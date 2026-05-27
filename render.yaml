@@ -1,0 +1,25 @@
+# =====================================================================
+# Render Blueprint — Bài Giảng AI (FastAPI)
+# Deploy: Render Dashboard → New → Blueprint → chọn repo này.
+# Render tự đọc file này để tạo Web Service.
+# =====================================================================
+services:
+  - type: web
+    name: bai-giang-ai
+    runtime: python
+    plan: free
+    region: singapore            # gần Việt Nam nhất trong free tier
+    branch: main
+    # Cài dependencies (requirements.txt nằm trong backend/)
+    buildCommand: pip install -r backend/requirements.txt
+    # uvicorn --app-dir backend để import được app.main:app;
+    # PROJECT_ROOT trong config.py tự trỏ về gốc repo nên slides/ & frontend/ vẫn đúng.
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT --app-dir backend
+    healthCheckPath: /api/health
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.6"
+      - key: DEBUG
+        value: "false"
+      - key: CORS_ORIGINS
+        value: "*"
