@@ -883,6 +883,64 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 
 /* Pulse animation removed for cleaner look */
 
+/* ============ SCHOOL FLIP CARDS (Slide 6 — thẻ lật) ============ */
+.school-flip {
+  perspective: 1200px;
+  height: 300px;
+  cursor: pointer;
+}
+.school-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.school-flip.flipped .school-flip-inner { transform: rotateY(180deg); }
+.school-flip-front, .school-flip-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 14px;
+  padding: 1.3rem 1.2rem;
+  box-shadow: 0 4px 16px rgba(15,23,42,0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.school-flip-front {
+  background: white;
+  border-top: 4px solid var(--sf-color, var(--primary));
+  align-items: flex-start;
+}
+.school-flip-front .school-num { align-self: flex-start; }
+.school-flip-front .school-title {
+  font-size: 1.05rem; font-weight: 800; margin: 0.7rem 0 0.45rem; line-height: 1.3;
+  text-align: left;
+}
+.school-flip-front .school-en {
+  font-size: 0.82rem; color: var(--primary); font-weight: 600; font-style: italic;
+  text-align: left;
+}
+.school-flip-hint {
+  margin-top: auto;
+  font-size: 0.74rem; color: var(--text-muted); font-weight: 600;
+  display: flex; align-items: center; gap: 0.35rem;
+}
+.school-flip-back {
+  background: var(--sf-grad, var(--grad-primary));
+  color: white;
+  transform: rotateY(180deg);
+  justify-content: center;
+}
+.school-flip-back .school-desc {
+  font-size: 0.88rem; line-height: 1.55; color: white; text-align: left;
+  flex: 0 0 auto;
+}
+.school-flip-back .school-desc strong { color: #FDE68A; }
+.school-flip-back .school-desc em { color: rgba(255,255,255,0.92); }
+
 </style>
 </head>
 <body>
@@ -972,7 +1030,7 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 <div class="cover-content slide-body">
   <span class="eyebrow">BUỔI 1 · MODULE 1 — NỀN TẢNG AI</span>
   <h1 class="hero-title">Chào mừng đến<br/><span class="grad-text">thế giới AI</span></h1>
-  <p class="slide-subtitle">Hành trình 24 buổi · Tự tay build 8 ứng dụng AI thực · Em sẽ thấy mình thay đổi từng tuần</p>
+  <p class="slide-subtitle">Hành trình 24 buổi · Tự tay build 8 ứng dụng AI thực · Bạn sẽ thấy mình thay đổi từng tuần</p>
   <div class="cover-chips">
     <span class="cover-chip">120 phút</span>
     <span class="cover-chip">Khai giảng &amp; Thế giới AI</span>
@@ -985,12 +1043,12 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 
 <div class="slide-body">
   <span class="eyebrow">CÁCH HỌC HÔM NAY</span>
-  <h2 class="slide-title">4 loại câu hỏi em sẽ gặp</h2>
-  <p class="slide-subtitle">Mỗi loại có màu riêng. Khi thấy hộp màu, em biết nên làm gì.</p>
+  <h2 class="slide-title">4 loại câu hỏi bạn sẽ gặp</h2>
+  <p class="slide-subtitle">Mỗi loại có màu riêng. Khi thấy hộp màu, bạn biết nên làm gì.</p>
   <div class="card-grid stagger" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
     <div class="qbox qbox-blue" style="margin:0;">
       <div class="qbox-header"><div class="qbox-icon" style="background:#3B82F6;">?</div>Trước giờ học</div>
-      <div class="qbox-content" style="font-size:0.88rem;">Đọc trước, ngẫm 30s, có thể viết tay vào sổ. Giúp em phát biểu tự tin khi GV gọi.</div>
+      <div class="qbox-content" style="font-size:0.88rem;">Đọc trước, ngẫm 30s, có thể viết tay vào sổ. Giúp bạn phát biểu tự tin khi GV gọi.</div>
     </div>
     <div class="qbox qbox-yellow" style="margin:0;">
       <div class="qbox-header"><div class="qbox-icon" style="background:#F59E0B;">!</div>Hỏi bạn cặp</div>
@@ -998,7 +1056,7 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
     </div>
     <div class="qbox qbox-purple" style="margin:0;">
       <div class="qbox-header"><div class="qbox-icon" style="background:#A855F7;">#</div>Suy ngẫm Sổ Tay</div>
-      <div class="qbox-content" style="font-size:0.88rem;">Em tự ngẫm, viết vào Sổ Tay Cá Nhân (nút trên cùng). Riêng tư, không nộp.</div>
+      <div class="qbox-content" style="font-size:0.88rem;">Bạn tự ngẫm, viết vào Sổ Tay Cá Nhân (nút trên cùng). Riêng tư, không nộp.</div>
     </div>
     <div class="qbox qbox-orange" style="margin:0;">
       <div class="qbox-header"><div class="qbox-icon" style="background:#F97316;">+</div>Thử AI tại nhà</div>
@@ -1008,7 +1066,7 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 </div>
 
     </section>
-    <section class="slide" data-slide="3" data-title="Em sẽ học được gì">
+    <section class="slide" data-slide="3" data-title="Bạn sẽ học được gì">
 
 <div class="slide-body">
   <span class="eyebrow">CUỐI BUỔI 1 — EM PHẢI CÓ</span>
@@ -1031,20 +1089,20 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 
 <div class="slide-body">
   <span class="eyebrow">BẮT ĐẦU HÀNH TRÌNH</span>
-  <h2 class="slide-title">Đầu tiên — em ghi nhận cảm xúc</h2>
+  <h2 class="slide-title">Đầu tiên — bạn ghi nhận cảm xúc</h2>
   <div class="qbox qbox-purple">
     <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #1 — Đầu buổi</div>
     <div class="qbox-content">
-      <strong>1 TỪ DUY NHẤT</strong> mô tả cảm xúc của em <em>LÚC NÀY</em> khi bắt đầu khoá AI.<br><br>
+      <strong>1 TỪ DUY NHẤT</strong> mô tả cảm xúc của bạn <em>LÚC NÀY</em> khi bắt đầu khoá AI.<br><br>
       Ví dụ: <em>hồi hộp, tò mò, lo lắng, háo hức, bình thường, ngỡ ngàng...</em>
     </div>
     <div class="nb-input-wrap">
-      <label>Cảm xúc của em:</label>
+      <label>Cảm xúc của bạn:</label>
       <textarea class="nb-input" data-nb-id="1" placeholder="Gõ 1 từ ở đây..."></textarea>
       <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
     </div>
     <div class="qbox-tip">
-      <span class="qbox-tip-label">Vì sao em viết?</span>Cuối khoá Buổi 24 em sẽ quay lại đọc — so sánh cảm xúc đầu-cuối hành trình.
+      <span class="qbox-tip-label">Vì sao bạn viết?</span>Cuối khoá Buổi 24 bạn sẽ quay lại đọc — so sánh cảm xúc đầu-cuối hành trình.
     </div>
   </div>
 </div>
@@ -1075,30 +1133,59 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
   <span class="eyebrow">GÓC NHÌN KHOA HỌC</span>
   <h2 class="slide-title">4 trường phái định nghĩa AI</h2>
   <p class="slide-subtitle">Các nhà khoa học có 4 cách hiểu khác nhau về AI — cùng tồn tại, không tách biệt hoàn toàn</p>
+  <p class="slide-subtitle" style="margin-top:-0.6rem;font-size:0.92rem;color:var(--text-muted);">Nhấn vào mỗi thẻ để lật xem mô tả chi tiết</p>
   <div class="school-grid stagger">
-    <div class="school-card" style="border-top-color:#3B82F6;">
-      <span class="school-num" style="background:linear-gradient(135deg, #3B82F6, #6366F1);">TRƯỜNG PHÁI 1</span>
-      <div class="school-title">Hệ thống SUY NGHĨ như con người</div>
-      <div class="school-en">Thinking Humanly — Cách tiếp cận Nhận thức</div>
-      <div class="school-desc">AI là nỗ lực <strong>tự động hoá các hoạt động tư duy</strong>: ra quyết định, giải quyết vấn đề, học tập. Liên quan đến Khoa học Nhận thức (Cognitive Science) — phải hiểu cách não bộ hoạt động trước khi mô phỏng nó.</div>
+    <div class="school-flip" onclick="this.classList.toggle('flipped')" style="--sf-color:#3B82F6; --sf-grad:linear-gradient(135deg,#3B82F6,#6366F1);">
+      <div class="school-flip-inner">
+        <div class="school-flip-front">
+          <span class="school-num" style="background:linear-gradient(135deg, #3B82F6, #6366F1);">TRƯỜNG PHÁI 1</span>
+          <div class="school-title">Hệ thống SUY NGHĨ như con người</div>
+          <div class="school-en">Thinking Humanly — Cách tiếp cận Nhận thức</div>
+          <div class="school-flip-hint">↺ Nhấn để xem mô tả</div>
+        </div>
+        <div class="school-flip-back">
+          <div class="school-desc">AI là nỗ lực <strong>tự động hoá các hoạt động tư duy</strong>: ra quyết định, giải quyết vấn đề, học tập. Liên quan đến Khoa học Nhận thức (Cognitive Science) — phải hiểu cách não bộ hoạt động trước khi mô phỏng nó.</div>
+        </div>
+      </div>
     </div>
-    <div class="school-card" style="border-top-color:#F59E0B;">
-      <span class="school-num" style="background:linear-gradient(135deg, #F59E0B, #F97316);">TRƯỜNG PHÁI 2</span>
-      <div class="school-title">Hệ thống HÀNH ĐỘNG như con người</div>
-      <div class="school-en">Acting Humanly — Cách tiếp cận Turing Test</div>
-      <div class="school-desc">AI là <strong>nghệ thuật tạo máy</strong> thực hiện các chức năng đòi hỏi trí thông minh nếu con người làm. Nền tảng của <strong>Bài kiểm tra Turing</strong>: xử lý ngôn ngữ tự nhiên, biểu diễn tri thức, suy luận tự động.</div>
+    <div class="school-flip" onclick="this.classList.toggle('flipped')" style="--sf-color:#F59E0B; --sf-grad:linear-gradient(135deg,#F59E0B,#F97316);">
+      <div class="school-flip-inner">
+        <div class="school-flip-front">
+          <span class="school-num" style="background:linear-gradient(135deg, #F59E0B, #F97316);">TRƯỜNG PHÁI 2</span>
+          <div class="school-title">Hệ thống HÀNH ĐỘNG như con người</div>
+          <div class="school-en">Acting Humanly — Cách tiếp cận Turing Test</div>
+          <div class="school-flip-hint">↺ Nhấn để xem mô tả</div>
+        </div>
+        <div class="school-flip-back">
+          <div class="school-desc">AI là <strong>nghệ thuật tạo máy</strong> thực hiện các chức năng đòi hỏi trí thông minh nếu con người làm. Nền tảng của <strong>Bài kiểm tra Turing</strong>: xử lý ngôn ngữ tự nhiên, biểu diễn tri thức, suy luận tự động.</div>
+        </div>
+      </div>
     </div>
-    <div class="school-card" style="border-top-color:#A855F7;">
-      <span class="school-num" style="background:linear-gradient(135deg, #A855F7, #EC4899);">TRƯỜNG PHÁI 3</span>
-      <div class="school-title">Hệ thống SUY NGHĨ hợp lý</div>
-      <div class="school-en">Thinking Rationally — Định luật Tư duy</div>
-      <div class="school-desc">AI là nghiên cứu các năng lực tính toán giúp nhận thức, suy luận, hành động dựa trên <strong>quy tắc logic hình thức</strong>. Mạnh khi suy luận chặt chẽ, yếu khi xử lý dữ liệu không chắc chắn trong thế giới thực.</div>
+    <div class="school-flip" onclick="this.classList.toggle('flipped')" style="--sf-color:#A855F7; --sf-grad:linear-gradient(135deg,#A855F7,#EC4899);">
+      <div class="school-flip-inner">
+        <div class="school-flip-front">
+          <span class="school-num" style="background:linear-gradient(135deg, #A855F7, #EC4899);">TRƯỜNG PHÁI 3</span>
+          <div class="school-title">Hệ thống SUY NGHĨ hợp lý</div>
+          <div class="school-en">Thinking Rationally — Định luật Tư duy</div>
+          <div class="school-flip-hint">↺ Nhấn để xem mô tả</div>
+        </div>
+        <div class="school-flip-back">
+          <div class="school-desc">AI là nghiên cứu các năng lực tính toán giúp nhận thức, suy luận, hành động dựa trên <strong>quy tắc logic hình thức</strong>. Mạnh khi suy luận chặt chẽ, yếu khi xử lý dữ liệu không chắc chắn trong thế giới thực.</div>
+        </div>
+      </div>
     </div>
-    <div class="school-card" style="border-top-color:#10B981;">
-      <span class="school-num" style="background:linear-gradient(135deg, #10B981, #06B6D4);">TRƯỜNG PHÁI 4 (CHUẨN HIỆN ĐẠI)</span>
-      <div class="school-title">Hệ thống HÀNH ĐỘNG hợp lý</div>
-      <div class="school-en">Acting Rationally — Tác nhân Thông minh</div>
-      <div class="school-desc">AI là nghiên cứu và thiết kế các <strong>Tác nhân tính toán</strong> thực hiện <strong>hành động đúng đắn nhất có thể</strong> dựa trên những gì chúng biết. <em>Chuẩn khoa học hiện đại và phổ biến nhất.</em></div>
+    <div class="school-flip" onclick="this.classList.toggle('flipped')" style="--sf-color:#10B981; --sf-grad:linear-gradient(135deg,#10B981,#06B6D4);">
+      <div class="school-flip-inner">
+        <div class="school-flip-front">
+          <span class="school-num" style="background:linear-gradient(135deg, #10B981, #06B6D4);">TRƯỜNG PHÁI 4 (CHUẨN HIỆN ĐẠI)</span>
+          <div class="school-title">Hệ thống HÀNH ĐỘNG hợp lý</div>
+          <div class="school-en">Acting Rationally — Tác nhân Thông minh</div>
+          <div class="school-flip-hint">↺ Nhấn để xem mô tả</div>
+        </div>
+        <div class="school-flip-back">
+          <div class="school-desc">AI là nghiên cứu và thiết kế các <strong>Tác nhân tính toán</strong> thực hiện <strong>hành động đúng đắn nhất có thể</strong> dựa trên những gì chúng biết. <em>Chuẩn khoa học hiện đại và phổ biến nhất.</em></div>
+        </div>
+      </div>
     </div>
   </div>
 </div>
@@ -1126,12 +1213,12 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 
 <div class="slide-body">
   <span class="eyebrow">HỘP CÂU HỎI MÀU XANH DƯƠNG</span>
-  <h2 class="slide-title">Trước khi bắt đầu — em hãy ngẫm</h2>
+  <h2 class="slide-title">Trước khi bắt đầu — bạn hãy ngẫm</h2>
   <div class="qbox qbox-blue">
     <div class="qbox-header"><div class="qbox-icon">?</div>CÂU CHUẨN BỊ #1 — Trước giờ học</div>
     <div class="qbox-content">
-      Em hãy tự nghĩ trong <strong>30 giây</strong>:<br><br>
-      "<em>3 ứng dụng (app) em sử dụng hằng ngày trên điện thoại — em đoán xem có cái nào CÓ AI bên trong không?</em>"
+      Bạn hãy tự nghĩ trong <strong>30 giây</strong>:<br><br>
+      "<em>3 ứng dụng (app) bạn sử dụng hằng ngày trên điện thoại — bạn đoán xem có cái nào CÓ AI bên trong không?</em>"
     </div>
     <div class="qbox-tip">
       <span class="qbox-tip-label">Gợi ý:</span>TikTok (gợi ý video), Google Maps (định tuyến), Gmail (lọc spam), Spotify (gợi ý nhạc), Google Photos (nhận diện khuôn mặt), Snap/Instagram filter, Face ID, Siri/Google Assistant...
@@ -1140,11 +1227,11 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 </div>
 
     </section>
-    <section class="slide" data-slide="9" data-title="AI quanh em">
+    <section class="slide" data-slide="9" data-title="AI quanh bạn">
 
 <div class="slide-body">
   <span class="eyebrow">AI ĐANG Ở KHẮP NƠI</span>
-  <h2 class="slide-title">5 lần em đã vô tình dùng AI hôm nay</h2>
+  <h2 class="slide-title">5 lần bạn đã vô tình dùng AI hôm nay</h2>
   <p class="slide-subtitle">Mỗi ứng dụng quen thuộc đều có AI làm việc bên trong</p>
   <div class="brand-grid stagger">
     <div class="brand-card">
@@ -1153,7 +1240,7 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
       </div>
       <div class="brand-body">
         <h3>TikTok</h3>
-        <p>Đề xuất video em hay xem dựa trên lịch sử</p>
+        <p>Đề xuất video bạn hay xem dựa trên lịch sử</p>
       </div>
     </div>
     <div class="brand-card">
@@ -1189,11 +1276,11 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
       </div>
       <div class="brand-body">
         <h3>Netflix</h3>
-        <p>Gợi ý phim em có thể thích</p>
+        <p>Gợi ý phim bạn có thể thích</p>
       </div>
     </div>
   </div>
-  <p class="brand-footer">5 ứng dụng quen thuộc — tất cả đều dùng <strong>Predictive AI</strong> để dự đoán điều em muốn.</p>
+  <p class="brand-footer">5 ứng dụng quen thuộc — tất cả đều dùng <strong>Predictive AI</strong> để dự đoán điều bạn muốn.</p>
 </div>
 
     </section>
@@ -1232,7 +1319,7 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 <div class="cover-content slide-body">
   <span class="eyebrow">3 TỪ EM SẼ NGHE LIÊN TỤC</span>
   <h1 class="hero-title">Model · LLM · Token<br/><span class="grad-text">qua 3 ẩn dụ vui</span></h1>
-  <p class="slide-subtitle">Khi dùng Generative AI, em sẽ nghe 3 từ này hoài. Slide tiếp theo giải thích bằng ẩn dụ dễ nhớ.</p>
+  <p class="slide-subtitle">Khi dùng Generative AI, bạn sẽ nghe 3 từ này hoài. Slide tiếp theo giải thích bằng ẩn dụ dễ nhớ.</p>
 </div>
 
     </section>
@@ -1246,7 +1333,7 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
       <div class="met-emoji">📖</div>
       <div class="met-term">MODEL</div>
       <div class="met-metaphor">Cuốn sổ tay bí kíp nấu ăn</div>
-      <div class="met-desc">Thay vì bắt AI nhớ chính xác từng bức ảnh hay từng câu chữ nó đã đọc, AI <strong>đúc kết ra các quy tắc và công thức</strong> rồi lưu vào "cuốn sổ" này. Khi em hỏi, nó mở Model ra để tự tạo câu trả lời.</div>
+      <div class="met-desc">Thay vì bắt AI nhớ chính xác từng bức ảnh hay từng câu chữ nó đã đọc, AI <strong>đúc kết ra các quy tắc và công thức</strong> rồi lưu vào "cuốn sổ" này. Khi bạn hỏi, nó mở Model ra để tự tạo câu trả lời.</div>
     </div>
     <div class="met-card llm">
       <div class="met-emoji">📚</div>
@@ -1318,15 +1405,15 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 
 <div class="slide-body">
   <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
-  <h2 class="slide-title">Cùng bạn cặp — đếm AI quanh em</h2>
+  <h2 class="slide-title">Cùng bạn cặp — đếm AI quanh bạn</h2>
   <div class="qbox qbox-yellow">
     <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Discussion #1</div>
     <div class="qbox-content">
-      Trong giờ Buổi 1, em hỏi bạn cặp mình:<br><br>
-      "<em>Trong 1 NGÀY bình thường, em có bao nhiêu lần VÔ TÌNH chạm vào AI mà không biết? Cùng nhau thử kể 3 lần.</em>"
+      Trong giờ Buổi 1, bạn hỏi bạn cặp của mình:<br><br>
+      "<em>Trong 1 NGÀY bình thường, bạn có bao nhiêu lần VÔ TÌNH chạm vào AI mà không biết? Cùng nhau thử kể 3 lần.</em>"
     </div>
     <div class="qbox-tip">
-      <span class="qbox-tip-label">Mục đích:</span>Hai em liệt kê cùng nhau. Ví dụ: mở TikTok (1) → Camera nhận diện gương mặt (2) → Google Maps đi học (3). Khám phá rằng AI nhiều hơn em tưởng!
+      <span class="qbox-tip-label">Mục đích:</span>Hai bạn liệt kê cùng nhau. Ví dụ: mở TikTok (1) → Camera nhận diện gương mặt (2) → Google Maps đi học (3). Khám phá rằng AI nhiều hơn bạn tưởng!
     </div>
   </div>
 </div>
@@ -1437,8 +1524,8 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
   <div class="qbox qbox-yellow">
     <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Discussion #2</div>
     <div class="qbox-content">
-      Em hỏi bạn cặp:<br><br>
-      "<em>Nếu BẠN sinh năm 2030 (không biết thế giới trước ChatGPT), em sẽ giải thích cho bạn ấy 4 lý do AI bùng nổ NHƯ THẾ NÀO? Mỗi lý do 1 câu THẬT NGẮN.</em>"
+      Bạn hỏi bạn cặp:<br><br>
+      "<em>Nếu một người bạn sinh năm 2030 (không biết thế giới trước ChatGPT), bạn sẽ giải thích cho người ấy 4 lý do AI bùng nổ NHƯ THẾ NÀO? Mỗi lý do 1 câu THẬT NGẮN.</em>"
     </div>
     <div class="qbox-tip">
       <span class="qbox-tip-label">Kỹ thuật Feynman:</span>Dạy lại bằng ngôn ngữ đơn giản nhất → mới thật sự hiểu. HS lớp 12 thử giảng cho HS lớp 8 trong cặp.
@@ -1451,13 +1538,13 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 
 <div class="slide-body">
   <span class="eyebrow">2026 — AI LÀM ĐƯỢC NHIỀU THỨ</span>
-  <h2 class="slide-title">6 lĩnh vực — em sẽ học buổi nào</h2>
+  <h2 class="slide-title">6 lĩnh vực — bạn sẽ học buổi nào</h2>
   <table class="cmp-table" style="font-size:0.92rem;">
     <thead>
       <tr>
         <th style="background:#EEF2FF;color:#4338CA;">Lĩnh vực</th>
         <th style="background:white;color:var(--text);">AI làm được</th>
-        <th style="background:#DCFCE7;color:#15803D;">Em sẽ học ở buổi</th>
+        <th style="background:#DCFCE7;color:#15803D;">Bạn sẽ học ở buổi</th>
       </tr>
     </thead>
     <tbody>
@@ -1465,7 +1552,7 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
       <tr><td>Hình ảnh</td><td>Vẽ tranh từ mô tả, sửa ảnh</td><td><strong>Buổi 10</strong></td></tr>
       <tr><td>Âm nhạc</td><td>Tạo bài hát có lời + giai điệu</td><td><strong>Buổi 11</strong></td></tr>
       <tr><td>Giọng nói</td><td>Nói như người thật, dịch giọng</td><td><strong>Buổi 11</strong></td></tr>
-      <tr><td>Lập trình</td><td>Viết code khi em mô tả ý tưởng</td><td><strong>Buổi 20-22</strong></td></tr>
+      <tr><td>Lập trình</td><td>Viết code khi bạn mô tả ý tưởng</td><td><strong>Buổi 20-22</strong></td></tr>
       <tr><td>Phân tích dữ liệu</td><td>Đọc Excel, vẽ biểu đồ, insight</td><td><strong>Buổi 13</strong></td></tr>
     </tbody>
   </table>
@@ -1476,19 +1563,19 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 
 <div class="slide-body">
   <span class="eyebrow">CHỌN LĨNH VỰC ĐỢI NHẤT</span>
-  <h2 class="slide-title">Lĩnh vực nào em ĐỢI NHẤT?</h2>
+  <h2 class="slide-title">Lĩnh vực nào bạn ĐỢI NHẤT?</h2>
   <div class="qbox qbox-purple">
     <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #2 — Định hướng Final Project</div>
     <div class="qbox-content">
-      Trong 6 lĩnh vực trên — em ĐỢI NHẤT lĩnh vực nào? Vì sao?
+      Trong 6 lĩnh vực trên — bạn ĐỢI NHẤT lĩnh vực nào? Vì sao?
     </div>
     <div class="nb-input-wrap">
-      <label>Em đợi nhất lĩnh vực: ___ vì:</label>
+      <label>Bạn đợi nhất lĩnh vực: ___ vì:</label>
       <textarea class="nb-input" data-nb-id="2" placeholder="Viết 1-2 câu vào đây..."></textarea>
       <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
     </div>
     <div class="qbox-tip">
-      <span class="qbox-tip-label">Vì sao quan trọng?</span>Lựa chọn này sẽ giúp em định hướng Final Project ở Buổi 24. Ví dụ: em thích nhạc → Final Project có thể là app sáng tác nhạc.
+      <span class="qbox-tip-label">Vì sao quan trọng?</span>Lựa chọn này sẽ giúp bạn định hướng Final Project ở Buổi 24. Ví dụ: bạn thích nhạc → Final Project có thể là app sáng tác nhạc.
     </div>
   </div>
 </div>
@@ -1519,7 +1606,7 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 <div class="slide-body">
   <span class="eyebrow">HIỂU SÂU HALLUCINATION</span>
   <h2 class="slide-title">Vì sao AI lại "ảo giác"?</h2>
-  <p class="slide-subtitle">Em hãy tưởng tượng AI như một người bạn đặc biệt...</p>
+  <p class="slide-subtitle">Bạn hãy tưởng tượng AI như một người bạn đặc biệt...</p>
   <div class="card-grid stagger" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
     <div class="card" style="border-top:4px solid #3B82F6;">
       <div class="card-icon" style="background:linear-gradient(135deg,#3B82F6,#6366F1);">1</div>
@@ -1528,8 +1615,8 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
     </div>
     <div class="card" style="border-top:4px solid #F59E0B;">
       <div class="card-icon" style="background:linear-gradient(135deg,#F59E0B,#F97316);">2</div>
-      <h3>Rất sợ làm em thất vọng</h3>
-      <p>Khi em hỏi, nhiệm vụ lớn nhất của nó là <strong>đưa ra câu trả lời</strong>. AI rất "ngại" phải nói câu "Mình không biết".</p>
+      <h3>Rất sợ làm bạn thất vọng</h3>
+      <p>Khi bạn hỏi, nhiệm vụ lớn nhất của nó là <strong>đưa ra câu trả lời</strong>. AI rất "ngại" phải nói câu "Mình không biết".</p>
     </div>
     <div class="card" style="border-top:4px solid #EF4444;">
       <div class="card-icon" style="background:linear-gradient(135deg,#EF4444,#DC2626);">3</div>
@@ -1553,13 +1640,13 @@ tại sân vận động Mỹ Đình."
   </div>
   <div class="hl-box danger">
     <span class="hl-label" style="color:#B91C1C;">AI BỊ "ẢO GIÁC" SẼ TRẢ LỜI</span>
-    <p>Một AI bị mắc chứng "ảo giác" <strong>KHÔNG nói với em là chuyện đó vô lý</strong>.<br><br>
+    <p>Một AI bị mắc chứng "ảo giác" <strong>KHÔNG nói với bạn là chuyện đó vô lý</strong>.<br><br>
     Thay vào đó, nó có thể bịa ra cả một bài văn miêu tả <strong>"Khủng long đã đánh đầu ghi bàn"</strong> và <strong>"Người Nhện đã dùng tơ nhện để bắt gôn xuất sắc"</strong>! Nó ghép các từ khoá "Khủng long", "Người Nhện", "bóng đá", "Mỹ Đình" lại với nhau tạo thành câu chuyện như thật.</p>
   </div>
   <div class="qbox qbox-orange">
     <div class="qbox-header"><div class="qbox-icon">+</div>EM CÓ MUỐN THỬ?</div>
     <div class="qbox-content">
-      Em có muốn nghĩ ra một câu hỏi thật "oái oăm" về điều không có thật để xem chúng ta có thể <strong>bẫy một AI rơi vào ảo giác</strong> không?
+      Bạn có muốn nghĩ ra một câu hỏi thật "oái oăm" về điều không có thật để xem chúng ta có thể <strong>bẫy một AI rơi vào ảo giác</strong> không?
     </div>
   </div>
 </div>
@@ -1569,21 +1656,21 @@ tại sân vận động Mỹ Đình."
 
 <div class="slide-body">
   <span class="eyebrow">KÍCH HOẠT CRITICAL THINKING</span>
-  <h2 class="slide-title">Em từng gặp thông tin sai chưa?</h2>
+  <h2 class="slide-title">Bạn từng gặp thông tin sai chưa?</h2>
   <div class="qbox qbox-purple">
     <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #3 — Giữa buổi</div>
     <div class="qbox-content">
-      Em viết vào Sổ Tay:<br><br>
-      "<em>1 LẦN em (hoặc người quen em) gặp 1 THÔNG TIN SAI từ AI / Google / Facebook trong TUẦN QUA. Em nhận ra nó sai bằng cách nào?</em>"<br><br>
+      Bạn viết vào Sổ Tay:<br><br>
+      "<em>1 LẦN bạn (hoặc người quen của bạn) gặp 1 THÔNG TIN SAI từ AI / Google / Facebook trong TUẦN QUA. Bạn nhận ra nó sai bằng cách nào?</em>"<br><br>
       (Nếu chưa từng — viết "chưa từng" cũng được.)
     </div>
     <div class="nb-input-wrap">
-      <label>Lần em gặp thông tin sai:</label>
+      <label>Lần bạn gặp thông tin sai:</label>
       <textarea class="nb-input" data-nb-id="3" placeholder="Viết 2-3 câu vào đây..."></textarea>
       <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
     </div>
     <div class="qbox-tip">
-      <span class="qbox-tip-label">Mục đích:</span>Em đã có tư duy phản biện — chỉ cần áp dụng vào AI.
+      <span class="qbox-tip-label">Mục đích:</span>Bạn đã có tư duy phản biện — chỉ cần áp dụng vào AI.
     </div>
   </div>
 </div>
@@ -1667,14 +1754,14 @@ tại sân vận động Mỹ Đình."
 
 <div class="slide-body">
   <span class="eyebrow">CHỌN ĐỢI &amp; LO</span>
-  <h2 class="slide-title">Module nào em đợi nhất? Lo nhất?</h2>
+  <h2 class="slide-title">Module nào bạn đợi nhất? Lo nhất?</h2>
   <div class="qbox qbox-blue">
     <div class="qbox-header"><div class="qbox-icon">?</div>CÂU CHUẨN BỊ #2 — Trước giờ học</div>
     <div class="qbox-content">
-      Em đọc qua 6 module trên — chọn:<br><br>
-      <strong>1 module em ĐỢI NHẤT</strong>, và<br>
-      <strong>1 module em LO LẮNG NHẤT</strong> (sợ khó).<br><br>
-      Khi GV hỏi trong buổi, em đã có câu trả lời sẵn — phát biểu tự tin hơn.
+      Bạn đọc qua 6 module trên — chọn:<br><br>
+      <strong>1 module bạn ĐỢI NHẤT</strong>, và<br>
+      <strong>1 module bạn LO LẮNG NHẤT</strong> (sợ khó).<br><br>
+      Khi GV hỏi trong buổi, bạn đã có câu trả lời sẵn — phát biểu tự tin hơn.
     </div>
     <div class="qbox-tip">
       <span class="qbox-tip-label">Gợi ý:</span>Module dễ thu hút: M3 Multimedia (vẽ, video) + M5 Vibe Coding (làm web). Đừng lo — Vibe Coding là "nói chuyện với AI" thay vì viết code.
@@ -1689,8 +1776,8 @@ tại sân vận động Mỹ Đình."
 <div class="cover-orb orb-2" style="background:#6366F1;"></div>
 <div class="cover-content slide-body">
   <span class="eyebrow">PHẦN THỰC HÀNH</span>
-  <h1 class="hero-title">Hành trang của em<br/><span class="grad-text">3 tài khoản AI</span></h1>
-  <p class="slide-subtitle" style="font-size: 1.1rem;">Sau 25 phút nữa — em sẽ có đủ 3 công cụ AI mạnh nhất 2026, hoàn toàn miễn phí</p>
+  <h1 class="hero-title">Hành trang của bạn<br/><span class="grad-text">3 tài khoản AI</span></h1>
+  <p class="slide-subtitle" style="font-size: 1.1rem;">Sau 25 phút nữa — bạn sẽ có đủ 3 công cụ AI mạnh nhất 2026, hoàn toàn miễn phí</p>
   <div class="cover-chips">
     <span class="cover-chip">ChatGPT</span>
     <span class="cover-chip">Gemini</span>
@@ -1704,7 +1791,7 @@ tại sân vận động Mỹ Đình."
 <div class="slide-body">
   <span class="eyebrow">1 / 3 — DỄ NHẤT, BẮT ĐẦU TỪ ĐÂY</span>
   <h2 class="slide-title">Đăng ký Google Gemini</h2>
-  <p class="slide-subtitle">Vì em có thể đã có tài khoản Google sẵn</p>
+  <p class="slide-subtitle">Vì bạn có thể đã có tài khoản Google sẵn</p>
   <ol class="steps stagger">
     <li>Mở Chrome → vào <code>gemini.google.com</code></li>
     <li>Đăng nhập Google (nếu chưa) — dùng Gmail cá nhân</li>
@@ -1714,7 +1801,7 @@ tại sân vận động Mỹ Đình."
   </ol>
   <div class="hl-box danger">
     <span class="hl-label" style="color:#B91C1C;">LƯU Ý CHO HS DƯỚI 16 TUỔI</span>
-    <p>Em đăng ký <strong>cùng phụ huynh</strong> bằng email/SĐT của phụ huynh.</p>
+    <p>Bạn đăng ký <strong>cùng phụ huynh</strong> bằng email/SĐT của phụ huynh.</p>
   </div>
 </div>
 
@@ -1727,14 +1814,14 @@ tại sân vận động Mỹ Đình."
   <ol class="steps stagger">
     <li>Mở tab mới → vào <code>chat.openai.com</code></li>
     <li>Bấm <strong>Sign up</strong> ở góc trên phải</li>
-    <li>Chọn <strong>Continue with Google</strong> → chọn Gmail của em</li>
+    <li>Chọn <strong>Continue with Google</strong> → chọn Gmail của bạn</li>
     <li>Nhập tên, ngày sinh. HS dưới 13t: phụ huynh đăng ký giúp</li>
     <li>Xác minh số điện thoại — nhập mã 6 số nhận qua SMS</li>
     <li>Vào <strong>Settings → Personalization → Study Mode</strong> → bật ON</li>
   </ol>
   <div class="hl-box success">
     <span class="hl-label">VÌ SAO BẬT STUDY MODE?</span>
-    <p>Study Mode làm ChatGPT trả lời theo Socratic method (gợi ý dần). Đây là nền tảng cho APP-1.2 Chatbot Socratic em sẽ build ở Buổi 15.</p>
+    <p>Study Mode làm ChatGPT trả lời theo Socratic method (gợi ý dần). Đây là nền tảng cho APP-1.2 Chatbot Socratic bạn sẽ build ở Buổi 15.</p>
   </div>
 </div>
 
@@ -1766,7 +1853,7 @@ tại sân vận động Mỹ Đình."
   <div class="qbox qbox-yellow">
     <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Discussion #3</div>
     <div class="qbox-content">
-      Khi vướng ở bước đăng ký, em <strong>ĐỪNG hỏi GV ngay</strong> — hãy <strong>HỎI BẠN CẶP TRƯỚC</strong>.<br><br>
+      Khi vướng ở bước đăng ký, bạn <strong>ĐỪNG hỏi GV ngay</strong> — hãy <strong>HỎI BẠN CẶP TRƯỚC</strong>.<br><br>
       Câu hỏi mẫu:<br>"<em>Bạn đăng ký Gemini bằng email nào? Có gặp lỗi gì không? Bạn có check sẵn ô 'không phải robot' chưa?</em>"
     </div>
     <div class="qbox-tip">
@@ -1781,7 +1868,7 @@ tại sân vận động Mỹ Đình."
 <div class="slide-body">
   <span class="eyebrow">CÂU HỎI ĐẦU TIÊN VỚI AI</span>
   <h2 class="slide-title">Hỏi cùng 1 câu — cả 3 AI</h2>
-  <p class="slide-subtitle">Chọn 1 câu của EM (không bắt chước bạn), hỏi vào CẢ 3 AI</p>
+  <p class="slide-subtitle">Chọn 1 câu của BẠN (không bắt chước bạn cặp), hỏi vào CẢ 3 AI</p>
   <table class="cmp-table">
     <thead>
       <tr>
@@ -1792,14 +1879,14 @@ tại sân vận động Mỹ Đình."
     <tbody>
       <tr>
         <td style="background:white;">"Hãy giải thích cho học sinh lớp 8 vì sao bầu trời lại có màu xanh."</td>
-        <td style="background:white;">"Cho em dàn ý 5 ý cho bài văn 'Trách nhiệm của tuổi trẻ với quê hương'. Mỗi ý có 1 dẫn chứng."</td>
+        <td style="background:white;">"Cho tôi dàn ý 5 ý cho bài văn 'Trách nhiệm của tuổi trẻ với quê hương'. Mỗi ý có 1 dẫn chứng."</td>
       </tr>
       <tr>
-        <td style="background:white;">"Em chưa hiểu định luật II Newton. Hãy dạy em từng bước với ví dụ thực tế."</td>
+        <td style="background:white;">"Tôi chưa hiểu định luật II Newton. Hãy dạy tôi từng bước với ví dụ thực tế."</td>
         <td style="background:white;">"Phân tích 1 sai lầm hay gặp khi giải tích phân lượng giác trong đề thi tốt nghiệp."</td>
       </tr>
       <tr>
-        <td style="background:white;">"Gợi ý cho em 3 trò chơi học từ vựng tiếng Anh phù hợp HS lớp 8."</td>
+        <td style="background:white;">"Gợi ý cho tôi 3 trò chơi học từ vựng tiếng Anh phù hợp HS lớp 8."</td>
         <td style="background:white;">"Gợi ý 3 chuyên ngành đại học phù hợp HS thích Toán và yêu mạng máy tính."</td>
       </tr>
     </tbody>
@@ -1811,12 +1898,12 @@ tại sân vận động Mỹ Đình."
 
 <div class="slide-body">
   <span class="eyebrow">KHI NHẬN CÂU TRẢ LỜI</span>
-  <h2 class="slide-title">Em quan sát theo 5 tiêu chí</h2>
+  <h2 class="slide-title">Bạn quan sát theo 5 tiêu chí</h2>
   <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));">
     <div class="card"><div class="card-icon" style="background:#3B82F6;">L</div><h3>Độ dài</h3><p>AI nào dài nhất? Ngắn nhất? Đếm số dòng.</p></div>
     <div class="card"><div class="card-icon" style="background:#A855F7;">S</div><h3>Cấu trúc</h3><p>AI nào dùng tiêu đề, gạch đầu dòng? Liền mạch?</p></div>
     <div class="card"><div class="card-icon" style="background:#F59E0B;">E</div><h3>Ví dụ</h3><p>AI nào có ví dụ cụ thể?</p></div>
-    <div class="card"><div class="card-icon" style="background:#10B981;">N</div><h3>Ngôn ngữ</h3><p>AI nào dùng từ ngữ em hiểu liền?</p></div>
+    <div class="card"><div class="card-icon" style="background:#10B981;">N</div><h3>Ngôn ngữ</h3><p>AI nào dùng từ ngữ bạn hiểu liền?</p></div>
     <div class="card"><div class="card-icon" style="background:#EF4444;">D</div><h3>Khác biệt</h3><p>3 AI có nói KHÁC NHAU không? Vì sao?</p></div>
   </div>
 </div>
@@ -1826,16 +1913,16 @@ tại sân vận động Mỹ Đình."
 
 <div class="slide-body">
   <span class="eyebrow">SAU KHI HỎI 3 AI</span>
-  <h2 class="slide-title">Bạn cặp em thích AI nào?</h2>
+  <h2 class="slide-title">Bạn cặp của bạn thích AI nào?</h2>
   <div class="qbox qbox-yellow">
     <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Discussion #4</div>
     <div class="qbox-content">
-      Em hỏi bạn cặp:<br><br>
+      Bạn hỏi bạn cặp:<br><br>
       "<em>Bạn hỏi AI câu gì? Trong 3 AI, bạn HÀI LÒNG NHẤT với câu trả lời của AI nào? Vì sao?</em>"<br><br>
       Sau đó kể GV nghe ngắn gọn nếu được gọi.
     </div>
     <div class="qbox-tip">
-      <span class="qbox-tip-label">Mục đích:</span>Đây là câu GV cũng sẽ hỏi trong lớp — em đã CHUẨN BỊ SẴN câu trả lời → phát biểu tự tin.
+      <span class="qbox-tip-label">Mục đích:</span>Đây là câu GV cũng sẽ hỏi trong lớp — bạn đã CHUẨN BỊ SẴN câu trả lời → phát biểu tự tin.
     </div>
   </div>
 </div>
@@ -1849,16 +1936,16 @@ tại sân vận động Mỹ Đình."
   <div class="qbox qbox-purple">
     <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #4 — Cuối buổi</div>
     <div class="qbox-content">
-      Em quay lại Sổ Tay #1 (đầu buổi — em viết 1 từ cảm xúc).<br><br>
-      Bây giờ em viết THÊM 1 từ nữa — cảm xúc của em <strong>LÚC NÀY</strong>. So sánh trong đầu: có gì khác?
+      Bạn quay lại Sổ Tay #1 (đầu buổi — bạn viết 1 từ cảm xúc).<br><br>
+      Bây giờ bạn viết THÊM 1 từ nữa — cảm xúc của bạn <strong>LÚC NÀY</strong>. So sánh trong đầu: có gì khác?
     </div>
     <div class="nb-input-wrap">
-      <label>Cảm xúc của em LÚC NÀY:</label>
+      <label>Cảm xúc của bạn LÚC NÀY:</label>
       <textarea class="nb-input" data-nb-id="4" placeholder="1 từ + lý do (nếu muốn)..."></textarea>
       <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
     </div>
     <div class="qbox-tip">
-      <span class="qbox-tip-label">Kỹ thuật:</span>"Bookend reflection" — đầu/cuối buổi. Nếu em chuyển từ "lo lắng" sang "hào hứng" → khoá học đang đúng hướng!
+      <span class="qbox-tip-label">Kỹ thuật:</span>"Bookend reflection" — đầu/cuối buổi. Nếu bạn chuyển từ "lo lắng" sang "hào hứng" → khoá học đang đúng hướng!
     </div>
   </div>
 </div>
@@ -1870,11 +1957,11 @@ tại sân vận động Mỹ Đình."
   <span class="eyebrow">BÀI TẬP VỀ NHÀ — TRƯỚC BUỔI 2</span>
   <h2 class="slide-title">Chuẩn bị cho Buổi 2</h2>
   <ol class="steps stagger">
-    <li>Chọn 1 câu hỏi SÂU về sở thích cá nhân của em<br>(vd: <em>"Gợi ý 5 cuốn sách cho người yêu thiên văn 14 tuổi"</em>)</li>
+    <li>Chọn 1 câu hỏi SÂU về sở thích cá nhân của bạn<br>(vd: <em>"Gợi ý 5 cuốn sách cho người yêu thiên văn 14 tuổi"</em>)</li>
     <li>Hỏi vào <strong>CẢ 3 AI</strong></li>
     <li>Chụp screenshot 3 câu trả lời</li>
     <li>Nộp Zalo lớp <strong>trước Buổi 2</strong></li>
-    <li>Viết 1 dòng: AI nào trả lời em thích nhất? Vì sao?</li>
+    <li>Viết 1 dòng: AI nào trả lời bạn thích nhất? Vì sao?</li>
     <li>Đọc Mục V (Từ điển kỹ thuật) — các slide tiếp theo có flashcard</li>
   </ol>
 </div>
@@ -1897,10 +1984,10 @@ tại sân vận động Mỹ Đình."
   <span class="eyebrow">BONUS #1</span>
   <h2 class="slide-title">Test trí nhớ AI</h2>
   <div class="qbox qbox-orange">
-    <div class="qbox-header"><div class="qbox-icon">+</div>BONUS #1 — Em thử tại nhà</div>
+    <div class="qbox-header"><div class="qbox-icon">+</div>BONUS #1 — Bạn thử tại nhà</div>
     <div class="qbox-content">
       Hỏi mỗi AI:<br><br>
-      "<em>Tôi tên là [tên em]. Tôi thích đọc sách thiên văn.</em>"<br><br>
+      "<em>Tôi tên là [tên của bạn]. Tôi thích đọc sách thiên văn.</em>"<br><br>
       Đợi AI trả lời. Sau đó, <strong>MỞ CỬA SỔ MỚI</strong> và hỏi cùng AI đó: "Tôi tên gì? Tôi thích đọc gì?"
     </div>
     <div class="qbox-tip">
@@ -1916,7 +2003,7 @@ tại sân vận động Mỹ Đình."
   <span class="eyebrow">BONUS #2 — PHÁT HIỆN HALLUCINATION</span>
   <h2 class="slide-title">Bẫy ảo giác AI</h2>
   <div class="qbox qbox-orange">
-    <div class="qbox-header"><div class="qbox-icon">+</div>BONUS #2 — Em thử tại nhà</div>
+    <div class="qbox-header"><div class="qbox-icon">+</div>BONUS #2 — Bạn thử tại nhà</div>
     <div class="qbox-content">
       Hỏi mỗi AI:<br><br>
       "<em>Bạn hãy kể cho tôi nghe câu chuyện Bác Hồ phát biểu tại Hội nghị Asia 2024 ở Hà Nội — đoạn nào ý nghĩa nhất?</em>"<br><br>
@@ -1935,27 +2022,27 @@ tại sân vận động Mỹ Đình."
   <span class="eyebrow">BONUS #3</span>
   <h2 class="slide-title">Thi sáng tạo 3 AI</h2>
   <div class="qbox qbox-orange">
-    <div class="qbox-header"><div class="qbox-icon">+</div>BONUS #3 — Em thử tại nhà</div>
+    <div class="qbox-header"><div class="qbox-icon">+</div>BONUS #3 — Bạn thử tại nhà</div>
     <div class="qbox-content">
       Yêu cầu cả 3 AI:<br><br>
       "<em>Hãy viết 1 đoạn 50 từ giới thiệu một MÓN ĂN VIỆT NAM ĐỘC ĐÁO mà ÍT NGƯỜI BIẾT — kèm tên đặc sản, nguyên liệu chính, và 1 câu chuyện đi kèm.</em>"
     </div>
     <div class="qbox-tip">
-      <span class="qbox-tip-label">Quan sát:</span>3 AI trả lời 3 món khác nhau không? Có món nào AI BỊA không? (Em có thể tra Google kiểm chứng.)
+      <span class="qbox-tip-label">Quan sát:</span>3 AI trả lời 3 món khác nhau không? Có món nào AI BỊA không? (Bạn có thể tra Google kiểm chứng.)
     </div>
   </div>
 </div>
 
     </section>
-    <section class="slide" data-slide="42" data-title="Bonus #4: AI dạy lại em">
+    <section class="slide" data-slide="42" data-title="Bonus #4: AI dạy lại bạn">
 
 <div class="slide-body">
   <span class="eyebrow">BONUS #4</span>
-  <h2 class="slide-title">AI dạy lại em môn học hiện tại</h2>
+  <h2 class="slide-title">AI dạy lại bạn môn học hiện tại</h2>
   <div class="qbox qbox-orange">
-    <div class="qbox-header"><div class="qbox-icon">+</div>BONUS #4 — Em thử tại nhà</div>
+    <div class="qbox-header"><div class="qbox-icon">+</div>BONUS #4 — Bạn thử tại nhà</div>
     <div class="qbox-content">
-      Chọn 1 chủ đề em đang HỌC TRONG TUẦN này ở trường<br>(vd: <em>"cấu trúc tế bào lớp 8"</em> hoặc <em>"tích phân lượng giác lớp 12"</em>).<br><br>
+      Chọn 1 chủ đề bạn đang HỌC TRONG TUẦN này ở trường<br>(vd: <em>"cấu trúc tế bào lớp 8"</em> hoặc <em>"tích phân lượng giác lớp 12"</em>).<br><br>
       Hỏi 3 AI:<br>"<em>Hãy dạy chủ đề X cho 1 HS lớp 8/12 CHƯA BIẾT GÌ — dùng ví dụ thực tế hằng ngày, kết thúc bằng 1 câu hỏi kiểm tra.</em>"
     </div>
     <div class="qbox-tip">
@@ -1974,12 +2061,12 @@ tại sân vận động Mỹ Đình."
   <div class="fc-grid">
     <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">CPU</div><div class="fc-vi">Bộ xử lý trung tâm</div></div><div class="fc-back">Bộ não TỔNG QUÁT — vừa tính, vừa quản lý. Đa năng, không siêu nhanh.</div></div></div>
     <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">GPU</div><div class="fc-vi">Card đồ hoạ NVIDIA</div></div><div class="fc-back">Bộ não CHUYÊN VẼ TRANH NHANH — làm 1 việc nhanh gấp ngàn lần. AI cần GPU.</div></div></div>
-    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Transformer</div><div class="fc-vi">Kiến trúc AI 2017</div></div><div class="fc-back">Cách AI đọc 1 câu vẫn NHỚ TOÀN BỘ trước đó — giống em đọc chương 5 vẫn nhớ tên nhân vật chương 1.</div></div></div>
+    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Transformer</div><div class="fc-vi">Kiến trúc AI 2017</div></div><div class="fc-back">Cách AI đọc 1 câu vẫn NHỚ TOÀN BỘ trước đó — giống bạn đọc chương 5 vẫn nhớ tên nhân vật chương 1.</div></div></div>
     <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Model</div><div class="fc-vi">Phiên bản AI</div></div><div class="fc-back">Cuốn sổ tay bí kíp — AI đúc kết quy tắc lưu vào "sổ". GPT-4 là 1 model, Claude Opus là 1 model khác.</div></div></div>
     <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">LLM</div><div class="fc-vi">Mô hình Ngôn ngữ Lớn</div></div><div class="fc-back">Siêu mọt sách khổng lồ đã đọc hết cả thư viện. ChatGPT/Gemini/Claude đều là LLM.</div></div></div>
-    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Token</div><div class="fc-vi">Đơn vị AI cắt câu</div></div><div class="fc-back">Mảnh ghép Lego. AI cắn câu em thành token. "Em yêu mẹ" ≈ 3 token.</div></div></div>
-    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Hallucination</div><div class="fc-vi">Ảo giác AI</div></div><div class="fc-back">AI bịa thông tin sai tự tin — vì sợ làm em thất vọng, không dám nói "không biết".</div></div></div>
-    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Bias</div><div class="fc-vi">Thiên kiến AI</div></div><div class="fc-back">Em chỉ chơi 1 nhóm bạn nên nghĩ TẤT CẢ HS như nhóm đó. AI có thể nghĩ "lập trình viên = nam".</div></div></div>
+    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Token</div><div class="fc-vi">Đơn vị AI cắt câu</div></div><div class="fc-back">Mảnh ghép Lego. AI cắt câu của bạn thành token. "Em yêu mẹ" ≈ 3 token.</div></div></div>
+    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Hallucination</div><div class="fc-vi">Ảo giác AI</div></div><div class="fc-back">AI bịa thông tin sai tự tin — vì sợ làm bạn thất vọng, không dám nói "không biết".</div></div></div>
+    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Bias</div><div class="fc-vi">Thiên kiến AI</div></div><div class="fc-back">Bạn chỉ chơi 1 nhóm bạn nên nghĩ TẤT CẢ HS như nhóm đó. AI có thể nghĩ "lập trình viên = nam".</div></div></div>
     <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">RAG</div><div class="fc-vi">Truy xuất tăng cường</div></div><div class="fc-back">Như làm bài thi MỞ SÁCH — đọc tài liệu rồi trả lời, không trả lời từ trí nhớ. NotebookLM dùng RAG.</div></div></div>
     <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">AGI</div><div class="fc-vi">Trí tuệ Nhân tạo Tổng quát</div></div><div class="fc-back">AI thông minh ngang con người ở MỌI LĨNH VỰC. CHƯA TỒN TẠI — chỉ là MƠ ƯỚC.</div></div></div>
   </div>
@@ -1990,19 +2077,19 @@ tại sân vận động Mỹ Đình."
 
 <div class="slide-body">
   <span class="eyebrow">REFLECTION VỀ TỪ VỰNG</span>
-  <h2 class="slide-title">Thuật ngữ nào em ghi nhớ nhất?</h2>
+  <h2 class="slide-title">Thuật ngữ nào bạn ghi nhớ nhất?</h2>
   <div class="qbox qbox-purple">
     <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #5</div>
     <div class="qbox-content">
-      Trong 10 thuật ngữ trên — thuật ngữ nào em thấy GIÚP EM HIỂU NHẤT? Thuật ngữ nào em VẪN CHƯA HIỂU dù đọc ẩn dụ?
+      Trong 10 thuật ngữ trên — thuật ngữ nào bạn thấy GIÚP BẠN HIỂU NHẤT? Thuật ngữ nào bạn VẪN CHƯA HIỂU dù đọc ẩn dụ?
     </div>
     <div class="nb-input-wrap">
-      <label>Em hiểu nhất / chưa hiểu:</label>
-      <textarea class="nb-input" data-nb-id="5" placeholder="Em hiểu nhất: ... | Chưa hiểu: ..."></textarea>
+      <label>Bạn hiểu nhất / chưa hiểu:</label>
+      <textarea class="nb-input" data-nb-id="5" placeholder="Bạn hiểu nhất: ... | Chưa hiểu: ..."></textarea>
       <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
     </div>
     <div class="qbox-tip">
-      <span class="qbox-tip-label">Mục đích:</span>Em đem câu hỏi "chưa hiểu" đến Buổi 2 hỏi GV — không sợ ngại. Mỗi thuật ngữ CHƯA HIỂU = 1 cơ hội học sâu.
+      <span class="qbox-tip-label">Mục đích:</span>Bạn đem câu hỏi "chưa hiểu" đến Buổi 2 hỏi GV — không sợ ngại. Mỗi thuật ngữ CHƯA HIỂU = 1 cơ hội học sâu.
     </div>
   </div>
 </div>
@@ -2012,9 +2099,9 @@ tại sân vận động Mỹ Đình."
 
 <div class="slide-body">
   <span class="eyebrow">CÂU HỎI TỰ KIỂM TRA — KHÔNG NỘP</span>
-  <h2 class="slide-title">Em nắm đến đâu?</h2>
+  <h2 class="slide-title">Bạn nắm đến đâu?</h2>
   <div class="quiz" data-correct="0" data-explanation="Đúng! Viết bài thơ về mùa hè là SINH RA NỘI DUNG MỚI → Generative AI.">
-    <p class="quiz-q">Câu 1: Khi em bảo "AI hãy viết cho mình một bài thơ về mùa hè" — đây là AI loại nào?</p>
+    <p class="quiz-q">Câu 1: Khi bạn bảo "AI hãy viết cho mình một bài thơ về mùa hè" — đây là AI loại nào?</p>
     <div class="quiz-opts">
       <button class="quiz-opt" data-index="0">Generative AI</button>
       <button class="quiz-opt" data-index="1">Predictive AI</button>
@@ -2029,9 +2116,9 @@ tại sân vận động Mỹ Đình."
 
 <div class="slide-body">
   <span class="eyebrow">CÂU HỎI TỰ KIỂM TRA — #2</span>
-  <h2 class="slide-title">TikTok gợi ý em — AI loại nào?</h2>
-  <div class="quiz" data-correct="1" data-explanation="Đúng! TikTok ĐOÁN em sẽ thích video gì dựa trên lịch sử → Predictive AI.">
-    <p class="quiz-q">Câu 2: TikTok gợi ý em video bóng đá liên tục — đây là AI loại nào?</p>
+  <h2 class="slide-title">TikTok gợi ý bạn — AI loại nào?</h2>
+  <div class="quiz" data-correct="1" data-explanation="Đúng! TikTok ĐOÁN bạn sẽ thích video gì dựa trên lịch sử → Predictive AI.">
+    <p class="quiz-q">Câu 2: TikTok gợi ý bạn video bóng đá liên tục — đây là AI loại nào?</p>
     <div class="quiz-opts">
       <button class="quiz-opt" data-index="0">Generative AI</button>
       <button class="quiz-opt" data-index="1">Predictive AI</button>
@@ -2046,9 +2133,9 @@ tại sân vận động Mỹ Đình."
 
 <div class="slide-body">
   <span class="eyebrow">CÂU HỎI TỰ KIỂM TRA — #3</span>
-  <h2 class="slide-title">Em gặp Hallucination — phải làm gì?</h2>
-  <div class="quiz" data-correct="2" data-explanation="Đúng! Khi gặp hallucination — em PHẢI KIỂM CHỨNG bằng sách, thầy cô, hoặc AI khác.">
-    <p class="quiz-q">Câu 3: Em phải làm gì khi gặp hallucination (AI nói sai)?</p>
+  <h2 class="slide-title">Bạn gặp Hallucination — phải làm gì?</h2>
+  <div class="quiz" data-correct="2" data-explanation="Đúng! Khi gặp hallucination — bạn PHẢI KIỂM CHỨNG bằng sách, thầy cô, hoặc AI khác.">
+    <p class="quiz-q">Câu 3: Bạn phải làm gì khi gặp hallucination (AI nói sai)?</p>
     <div class="quiz-opts">
       <button class="quiz-opt" data-index="0">Tin AI vì nó nói tự tin</button>
       <button class="quiz-opt" data-index="1">Bỏ qua, không quan tâm</button>
@@ -2100,11 +2187,11 @@ tại sân vận động Mỹ Đình."
   <div class="qbox qbox-blue">
     <div class="qbox-header"><div class="qbox-icon">?</div>CÂU CHUẨN BỊ #3 — Trước Buổi 2</div>
     <div class="qbox-content">
-      Buổi 2 sẽ học cách HỎI AI hiệu quả. Em hãy nghĩ trước:<br><br>
-      "<em>Trong BTVN, câu trả lời nào của AI em CẢM THẤY CHƯA HÀI LÒNG? Vì sao em nghĩ AI trả lời tệ — do em hỏi chưa rõ, hay do AI dở?</em>"
+      Buổi 2 sẽ học cách HỎI AI hiệu quả. Bạn hãy nghĩ trước:<br><br>
+      "<em>Trong BTVN, câu trả lời nào của AI bạn CẢM THẤY CHƯA HÀI LÒNG? Vì sao bạn nghĩ AI trả lời tệ — do bạn hỏi chưa rõ, hay do AI dở?</em>"
     </div>
     <div class="qbox-tip">
-      <span class="qbox-tip-label">Sẵn sàng cho Buổi 2:</span>Sẽ dạy framework RCTFE (Role-Context-Task-Format-Example). Em đến với CÂU HỎI CHƯA TỐT → buổi 2 sẽ NÂNG CẤP nó.
+      <span class="qbox-tip-label">Sẵn sàng cho Buổi 2:</span>Sẽ dạy framework RCTFE (Role-Context-Task-Format-Example). Bạn đến với CÂU HỎI CHƯA TỐT → buổi 2 sẽ NÂNG CẤP nó.
     </div>
   </div>
 </div>
@@ -2117,14 +2204,14 @@ tại sân vận động Mỹ Đình."
 <div class="cover-orb orb-3"></div>
 <div class="cover-content slide-body">
   <span class="eyebrow">HẾT BUỔI 1</span>
-  <h1 class="hero-title">Hẹn em ở Buổi 2<br/><span class="grad-text">Prompt Engineering RCTFE</span></h1>
-  <p class="slide-subtitle" style="font-size: 1.1rem;">Em đã có nền tảng — Buổi 2 sẽ học <strong style="color:#FBBF24;">khung RCTFE</strong> để hỏi AI như chuyên gia. Buổi 4 — em hoàn thành <strong style="color:#FBBF24;">APP-3.1</strong> đầu tiên!</p>
+  <h1 class="hero-title">Hẹn bạn ở Buổi 2<br/><span class="grad-text">Prompt Engineering RCTFE</span></h1>
+  <p class="slide-subtitle" style="font-size: 1.1rem;">Bạn đã có nền tảng — Buổi 2 sẽ học <strong style="color:#FBBF24;">khung RCTFE</strong> để hỏi AI như chuyên gia. Buổi 4 — bạn hoàn thành <strong style="color:#FBBF24;">APP-3.1</strong> đầu tiên!</p>
   <div class="cover-chips">
     <span class="cover-chip">Mang laptop có sẵn 3 tài khoản</span>
     <span class="cover-chip">Đem Sổ Tay</span>
     <span class="cover-chip">Nộp BTVN trước Buổi 2</span>
   </div>
-  <p style="margin-top:2rem;color:rgba(255,255,255,0.85);font-size:1rem;">Cảm ơn các em đã tham gia Buổi 1!</p>
+  <p style="margin-top:2rem;color:rgba(255,255,255,0.85);font-size:1rem;">Cảm ơn bạn đã tham gia Buổi 1!</p>
 </div>
 
     </section>
@@ -2217,11 +2304,11 @@ function toggleSidebar() {
 }
 
 const NB_QUESTIONS = {
-  1: { title: 'SỔ TAY #1 — Đầu buổi', q: 'Cảm xúc của em khi bắt đầu khoá AI (1 từ)' },
-  2: { title: 'SỔ TAY #2 — Lĩnh vực đợi', q: 'Trong 6 lĩnh vực AI, em đợi nhất lĩnh vực nào? Vì sao?' },
-  3: { title: 'SỔ TAY #3 — Critical thinking', q: '1 lần em gặp thông tin sai từ AI/Google/Facebook trong tuần qua' },
-  4: { title: 'SỔ TAY #4 — Cuối buổi', q: 'Cảm xúc của em LÚC NÀY (so với đầu buổi)' },
-  5: { title: 'SỔ TAY #5 — Từ vựng', q: 'Thuật ngữ em hiểu nhất / chưa hiểu' }
+  1: { title: 'SỔ TAY #1 — Đầu buổi', q: 'Cảm xúc của bạn khi bắt đầu khoá AI (1 từ)' },
+  2: { title: 'SỔ TAY #2 — Lĩnh vực đợi', q: 'Trong 6 lĩnh vực AI, bạn đợi nhất lĩnh vực nào? Vì sao?' },
+  3: { title: 'SỔ TAY #3 — Critical thinking', q: '1 lần bạn gặp thông tin sai từ AI/Google/Facebook trong tuần qua' },
+  4: { title: 'SỔ TAY #4 — Cuối buổi', q: 'Cảm xúc của bạn LÚC NÀY (so với đầu buổi)' },
+  5: { title: 'SỔ TAY #5 — Từ vựng', q: 'Thuật ngữ bạn hiểu nhất / chưa hiểu' }
 };
 
 function initNotebookInputs() {
@@ -2267,7 +2354,7 @@ function exportNotebook() {
     const info = NB_QUESTIONS[i];
     txt += '--- ' + info.title + ' ---\n';
     txt += 'Câu hỏi: ' + info.q + '\n';
-    txt += 'Em trả lời: ' + (data[i] || '(chưa viết)') + '\n\n';
+    txt += 'Bạn trả lời: ' + (data[i] || '(chưa viết)') + '\n\n';
   }
   txt += '=== KẾT THÚC ===\n';
   const blob = new Blob([txt], { type: 'text/plain;charset=utf-8' });
@@ -2279,7 +2366,7 @@ function exportNotebook() {
 }
 
 function clearNotebook() {
-  if (confirm('Em có chắc muốn xoá toàn bộ Sổ Tay không?')) {
+  if (confirm('Bạn có chắc muốn xoá toàn bộ Sổ Tay không?')) {
     localStorage.removeItem(STORAGE_KEY);
     document.querySelectorAll('.nb-input').forEach(i => i.value = '');
     openNotebook();
@@ -2395,7 +2482,7 @@ function handleDrop(item, bucket) {
   if (isCorrect) gameCorrect++;
   if (gameDroppedCount === gameTotal) {
     const score = document.getElementById('gameScore');
-    document.getElementById('gameScoreText').innerHTML = 'Điểm em: <strong style="font-size:1.3rem;color:' + (gameCorrect === gameTotal ? '#10B981' : '#F59E0B') + ';">' + gameCorrect + ' / ' + gameTotal + '</strong>' + (gameCorrect === gameTotal ? ' — Xuất sắc!' : ' — Cố lên nhé!');
+    document.getElementById('gameScoreText').innerHTML = 'Điểm của bạn: <strong style="font-size:1.3rem;color:' + (gameCorrect === gameTotal ? '#10B981' : '#F59E0B') + ';">' + gameCorrect + ' / ' + gameTotal + '</strong>' + (gameCorrect === gameTotal ? ' — Xuất sắc!' : ' — Cố lên nhé!');
     score.style.display = 'block';
   }
 }
