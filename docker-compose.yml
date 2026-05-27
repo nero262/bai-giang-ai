@@ -1,0 +1,33 @@
+# =====================================================================
+# Bài Giảng AI — Docker Compose
+# Khởi động bằng: docker compose up -d
+# =====================================================================
+services:
+  app:
+    build:
+      context: .
+      dockerfile: deployment/docker/Dockerfile
+    image: bai-giang-ai:latest
+    container_name: bai_giang_app
+    restart: unless-stopped
+    ports:
+      - "${APP_PORT:-8000}:8000"
+    environment:
+      - APP_NAME=${APP_NAME:-Khóa AI 24 buổi}
+      - DEBUG=${DEBUG:-false}
+      - CORS_ORIGINS=${CORS_ORIGINS:-*}
+    volumes:
+      # Mount slides để cập nhật nội dung không cần rebuild
+      - ./slides:/home/app/bai_giang/slides:ro
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8000/api/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    networks:
+      - bai-giang-net
+
+networks:
+  bai-giang-net:
+    driver: bridge
