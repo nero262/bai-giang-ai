@@ -69,7 +69,7 @@
     "module_name": "Second Brain",
     "duration_min": 120,
     "file": "buoi_05.html",
-    "available": false,
+    "available": true,
     "description": "Cài Obsidian, tạo Vault, tổ chức theo PARA (Projects/Areas/Resources/Archives), viết note Markdown và liên kết kiến thức bằng [[wikilink]] + Graph View.",
     "tags": [
       "obsidian",
@@ -87,7 +87,7 @@
     "module_name": "Second Brain",
     "duration_min": 120,
     "file": "buoi_06.html",
-    "available": false,
+    "available": true,
     "description": "Cho AI đọc Vault (RAG) bằng NotebookLM và Gemini Copilot; dùng prompt mẫu để AI tóm tắt bài và sinh Quiz/Đề; tạo Lộ trình có 'Ngày bắt đầu'.",
     "tags": [
       "rag",
@@ -105,7 +105,7 @@
     "module_name": "Second Brain",
     "duration_min": 120,
     "file": "buoi_07.html",
-    "available": false,
+    "available": true,
     "description": "Hoàn thành APP-3.2: web app đọc Vault qua File System Access API, tự rải Lịch trình từ Plan, Dashboard thống kê và Study Hub làm Quiz chấm điểm tại chỗ.",
     "tags": [
       "app",
