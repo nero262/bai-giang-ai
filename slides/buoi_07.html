@@ -1,0 +1,1783 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Buổi 7 — Hoàn thành APP-3.2 — Lịch ôn tập</title>
+<link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  /* Modern Tech palette — Blue + Slate (clean, professional) — giữ từ buoi_01.html gốc */
+  --bg: #0F172A;
+  --bg-light: #1E293B;
+  --surface: #FFFFFF;
+  --surface-alt: #F1F5F9;
+  --surface-2: #E2E8F0;
+  --border: #E2E8F0;
+  --text: #0F172A;
+  --text-light: #FFFFFF;
+  --text-muted: #94A3B8;
+  --text-dim: #475569;
+
+  --primary: #2563EB;        /* Royal Blue */
+  --primary-light: #3B82F6;
+  --primary-dark: #1D4ED8;
+  --accent: #06B6D4;         /* Cyan accent */
+  --success: #059669;
+  --warning: #D97706;
+  --danger: #DC2626;
+
+  /* 4 loại câu hỏi — dịu mắt, đồng bộ */
+  --box-blue: #EFF6FF; --box-blue-border: #2563EB; --box-blue-dark: #1E3A8A;
+  --box-yellow: #FFFBEB; --box-yellow-border: #D97706; --box-yellow-dark: #78350F;
+  --box-purple: #EEF2FF; --box-purple-border: #6366F1; --box-purple-dark: #3730A3;
+  --box-orange: #FFF7ED; --box-orange-border: #EA580C; --box-orange-dark: #7C2D12;
+
+  /* Gradient hệ Blue-Cyan */
+  --grad-primary: linear-gradient(135deg, #2563EB 0%, #0EA5E9 100%);
+  --grad-blue: linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%);
+  --grad-yellow: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+  --grad-purple: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+  --grad-orange: linear-gradient(135deg, #EA580C 0%, #F97316 100%);
+  --grad-success: linear-gradient(135deg, #059669 0%, #06B6D4 100%);
+  --grad-cover: linear-gradient(135deg, #0F172A 0%, #1E40AF 60%, #0EA5E9 100%);
+
+  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+  --shadow-md: 0 2px 8px rgba(15, 23, 42, 0.08);
+  --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.12);
+
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+
+  --font: 'Be Vietnam Pro', -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+}
+
+*:focus { outline: none; }
+:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; border-radius: 6px; }
+
+html, body { height: 100%; overflow: hidden; }
+body { font-family: var(--font); background: var(--surface-alt); color: var(--text); line-height: 1.6; }
+
+.app { display: flex; height: 100vh; position: relative; }
+
+/* SIDEBAR */
+.sidebar {
+  width: 280px; background: var(--bg); color: white;
+  padding: 1.5rem 1rem; overflow-y: auto;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  flex-shrink: 0; z-index: 50;
+  scrollbar-width: thin; scrollbar-color: #475569 #1E293B;
+}
+.app.sidebar-collapsed .sidebar { transform: translateX(-280px); position: absolute; height: 100vh; }
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-track { background: #1E293B; }
+.sidebar::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
+
+.sidebar-brand {
+  display: flex; align-items: center; gap: 0.6rem;
+  padding-bottom: 1rem; border-bottom: 1px solid #1E293B; margin-bottom: 1rem;
+}
+.brand-logo {
+  width: 36px; height: 36px; background: var(--grad-primary);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 1rem; color: white;
+}
+.brand-text { font-size: 0.95rem; font-weight: 700; }
+.brand-sub { font-size: 0.72rem; color: var(--text-muted); }
+
+.module-section { margin-bottom: 1rem; }
+.module-title {
+  font-size: 0.7rem; font-weight: 700; color: var(--primary-light);
+  letter-spacing: 0.12em; text-transform: uppercase;
+  padding: 0.5rem 0.5rem; display: flex; align-items: center; gap: 0.4rem;
+}
+.module-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary-light); }
+
+.lesson-item {
+  display: flex; align-items: center; gap: 0.5rem;
+  padding: 0.55rem 0.7rem; border-radius: 8px;
+  font-size: 0.82rem; color: var(--text-muted);
+  cursor: pointer; transition: all 0.2s;
+  margin-bottom: 2px; text-decoration: none; position: relative;
+}
+.lesson-item:hover:not(.disabled) { background: rgba(99, 102, 241, 0.1); color: white; }
+.lesson-item.active { background: var(--grad-primary); color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
+.lesson-item.disabled { color: #475569; cursor: not-allowed; opacity: 0.55; }
+.lesson-item.disabled::after { content: 'Sắp ra mắt'; margin-left: auto; font-size: 0.62rem; background: #1E293B; padding: 1px 6px; border-radius: 100px; color: #64748B; }
+.lesson-item.active::after { content: 'Đang học'; margin-left: auto; font-size: 0.62rem; background: rgba(255,255,255,0.25); padding: 1px 6px; border-radius: 100px; color: white; }
+.lesson-num {
+  width: 22px; height: 22px; border-radius: 50%; background: #1E293B;
+  display: inline-flex; align-items: center; justify-content: center;
+  font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
+}
+.lesson-item.active .lesson-num { background: rgba(255,255,255,0.2); }
+
+/* MAIN */
+.main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
+
+.top-bar {
+  padding: 0.75rem 1.5rem; background: white;
+  border-bottom: 1px solid #E2E8F0; display: flex;
+  align-items: center; justify-content: space-between;
+  flex-shrink: 0; position: relative; z-index: 10;
+}
+.top-collapse-btn {
+  background: var(--surface-alt); border: 1px solid #E2E8F0;
+  width: 36px; height: 36px; border-radius: 8px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem; color: var(--text);
+}
+.top-collapse-btn:hover { background: #E2E8F0; }
+.top-title { display: flex; align-items: center; gap: 0.7rem; }
+.lesson-badge { background: var(--grad-primary); color: white; padding: 0.3rem 0.8rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; }
+.top-title-text { font-weight: 700; font-size: 1rem; }
+.top-actions { display: flex; gap: 0.5rem; align-items: center; }
+.btn-action {
+  background: var(--surface-alt); border: 1px solid #E2E8F0;
+  padding: 0.4rem 0.9rem; border-radius: 8px; cursor: pointer;
+  font-family: inherit; font-size: 0.82rem; color: var(--text);
+  display: flex; align-items: center; gap: 0.3rem; font-weight: 500;
+}
+.btn-action:hover { background: #E2E8F0; }
+.btn-action.notebook { background: var(--grad-purple); color: white; border: none; }
+.btn-action.notebook:hover { transform: translateY(-1px); }
+
+.progress-track { height: 3px; background: #E2E8F0; position: relative; }
+.progress-fill { height: 100%; background: var(--grad-primary); width: 0; transition: width 0.4s ease; }
+
+.slides-container { flex: 1; position: relative; overflow: hidden; }
+.slide {
+  position: absolute; inset: 0; padding: 2rem 4%;
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  opacity: 0; visibility: hidden; transform: translateX(50px);
+  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  overflow-y: auto;
+}
+.slide.active { opacity: 1; visibility: visible; transform: translateX(0); }
+.slide-body { width: 100%; max-width: 1100px; padding: 1rem 0; }
+
+.eyebrow {
+  display: inline-block; font-size: 0.75rem; font-weight: 700;
+  letter-spacing: 0.15em; text-transform: uppercase; color: var(--primary);
+  padding: 0.35rem 0.9rem; background: rgba(99, 102, 241, 0.1);
+  border-radius: 100px; margin-bottom: 1.2rem;
+}
+.hero-title {
+  font-size: clamp(2rem, 5vw, 4rem); font-weight: 900;
+  line-height: 1.08; letter-spacing: -0.025em;
+  margin-bottom: 1.2rem; text-align: center;
+}
+.hero-title .grad-text {
+  background: var(--grad-primary); -webkit-background-clip: text;
+  background-clip: text; -webkit-text-fill-color: transparent;
+}
+.slide-title {
+  font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800;
+  letter-spacing: -0.02em; margin-bottom: 1.2rem; text-align: center;
+}
+.slide-subtitle {
+  font-size: clamp(0.95rem, 1.4vw, 1.15rem); color: var(--text-dim);
+  text-align: center; margin-bottom: 1.5rem;
+  max-width: 700px; margin-left: auto; margin-right: auto;
+}
+
+/* COVER SLIDE */
+.slide-cover { background: var(--bg); color: white; overflow: hidden; }
+.slide-cover .hero-title { color: white; }
+.slide-cover .eyebrow { color: white; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); }
+.slide-cover .slide-subtitle { color: rgba(255,255,255,0.9); }
+.cover-orb {
+  position: absolute; border-radius: 50%;
+  filter: blur(80px); opacity: 0.6; pointer-events: none;
+}
+.cover-orb.orb-1 { width: 400px; height: 400px; background: #6366F1; top: -100px; left: -100px; }
+.cover-orb.orb-2 { width: 350px; height: 350px; background: #EC4899; bottom: -100px; right: -100px; }
+.cover-orb.orb-3 { width: 300px; height: 300px; background: #8B5CF6; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.3; }
+.cover-content { position: relative; z-index: 2; text-align: center; }
+.cover-chips { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
+.cover-chip {
+  background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
+  border: 1px solid rgba(255,255,255,0.15); color: white;
+  padding: 0.5rem 1.1rem; border-radius: 100px;
+  font-size: 0.85rem; font-weight: 500;
+}
+
+/* QUESTION BOXES */
+.qbox {
+  border-radius: 16px; padding: 1.3rem 1.5rem;
+  margin: 1rem 0; width: 100%; max-width: 800px;
+  position: relative; border-left: 5px solid;
+}
+.qbox-header {
+  display: flex; align-items: center; gap: 0.5rem;
+  font-weight: 700; font-size: 0.78rem; letter-spacing: 0.08em;
+  text-transform: uppercase; margin-bottom: 0.7rem;
+}
+.qbox-icon {
+  width: 28px; height: 28px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem; font-weight: 900; color: white;
+}
+.qbox-content { font-size: 0.98rem; line-height: 1.55; font-weight: 500; }
+.qbox-tip {
+  margin-top: 0.7rem; padding-top: 0.7rem;
+  border-top: 1px dashed currentColor;
+  font-size: 0.85rem; opacity: 0.85;
+}
+.qbox-tip-label { font-weight: 700; margin-right: 0.3rem; }
+.qbox-blue { background: var(--box-blue); border-left-color: var(--box-blue-border); color: var(--box-blue-dark); }
+.qbox-blue .qbox-icon { background: var(--box-blue-border); }
+.qbox-yellow { background: var(--box-yellow); border-left-color: var(--box-yellow-border); color: var(--box-yellow-dark); }
+.qbox-yellow .qbox-icon { background: var(--box-yellow-border); }
+.qbox-purple { background: var(--box-purple); border-left-color: var(--box-purple-border); color: var(--box-purple-dark); }
+.qbox-purple .qbox-icon { background: var(--box-purple-border); }
+.qbox-orange { background: var(--box-orange); border-left-color: var(--box-orange-border); color: var(--box-orange-dark); }
+.qbox-orange .qbox-icon { background: var(--box-orange-border); }
+
+/* NOTEBOOK INPUT */
+.nb-input-wrap {
+  margin-top: 1rem; background: white;
+  border-radius: 12px; padding: 1rem;
+  border: 2px dashed var(--box-purple-border);
+}
+.nb-input-wrap label {
+  display: block; font-size: 0.78rem; font-weight: 700;
+  color: var(--box-purple-dark); letter-spacing: 0.05em;
+  margin-bottom: 0.5rem; text-transform: uppercase;
+}
+.nb-input {
+  width: 100%; border: none; outline: none;
+  font-family: inherit; font-size: 0.95rem;
+  padding: 0.5rem 0; background: transparent;
+  color: var(--text); resize: vertical; min-height: 50px;
+}
+.nb-save-status {
+  font-size: 0.75rem; color: var(--success);
+  font-weight: 500; margin-top: 0.4rem; display: none;
+}
+.nb-save-status.show { display: block; }
+
+/* CARDS */
+.card-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem; width: 100%; margin-top: 1rem;
+}
+.card {
+  background: white; border-radius: 14px; padding: 1.2rem;
+  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06); transition: all 0.3s;
+}
+.card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1); }
+.card-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: var(--grad-primary); color: white;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 900; font-size: 1rem; margin-bottom: 0.7rem;
+}
+.card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; letter-spacing: -0.01em; }
+.card p { font-size: 0.86rem; color: var(--text-dim); line-height: 1.5; }
+
+/* COMPARE TABLE */
+.cmp-table {
+  width: 100%; border-collapse: separate; border-spacing: 0;
+  background: white; border-radius: 14px; overflow: hidden;
+  margin-top: 1rem; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+}
+.cmp-table th, .cmp-table td {
+  padding: 0.85rem 1rem; text-align: left;
+  border-bottom: 1px solid #F1F5F9; font-size: 0.92rem;
+}
+.cmp-table th { font-weight: 700; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; }
+.cmp-table th:first-child { background: var(--surface-alt); color: var(--text-dim); }
+.cmp-table th:nth-child(2) { background: #FFF3E0; color: #C2410C; }
+.cmp-table th:nth-child(3) { background: #DCFCE7; color: #15803D; }
+.cmp-table td:first-child { font-weight: 600; background: var(--surface-alt); color: var(--text-dim); font-size: 0.85rem; }
+.cmp-table tr:last-child td { border-bottom: none; }
+
+/* DRAG-DROP GAME */
+.game-area { width: 100%; margin-top: 1rem; }
+.game-items {
+  display: flex; flex-wrap: wrap; gap: 0.6rem;
+  justify-content: center; padding: 1rem;
+  background: var(--surface-alt); border-radius: 14px;
+  min-height: 80px; margin-bottom: 1rem;
+}
+.draggable {
+  background: white; padding: 0.6rem 1.1rem; border-radius: 100px;
+  cursor: grab; font-size: 0.88rem; font-weight: 500;
+  border: 2px solid #E2E8F0; transition: all 0.2s;
+  user-select: none; touch-action: none; position: relative;
+}
+.draggable:active { cursor: grabbing; transform: scale(1.05); }
+.draggable.dragging { opacity: 0.5; }
+.draggable.dropped { display: none; }
+.tap-picker {
+  position: absolute; top: calc(100% + 4px); left: 50%;
+  transform: translateX(-50%); display: flex; gap: 4px;
+  background: var(--bg); padding: 4px; border-radius: 100px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 10;
+}
+.tap-pick { border: none; padding: 6px 12px; border-radius: 100px; font-size: 0.78rem; font-weight: 600; cursor: pointer; font-family: inherit; }
+.tap-pick.predictive { background: #FB923C; color: white; }
+.tap-pick.generative { background: #34D399; color: white; }
+.game-buckets { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.bucket {
+  background: white; border-radius: 14px; padding: 1.2rem;
+  min-height: 160px; border: 2px dashed #E2E8F0; transition: all 0.2s;
+}
+.bucket.predictive { border-color: #FB923C; background: #FFF7ED; }
+.bucket.generative { border-color: #34D399; background: #ECFDF5; }
+.bucket.drag-over { border-style: solid; transform: scale(1.02); }
+.bucket-title { font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
+.bucket.predictive .bucket-title { color: #C2410C; }
+.bucket.generative .bucket-title { color: #15803D; }
+.bucket-zone { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.dropped-item {
+  background: white; padding: 0.4rem 0.9rem; border-radius: 100px;
+  font-size: 0.82rem; font-weight: 500; border: 1px solid currentColor;
+}
+.dropped-item.correct { background: #DCFCE7; color: #15803D; border-color: #15803D; }
+.dropped-item.wrong { background: #FEE2E2; color: #B91C1C; border-color: #B91C1C; }
+.game-score { margin-top: 1rem; text-align: center; font-weight: 600; font-size: 0.95rem; color: var(--primary); }
+.btn-restart { margin-top: 0.5rem; background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 600; }
+
+/* QUIZ */
+.quiz {
+  background: white; border-radius: 16px; padding: 1.5rem;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+  width: 100%; max-width: 750px; margin-top: 0.5rem;
+}
+.quiz-q { font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.4; }
+.quiz-opts { counter-reset: opts; display: flex; flex-direction: column; gap: 0.5rem; }
+.quiz-opt {
+  padding: 0.85rem 1.1rem; border: 2px solid #E2E8F0;
+  border-radius: 10px; background: white; cursor: pointer;
+  text-align: left; font-size: 0.95rem; font-family: inherit;
+  transition: all 0.2s; display: flex; align-items: center; gap: 0.7rem;
+}
+.quiz-opt::before {
+  counter-increment: opts; content: counter(opts, upper-alpha);
+  width: 24px; height: 24px; border-radius: 50%; background: #F1F5F9;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; font-size: 0.78rem; color: var(--text-dim); flex-shrink: 0;
+}
+.quiz-opt:hover { border-color: var(--primary); background: #F5F7FF; }
+.quiz-opt:hover::before { background: var(--primary); color: white; }
+.quiz-opt.correct { border-color: var(--success); background: #ECFDF5; }
+.quiz-opt.correct::before { background: var(--success); color: white; }
+.quiz-opt.wrong { border-color: var(--danger); background: #FEF2F2; }
+.quiz-opt.wrong::before { background: var(--danger); color: white; }
+.quiz-opt.disabled { pointer-events: none; opacity: 0.6; }
+.quiz-fb { margin-top: 1rem; padding: 0.9rem; border-radius: 10px; font-weight: 500; font-size: 0.9rem; display: none; }
+.quiz-fb.show { display: block; }
+.quiz-fb.correct { background: #ECFDF5; color: #065F46; border-left: 4px solid var(--success); }
+.quiz-fb.wrong { background: #FEF2F2; color: #B91C1C; border-left: 4px solid var(--danger); }
+
+/* FLASHCARD */
+.fc-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.8rem; margin-top: 1rem; width: 100%;
+}
+.fc { perspective: 1000px; height: 150px; cursor: pointer; }
+.fc-inner {
+  position: relative; width: 100%; height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.fc.flipped .fc-inner { transform: rotateY(180deg); }
+.fc-front, .fc-back {
+  position: absolute; inset: 0; backface-visibility: hidden;
+  border-radius: 14px; padding: 1rem;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; text-align: center;
+}
+.fc-front { background: white; border: 2px solid #E2E8F0; }
+.fc-front .fc-term { font-weight: 800; font-size: 1.05rem; color: var(--primary); letter-spacing: 0.02em; }
+.fc-front .fc-vi { font-size: 0.82rem; color: var(--text-dim); margin-top: 0.3rem; }
+.fc-back { background: var(--grad-primary); color: white; transform: rotateY(180deg); font-size: 0.85rem; line-height: 1.4; }
+
+/* STEPS */
+.steps { list-style: none; counter-reset: step; width: 100%; max-width: 800px; margin-top: 1rem; }
+.steps li {
+  counter-increment: step;
+  padding: 0.85rem 1.2rem 0.85rem 3.8rem;
+  position: relative; background: white;
+  border-radius: 12px; margin-bottom: 0.5rem;
+  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+  font-size: 0.94rem; line-height: 1.5;
+}
+.steps li::before {
+  content: counter(step); position: absolute;
+  left: 0.85rem; top: 50%; transform: translateY(-50%);
+  width: 36px; height: 36px; background: var(--grad-primary);
+  color: white; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: 1rem;
+}
+.steps li code { background: #F1F5F9; padding: 0.1rem 0.4rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.85em; color: var(--primary); }
+
+/* HIGHLIGHT BOX */
+.hl-box {
+  background: linear-gradient(135deg, #FEF3C7 0%, #FED7AA 100%);
+  border-radius: 14px; padding: 1.1rem 1.3rem;
+  margin: 1rem 0; width: 100%; max-width: 800px;
+  border-left: 4px solid var(--warning);
+}
+.hl-box.danger { background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%); border-left-color: var(--danger); }
+.hl-box.success { background: linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%); border-left-color: var(--success); }
+.hl-box.info { background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%); border-left-color: #3B82F6; }
+.hl-label { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.4rem; text-transform: uppercase; }
+.hl-box p { font-size: 0.95rem; }
+
+/* TIMELINE */
+.timeline { position: relative; padding-left: 2rem; margin-top: 1rem; width: 100%; max-width: 850px; }
+.timeline::before {
+  content: ''; position: absolute; left: 9px; top: 0; bottom: 0;
+  width: 3px; background: linear-gradient(to bottom, var(--primary-light), var(--accent));
+  border-radius: 100px;
+}
+.tl-item { position: relative; padding-bottom: 1rem; }
+.tl-dot {
+  position: absolute; left: -1.85rem; top: 0.4rem;
+  width: 16px; height: 16px; background: white;
+  border: 3px solid var(--primary); border-radius: 50%;
+}
+.tl-content { background: white; padding: 0.85rem 1.1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05); }
+.tl-year { font-size: 0.78rem; font-weight: 800; color: var(--primary); letter-spacing: 0.05em; }
+.tl-title { font-weight: 700; font-size: 0.95rem; margin: 0.2rem 0; }
+.tl-desc { font-size: 0.86rem; color: var(--text-dim); line-height: 1.5; }
+
+/* MODULE ROADMAP */
+.modmap { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; width: 100%; margin-top: 1rem; max-width: 1000px; }
+@media (max-width: 768px) { .modmap { grid-template-columns: repeat(3, 1fr); } }
+.modmap-item { background: white; border-radius: 14px; padding: 0.9rem 0.6rem; text-align: center; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); position: relative; border-top: 3px solid; }
+.modmap-item:nth-child(1) { border-top-color: #10B981; }
+.modmap-item:nth-child(2) { border-top-color: #3B82F6; }
+.modmap-item:nth-child(3) { border-top-color: #F59E0B; }
+.modmap-item:nth-child(4) { border-top-color: #F97316; }
+.modmap-item:nth-child(5) { border-top-color: #A855F7; }
+.modmap-item:nth-child(6) { border-top-color: #10B981; }
+.modmap-mod { font-size: 0.7rem; font-weight: 800; color: var(--primary); letter-spacing: 0.08em; }
+.modmap-name { font-size: 0.88rem; font-weight: 700; margin: 0.2rem 0; }
+.modmap-buoi { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.4rem; }
+.modmap-out { font-size: 0.72rem; color: var(--text); line-height: 1.3; }
+
+/* CHECKLIST */
+.cl-container { width: 100%; max-width: 700px; margin-top: 1rem; }
+.cl-progress {
+  background: white; border-radius: 12px;
+  padding: 0.7rem 1rem; margin-bottom: 0.8rem;
+  display: flex; align-items: center; gap: 1rem;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+}
+.cl-bar { flex: 1; height: 8px; background: #E2E8F0; border-radius: 100px; overflow: hidden; }
+.cl-bar-fill { height: 100%; background: var(--grad-success); width: 0; transition: width 0.4s ease; border-radius: 100px; }
+.cl-stat { font-weight: 700; font-size: 0.9rem; color: var(--success); }
+.cl-list { list-style: none; }
+.cl-item {
+  background: white; padding: 0.7rem 1rem; border-radius: 10px;
+  margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.7rem;
+  cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
+}
+.cl-item:hover { background: var(--surface-alt); }
+.cl-check { width: 22px; height: 22px; border: 2px solid #CBD5E1; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.85rem; color: white; transition: all 0.2s; }
+.cl-item.done .cl-check { background: var(--success); border-color: var(--success); }
+.cl-item.done .cl-check::after { content: '✓'; }
+.cl-item.done span { text-decoration: line-through; color: var(--text-muted); }
+
+/* PROMPT BOX */
+.prompt-box {
+  background: var(--bg); color: #CDD6F4;
+  border-radius: 14px; padding: 1.1rem 1.4rem;
+  font-family: var(--font-mono); font-size: 0.88rem;
+  line-height: 1.7; margin: 0.8rem 0; width: 100%; max-width: 800px;
+  border-left: 4px solid var(--warning); text-align: left;
+  white-space: pre-wrap; position: relative;
+}
+.prompt-box .prompt-label { display: block; font-size: 0.65rem; color: var(--warning); font-weight: 700; letter-spacing: 0.15em; margin-bottom: 0.4rem; font-family: var(--font); }
+
+/* NAV */
+.nav-bar {
+  position: fixed; bottom: 1rem; right: 1rem;
+  display: flex; align-items: center; gap: 0.4rem;
+  background: white; padding: 0.4rem;
+  border-radius: 100px; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+  z-index: 40;
+}
+.nav-btn {
+  width: 38px; height: 38px; border-radius: 50%;
+  border: none; background: var(--surface-alt); color: var(--text);
+  font-size: 1rem; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 700; transition: all 0.2s;
+}
+.nav-btn:hover { background: var(--primary); color: white; }
+.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+.nav-counter { padding: 0 0.7rem; font-size: 0.82rem; font-weight: 700; color: var(--text-dim); min-width: 64px; text-align: center; }
+
+/* NOTEBOOK */
+.nb-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(10px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 1.5rem; }
+.nb-overlay.show { display: flex; }
+.nb-panel { background: white; border-radius: 20px; padding: 1.5rem 1.8rem; max-width: 700px; width: 100%; max-height: 85vh; overflow-y: auto; }
+.nb-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.nb-title { font-size: 1.4rem; font-weight: 800; color: var(--box-purple-dark); }
+.nb-close { background: var(--surface-alt); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
+.nb-entry { background: var(--surface-alt); border-radius: 12px; padding: 1rem; margin-bottom: 0.7rem; }
+.nb-entry h4 { font-size: 0.82rem; font-weight: 700; color: var(--box-purple-dark); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.3rem; }
+.nb-entry .nb-q { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 0.5rem; font-style: italic; }
+.nb-entry .nb-answer { background: white; padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.92rem; border-left: 3px solid var(--box-purple-border); min-height: 40px; color: var(--text); }
+.nb-entry .nb-answer:empty::before { content: '(chưa viết)'; color: var(--text-muted); font-style: italic; }
+.nb-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
+.btn-purple, .btn-secondary { flex: 1; padding: 0.6rem 1rem; border-radius: 10px; border: none; cursor: pointer; font-family: inherit; font-weight: 600; font-size: 0.85rem; }
+.btn-purple { background: var(--grad-purple); color: white; }
+.btn-secondary { background: var(--surface-alt); color: var(--text); }
+.btn-purple:disabled { opacity: 0.6; cursor: default; }
+.nb-submit-status { display: none; margin-top: 0.8rem; padding: 0.6rem 0.9rem; border-radius: 10px; font-size: 0.85rem; font-weight: 600; background: var(--surface-alt); color: var(--text-dim); }
+.nb-submit-status.show { display: block; }
+.nb-submit-status.success { background: #ECFDF5; color: #065F46; border-left: 4px solid var(--success); }
+.nb-submit-status.error { background: #FEF2F2; color: #B91C1C; border-left: 4px solid var(--danger); }
+
+/* SCHOOL CARDS (4 trường phái) */
+.school-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; width: 100%; margin-top: 1rem; }
+.school-card { background: white; border-radius: 14px; padding: 1.1rem 1.2rem; box-shadow: 0 4px 16px rgba(15,23,42,0.06); border-top: 4px solid var(--primary); }
+.school-num { display: inline-block; font-size: 0.7rem; font-weight: 800; background: var(--grad-primary); color: white; padding: 0.2rem 0.7rem; border-radius: 100px; margin-bottom: 0.5rem; }
+.school-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; line-height: 1.3; }
+.school-en { font-size: 0.78rem; color: var(--primary); font-weight: 600; font-style: italic; margin-bottom: 0.5rem; }
+.school-desc { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; }
+
+/* METAPHOR CARDS (Model/LLM/Token) */
+.met-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; width: 100%; margin-top: 1rem; }
+.met-card { background: white; border-radius: 16px; padding: 1.4rem 1.3rem; box-shadow: 0 4px 18px rgba(15,23,42,0.07); position: relative; overflow: hidden; }
+.met-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; }
+.met-card.model::before { background: linear-gradient(90deg, #F59E0B, #EF4444); }
+.met-card.llm::before { background: linear-gradient(90deg, #3B82F6, #6366F1); }
+.met-card.token::before { background: linear-gradient(90deg, #10B981, #06B6D4); }
+.met-emoji { font-size: 2.5rem; margin-bottom: 0.5rem; }
+.met-term { font-size: 1.2rem; font-weight: 900; letter-spacing: -0.01em; margin-bottom: 0.3rem; }
+.met-metaphor { font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; }
+.met-desc { font-size: 0.85rem; color: var(--text-dim); line-height: 1.55; }
+
+/* ANIM */
+.slide.active .stagger > * { opacity: 0; animation: slideUp 0.5s ease forwards; }
+.slide.active .stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.slide.active .stagger > *:nth-child(2) { animation-delay: 0.12s; }
+.slide.active .stagger > *:nth-child(3) { animation-delay: 0.2s; }
+.slide.active .stagger > *:nth-child(4) { animation-delay: 0.28s; }
+.slide.active .stagger > *:nth-child(5) { animation-delay: 0.36s; }
+.slide.active .stagger > *:nth-child(6) { animation-delay: 0.44s; }
+.slide.active .stagger > *:nth-child(7) { animation-delay: 0.52s; }
+.slide.active .stagger > *:nth-child(8) { animation-delay: 0.6s; }
+@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+/* VIDEO */
+.video-frame { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 30px rgba(15, 23, 42, 0.15); margin: 1rem 0; width: 100%; max-width: 780px; }
+.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
+
+@media (max-width: 1024px) { .sidebar { position: absolute; transform: translateX(-280px); height: 100vh; } .sidebar.open { transform: translateX(0); } }
+@media (max-width: 768px) { .slide { padding: 1.5rem 5%; } .card-grid { grid-template-columns: 1fr; } .top-title-text { display: none; } .game-buckets { grid-template-columns: 1fr; } }
+@media print { .sidebar, .nav-bar, .top-bar, .top-collapse-btn, .nb-overlay { display: none !important; } .slide { position: relative; opacity: 1; visibility: visible; transform: none; page-break-after: always; min-height: 100vh; } html, body, .main, .slides-container { overflow: visible; height: auto; } }
+
+
+/* ============ ALIGNMENT FIXES ============ */
+/* 1. Equal heights for all card grids via flex */
+.card-grid, .school-grid, .met-grid, .fc-grid, .app-grid-mini, .modmap {
+  align-items: stretch;
+}
+
+/* 2. .card - equal heights with consistent vertical rhythm */
+.card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+.card-icon {
+  flex-shrink: 0;
+  margin-bottom: 0.8rem;
+}
+.card h3 {
+  flex-shrink: 0;
+  margin-bottom: 0.4rem;
+  line-height: 1.35;
+  min-height: 2.7em;
+  display: flex;
+  align-items: flex-start;
+}
+.card p {
+  flex-grow: 1;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* 3. School cards (4 trường phái) - equal heights */
+.school-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.school-num { align-self: flex-start; }
+.school-title {
+  min-height: 2.6em;
+  display: flex;
+  align-items: flex-start;
+}
+.school-en {
+  min-height: 1.4em;
+}
+.school-desc {
+  flex-grow: 1;
+  margin: 0;
+}
+
+/* 4. Metaphor cards (Model/LLM/Token) */
+.met-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.met-emoji {
+  flex-shrink: 0;
+  line-height: 1;
+}
+.met-term { flex-shrink: 0; }
+.met-metaphor {
+  min-height: 1.4em;
+  flex-shrink: 0;
+}
+.met-desc {
+  flex-grow: 1;
+  margin: 0;
+}
+
+/* 5. App mini cards (Buổi 1 không dùng nhưng đảm bảo nhất quán) */
+.app-mini-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* 6. Module roadmap cards - equal heights */
+.modmap-item {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.modmap-mod, .modmap-name, .modmap-buoi {
+  flex-shrink: 0;
+}
+.modmap-out {
+  flex-grow: 1;
+  margin: 0;
+}
+
+/* 7. Flashcards - all same size */
+.fc {
+  height: 160px;
+}
+
+/* 8. Feature/qbox cards in card-grid (slide 2 - 4 loại câu hỏi) */
+.card-grid .qbox {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+.card-grid .qbox-content {
+  flex-grow: 1;
+}
+
+/* 9. Slide body — center content vertically when there's room */
+.slide-body {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* 10. Eyebrow/title always centered */
+.eyebrow, .slide-title, .slide-subtitle {
+  align-self: center;
+}
+
+/* 11. Grid containers - center horizontally */
+.card-grid, .school-grid, .met-grid, .fc-grid, .app-grid-mini, .modmap, .compare, .game-buckets {
+  align-self: stretch;
+}
+
+/* 12. Timeline content cards equal padding */
+.tl-content {
+  display: flex;
+  flex-direction: column;
+}
+
+/* 13. Steps list - consistent padding regardless of content */
+.steps li {
+  display: flex;
+  align-items: center;
+}
+.steps li::before {
+  position: relative;
+  left: 0;
+  top: 0;
+  transform: none;
+  margin-right: 1rem;
+  flex-shrink: 0;
+}
+
+/* 14. Quiz options - icon and text aligned */
+.quiz-opt {
+  align-items: center;
+}
+
+/* 15. Cmp-table - row heights equal */
+.cmp-table tr td {
+  vertical-align: top;
+}
+
+/* 16. HL-box consistent width */
+.hl-box {
+  align-self: stretch;
+  max-width: 100%;
+}
+
+/* 17. Game-items center & wrap properly */
+.game-items {
+  align-items: center;
+}
+
+/* 18. Cover content centering */
+.slide-cover .slide-body, .slide-cover .cover-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* 19. Cards in 3-card layouts should look identical */
+.card-grid > .card {
+  text-align: left;
+}
+
+/* 20. Make all icon containers same size and aligned top-left */
+.card-icon, .school-card .card-icon, .met-card .card-icon {
+  align-self: flex-start;
+}
+
+
+/* ============ BRAND CARDS (Slide 9) ============ */
+.brand-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 1rem;
+  width: 100%;
+  margin-top: 1rem;
+  align-items: stretch;
+}
+.brand-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(15,23,42,0.08);
+  display: flex;
+  flex-direction: column;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.brand-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 14px 32px rgba(15,23,42,0.14);
+}
+.brand-head {
+  height: 130px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+.brand-head svg {
+  width: 56px;
+  height: 56px;
+  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.2));
+}
+.brand-body {
+  padding: 1.1rem 1.1rem 1.3rem;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+}
+.brand-body h3 {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 0.4rem;
+  letter-spacing: -0.01em;
+  color: var(--text);
+}
+.brand-body p {
+  font-size: 0.88rem;
+  color: var(--text-dim);
+  line-height: 1.5;
+  margin: 0;
+  flex-grow: 1;
+}
+.brand-footer {
+  margin-top: 1.2rem;
+  font-size: 0.9rem;
+  color: var(--text-dim);
+  text-align: center;
+  max-width: 700px;
+  align-self: center;
+}
+.brand-footer strong { color: var(--primary); font-weight: 700; }
+
+/* ============ DOCFIG (illustration images) ============ */
+.docfig {
+  margin: 1.2rem 0;
+  width: 100%;
+  max-width: 950px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  align-self: center;
+  background: white;
+  padding: 1rem;
+  border-radius: 16px;
+  box-shadow: 0 8px 28px rgba(15,23,42,0.1);
+}
+.docfig img {
+  width: 100%;
+  max-width: 900px;
+  height: auto;
+  border-radius: 10px;
+  display: block;
+}
+.docfig figcaption {
+  margin-top: 0.8rem;
+  font-size: 0.88rem;
+  color: var(--text);
+  font-style: italic;
+  text-align: center;
+  font-weight: 500;
+}
+
+/* ============ SUBTLE ANIMATIONS ============ */
+.slide.active .docfig img {
+  animation: fadeInScale 0.7s ease forwards;
+}
+.slide.active .brand-card {
+  animation: fadeInUp 0.5s ease forwards;
+  opacity: 0;
+}
+.slide.active .brand-card:nth-child(1) { animation-delay: 0.05s; }
+.slide.active .brand-card:nth-child(2) { animation-delay: 0.15s; }
+.slide.active .brand-card:nth-child(3) { animation-delay: 0.25s; }
+.slide.active .brand-card:nth-child(4) { animation-delay: 0.35s; }
+.slide.active .brand-card:nth-child(5) { animation-delay: 0.45s; }
+
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.96); }
+  to { opacity: 1; transform: scale(1); }
+}
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Pulse animation removed for cleaner look */
+
+/* ============ SCHOOL FLIP CARDS (Slide 6 — thẻ lật) ============ */
+.school-flip {
+  perspective: 1200px;
+  height: 300px;
+  cursor: pointer;
+}
+.school-flip-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.school-flip.flipped .school-flip-inner { transform: rotateY(180deg); }
+.school-flip-front, .school-flip-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 14px;
+  padding: 1.3rem 1.2rem;
+  box-shadow: 0 4px 16px rgba(15,23,42,0.06);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.school-flip-front {
+  background: white;
+  border-top: 4px solid var(--sf-color, var(--primary));
+  align-items: flex-start;
+}
+.school-flip-front .school-num { align-self: flex-start; }
+.school-flip-front .school-title {
+  font-size: 1.05rem; font-weight: 800; margin: 0.7rem 0 0.45rem; line-height: 1.3;
+  text-align: left;
+}
+.school-flip-front .school-en {
+  font-size: 0.82rem; color: var(--primary); font-weight: 600; font-style: italic;
+  text-align: left;
+}
+.school-flip-hint {
+  margin-top: auto;
+  font-size: 0.74rem; color: var(--text-muted); font-weight: 600;
+  display: flex; align-items: center; gap: 0.35rem;
+}
+.school-flip-back {
+  background: var(--sf-grad, var(--grad-primary));
+  color: white;
+  transform: rotateY(180deg);
+  justify-content: center;
+}
+.school-flip-back .school-desc {
+  font-size: 0.88rem; line-height: 1.55; color: white; text-align: left;
+  flex: 0 0 auto;
+}
+.school-flip-back .school-desc strong { color: #FDE68A; }
+.school-flip-back .school-desc em { color: rgba(255,255,255,0.92); }
+
+/* SLIDE 7 — bố cục 2 cột: nội dung trái + video phải */
+.agent-split { display: flex; gap: 1.5rem; width: 100%; margin-top: 1rem; align-items: stretch; }
+.agent-left { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; }
+.agent-right { flex: 1 1 0; min-width: 0; display: flex; }
+.agent-flip-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 1rem; }
+.agent-flip { perspective: 1200px; height: 180px; cursor: pointer; }
+.agent-flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); transform-style: preserve-3d; }
+.agent-flip.flipped .agent-flip-inner { transform: rotateY(180deg); }
+.agent-flip-front, .agent-flip-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 14px; padding: 1rem; box-shadow: 0 4px 16px rgba(15,23,42,0.06); display: flex; flex-direction: column; overflow: hidden; }
+.agent-flip-front { background: white; border-top: 4px solid var(--sf-color, var(--primary)); align-items: flex-start; }
+.agent-flip-front .card-icon { margin-bottom: 0.55rem; }
+.agent-flip-front h3 { font-size: 0.98rem; font-weight: 700; margin: 0 0 0.3rem; letter-spacing: -0.01em; text-align: left; }
+.agent-flip-front p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.45; text-align: left; margin: 0; }
+.agent-flip-hint { margin-top: auto; font-size: 0.72rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 0.35rem; }
+.agent-flip-back { background: var(--sf-grad, var(--grad-primary)); color: white; transform: rotateY(180deg); justify-content: center; }
+.agent-flip-back p { font-size: 0.8rem; line-height: 1.5; color: white; margin: 0; text-align: left; }
+.agent-flip-back strong { color: #FDE68A; }
+.video-frame { width: 100%; display: flex; flex-direction: column; background: white; border-radius: 16px; box-shadow: 0 4px 18px rgba(15,23,42,0.08); overflow: hidden; min-height: 420px; }
+.video-frame-header { padding: 0.75rem 1rem; background: var(--grad-primary); color: white; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+.video-frame-header .vft { font-weight: 800; font-size: 1rem; }
+.video-frame-header .video-open { font-size: 0.78rem; font-weight: 700; color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 0.3rem 0.65rem; border-radius: 100px; white-space: nowrap; }
+.video-frame-header .video-open:hover { background: rgba(255,255,255,0.32); }
+.video-embed { flex: 1; min-height: 0; background: #0f172a; }
+.video-embed iframe { width: 100%; height: 100%; border: 0; display: block; }
+@media (max-width: 900px) { .agent-split { flex-direction: column; } }
+@media (max-width: 768px) { .agent-flip-grid { grid-template-columns: 1fr; } }
+
+</style>
+</head>
+<body>
+
+<div class="app" id="app">
+
+<aside class="sidebar" id="sidebar">
+  <a class="sidebar-brand" href="../" title="Về trang chủ — danh sách 24 buổi">
+    <div class="brand-logo">AI</div>
+    <div>
+      <div class="brand-text">Khóa AI · 24 buổi</div>
+      <div class="brand-sub">Dành cho học sinh — V5</div>
+    </div>
+  </a>
+  <div class="module-section">
+    <div class="module-title"><span class="module-dot" style="background:#10B981;"></span>M1 · Nền tảng AI</div>
+    <a class="lesson-item" href="buoi_01.html" title="AI là gì, đăng ký 3 tài khoản"><span class="lesson-num">1</span><span>Khai giảng & Thế giới AI</span></a>
+    <a class="lesson-item disabled" title="Học cách hỏi AI hiệu quả"><span class="lesson-num">2</span><span>Prompt Engineering RCTFE</span></a>
+    <a class="lesson-item disabled" title="AI dạy theo phương pháp hỏi ngược"><span class="lesson-num">3</span><span>AI làm Trợ giảng (Socratic)</span></a>
+    <a class="lesson-item disabled" title="Build app Tóm tắt tài liệu đầu tiên"><span class="lesson-num">4</span><span>HOÀN THÀNH APP-3.1</span></a>
+  </div>
+  <div class="module-section">
+    <div class="module-title"><span class="module-dot" style="background:#3B82F6;"></span>M2 · Second Brain</div>
+    <a class="lesson-item disabled" title="Bắt đầu hệ thống Second Brain"><span class="lesson-num">5</span><span>Obsidian + PARA</span></a>
+    <a class="lesson-item disabled" title="Cài đặt nguồn dữ liệu cho app"><span class="lesson-num">6</span><span>NotebookLM + Gemini</span></a>
+    <a class="lesson-item active" title="Build app Lịch ôn tập cá nhân"><span class="lesson-num">7</span><span>HOÀN THÀNH APP-3.2</span></a>
+    <a class="lesson-item disabled" title="Đạo đức AI và kiểm tra giữa module"><span class="lesson-num">8</span><span>Đạo đức AI + Mini-test</span></a>
+  </div>
+  <div class="module-section">
+    <div class="module-title"><span class="module-dot" style="background:#F59E0B;"></span>M3 · Multimedia</div>
+    <a class="lesson-item disabled" title="Workflow đa AI và đánh giá output"><span class="lesson-num">9</span><span>Workflow + AI Eval</span></a>
+    <a class="lesson-item disabled" title="Tạo ảnh với AI"><span class="lesson-num">10</span><span>Tạo ảnh AI</span></a>
+    <a class="lesson-item disabled" title="Tạo slide và audio bằng AI"><span class="lesson-num">11</span><span>Slide + Audio</span></a>
+    <a class="lesson-item disabled" title="Build app Chấm bài văn"><span class="lesson-num">12</span><span>HOÀN THÀNH APP-2.1</span></a>
+    <a class="lesson-item disabled" title="Build app Phân tích dữ liệu"><span class="lesson-num">13</span><span>HOÀN THÀNH APP-1.3</span></a>
+  </div>
+  <div class="module-section">
+    <div class="module-title"><span class="module-dot" style="background:#F97316;"></span>M4 · Mini Project + Agent</div>
+    <a class="lesson-item disabled" title="Brief dự án APP-1.2"><span class="lesson-num">14</span><span>Brief APP-1.2</span></a>
+    <a class="lesson-item disabled" title="Build app Chatbot Socratic"><span class="lesson-num">15</span><span>HOÀN THÀNH APP-1.2</span></a>
+    <a class="lesson-item disabled" title="Trình diễn sản phẩm giữa kỳ"><span class="lesson-num">16</span><span>Demo Day giữa kỳ</span></a>
+    <a class="lesson-item disabled" title="Brief dự án APP-2.2"><span class="lesson-num">17</span><span>Brief APP-2.2</span></a>
+    <a class="lesson-item disabled" title="Build app Custom GPT + Make.com"><span class="lesson-num">18</span><span>HOÀN THÀNH APP-2.2</span></a>
+    <a class="lesson-item disabled" title="Dùng MCP nâng cấp app"><span class="lesson-num">19</span><span>MCP nâng cấp app</span></a>
+  </div>
+  <div class="module-section">
+    <div class="module-title"><span class="module-dot" style="background:#A855F7;"></span>M5 · Vibe Coding</div>
+    <a class="lesson-item disabled" title="Dùng Cursor vibe coding"><span class="lesson-num">20</span><span>Cursor + APP-1.1</span></a>
+    <a class="lesson-item disabled" title="Build web app prototype"><span class="lesson-num">21</span><span>HOÀN THÀNH APP-1.1</span></a>
+    <a class="lesson-item disabled" title="Build và deploy web app"><span class="lesson-num">22</span><span>HOÀN THÀNH APP-4.1</span></a>
+  </div>
+  <div class="module-section">
+    <div class="module-title"><span class="module-dot" style="background:#10B981;"></span>M6 · Final Project</div>
+    <a class="lesson-item disabled" title="Hoàn thiện sản phẩm cuối khóa"><span class="lesson-num">23</span><span>Polish + Deploy</span></a>
+    <a class="lesson-item disabled" title="Trình diễn cuối khóa và bế giảng"><span class="lesson-num">24</span><span>Demo Day cuối + Bế giảng</span></a>
+  </div>
+</aside>
+
+<main class="main">
+  <div class="top-bar">
+    <button class="top-collapse-btn" onclick="toggleSidebar()" aria-label="Thu gọn / mở thanh bên">≡</button>
+    <div class="top-title">
+      <span class="lesson-badge">BUỔI 7 / 24</span>
+      <span class="top-title-text">Hoàn thành APP-3.2 — Lịch ôn tập</span>
+    </div>
+    <div class="top-actions">
+      <a class="btn-action" href="../" title="Về trang chủ">← Trang chủ</a>
+      <button class="btn-action notebook" onclick="openNotebook()">Sổ Tay Cá Nhân</button>
+      <button class="btn-action" onclick="window.print()">In</button>
+    </div>
+  </div>
+
+  <div class="progress-track"><div class="progress-fill"></div></div>
+
+  <div class="slides-container" id="slidesContainer">
+    <section class="slide active slide-cover" data-slide="1" data-title="Chào mừng">
+
+<div class="cover-orb orb-1"></div><div class="cover-orb orb-2"></div><div class="cover-orb orb-3"></div>
+<div class="cover-content slide-body">
+  <span class="eyebrow">BUỔI 7 · MODULE 2 — SECOND BRAIN</span>
+  <h1 class="hero-title">Hoàn thành <span class="grad-text">APP-3.2 — Lịch ôn tập</span></h1>
+  <p class="slide-subtitle">Em ráp Vault, Quiz và Lộ trình thành một ứng dụng web đọc thẳng kho ghi chú của mình — chính là Advanced Learning App.</p>
+  <div class="cover-chips"><span class="cover-chip">120 phút</span><span class="cover-chip">App Lịch ôn tập</span><span class="cover-chip">Output: App chạy trên vault của em</span></div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="2" data-title="Bạn sẽ làm được gì">
+
+<div class="slide-body">
+  <span class="eyebrow">CUỐI BUỔI 7 — EM PHẢI CÓ</span>
+  <h2 class="slide-title">3 thứ em mang về nhà</h2>
+  <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));">
+    <div class="card"><div class="card-icon">1</div><h3>App đọc Vault</h3><p>Mở app, cấp quyền và để nó đọc thẳng thư mục My_Second_Brain_Grade8.</p></div>
+    <div class="card"><div class="card-icon">2</div><h3>Lịch trình tự động</h3><p>App rải các mốc Ngày/Tuần từ Plan lên Lịch và thống kê ở Dashboard.</p></div>
+    <div class="card"><div class="card-icon">3</div><h3>Ôn tập tại chỗ</h3><p>Làm Quiz/Đề ngay trên app và được chấm đúng/sai liền.</p></div>
+  </div>
+
+  <div class="hl-box success"><span class="hl-label">OUTPUT BẮT BUỘC</span><p>App mở được vault của em · Lịch trình hiện đúng các buổi từ Plan · làm thử 1 Quiz và được chấm điểm.</p></div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="3" data-title="Sổ Tay #1 — Đầu buổi">
+
+<div class="slide-body">
+  <span class="eyebrow">BẮT ĐẦU</span>
+  <h2 class="slide-title">Em hình dung app này thế nào?</h2>
+  <div class="qbox qbox-purple">
+    <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #1 — Đầu buổi</div>
+    <div class="qbox-content">Trước khi xem, em đoán xem: một app "đọc ghi chú của em rồi tự lên lịch ôn tập" sẽ giúp em điều gì mà cách học cũ không làm được?</div>
+    <div class="nb-input-wrap">
+      <label>Em mong app giúp gì:</label>
+      <textarea class="nb-input" data-nb-id="1" placeholder="Ví dụ: nhắc em hôm nay cần ôn gì..."></textarea>
+      <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+    </div>
+    <div class="qbox-tip"><span class="qbox-tip-label">Vì sao em viết?</span>Cuối Module 2, em quay lại Sổ Tay Buổi 5 để thấy cả hành trình: từ chưa có gì → có cả một hệ thống học tập.</div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide slide-cover" data-slide="4" data-title="Từ ghi chú → ứng dụng">
+
+<div class="cover-orb orb-1"></div><div class="cover-orb orb-2"></div><div class="cover-orb orb-3"></div>
+<div class="cover-content slide-body">
+  <span class="eyebrow">Ý TƯỞNG</span>
+  <h1 class="hero-title">Ghi chú tĩnh → <span class="grad-text">App sống động</span></h1>
+  <p class="slide-subtitle">Note trong Obsidian là dữ liệu. App đọc dữ liệu đó và biến thành Dashboard, Lịch và Quiz tương tác.</p>
+  <div class="cover-chips"><span class="cover-chip">Dashboard</span><span class="cover-chip">Lịch trình</span><span class="cover-chip">Study Hub</span></div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="5" data-title="APP-3.2 làm gì">
+
+<div class="slide-body">
+  <span class="eyebrow">4 TÍNH NĂNG CHÍNH</span>
+  <h2 class="slide-title">Advanced Learning App có gì</h2>
+  <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+    <div class="card"><div class="card-icon">📊</div><h3>Dashboard</h3><p>Tự đếm số Dự án, Tài nguyên, Lộ trình, mục Hoàn thành. Có bộ lọc Tuần/Tháng/Năm.</p></div>
+    <div class="card"><div class="card-icon">📅</div><h3>Lịch trình</h3><p>Rải các buổi học từ <code>05_learning_plan</code> lên đúng ngày.</p></div>
+    <div class="card"><div class="card-icon">🎯</div><h3>Study Hub</h3><p>Quiz & Đề tương tác đọc từ <code>06_quiz_exam</code>, chấm điểm tại chỗ.</p></div>
+    <div class="card"><div class="card-icon">🔍</div><h3>Lọc toàn cục</h3><p>Chọn 1 Dự án ở Sidebar, cả app đổi theo đúng ngữ cảnh đó.</p></div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="6" data-title="Kiến trúc app">
+
+<div class="slide-body">
+  <span class="eyebrow">BÊN TRONG APP</span>
+  <h2 class="slide-title">App được dựng từ 3 mảnh ghép</h2>
+  <p class="slide-subtitle">App là một file HTML chạy ngay trên trình duyệt, không cần máy chủ.</p>
+  <div class="met-grid">
+    <div class="met-card model"><div class="met-emoji">🎨</div><div class="met-term">Giao diện</div><div class="met-metaphor">HTML + Tailwind CSS</div><div class="met-desc">Phần nhìn thấy: Dashboard, Lịch, các nút bấm.</div></div>
+    <div class="met-card llm"><div class="met-emoji">🔑</div><div class="met-term">Đọc Vault</div><div class="met-metaphor">File System Access API</div><div class="met-desc">Cơ chế xin quyền để app đọc thẳng thư mục vault trên máy em.</div></div>
+    <div class="met-card token"><div class="met-emoji">⚙️</div><div class="met-term">Bộ phân tích</div><div class="met-metaphor">Parser</div><div class="met-desc">Đọc từng file .md, tìm các mốc ngày rồi rải lên lịch.</div></div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="7" data-title="File System Access API">
+
+<div class="slide-body">
+  <span class="eyebrow">CƠ CHẾ ĐỌC THƯ MỤC</span>
+  <h2 class="slide-title">Ẩn dụ: xin chìa khóa tủ</h2>
+  <div class="qbox qbox-blue">
+    <div class="qbox-header"><div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC</div>
+    <div class="qbox-content">Trình duyệt không tự ý đọc file trên máy em (để an toàn). <strong>File System Access API</strong> là cách app LỊCH SỰ XIN PHÉP: em bấm "Cho phép", app mới đọc được vault — giống em đưa chìa khóa tủ cho người em tin tưởng.</div>
+  </div>
+  <div class="hl-box "><span class="hl-label">LƯU Ý</span><p>Tính năng này chạy tốt trên Chrome/Edge bản mới. App chỉ đọc đúng thư mục em chọn, không đọc nơi khác.</p></div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="8" data-title="Hỏi bạn cặp #1">
+
+<div class="slide-body">
+  <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
+  <h2 class="slide-title">Cùng bạn cặp — vì sao phải xin quyền</h2>
+  <div class="qbox qbox-yellow">
+    <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận #1</div>
+    <div class="qbox-content">Hai bạn bàn: "<em>Nếu trình duyệt cho mọi trang web tự đọc file trong máy thì sao? Vì sao app phải XIN PHÉP mới được đọc vault?</em>"</div>
+    <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Đây là bài học về quyền riêng tư và an toàn dữ liệu — rất quan trọng khi tự làm app.</div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="9" data-title="Mở app &amp; cấp quyền">
+
+<div class="slide-body">
+  <span class="eyebrow">THỰC HÀNH 1</span>
+  <h2 class="slide-title">Kết nối app với vault của em</h2>
+  <ol class="steps stagger">
+    <li>Mở file <code>Advanced_Learning_App.html</code> bằng Chrome hoặc Edge (bấm đúp).</li>
+    <li>Bấm nút kết nối / chọn thư mục, rồi trỏ tới vault <code>My_Second_Brain_Grade8</code>.</li>
+    <li>Khi trình duyệt hỏi quyền, bấm <strong>Cho phép / Allow</strong>.</li>
+    <li>App đọc xong sẽ hiện Dashboard với số liệu vault của em.</li>
+  </ol>
+  <div class="hl-box info"><span class="hl-label">MẸO</span><p>Sửa note trong Obsidian xong, quay lại app bấm <strong>🔄 Làm mới (Rescan)</strong> để cập nhật.</p></div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="10" data-title="Dashboard">
+
+<div class="slide-body">
+  <span class="eyebrow">MÀN HÌNH CHÍNH</span>
+  <h2 class="slide-title">Dashboard thống kê những gì</h2>
+  <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));">
+    <div class="card"><div class="card-icon" style="background:#3B82F6;">P</div><h3>Số Dự án</h3><p>Đếm file trong <code>01_Projects</code>.</p></div>
+    <div class="card"><div class="card-icon" style="background:#A855F7;">R</div><h3>Tài nguyên</h3><p>Đếm file trong <code>03_Resources</code>.</p></div>
+    <div class="card"><div class="card-icon" style="background:#06B6D4;">L</div><h3>Lộ trình</h3><p>Đếm file trong <code>05_learning_plan</code>.</p></div>
+    <div class="card"><div class="card-icon" style="background:#10B981;">✓</div><h3>Hoàn thành</h3><p>Đếm mục trong <code>04_Archives</code> và tiến độ %.</p></div>
+  </div>
+
+  <div class="hl-box "><span class="hl-label">LIÊN KẾT HAI CHIỀU</span><p>App tự đếm cả những file <code>[[trỏ]]</code> tới một Dự án, dù link nằm ở đâu — nhờ vậy số liệu luôn đúng ngữ cảnh.</p></div>
+</div>
+
+    </section>
+    <section class="slide slide-cover" data-slide="11" data-title="Bộ máy Lịch trình">
+
+<div class="cover-orb orb-1" style="background:#3B82F6;"></div><div class="cover-orb orb-2" style="background:#06B6D4;"></div><div class="cover-orb orb-3"></div>
+<div class="cover-content slide-body">
+  <span class="eyebrow">TRÁI TIM CỦA APP</span>
+  <h1 class="hero-title">Bộ máy <span class="grad-text">Lịch trình</span></h1>
+  <p class="slide-subtitle">App đọc các mốc Ngày/Tuần/Thứ trong Plan rồi tự đặt từng buổi học vào đúng ngày trên lịch.</p>
+  <div class="cover-chips"><span class="cover-chip">Đọc mốc</span><span class="cover-chip">Tính ngày</span><span class="cover-chip">Rải lên lịch</span></div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="12" data-title="App đọc mốc thời gian thế nào">
+
+<div class="slide-body">
+  <span class="eyebrow">QUY TRÌNH PARSER</span>
+  <h2 class="slide-title">4 bước app biến chữ thành lịch</h2>
+  <ol class="steps stagger">
+    <li>Tìm dòng <code>**Ngày bắt đầu:**</code> để lấy mốc neo.</li>
+    <li>Quét từng mục <code>- **Ngày 3:** …</code> để lấy số ngày.</li>
+    <li>Tính ngày thật = Ngày bắt đầu + (số ngày − 1).</li>
+    <li>Đặt buổi học đó vào đúng ô trên Lịch trình.</li>
+  </ol>
+  <div class="hl-box success"><span class="hl-label">NHỜ VẬY</span><p>Em chỉ viết Plan bằng chữ đơn giản, app lo phần tính toán và sắp lịch.</p></div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="13" data-title="Đánh số: toàn cục vs lồng nhau">
+
+<div class="slide-body">
+  <span class="eyebrow">LOGIC THÔNG MINH</span>
+  <h2 class="slide-title">App tự nhận biết cách em đánh số</h2>
+  <table class="cmp-table"><thead><tr><th>Kiểu đánh số</th><th>Em viết</th><th>App tính</th></tr></thead><tbody><tr><td>Toàn cục</td><td>Ngày 1 … Ngày 14 tăng dần</td><td>Ngày N = Ngày bắt đầu + (N−1)</td></tr><tr><td>Lồng trong Tuần</td><td>Mỗi ### Tuần lại Ngày 1</td><td>(số tuần × 7) + ngày</td></tr><tr><td>Lồng trong Tháng</td><td>Mỗi ### Tháng lại Tuần 1</td><td>Các tháng nối tiếp, không chồng</td></tr></tbody></table>
+  <div class="hl-box info"><span class="hl-label">MẸO</span><p>Muốn lịch chạy thẳng không reset → cứ đánh số tăng dần liên tục cả file.</p></div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="14" data-title="Game: app đọc được hay bỏ qua?">
+
+<div class="slide-body">
+  <span class="eyebrow">QUICK SELF-TEST</span>
+  <h2 class="slide-title">Dòng nào app HIỂU là mốc?</h2>
+  <p class="slide-subtitle">Kéo (hoặc bấm) từng dòng vào đúng nhóm.</p>
+  <div class="game-area">
+    <div class="game-items" id="gameItems">
+      <div class="draggable" draggable="true" data-type="doc" data-label="- **Ngày 3:** Ôn tập">- **Ngày 3:** Ôn tập</div>
+      <div class="draggable" draggable="true" data-type="doc" data-label="- **Tuần 2:** Luyện đề">- **Tuần 2:** Luyện đề</div>
+      <div class="draggable" draggable="true" data-type="boqua" data-label="Phân số 1/2 nằm giữa câu">Phân số 1/2 nằm giữa câu</div>
+      <div class="draggable" draggable="true" data-type="doc" data-label="- **20/06/2026:** Thi thử">- **20/06/2026:** Thi thử</div>
+      <div class="draggable" draggable="true" data-type="boqua" data-label="Mốc nằm giữa câu, không ở đầu mục">Mốc nằm giữa câu, không ở đầu mục</div>
+      <div class="draggable" draggable="true" data-type="doc" data-label="- **Thứ 2:** Học hình học">- **Thứ 2:** Học hình học</div>
+    </div>
+    <div class="game-buckets" style="grid-template-columns:1fr 1fr;">
+      <div class="bucket" data-bucket="doc" data-color="#059669" style="border-color:#10B981;background:#ECFDF5;"><div class="bucket-title" style="color:#059669;">App ĐỌC được</div><div class="bucket-zone"></div></div>
+      <div class="bucket" data-bucket="boqua" data-color="#DC2626" style="border-color:#DC2626;background:#FEF2F2;"><div class="bucket-title" style="color:#DC2626;">App BỎ QUA</div><div class="bucket-zone"></div></div>
+    </div>
+    <div class="game-score" id="gameScore" style="display:none;">
+      <div id="gameScoreText"></div>
+      <button class="btn-restart" onclick="restartGame()">Chơi lại</button>
+    </div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="15" data-title="Sổ Tay #2 — Lịch của em">
+
+<div class="slide-body">
+  <span class="eyebrow">ÁP DỤNG</span>
+  <h2 class="slide-title">Lộ trình nào em muốn thấy trên lịch?</h2>
+  <div class="qbox qbox-purple">
+    <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #2</div>
+    <div class="qbox-content">Em muốn app rải lịch cho dự án nào trước? Viết tên dự án + ngày bắt đầu em định đặt.</div>
+    <div class="nb-input-wrap">
+      <label>Dự án & ngày bắt đầu:</label>
+      <textarea class="nb-input" data-nb-id="2" placeholder="Ví dụ: Ôn thi Toán — bắt đầu 01/06/2026"></textarea>
+      <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+    </div>
+    <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Đây chính là file Plan em sẽ kiểm tra trên app ngay trong phần thực hành.</div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="16" data-title="Study Hub — Quiz tương tác">
+
+<div class="slide-body">
+  <span class="eyebrow">ÔN TẬP TẠI CHỖ</span>
+  <h2 class="slide-title">Làm bài ngay trên app</h2>
+  <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+    <div class="card"><div class="card-icon">📝</div><h3>Quiz</h3><p>App đọc file Quiz, hiện từng câu với các đáp án bấm được.</p></div>
+    <div class="card"><div class="card-icon">✅</div><h3>Chấm tức thì</h3><p>Bấm đáp án → app báo đúng/sai ngay nhờ dấu ✅ trong file.</p></div>
+    <div class="card"><div class="card-icon">🎯</div><h3>Đề (Exam)</h3><p>Phần tự luận có nút mở đáp án để em tự chấm.</p></div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="17" data-title="Gắn Quiz vào buổi học">
+
+<div class="slide-body">
+  <span class="eyebrow">KẾT NỐI DỮ LIỆU</span>
+  <h2 class="slide-title">App tự nạp Quiz từ Plan</h2>
+  <div class="qbox qbox-blue">
+    <div class="qbox-header"><div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC</div>
+    <div class="qbox-content">Nhờ <code>📝[[Math_HangDangThuc]]</code> em viết ở Buổi 6, app biết buổi học này gắn với Quiz nào và TỰ NẠP vào tab Quiz khi em bấm vào ngày đó.</div>
+  </div>
+  <div class="prompt-box"><span class="prompt-label">Trong 05_learning_plan</span>- **Ngày 1-2:** Ôn 7 hằng đẳng thức (Sử dụng [[Math_Equation_Basics]]) 📝 [[Math_HangDangThuc]]</div>
+  <div class="hl-box success"><span class="hl-label">TẤT CẢ KHỚP NHAU</span><p>Plan (Buổi 6) + Quiz (Buổi 6) + App (Buổi 7) ráp lại thành một hệ thống học tập hoàn chỉnh.</p></div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="18" data-title="Quiz: hiểu cách app chạy">
+
+<div class="slide-body">
+  <span class="eyebrow">KIỂM TRA NHANH</span>
+  <h2 class="slide-title">App đọc vault bằng cơ chế nào?</h2>
+  <div class="quiz" data-correct="1" data-explanation="Đúng! File System Access API là cách app xin quyền đọc thư mục vault trên máy em.">
+    <p class="quiz-q">App lấy dữ liệu từ vault của em bằng cách nào?</p>
+    <div class="quiz-opts">
+      <button class="quiz-opt" data-index="0">Tải vault lên internet</button>
+      <button class="quiz-opt" data-index="1">Xin quyền đọc thư mục qua File System Access API</button>
+      <button class="quiz-opt" data-index="2">Chép tay từng note</button>
+      <button class="quiz-opt" data-index="3">Gửi email cho Google</button>
+    </div>
+    <div class="quiz-fb"></div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide slide-cover" data-slide="19" data-title="Tự build / chạy app">
+
+<div class="cover-orb orb-1"></div><div class="cover-orb orb-2"></div><div class="cover-orb orb-3"></div>
+<div class="cover-content slide-body">
+  <span class="eyebrow">RÁP TẤT CẢ</span>
+  <h1 class="hero-title">Quy trình <span class="grad-text">6 bước</span></h1>
+  <p class="slide-subtitle">Đây là vòng đời của cả hệ thống Second Brain mà em đã dựng suốt Module 2.</p>
+  <div class="cover-chips"><span class="cover-chip">Tạo Area/Resource</span><span class="cover-chip">Lập Plan</span><span class="cover-chip">Tạo Quiz</span><span class="cover-chip">Mở App</span></div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="20" data-title="Quy trình học tập 6 bước">
+
+<div class="slide-body">
+  <span class="eyebrow">WORKFLOW HOÀN CHỈNH</span>
+  <h2 class="slide-title">Từ ghi chú tới ôn tập</h2>
+  <ol class="steps stagger">
+    <li>Chuẩn bị: tạo <strong>Area</strong> và các note <strong>Resource</strong> ban đầu (Buổi 5).</li>
+    <li>Khởi tạo: tạo note <strong>Project</strong> trong <code>01_Projects</code>.</li>
+    <li>Lập kế hoạch: viết <strong>Plan</strong> trong <code>05_learning_plan</code>, khai báo Ngày bắt đầu (Buổi 6).</li>
+    <li>Chuẩn bị đề: tạo <strong>Quiz/Đề</strong> trong <code>06_quiz_exam</code> và gắn vào Plan (Buổi 6).</li>
+    <li>Hành động: mở <strong>App</strong>, chọn Dự án, học theo Lịch trình (Buổi 7).</li>
+    <li>Hoàn thành: chuyển dự án vào <code>04_Archives</code> khi xong.</li>
+  </ol>
+</div>
+
+    </section>
+    <section class="slide" data-slide="21" data-title="Checklist build app">
+
+<div class="slide-body">
+  <span class="eyebrow">CUỐI BUỔI 7 — KIỂM TRA EM ĐÃ LÀM GÌ</span>
+  <h2 class="slide-title">Checklist — bấm để tick</h2>
+  <div class="cl-container">
+    <div class="cl-progress">
+      <div style="font-weight:700;font-size:0.85rem;">Tiến độ:</div>
+      <div class="cl-bar"><div class="cl-bar-fill" id="clBarFill"></div></div>
+      <div class="cl-stat" id="clStat">0 / 10</div>
+    </div>
+    <ul class="cl-list" id="clList">
+      <li class="cl-item"><div class="cl-check"></div><span>Mở được Advanced_Learning_App.html</span></li>
+      <li class="cl-item"><div class="cl-check"></div><span>Cấp quyền và kết nối đúng vault</span></li>
+      <li class="cl-item"><div class="cl-check"></div><span>Dashboard hiện đúng số Dự án/Tài nguyên</span></li>
+      <li class="cl-item"><div class="cl-check"></div><span>Lịch trình hiện các buổi học từ Plan</span></li>
+      <li class="cl-item"><div class="cl-check"></div><span>Bấm vào 1 ngày để xem nội dung buổi học</span></li>
+      <li class="cl-item"><div class="cl-check"></div><span>Làm thử 1 Quiz và được chấm điểm</span></li>
+      <li class="cl-item"><div class="cl-check"></div><span>Dùng nút Làm mới (Rescan) sau khi sửa note</span></li>
+      <li class="cl-item"><div class="cl-check"></div><span>Hiểu cơ chế File System Access API</span></li>
+      <li class="cl-item"><div class="cl-check"></div><span>Hiểu quy trình 6 bước của hệ thống</span></li>
+      <li class="cl-item"><div class="cl-check"></div><span>Viết Sổ Tay #1, #2, #3</span></li>
+    </ul>
+  </div>
+  <div class="hl-box success"><span class="hl-label">NẾU CHƯA TICK HẾT</span><p>Nhắn riêng GV trong Zalo lớp — GV hỗ trợ. <strong>KHÔNG AI BỊ BỎ LẠI.</strong></p></div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="22" data-title="Hỏi bạn cặp #2">
+
+<div class="slide-body">
+  <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
+  <h2 class="slide-title">Cùng bạn cặp — demo app cho nhau</h2>
+  <div class="qbox qbox-yellow">
+    <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận #2</div>
+    <div class="qbox-content">Hai bạn lần lượt mở app của mình và giới thiệu: "<em>Lịch trình của mình cho môn gì? App rải đúng ngày chưa? Có gì cần sửa trong Plan?</em>"</div>
+    <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Trình bày sản phẩm cho người khác là cách tốt nhất để phát hiện lỗi và tự hào về thành quả.</div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="23" data-title="Từ điển Buổi 7 — click để lật">
+
+<div class="slide-body">
+  <span class="eyebrow">8 THUẬT NGỮ — CLICK ĐỂ LẬT</span>
+  <h2 class="slide-title">Học qua ẩn dụ dễ nhớ</h2>
+  <div class="fc-grid">
+    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Local Web-App</div><div class="fc-vi">App web chạy máy</div></div><div class="fc-back">File HTML chạy thẳng trên trình duyệt, không cần máy chủ.</div></div></div>
+    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">File System Access API</div><div class="fc-vi">API truy cập file</div></div><div class="fc-back">Cơ chế xin phép để app đọc thư mục vault — như xin chìa khóa tủ.</div></div></div>
+    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Parser</div><div class="fc-vi">Bộ phân tích</div></div><div class="fc-back">Đoạn mã đọc file .md, tìm mốc ngày rồi biến thành dữ liệu lịch.</div></div></div>
+    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Dashboard</div><div class="fc-vi">Bảng điều khiển</div></div><div class="fc-back">Màn hình tổng quan thống kê Dự án, Tài nguyên, tiến độ.</div></div></div>
+    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Roadmap Engine</div><div class="fc-vi">Bộ máy lộ trình</div></div><div class="fc-back">Phần app rải các buổi học lên lịch theo mốc thời gian.</div></div></div>
+    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Rescan</div><div class="fc-vi">Làm mới</div></div><div class="fc-back">Nút bảo app đọc lại vault sau khi em sửa note.</div></div></div>
+    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Deep-link</div><div class="fc-vi">Liên kết sâu</div></div><div class="fc-back">Nút trên app mở thẳng về đúng note trong Obsidian.</div></div></div>
+    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">localStorage</div><div class="fc-vi">Bộ nhớ trình duyệt</div></div><div class="fc-back">Nơi app/bài giảng lưu dữ liệu ngay trong trình duyệt của em.</div></div></div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="24" data-title="Sổ Tay #3 — Thuật ngữ">
+
+<div class="slide-body">
+  <span class="eyebrow">REFLECTION</span>
+  <h2 class="slide-title">Thuật ngữ nào em nhớ nhất?</h2>
+  <div class="qbox qbox-purple">
+    <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #3</div>
+    <div class="qbox-content">Trong các thuật ngữ Buổi 7 — cái nào nghe "khó" nhất lúc đầu nhưng giờ em đã hiểu nhờ ẩn dụ? Cái nào vẫn mơ hồ?</div>
+    <div class="nb-input-wrap">
+      <label>Đã hiểu / chưa hiểu:</label>
+      <textarea class="nb-input" data-nb-id="3" placeholder="Đã hiểu: ... | Chưa hiểu: ..."></textarea>
+      <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+    </div>
+    <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Em đem câu "chưa hiểu" tới Buổi 8 hỏi GV trước khi làm Mini-test.</div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="25" data-title="Tự kiểm tra #1">
+
+<div class="slide-body">
+  <span class="eyebrow">TỰ KIỂM TRA — KHÔNG NỘP</span>
+  <h2 class="slide-title">Sửa note xong cần làm gì?</h2>
+  <div class="quiz" data-correct="2" data-explanation="Đúng! Sửa note trong Obsidian xong, bấm Làm mới (Rescan) để app đọc lại dữ liệu mới.">
+    <p class="quiz-q">Sau khi sửa một note trong Obsidian, để app cập nhật em bấm nút nào?</p>
+    <div class="quiz-opts">
+      <button class="quiz-opt" data-index="0">Đóng app rồi xoá vault</button>
+      <button class="quiz-opt" data-index="1">Gửi lại email</button>
+      <button class="quiz-opt" data-index="2">Làm mới (Rescan)</button>
+      <button class="quiz-opt" data-index="3">Không cần làm gì</button>
+    </div>
+    <div class="quiz-fb"></div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="26" data-title="Tự kiểm tra #2">
+
+<div class="slide-body">
+  <span class="eyebrow">TỰ KIỂM TRA — #2</span>
+  <h2 class="slide-title">App đọc Quiz từ thư mục nào?</h2>
+  <div class="quiz" data-correct="3" data-explanation="Đúng! App đọc các file Quiz/Đề trong thư mục 06_quiz_exam.">
+    <p class="quiz-q">App nạp Quiz tương tác từ thư mục nào trong vault?</p>
+    <div class="quiz-opts">
+      <button class="quiz-opt" data-index="0">01_Projects</button>
+      <button class="quiz-opt" data-index="1">03_Resources</button>
+      <button class="quiz-opt" data-index="2">05_learning_plan</button>
+      <button class="quiz-opt" data-index="3">06_quiz_exam</button>
+    </div>
+    <div class="quiz-fb"></div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="27" data-title="Bonus: nâng cấp app">
+
+<div class="slide-body">
+  <span class="eyebrow">THỬ THÁCH THÊM — KHÔNG BẮT BUỘC</span>
+  <h2 class="slide-title">Cho người thích khám phá</h2>
+  <div class="qbox qbox-orange">
+    <div class="qbox-header"><div class="qbox-icon">+</div>THỬ AI TẠI NHÀ</div>
+    <div class="qbox-content">Mở Advanced_Learning_App.html, nhờ AI (hoặc Cursor ở Module 5) thêm 1 tính năng nhỏ: ví dụ đổi màu chủ đề, thêm bộ đếm số ngày còn lại tới kỳ thi. Chụp màn hình khoe nhóm Zalo lớp.</div>
+    <div class="qbox-tip"><span class="qbox-tip-label">Gợi ý:</span>Đây là cầu nối tới Module 5 — Vibe Coding, nơi em sẽ tự build app bằng AI.</div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide" data-slide="28" data-title="Sổ Tay #4 — Cuối buổi &amp; Module">
+
+<div class="slide-body">
+  <span class="eyebrow">BOOKEND CẢ MODULE 2</span>
+  <h2 class="slide-title">Nhìn lại hành trình Buổi 5 → 7</h2>
+  <div class="qbox qbox-purple">
+    <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #4 — Cuối Module 2</div>
+    <div class="qbox-content">Đầu Buổi 5 em chưa có gì. Giờ em có Vault PARA, biết dùng AI/RAG và có một App Lịch ôn tập. Điều gì khiến em TỰ HÀO NHẤT? Em sẽ dùng hệ thống này cho kỳ thi sắp tới thế nào?</div>
+    <div class="nb-input-wrap">
+      <label>Điều em tự hào & dự định dùng:</label>
+      <textarea class="nb-input" data-nb-id="4" placeholder="Tự hào nhất: ... | Sẽ dùng để: ..."></textarea>
+      <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+    </div>
+    <div class="qbox-tip"><span class="qbox-tip-label">Chúc mừng:</span>Em vừa hoàn thành Second Brain của riêng mình. Buổi 8 là Đạo đức AI + Mini-test khép lại Module 2.</div>
+  </div>
+</div>
+
+    </section>
+    <section class="slide slide-cover" data-slide="29" data-title="Hẹn Buổi 8">
+
+<div class="cover-orb orb-1"></div><div class="cover-orb orb-2"></div><div class="cover-orb orb-3"></div>
+<div class="cover-content slide-body">
+  <span class="eyebrow">HẾT BUỔI 7 — HOÀN THÀNH MODULE 2</span>
+  <h1 class="hero-title">Hẹn em ở Buổi 8<br/><span class="grad-text">Đạo đức AI + Mini-test</span></h1>
+  <p class="slide-subtitle">Em đã có một hệ thống Second Brain hoàn chỉnh! Buổi 8 ta bàn về dùng AI có đạo đức và làm bài kiểm tra giữa khóa.</p>
+  <div class="cover-chips"><span class="cover-chip">Mang theo App đã chạy</span><span class="cover-chip">Đem Sổ Tay</span><span class="cover-chip">Ôn lại Buổi 1–7</span></div>
+  <p style="margin-top:2rem;color:rgba(255,255,255,0.85);font-size:1rem;">Cảm ơn em đã hoàn thành Buổi 7 và cả Module 2!</p>
+</div>
+
+    </section>
+  </div>
+
+  <div class="nav-bar">
+    <button class="nav-btn prev" onclick="slideEngine.prev()" aria-label="Slide trước">←</button>
+    <div class="nav-counter"><span class="current">1</span> / <span class="total">29</span></div>
+    <button class="nav-btn next" onclick="slideEngine.next()" aria-label="Slide sau">→</button>
+  </div>
+</main>
+
+</div>
+
+<div class="nb-overlay" id="nbOverlay" onclick="if(event.target===this) closeNotebook()">
+  <div class="nb-panel">
+    <div class="nb-header">
+      <div class="nb-title">Sổ Tay Cá Nhân — Buổi 7</div>
+      <button class="nb-close" onclick="closeNotebook()" aria-label="Đóng Sổ Tay">×</button>
+    </div>
+    <div id="nbContent"></div>
+    <div class="nb-actions">
+      <button class="btn-purple" id="nbSubmitBtn" onclick="submitNotebook()">Lưu &amp; Xác nhận</button>
+      <button class="btn-secondary" onclick="clearNotebook()">Xoá hết</button>
+    </div>
+    <div class="nb-submit-status" id="nbSubmitStatus"></div>
+  </div>
+</div>
+
+<script>
+const STORAGE_KEY = 'BAI_GIANG_B7_NOTEBOOK';
+const CL_KEY = 'BAI_GIANG_B7_CHECKLIST';
+
+function loadNotebook() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { return {}; } }
+function saveNotebook(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
+function loadChecklist() { try { return JSON.parse(localStorage.getItem(CL_KEY) || '[]'); } catch(e) { return []; } }
+function saveChecklist(arr) { localStorage.setItem(CL_KEY, JSON.stringify(arr)); }
+
+class SlideEngine {
+  constructor() {
+    this.slides = document.querySelectorAll('.slide');
+    this.current = 0;
+    this.total = this.slides.length;
+    document.querySelector('.total').textContent = this.total;
+    this.bindEvents();
+    this.updateUI();
+  }
+  goto(index) {
+    if (index < 0 || index >= this.total) return;
+    this.slides[this.current].classList.remove('active');
+    this.current = index;
+    this.slides[this.current].classList.add('active');
+    this.slides[this.current].scrollTop = 0;
+    this.updateUI();
+  }
+  next() { this.goto(this.current + 1); }
+  prev() { this.goto(this.current - 1); }
+  updateUI() {
+    document.querySelector('.current').textContent = this.current + 1;
+    const pct = ((this.current + 1) / this.total) * 100;
+    document.querySelector('.progress-fill').style.width = pct + '%';
+    document.querySelector('.nav-btn.prev').disabled = this.current === 0;
+    document.querySelector('.nav-btn.next').disabled = this.current === this.total - 1;
+  }
+  bindEvents() {
+    document.addEventListener('keydown', (e) => {
+      if (document.getElementById('nbOverlay').classList.contains('show')) return;
+      if (document.activeElement && document.activeElement.tagName === 'TEXTAREA') return;
+      if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); this.next(); }
+      if (e.key === 'ArrowLeft') { e.preventDefault(); this.prev(); }
+      if (e.key === 'Escape') {
+        const o = document.getElementById('nbOverlay');
+        if (o.classList.contains('show')) closeNotebook();
+      }
+    });
+    let startX = 0;
+    document.addEventListener('touchstart', (e) => startX = e.touches[0].clientX);
+    document.addEventListener('touchend', (e) => {
+      if (document.activeElement && document.activeElement.tagName === 'TEXTAREA') return;
+      const diff = startX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 60) diff > 0 ? this.next() : this.prev();
+    });
+  }
+}
+
+const slideEngine = new SlideEngine();
+
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('collapsed');
+  document.getElementById('app').classList.toggle('sidebar-collapsed');
+}
+
+const NB_QUESTIONS = {"1": {"title": "SỔ TAY #1 — Đầu buổi", "q": "Em mong app lịch ôn tập giúp được gì"}, "2": {"title": "SỔ TAY #2 — Lịch của em", "q": "Dự án & ngày bắt đầu em muốn thấy trên lịch"}, "3": {"title": "SỔ TAY #3 — Thuật ngữ", "q": "Thuật ngữ Buổi 7 đã hiểu / chưa hiểu"}, "4": {"title": "SỔ TAY #4 — Cuối Module 2", "q": "Điều em tự hào nhất & dự định dùng hệ thống"}};
+
+function initNotebookInputs() {
+  const data = loadNotebook();
+  document.querySelectorAll('.nb-input').forEach(input => {
+    const id = input.dataset.nbId;
+    if (data[id]) input.value = data[id];
+    input.addEventListener('input', () => {
+      const allData = loadNotebook();
+      allData[id] = input.value;
+      saveNotebook(allData);
+      const status = input.parentElement.querySelector('.nb-save-status');
+      if (status) {
+        status.classList.add('show');
+        clearTimeout(input._saveTimeout);
+        input._saveTimeout = setTimeout(() => status.classList.remove('show'), 1500);
+      }
+    });
+  });
+}
+
+function openNotebook() {
+  const data = loadNotebook();
+  const content = document.getElementById('nbContent');
+  content.innerHTML = '';
+  Object.keys(NB_QUESTIONS).forEach(i => {
+    const info = NB_QUESTIONS[i];
+    const answer = (data[i] || '');
+    content.innerHTML += '<div class="nb-entry"><h4>' + info.title + '</h4><div class="nb-q">' + info.q + '</div><div class="nb-answer">' + answer.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div></div>';
+  });
+  document.getElementById('nbOverlay').classList.add('show');
+}
+
+function closeNotebook() { document.getElementById('nbOverlay').classList.remove('show'); }
+
+function submitNotebook() {
+  const data = loadNotebook();
+  const status = document.getElementById('nbSubmitStatus');
+  let hasContent = false;
+  Object.keys(NB_QUESTIONS).forEach(i => { if ((data[i] || '').trim()) hasContent = true; });
+  if (!hasContent) {
+    status.textContent = 'Em chưa viết gì cả — hãy điền ít nhất 1 ô trước khi lưu.';
+    status.className = 'nb-submit-status error show';
+    return;
+  }
+  status.textContent = '✓ Đã lưu Sổ Tay vào trình duyệt của em. Mở lại buổi học, nội dung vẫn còn.';
+  status.className = 'nb-submit-status success show';
+}
+
+function clearNotebook() {
+  if (confirm('Em có chắc muốn xoá toàn bộ Sổ Tay không?')) {
+    localStorage.removeItem(STORAGE_KEY);
+    document.querySelectorAll('.nb-input').forEach(i => i.value = '');
+    openNotebook();
+  }
+}
+
+document.querySelectorAll('.quiz').forEach(quiz => {
+  const correctIndex = parseInt(quiz.dataset.correct);
+  const explanation = quiz.dataset.explanation || '';
+  const options = quiz.querySelectorAll('.quiz-opt');
+  const feedback = quiz.querySelector('.quiz-fb');
+  options.forEach(opt => {
+    opt.addEventListener('click', () => {
+      if (opt.classList.contains('disabled')) return;
+      options.forEach(o => o.classList.add('disabled'));
+      const chosen = parseInt(opt.dataset.index);
+      if (chosen === correctIndex) {
+        opt.classList.add('correct');
+        feedback.textContent = 'Chính xác! ' + explanation;
+        feedback.className = 'quiz-fb show correct';
+      } else {
+        opt.classList.add('wrong');
+        options[correctIndex].classList.add('correct');
+        feedback.textContent = 'Chưa đúng. ' + explanation;
+        feedback.className = 'quiz-fb show wrong';
+      }
+    });
+  });
+});
+
+function initChecklist() {
+  const saved = loadChecklist();
+  document.querySelectorAll('.cl-item').forEach((item, idx) => {
+    if (saved.includes(idx)) item.classList.add('done');
+    item.addEventListener('click', () => {
+      item.classList.toggle('done');
+      const current = [];
+      document.querySelectorAll('.cl-item').forEach((it, i) => {
+        if (it.classList.contains('done')) current.push(i);
+      });
+      saveChecklist(current);
+      updateClProgress();
+    });
+  });
+  updateClProgress();
+}
+
+function updateClProgress() {
+  const total = document.querySelectorAll('.cl-item').length;
+  const done = document.querySelectorAll('.cl-item.done').length;
+  const pct = total ? (done / total) * 100 : 0;
+  const fill = document.getElementById('clBarFill');
+  const stat = document.getElementById('clStat');
+  if (fill) fill.style.width = pct + '%';
+  if (stat) stat.textContent = done + ' / ' + total;
+}
+
+let gameDroppedCount = 0, gameTotal = 0, gameCorrect = 0;
+
+function initGame() {
+  const draggables = document.querySelectorAll('.draggable');
+  gameTotal = draggables.length;
+  if (!gameTotal) return;
+  const buckets = document.querySelectorAll('.bucket');
+  draggables.forEach(d => {
+    d.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', d.dataset.type);
+      d.classList.add('dragging');
+    });
+    d.addEventListener('dragend', () => d.classList.remove('dragging'));
+    d.addEventListener('click', () => {
+      if (d.classList.contains('dropped')) return;
+      const existing = d.querySelector('.tap-picker');
+      if (existing) { existing.remove(); return; }
+      const picker = document.createElement('div');
+      picker.className = 'tap-picker';
+      buckets.forEach(b => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'tap-pick';
+        btn.textContent = b.querySelector('.bucket-title').textContent;
+        btn.style.background = b.dataset.color || '#2563EB';
+        btn.style.color = 'white';
+        btn.addEventListener('click', (e) => { e.stopPropagation(); handleDrop(d, b); });
+        picker.appendChild(btn);
+      });
+      d.appendChild(picker);
+    });
+  });
+  buckets.forEach(b => {
+    b.addEventListener('dragover', (e) => { e.preventDefault(); b.classList.add('drag-over'); });
+    b.addEventListener('dragleave', () => b.classList.remove('drag-over'));
+    b.addEventListener('drop', (e) => {
+      e.preventDefault();
+      b.classList.remove('drag-over');
+      const dragged = document.querySelector('.draggable.dragging');
+      if (dragged) handleDrop(dragged, b);
+    });
+  });
+}
+
+function handleDrop(item, bucket) {
+  if (item.classList.contains('dropped')) return;
+  const isCorrect = item.dataset.type === bucket.dataset.bucket;
+  const dropped = document.createElement('div');
+  dropped.className = 'dropped-item ' + (isCorrect ? 'correct' : 'wrong');
+  dropped.textContent = item.dataset.label + (isCorrect ? ' ✓' : ' ✗');
+  bucket.querySelector('.bucket-zone').appendChild(dropped);
+  item.classList.add('dropped');
+  gameDroppedCount++;
+  if (isCorrect) gameCorrect++;
+  if (gameDroppedCount === gameTotal) {
+    const score = document.getElementById('gameScore');
+    document.getElementById('gameScoreText').innerHTML = 'Điểm của em: <strong style="font-size:1.3rem;color:' + (gameCorrect === gameTotal ? '#10B981' : '#F59E0B') + ';">' + gameCorrect + ' / ' + gameTotal + '</strong>' + (gameCorrect === gameTotal ? ' — Xuất sắc!' : ' — Cố lên nhé!');
+    score.style.display = 'block';
+  }
+}
+
+function restartGame() {
+  gameDroppedCount = 0; gameCorrect = 0;
+  document.querySelectorAll('.draggable').forEach(d => {
+    d.classList.remove('dropped');
+    const p = d.querySelector('.tap-picker');
+    if (p) p.remove();
+  });
+  document.querySelectorAll('.bucket-zone').forEach(z => z.innerHTML = '');
+  const score = document.getElementById('gameScore');
+  if (score) score.style.display = 'none';
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  initNotebookInputs();
+  initChecklist();
+  initGame();
+});
+
+if (window.innerWidth < 1024) {
+  document.getElementById('sidebar').classList.add('collapsed');
+  document.getElementById('app').classList.add('sidebar-collapsed');
+}
+</script>
+
+</body>
+</html>
