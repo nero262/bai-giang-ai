@@ -6,7 +6,7 @@
 <title>{{ app_name }} — Trang chủ</title>
 <meta name="description" content="Khóa học AI 24 buổi cho học sinh lớp 8 và lớp 12 — tự tay xây 8 ứng dụng AI thực tế.">
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="/static/css/style.css">
+<link rel="stylesheet" href="{{ static_base }}/css/style.css">
 </head>
 <body>
   <header class="hero">
@@ -106,7 +106,7 @@
               </span>
             </div>
             {% if lesson.available %}
-              <a class="lesson-cta" href="/lesson/{{ lesson.slug }}" target="_blank" rel="noopener" id="open-{{ lesson.slug }}">
+              <a class="lesson-cta" href="{{ lesson_urls[lesson.slug] }}" target="_blank" rel="noopener" id="open-{{ lesson.slug }}">
                 Mở bài giảng →
               </a>
             {% else %}
@@ -122,10 +122,12 @@
   </main>
 
   <footer class="footer">
-    <p>© 2026 · {{ app_name }} · Built with FastAPI</p>
+    <p>© 2026 · {{ app_name }}</p>
+    {% if show_api_links %}
     <p><a href="/api/docs" target="_blank">API docs</a> · <a href="/api/health" target="_blank">Health</a></p>
+    {% endif %}
   </footer>
 
-  <script src="/static/js/app.js" defer></script>
+  <script src="{{ static_base }}/js/app.js" defer></script>
 </body>
 </html>

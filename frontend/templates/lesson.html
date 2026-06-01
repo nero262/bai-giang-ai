@@ -523,7 +523,7 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 <div class="app" id="app">
 
 <aside class="sidebar" id="sidebar">
-  <a class="sidebar-brand" href="/" title="Về trang chủ — danh sách 24 buổi">
+  <a class="sidebar-brand" href="{{ home_link }}" title="Về trang chủ — danh sách 24 buổi">
     <div class="brand-logo">AI</div>
     <div>
       <div class="brand-text">Khóa AI · 24 buổi</div>
@@ -542,7 +542,7 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
       {% if l.slug == current.slug %}
         <a class="lesson-item active" title="{{ l.description or '' }}"><span class="lesson-num">{{ l.id }}</span><span>{{ l.title }}</span></a>
       {% elif l.available %}
-        <a class="lesson-item" href="/lesson/{{ l.slug }}" title="{{ l.description or '' }}"><span class="lesson-num">{{ l.id }}</span><span>{{ l.title }}</span></a>
+        <a class="lesson-item" href="{{ lesson_urls[l.slug] }}" title="{{ l.description or '' }}"><span class="lesson-num">{{ l.id }}</span><span>{{ l.title }}</span></a>
       {% else %}
         <a class="lesson-item disabled" title="{{ l.description or 'Sắp ra mắt' }}"><span class="lesson-num">{{ l.id }}</span><span>{{ l.title }}</span></a>
       {% endif %}
@@ -560,7 +560,7 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
       <span class="top-title-text">{{ current.title }}</span>
     </div>
     <div class="top-actions">
-      <a class="btn-action" href="/" title="Về trang chủ">← Trang chủ</a>
+      <a class="btn-action" href="{{ home_link }}" title="Về trang chủ">← Trang chủ</a>
       <button class="btn-action notebook" onclick="openNotebook()">Sổ Tay Cá Nhân</button>
       <button class="btn-action" onclick="window.print()">In</button>
     </div>

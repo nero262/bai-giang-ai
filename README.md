@@ -1,67 +1,79 @@
 # Khóa AI 24 buổi — Bài Giảng
 
 Nền tảng web phục vụ bài giảng AI tương tác cho học sinh lớp 8 và lớp 12.
-Mỗi bài giảng là một file HTML độc lập (có slide, quiz, flashcard, drag-drop,
-sổ tay cá nhân), được FastAPI phục vụ và liệt kê trên một trang chủ.
+Mỗi bài giảng là một **slide fragment** (chỉ chứa nội dung slide); phần khung
+dùng chung — sidebar, thanh điều hướng, slide-engine, Sổ Tay, quiz, drag-drop —
+do một template duy nhất cung cấp. Có thể chạy theo **2 cách**: server FastAPI
+(render lúc request) hoặc **trang tĩnh** build sẵn cho GitHub Pages.
 
 ## Tính năng
 
-- 24 bài giảng dạng slide HTML, mỗi bài là một file độc lập.
-- Trang chủ động liệt kê các bài giảng từ `slides/lessons.json`.
-- REST API (Swagger UI tại `/api/docs`).
-- Sổ Tay Cá Nhân — lưu trạng thái câu trả lời vào `localStorage` của trình duyệt.
-- Style "Modern Tech" (Blue + Slate) — phù hợp môi trường giáo dục/doanh nghiệp.
-- Đóng gói Docker, một lệnh là chạy được.
+- 24 bài giảng; mỗi buổi là một fragment trong `slides/`, tự liên kết vào template chung.
+- Trang chủ + sidebar sinh động từ `slides/lessons.json` (single source of truth).
+- Sidebar có **dropdown từng module** — click để xổ/thu danh sách bài.
+- Sổ Tay Cá Nhân, quiz chấm điểm, checklist, drag-drop, flashcard — toàn bộ client-side
+  (lưu `localStorage`), chạy được cả trên bản tĩnh lẫn server.
+- **Chạy 2 chế độ:** FastAPI (có REST API + Swagger `/api/docs`) **hoặc** trang tĩnh
+  (build → GitHub Pages, không cần server).
+- Style "Modern Tech" (Blue + Slate). Đóng gói Docker cho bản server.
 
 ## Cấu trúc thư mục
 
 ```
 bai_giang/
 ├── README.md                  ← Tài liệu này
-├── Makefile                   ← Lệnh nhanh: make dev / make up / make test
-├── docker-compose.yml         ← Deploy 1 lệnh
+├── Makefile                   ← make dev / build-static / test / up
+├── docker-compose.yml         ← Deploy bản server bằng 1 lệnh
+├── render.yaml                ← Blueprint deploy lên Render.com (bản server)
 ├── .env.example               ← Mẫu biến môi trường
 ├── .gitignore  /  .dockerignore
 │
-├── backend/                   ← FastAPI app
+├── .github/workflows/
+│   └── deploy-pages.yml        ← CI: build trang tĩnh + deploy GitHub Pages
+│
+├── backend/                   ← FastAPI app (bản server)
 │   ├── app/
-│   │   ├── __init__.py
-│   │   ├── main.py            ← Entry point, route web + API
-│   │   ├── config.py          ← Cấu hình runtime
-│   │   ├── models.py          ← Pydantic models
-│   │   └── lesson_repository.py
-│   ├── tests/
-│   │   └── test_api.py        ← Pytest
+│   │   ├── main.py            ← Entry point: route web (/ , /lesson/{slug}) + API
+│   │   ├── config.py          ← Cấu hình runtime (đường dẫn, CORS…)
+│   │   ├── models.py          ← Pydantic models (Lesson, …)
+│   │   ├── lesson_repository.py ← Đọc lessons.json
+│   │   ├── rendering.py        ← Gom lesson theo module (dùng chung server + build)
+│   │   └── slide_fragment.py   ← Parse fragment: tách style/slides/Sổ Tay/script
+│   ├── tests/test_api.py
 │   ├── requirements.txt
 │   └── pyproject.toml
 │
-├── frontend/                  ← UI cho trang chủ (Jinja2 + CSS)
+├── frontend/                  ← UI dùng chung (Jinja2 + CSS)
 │   ├── templates/
-│   │   └── index.html
+│   │   ├── index.html         ← Template trang chủ
+│   │   └── lesson.html         ← Template trang bài giảng (khung dùng chung)
 │   └── static/
-│       ├── css/style.css
+│       ├── css/style.css       ← CSS trang chủ
 │       ├── js/app.js
 │       └── images/
 │
-├── slides/                    ← Nội dung bài giảng
-│   ├── lessons.json           ← Index 24 buổi
-│   └── buoi_01.html           ← Slide HTML từng buổi
+├── slides/                    ← Nội dung bài giảng (fragment)
+│   ├── lessons.json           ← Index 24 buổi (id, slug, module, available…)
+│   └── buoi_01.html …          ← Fragment từng buổi (KHÔNG còn <html>/khung)
 │
 ├── deployment/
 │   ├── docker/Dockerfile
-│   └── nginx/bai_giang.conf   ← Reverse proxy (optional)
+│   └── nginx/bai_giang.conf
 │
 ├── scripts/
-│   ├── run_dev.sh
-│   ├── run_test.sh
-│   └── deploy.sh
+│   ├── build_static.py         ← Build trang tĩnh → dist/ (GitHub Pages)
+│   ├── migrate_slide_to_fragment.py ← Chuyển slide HTML cũ → fragment
+│   ├── run_dev.sh / run_test.sh / deploy.sh
 │
-├── prompts/                   ← Prompt để tự tạo bài giảng mới
+├── prompts/                   ← Prompt + hướng dẫn tạo bài giảng mới
 │   ├── lesson_template_prompt.md
 │   └── HUONG_DAN.md
 │
-└── docs/                      ← Tài liệu kỹ thuật bổ sung
+└── docs/                      ← Tài liệu kỹ thuật (ARCHITECTURE, SELF_REVIEW)
 ```
+
+> **dist/** (kết quả build tĩnh) được `.gitignore` — không commit; GitHub Actions
+> tự sinh khi deploy.
 
 ## Yêu cầu
 
@@ -90,6 +102,26 @@ make down          # dừng
 
 Truy cập `http://localhost:8000`.
 
+### Phương án C — Trang tĩnh (GitHub Pages, không cần server)
+
+Toàn bộ nội dung là tĩnh (template + `lessons.json` + slide fragment). Một bước
+build ghép chúng thành HTML hoàn chỉnh, đẩy lên GitHub Pages — không cần FastAPI.
+
+```bash
+make build-static     # render → dist/
+make serve-static     # build rồi xem thử tại http://127.0.0.1:8080
+```
+
+`dist/` gồm `index.html`, `lesson/buoi_XX.html`, `static/`. Dùng đường dẫn tương đối
+nên chạy đúng cả khi đặt dưới sub-path GitHub Pages (`username.github.io/<repo>/`).
+
+**Tự động deploy:** workflow [.github/workflows/deploy-pages.yml](.github/workflows/deploy-pages.yml)
+build + publish mỗi lần push lên `main`. Bật một lần: **Settings → Pages →
+Build and deployment → Source = "GitHub Actions"**.
+
+> Sổ Tay, quiz, checklist, drag-drop, dropdown module đều là JS client-side nên
+> chạy đầy đủ trên bản tĩnh. Chỉ REST API (`/api/*`, Swagger) là riêng của bản server.
+
 ## Các URL chính
 
 | URL | Mô tả |
@@ -103,11 +135,15 @@ Truy cập `http://localhost:8000`.
 
 ## Thêm bài giảng mới
 
-1. Tạo file HTML mới trong `slides/`, ví dụ `buoi_02.html`
-   (tham khảo `prompts/lesson_template_prompt.md` để tạo bằng Claude/ChatGPT).
-2. Mở `slides/lessons.json`, đổi `"available": false` thành `true` cho buổi tương ứng
-   (hoặc thêm entry mới nếu vượt 24 buổi).
-3. Restart server: `make restart` (Docker) hoặc Ctrl+C rồi `make dev` lại.
+1. Tạo **fragment** mới trong `slides/`, ví dụ `buoi_02.html`
+   (tham khảo [prompts/lesson_template_prompt.md](prompts/lesson_template_prompt.md)
+   để tạo bằng Claude/ChatGPT). Fragment chỉ chứa các `<section class="slide">`,
+   cấu hình Sổ Tay (`<script id="nb-questions">`) và CSS/JS riêng nếu cần —
+   **không** có `<html>`/sidebar/khung.
+2. Mở `slides/lessons.json`, đổi `"available": false` → `true` cho buổi tương ứng.
+3. Bài mới **tự** xuất hiện trên trang chủ + sidebar và liên kết vào template:
+   - Bản server: restart (`make restart` hoặc `make dev`) rồi mở `/lesson/buoi_02`.
+   - Bản tĩnh: `make build-static` (hoặc push lên `main` để CI tự build).
 
 Xem chi tiết trong [prompts/HUONG_DAN.md](prompts/HUONG_DAN.md).
 
@@ -133,12 +169,34 @@ pytest
 4. `docker compose up -d`.
 5. (Tùy chọn) Cấu hình Nginx + Let's Encrypt — tham khảo `deployment/nginx/bai_giang.conf`.
 
-## Cấu trúc một slide HTML
+## Cấu trúc một slide (fragment)
 
-Mỗi file slide trong `slides/` là một HTML hoàn chỉnh, self-contained
-(CSS + JS inline). Có thể mở trực tiếp file mà không cần backend.
+Mỗi file trong `slides/` là một **fragment** — KHÔNG còn là HTML hoàn chỉnh.
+Nó chỉ gồm, theo thứ tự:
 
-Backend chỉ làm hai việc: (1) liệt kê các bài giảng, (2) phục vụ file HTML.
+```html
+<!-- comment ghi rõ buổi -->
+<script type="application/json" id="nb-questions">{ "1": {...}, ... }</script>  <!-- câu hỏi Sổ Tay (tuỳ chọn) -->
+<style> /* CSS riêng của buổi (tuỳ chọn) */ </style>
+<section class="slide active slide-cover" data-slide="1" ...> ... </section>
+<section class="slide" data-slide="2" ...> ... </section>
+...
+<script> /* JS riêng của buổi (tuỳ chọn) */ </script>
+```
+
+Khung dùng chung (sidebar có dropdown module, top-bar, slide-engine, Sổ Tay overlay,
+handler quiz/checklist/drag-drop/flashcard) nằm trong
+[frontend/templates/lesson.html](frontend/templates/lesson.html).
+
+**Hai chế độ ghép fragment vào khung:**
+- **Server:** `backend/app/slide_fragment.py` parse fragment → `main.py` render
+  `lesson.html` lúc request (`/lesson/{slug}`).
+- **Tĩnh:** `scripts/build_static.py` làm đúng việc đó lúc build → ghi ra
+  `dist/lesson/buoi_XX.html`.
+
+Cùng một template phục vụ cả hai; khác biệt chỉ là đường dẫn link (server dùng
+tuyệt đối `/lesson/...`, tĩnh dùng tương đối để chạy dưới sub-path GitHub Pages).
+Chi tiết kiến trúc: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
 
 ## License
 
