@@ -3,7 +3,7 @@
 # Lệnh nhanh cho dev & deploy
 # Dùng: make help
 # =====================================================================
-.PHONY: help install dev test build up down logs restart clean
+.PHONY: help install dev test build build-static serve-static up down logs restart clean
 
 help: ## Hiện danh sách lệnh
 	@grep -E '^[a-zA-Z_-]+:.*?## .*$$' $(MAKEFILE_LIST) | awk 'BEGIN{FS=":.*?## "} {printf "  %-12s %s\n", $$1, $$2}'
@@ -20,6 +20,13 @@ test: ## Chạy unit tests
 
 build: ## Build Docker image
 	docker compose build
+
+build-static: ## Build bản tĩnh cho GitHub Pages → dist/
+	python3 scripts/build_static.py --out dist
+
+serve-static: build-static ## Build rồi xem thử bản tĩnh tại http://127.0.0.1:8080
+	@echo "→ http://127.0.0.1:8080"
+	@cd dist && python3 -m http.server 8080
 
 up: ## Khởi động container (production)
 	docker compose up -d

@@ -1,5 +1,9 @@
 # Self-Review — Software Engineer Perspective
 
+> **Lưu ý:** đây là bản review tại thời điểm bàn giao ban đầu (slide còn là HTML
+> self-contained). Kiến trúc sau đó đã đổi: slide → **fragment** + template dùng
+> chung + build tĩnh. Xem [ARCHITECTURE.md](./ARCHITECTURE.md) cho trạng thái hiện tại.
+
 Đánh giá repo `bai_giang/` từ góc nhìn của một software engineer trước khi
 bàn giao. Mục tiêu: phát hiện rủi ro, đề xuất cải thiện cụ thể.
 

@@ -11,34 +11,8 @@ from fastapi.templating import Jinja2Templates
 from .config import get_settings
 from .lesson_repository import LessonRepository
 from .models import HealthStatus, Lesson, LessonList
+from .rendering import group_lessons_by_module
 from .slide_fragment import parse_fragment
-
-
-# Màu chấm sidebar cho từng module (giống style cũ trong các slide).
-MODULE_COLORS: dict[str, str] = {
-    "M1": "#10B981",
-    "M2": "#3B82F6",
-    "M3": "#F59E0B",
-    "M4": "#F97316",
-    "M5": "#A855F7",
-    "M6": "#10B981",
-}
-
-
-def _group_lessons_by_module(lessons: list[Lesson]) -> dict[str, dict]:
-    """Gom lessons theo module, giữ thứ tự xuất hiện. Trả dict[module_code -> {name, color, lessons}]."""
-    modules: dict[str, dict] = {}
-    for l in lessons:
-        bucket = modules.setdefault(
-            l.module,
-            {
-                "name": l.module_name,
-                "color": MODULE_COLORS.get(l.module, "#2563EB"),
-                "lessons": [],
-            },
-        )
-        bucket["lessons"].append(l)
-    return modules
 
 
 settings = get_settings()
@@ -102,6 +76,11 @@ async def home(request: Request) -> HTMLResponse:
             "lessons": lessons_data,
             "total_available": repo.count_available(),
             "total_lessons": len(lessons_data),
+            # URL context — server dùng đường dẫn tuyệt đối, clean URLs.
+            "static_base": "/static",
+            "home_link": "/",
+            "lesson_urls": {l.slug: f"/lesson/{l.slug}" for l in lessons if l.available},
+            "show_api_links": True,
         },
     )
 
@@ -134,12 +113,15 @@ async def view_lesson(request: Request, slug: str):
         "lesson.html",
         {
             "current": lesson,
-            "modules": _group_lessons_by_module(all_lessons),
+            "modules": group_lessons_by_module(all_lessons),
             "total_lessons": len(all_lessons),
             "slide_content": fragment.slide_content,
             "lesson_style": fragment.lesson_style,
             "lesson_script": fragment.lesson_script,
             "notebook_config_json": fragment.notebook_config_json,
+            # URL context — server dùng đường dẫn tuyệt đối.
+            "home_link": "/",
+            "lesson_urls": {l.slug: f"/lesson/{l.slug}" for l in all_lessons if l.available},
         },
     )
 
