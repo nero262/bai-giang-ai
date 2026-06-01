@@ -1,15 +1,12 @@
-<!DOCTYPE html>
-<html lang="vi">
+<!--
+  Slide fragment cho Buổi 7.
+  Chrome (sidebar/top-bar/slide-engine/notebook/quiz) đến từ
+  frontend/templates/lesson.html. File này chỉ chứa nội dung slide,
+  CSS riêng (nếu có), và cấu hình Sổ Tay.
+-->
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Buổi 7 — Hoàn thành APP-3.2 — Lịch ôn tập</title>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap"
-    rel="stylesheet">
-  <style>
-    *,
+<style>
+*,
     *::before,
     *::after {
       box-sizing: border-box;
@@ -2566,110 +2563,30 @@
         grid-template-columns: 1fr;
       }
     }
-  </style>
-</head>
+</style>
 
-<body>
+<script type="application/json" id="nb-questions">
+{
+  "1": {
+    "title": "SỔ TAY #1 — Đầu buổi",
+    "q": "Vì sao app đôi khi lịch trống / quiz không hiện"
+  },
+  "2": {
+    "title": "SỔ TAY #2 — Dự án của em",
+    "q": "Dự án + 2 Resource em sẽ đưa lên app"
+  },
+  "3": {
+    "title": "SỔ TAY #3 — Quiz của em",
+    "q": "Câu Quiz đầu tiên em viết (có ✅)"
+  },
+  "4": {
+    "title": "SỔ TAY #4 — Cuối Module 2",
+    "q": "Điều em tự hào nhất & dự định dùng hệ thống"
+  }
+}
+</script>
 
-  <div class="app" id="app">
-
-    <aside class="sidebar" id="sidebar">
-      <a class="sidebar-brand" href="../" title="Về trang chủ — danh sách 24 buổi">
-        <div class="brand-logo">AI</div>
-        <div>
-          <div class="brand-text">Khóa AI · 24 buổi</div>
-          <div class="brand-sub">Dành cho học sinh — V5</div>
-        </div>
-      </a>
-      <div class="module-section">
-        <div class="module-title"><span class="module-dot" style="background:#10B981;"></span>M1 · Nền tảng AI</div>
-        <a class="lesson-item" href="buoi_01.html" title="AI là gì, đăng ký 3 tài khoản"><span
-            class="lesson-num">1</span><span>Khai giảng & Thế giới AI</span></a>
-        <a class="lesson-item disabled" title="Học cách hỏi AI hiệu quả"><span class="lesson-num">2</span><span>Prompt
-            Engineering RCTFE</span></a>
-        <a class="lesson-item disabled" title="AI dạy theo phương pháp hỏi ngược"><span
-            class="lesson-num">3</span><span>AI làm Trợ giảng (Socratic)</span></a>
-        <a class="lesson-item disabled" title="Build app Tóm tắt tài liệu đầu tiên"><span
-            class="lesson-num">4</span><span>HOÀN THÀNH APP-3.1</span></a>
-      </div>
-      <div class="module-section">
-        <div class="module-title"><span class="module-dot" style="background:#3B82F6;"></span>M2 · Second Brain</div>
-        <a class="lesson-item disabled" title="Bắt đầu hệ thống Second Brain"><span
-            class="lesson-num">5</span><span>Obsidian + PARA</span></a>
-        <a class="lesson-item disabled" title="Cài đặt nguồn dữ liệu cho app"><span
-            class="lesson-num">6</span><span>NotebookLM + Gemini</span></a>
-        <a class="lesson-item active" title="Build app Lịch ôn tập cá nhân"><span class="lesson-num">7</span><span>HOÀN
-            THÀNH APP-3.2</span></a>
-        <a class="lesson-item disabled" title="Đạo đức AI và kiểm tra giữa module"><span
-            class="lesson-num">8</span><span>Đạo đức AI + Mini-test</span></a>
-      </div>
-      <div class="module-section">
-        <div class="module-title"><span class="module-dot" style="background:#F59E0B;"></span>M3 · Multimedia</div>
-        <a class="lesson-item disabled" title="Workflow đa AI và đánh giá output"><span
-            class="lesson-num">9</span><span>Workflow + AI Eval</span></a>
-        <a class="lesson-item disabled" title="Tạo ảnh với AI"><span class="lesson-num">10</span><span>Tạo ảnh
-            AI</span></a>
-        <a class="lesson-item disabled" title="Tạo slide và audio bằng AI"><span class="lesson-num">11</span><span>Slide
-            + Audio</span></a>
-        <a class="lesson-item disabled" title="Build app Chấm bài văn"><span class="lesson-num">12</span><span>HOÀN
-            THÀNH APP-2.1</span></a>
-        <a class="lesson-item disabled" title="Build app Phân tích dữ liệu"><span class="lesson-num">13</span><span>HOÀN
-            THÀNH APP-1.3</span></a>
-      </div>
-      <div class="module-section">
-        <div class="module-title"><span class="module-dot" style="background:#F97316;"></span>M4 · Mini Project + Agent
-        </div>
-        <a class="lesson-item disabled" title="Brief dự án APP-1.2"><span class="lesson-num">14</span><span>Brief
-            APP-1.2</span></a>
-        <a class="lesson-item disabled" title="Build app Chatbot Socratic"><span class="lesson-num">15</span><span>HOÀN
-            THÀNH APP-1.2</span></a>
-        <a class="lesson-item disabled" title="Trình diễn sản phẩm giữa kỳ"><span class="lesson-num">16</span><span>Demo
-            Day giữa kỳ</span></a>
-        <a class="lesson-item disabled" title="Brief dự án APP-2.2"><span class="lesson-num">17</span><span>Brief
-            APP-2.2</span></a>
-        <a class="lesson-item disabled" title="Build app Custom GPT + Make.com"><span
-            class="lesson-num">18</span><span>HOÀN THÀNH APP-2.2</span></a>
-        <a class="lesson-item disabled" title="Dùng MCP nâng cấp app"><span class="lesson-num">19</span><span>MCP nâng
-            cấp app</span></a>
-      </div>
-      <div class="module-section">
-        <div class="module-title"><span class="module-dot" style="background:#A855F7;"></span>M5 · Vibe Coding</div>
-        <a class="lesson-item disabled" title="Dùng Cursor vibe coding"><span class="lesson-num">20</span><span>Cursor +
-            APP-1.1</span></a>
-        <a class="lesson-item disabled" title="Build web app prototype"><span class="lesson-num">21</span><span>HOÀN
-            THÀNH APP-1.1</span></a>
-        <a class="lesson-item disabled" title="Build và deploy web app"><span class="lesson-num">22</span><span>HOÀN
-            THÀNH APP-4.1</span></a>
-      </div>
-      <div class="module-section">
-        <div class="module-title"><span class="module-dot" style="background:#10B981;"></span>M6 · Final Project</div>
-        <a class="lesson-item disabled" title="Hoàn thiện sản phẩm cuối khóa"><span
-            class="lesson-num">23</span><span>Polish + Deploy</span></a>
-        <a class="lesson-item disabled" title="Trình diễn cuối khóa và bế giảng"><span
-            class="lesson-num">24</span><span>Demo Day cuối + Bế giảng</span></a>
-      </div>
-    </aside>
-
-    <main class="main">
-      <div class="top-bar">
-        <button class="top-collapse-btn" onclick="toggleSidebar()" aria-label="Thu gọn / mở thanh bên">≡</button>
-        <div class="top-title">
-          <span class="lesson-badge">BUỔI 7 / 24</span>
-          <span class="top-title-text">Hoàn thành APP-3.2 — Lịch ôn tập</span>
-        </div>
-        <div class="top-actions">
-          <a class="btn-action" href="../" title="Về trang chủ">← Trang chủ</a>
-          <button class="btn-action notebook" onclick="openNotebook()">Sổ Tay Cá Nhân</button>
-          <button class="btn-action" onclick="window.print()">In</button>
-        </div>
-      </div>
-
-      <div class="progress-track">
-        <div class="progress-fill"></div>
-      </div>
-
-      <div class="slides-container" id="slidesContainer">
-        <section class="slide active slide-cover" data-slide="1" data-title="Chào mừng">
+<section class="slide active slide-cover" data-slide="1" data-title="Chào mừng">
 
           <div class="cover-orb orb-1"></div>
           <div class="cover-orb orb-2"></div>
@@ -2684,7 +2601,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="2" data-title="Bạn sẽ làm được gì">
+
+<section class="slide" data-slide="2" data-title="Bạn sẽ làm được gì">
 
           <div class="slide-body">
             <span class="eyebrow">CUỐI BUỔI 7 — EM PHẢI CÓ</span>
@@ -2716,7 +2634,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="3" data-title="Sổ Tay #1 — Đầu buổi">
+
+<section class="slide" data-slide="3" data-title="Sổ Tay #1 — Đầu buổi">
 
           <div class="slide-body">
             <span class="eyebrow">BẮT ĐẦU</span>
@@ -2738,7 +2657,8 @@
           </div>
 
         </section>
-        <section class="slide slide-cover" data-slide="4" data-title="App đã có sẵn">
+
+<section class="slide slide-cover" data-slide="4" data-title="App đã có sẵn">
 
           <div class="cover-orb orb-1"></div>
           <div class="cover-orb orb-2"></div>
@@ -2753,7 +2673,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="5" data-title="Giới thiệu qua về app">
+
+<section class="slide" data-slide="5" data-title="Giới thiệu qua về app">
 
           <div class="slide-body">
             <span class="eyebrow">GIỚI THIỆU NHANH</span>
@@ -2784,7 +2705,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="6" data-title="Mở app &amp; cấp quyền">
+
+<section class="slide" data-slide="6" data-title="Mở app &amp; cấp quyền">
 
           <div class="slide-body">
             <span class="eyebrow">THỰC HÀNH 1 — NHANH</span>
@@ -2798,7 +2720,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="7" data-title="Nguyên tắc vàng">
+
+<section class="slide" data-slide="7" data-title="Nguyên tắc vàng">
 
           <div class="slide-body">
             <span class="eyebrow">ĐIỀU CỐT LÕI CỦA CẢ BUỔI</span>
@@ -2822,7 +2745,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="8" data-title="Hỏi bạn cặp #1">
+
+<section class="slide" data-slide="8" data-title="Hỏi bạn cặp #1">
 
           <div class="slide-body">
             <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
@@ -2839,7 +2763,8 @@
           </div>
 
         </section>
-        <section class="slide slide-cover" data-slide="9" data-title="Tạo nội dung theo từng folder">
+
+<section class="slide slide-cover" data-slide="9" data-title="Tạo nội dung theo từng folder">
 
           <div class="cover-orb orb-1" style="background:#3B82F6;"></div>
           <div class="cover-orb orb-2" style="background:#06B6D4;"></div>
@@ -2855,7 +2780,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="10" data-title="Folder nào hiện ở đâu">
+
+<section class="slide" data-slide="10" data-title="Folder nào hiện ở đâu">
 
           <div class="slide-body">
             <span class="eyebrow">BẢN ĐỒ DỮ LIỆU</span>
@@ -2897,7 +2823,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="11" data-title="01_Projects — viết note Dự án">
+
+<section class="slide" data-slide="11" data-title="01_Projects — viết note Dự án">
 
           <div class="slide-body">
             <span class="eyebrow">FOLDER 1</span>
@@ -2916,7 +2843,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="12" data-title="03_Resources — viết Tài nguyên">
+
+<section class="slide" data-slide="12" data-title="03_Resources — viết Tài nguyên">
 
           <div class="slide-body">
             <span class="eyebrow">FOLDER 2</span>
@@ -2932,7 +2860,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="13" data-title="Sổ Tay #2 — Dự án của em">
+
+<section class="slide" data-slide="13" data-title="Sổ Tay #2 — Dự án của em">
 
           <div class="slide-body">
             <span class="eyebrow">ÁP DỤNG</span>
@@ -2955,7 +2884,8 @@
           </div>
 
         </section>
-        <section class="slide slide-cover" data-slide="14" data-title="05_learning_plan — trái tim của lịch">
+
+<section class="slide slide-cover" data-slide="14" data-title="05_learning_plan — trái tim của lịch">
 
           <div class="cover-orb orb-1" style="background:#10B981;"></div>
           <div class="cover-orb orb-2" style="background:#3B82F6;"></div>
@@ -2969,7 +2899,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="15" data-title="Cấu trúc 1 file Plan">
+
+<section class="slide" data-slide="15" data-title="Cấu trúc 1 file Plan">
 
           <div class="slide-body">
             <span class="eyebrow">3 PHẦN BẮT BUỘC</span>
@@ -2998,7 +2929,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="16" data-title="Bắt buộc: Ngày bắt đầu">
+
+<section class="slide" data-slide="16" data-title="Bắt buộc: Ngày bắt đầu">
 
           <div class="slide-body">
             <span class="eyebrow">LỖI SỐ 1 HAY GẶP</span>
@@ -3015,7 +2947,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="17" data-title="4 cách ghi mốc thời gian">
+
+<section class="slide" data-slide="17" data-title="4 cách ghi mốc thời gian">
 
           <div class="slide-body">
             <span class="eyebrow">VIẾT MỐC CHO ĐÚNG</span>
@@ -3057,7 +2990,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="18" data-title="Đánh số: toàn cục vs lồng nhau">
+
+<section class="slide" data-slide="18" data-title="Đánh số: toàn cục vs lồng nhau">
 
           <div class="slide-body">
             <span class="eyebrow">ĐỂ KHÔNG BỊ CHỒNG NGÀY</span>
@@ -3094,7 +3028,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="19" data-title="Gắn Quiz vào buổi học">
+
+<section class="slide" data-slide="19" data-title="Gắn Quiz vào buổi học">
 
           <div class="slide-body">
             <span class="eyebrow">ĐỂ QUIZ HIỆN TRÊN APP</span>
@@ -3116,7 +3051,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="20" data-title="Game: app đọc được hay bỏ qua?">
+
+<section class="slide" data-slide="20" data-title="Game: app đọc được hay bỏ qua?">
 
           <div class="slide-body">
             <span class="eyebrow">QUICK SELF-TEST</span>
@@ -3157,7 +3093,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="21" data-title="Quiz: chọn dòng đúng định dạng">
+
+<section class="slide" data-slide="21" data-title="Quiz: chọn dòng đúng định dạng">
 
           <div class="slide-body">
             <span class="eyebrow">KIỂM TRA NHANH</span>
@@ -3176,7 +3113,8 @@
           </div>
 
         </section>
-        <section class="slide slide-cover" data-slide="22" data-title="06_quiz_exam — Quiz hiện đúng">
+
+<section class="slide slide-cover" data-slide="22" data-title="06_quiz_exam — Quiz hiện đúng">
 
           <div class="cover-orb orb-1"></div>
           <div class="cover-orb orb-2"></div>
@@ -3191,7 +3129,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="23" data-title="Định dạng Quiz chuẩn">
+
+<section class="slide" data-slide="23" data-title="Định dạng Quiz chuẩn">
 
           <div class="slide-body">
             <span class="eyebrow">MẪU CHUẨN</span>
@@ -3214,7 +3153,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="24" data-title="Định dạng Đề (Exam)">
+
+<section class="slide" data-slide="24" data-title="Định dạng Đề (Exam)">
 
           <div class="slide-body">
             <span class="eyebrow">PHẦN TỰ LUẬN</span>
@@ -3232,7 +3172,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="25" data-title="Sổ Tay #3 — Quiz của em">
+
+<section class="slide" data-slide="25" data-title="Sổ Tay #3 — Quiz của em">
 
           <div class="slide-body">
             <span class="eyebrow">ÁP DỤNG</span>
@@ -3258,7 +3199,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="26" data-title="Các lỗi thường gặp &amp; cách sửa">
+
+<section class="slide" data-slide="26" data-title="Các lỗi thường gặp &amp; cách sửa">
 
           <div class="slide-body">
             <span class="eyebrow">DEBUG NỘI DUNG</span>
@@ -3298,7 +3240,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="27" data-title="Sửa xong phải Làm mới (Rescan)">
+
+<section class="slide" data-slide="27" data-title="Sửa xong phải Làm mới (Rescan)">
 
           <div class="slide-body">
             <span class="eyebrow">BƯỚC CUỐI MỖI LẦN SỬA</span>
@@ -3318,7 +3261,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="28" data-title="Hỏi bạn cặp #2">
+
+<section class="slide" data-slide="28" data-title="Hỏi bạn cặp #2">
 
           <div class="slide-body">
             <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
@@ -3335,7 +3279,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="29" data-title="Checklist — nội dung sẵn sàng lên app">
+
+<section class="slide" data-slide="29" data-title="Checklist — nội dung sẵn sàng lên app">
 
           <div class="slide-body">
             <span class="eyebrow">CUỐI BUỔI 7 — KIỂM TRA NỘI DUNG</span>
@@ -3388,7 +3333,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="30" data-title="Từ điển Buổi 7 — click để lật">
+
+<section class="slide" data-slide="30" data-title="Từ điển Buổi 7 — click để lật">
 
           <div class="slide-body">
             <span class="eyebrow">8 THUẬT NGỮ — CLICK ĐỂ LẬT</span>
@@ -3470,7 +3416,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="31" data-title="Tự kiểm tra #1">
+
+<section class="slide" data-slide="31" data-title="Tự kiểm tra #1">
 
           <div class="slide-body">
             <span class="eyebrow">TỰ KIỂM TRA — KHÔNG NỘP</span>
@@ -3489,7 +3436,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="32" data-title="Tự kiểm tra #2">
+
+<section class="slide" data-slide="32" data-title="Tự kiểm tra #2">
 
           <div class="slide-body">
             <span class="eyebrow">TỰ KIỂM TRA — #2</span>
@@ -3508,7 +3456,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="33" data-title="Thử AI tại nhà">
+
+<section class="slide" data-slide="33" data-title="Thử AI tại nhà">
 
           <div class="slide-body">
             <span class="eyebrow">BÀI TẬP VỀ NHÀ — TRƯỚC BUỔI 8</span>
@@ -3526,7 +3475,8 @@
           </div>
 
         </section>
-        <section class="slide" data-slide="34" data-title="Sổ Tay #4 — Cuối Module 2">
+
+<section class="slide" data-slide="34" data-title="Sổ Tay #4 — Cuối Module 2">
 
           <div class="slide-body">
             <span class="eyebrow">BOOKEND CẢ MODULE 2</span>
@@ -3548,7 +3498,8 @@
           </div>
 
         </section>
-        <section class="slide slide-cover" data-slide="35" data-title="Hẹn Buổi 8">
+
+<section class="slide slide-cover" data-slide="35" data-title="Hẹn Buổi 8">
 
           <div class="cover-orb orb-1"></div>
           <div class="cover-orb orb-2"></div>
@@ -3565,153 +3516,9 @@
           </div>
 
         </section>
-      </div>
 
-      <div class="nav-bar">
-        <button class="nav-btn prev" onclick="slideEngine.prev()" aria-label="Slide trước">←</button>
-        <div class="nav-counter"><span class="current">1</span> / <span class="total">35</span></div>
-        <button class="nav-btn next" onclick="slideEngine.next()" aria-label="Slide sau">→</button>
-      </div>
-    </main>
-
-  </div>
-
-  <div class="nb-overlay" id="nbOverlay" onclick="if(event.target===this) closeNotebook()">
-    <div class="nb-panel">
-      <div class="nb-header">
-        <div class="nb-title">Sổ Tay Cá Nhân — Buổi 7</div>
-        <button class="nb-close" onclick="closeNotebook()" aria-label="Đóng Sổ Tay">×</button>
-      </div>
-      <div id="nbContent"></div>
-      <div class="nb-actions">
-        <button class="btn-purple" id="nbSubmitBtn" onclick="submitNotebook()">Lưu &amp; Xác nhận</button>
-        <button class="btn-secondary" onclick="clearNotebook()">Xoá hết</button>
-      </div>
-      <div class="nb-submit-status" id="nbSubmitStatus"></div>
-    </div>
-  </div>
-
-  <script>
-    const STORAGE_KEY = 'BAI_GIANG_B7_NOTEBOOK';
-    const CL_KEY = 'BAI_GIANG_B7_CHECKLIST';
-
-    function loadNotebook() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch (e) { return {}; } }
-    function saveNotebook(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
-    function loadChecklist() { try { return JSON.parse(localStorage.getItem(CL_KEY) || '[]'); } catch (e) { return []; } }
-    function saveChecklist(arr) { localStorage.setItem(CL_KEY, JSON.stringify(arr)); }
-
-    class SlideEngine {
-      constructor() {
-        this.slides = document.querySelectorAll('.slide');
-        this.current = 0;
-        this.total = this.slides.length;
-        document.querySelector('.total').textContent = this.total;
-        this.bindEvents();
-        this.updateUI();
-      }
-      goto(index) {
-        if (index < 0 || index >= this.total) return;
-        this.slides[this.current].classList.remove('active');
-        this.current = index;
-        this.slides[this.current].classList.add('active');
-        this.slides[this.current].scrollTop = 0;
-        this.updateUI();
-      }
-      next() { this.goto(this.current + 1); }
-      prev() { this.goto(this.current - 1); }
-      updateUI() {
-        document.querySelector('.current').textContent = this.current + 1;
-        const pct = ((this.current + 1) / this.total) * 100;
-        document.querySelector('.progress-fill').style.width = pct + '%';
-        document.querySelector('.nav-btn.prev').disabled = this.current === 0;
-        document.querySelector('.nav-btn.next').disabled = this.current === this.total - 1;
-      }
-      bindEvents() {
-        document.addEventListener('keydown', (e) => {
-          if (document.getElementById('nbOverlay').classList.contains('show')) return;
-          if (document.activeElement && document.activeElement.tagName === 'TEXTAREA') return;
-          if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); this.next(); }
-          if (e.key === 'ArrowLeft') { e.preventDefault(); this.prev(); }
-          if (e.key === 'Escape') {
-            const o = document.getElementById('nbOverlay');
-            if (o.classList.contains('show')) closeNotebook();
-          }
-        });
-        let startX = 0;
-        document.addEventListener('touchstart', (e) => startX = e.touches[0].clientX);
-        document.addEventListener('touchend', (e) => {
-          if (document.activeElement && document.activeElement.tagName === 'TEXTAREA') return;
-          const diff = startX - e.changedTouches[0].clientX;
-          if (Math.abs(diff) > 60) diff > 0 ? this.next() : this.prev();
-        });
-      }
-    }
-
-    const slideEngine = new SlideEngine();
-
-    function toggleSidebar() {
-      document.getElementById('sidebar').classList.toggle('collapsed');
-      document.getElementById('app').classList.toggle('sidebar-collapsed');
-    }
-
-    const NB_QUESTIONS = { "1": { "title": "SỔ TAY #1 — Đầu buổi", "q": "Vì sao app đôi khi lịch trống / quiz không hiện" }, "2": { "title": "SỔ TAY #2 — Dự án của em", "q": "Dự án + 2 Resource em sẽ đưa lên app" }, "3": { "title": "SỔ TAY #3 — Quiz của em", "q": "Câu Quiz đầu tiên em viết (có ✅)" }, "4": { "title": "SỔ TAY #4 — Cuối Module 2", "q": "Điều em tự hào nhất & dự định dùng hệ thống" } };
-
-    function initNotebookInputs() {
-      const data = loadNotebook();
-      document.querySelectorAll('.nb-input').forEach(input => {
-        const id = input.dataset.nbId;
-        if (data[id]) input.value = data[id];
-        input.addEventListener('input', () => {
-          const allData = loadNotebook();
-          allData[id] = input.value;
-          saveNotebook(allData);
-          const status = input.parentElement.querySelector('.nb-save-status');
-          if (status) {
-            status.classList.add('show');
-            clearTimeout(input._saveTimeout);
-            input._saveTimeout = setTimeout(() => status.classList.remove('show'), 1500);
-          }
-        });
-      });
-    }
-
-    function openNotebook() {
-      const data = loadNotebook();
-      const content = document.getElementById('nbContent');
-      content.innerHTML = '';
-      Object.keys(NB_QUESTIONS).forEach(i => {
-        const info = NB_QUESTIONS[i];
-        const answer = (data[i] || '');
-        content.innerHTML += '<div class="nb-entry"><h4>' + info.title + '</h4><div class="nb-q">' + info.q + '</div><div class="nb-answer">' + answer.replace(/</g, '&lt;').replace(/>/g, '&gt;') + '</div></div>';
-      });
-      document.getElementById('nbOverlay').classList.add('show');
-    }
-
-    function closeNotebook() { document.getElementById('nbOverlay').classList.remove('show'); }
-
-    function submitNotebook() {
-      const data = loadNotebook();
-      const status = document.getElementById('nbSubmitStatus');
-      let hasContent = false;
-      Object.keys(NB_QUESTIONS).forEach(i => { if ((data[i] || '').trim()) hasContent = true; });
-      if (!hasContent) {
-        status.textContent = 'Em chưa viết gì cả — hãy điền ít nhất 1 ô trước khi lưu.';
-        status.className = 'nb-submit-status error show';
-        return;
-      }
-      status.textContent = '✓ Đã lưu Sổ Tay vào trình duyệt của em. Mở lại buổi học, nội dung vẫn còn.';
-      status.className = 'nb-submit-status success show';
-    }
-
-    function clearNotebook() {
-      if (confirm('Em có chắc muốn xoá toàn bộ Sổ Tay không?')) {
-        localStorage.removeItem(STORAGE_KEY);
-        document.querySelectorAll('.nb-input').forEach(i => i.value = '');
-        openNotebook();
-      }
-    }
-
-    document.querySelectorAll('.quiz').forEach(quiz => {
+<script>
+document.querySelectorAll('.quiz').forEach(quiz => {
       const correctIndex = parseInt(quiz.dataset.correct);
       const explanation = quiz.dataset.explanation || '';
       const options = quiz.querySelectorAll('.quiz-opt');
@@ -3735,118 +3542,8 @@
       });
     });
 
-    function initChecklist() {
-      const saved = loadChecklist();
-      document.querySelectorAll('.cl-item').forEach((item, idx) => {
-        if (saved.includes(idx)) item.classList.add('done');
-        item.addEventListener('click', () => {
-          item.classList.toggle('done');
-          const current = [];
-          document.querySelectorAll('.cl-item').forEach((it, i) => {
-            if (it.classList.contains('done')) current.push(i);
-          });
-          saveChecklist(current);
-          updateClProgress();
-        });
-      });
-      updateClProgress();
-    }
-
-    function updateClProgress() {
-      const total = document.querySelectorAll('.cl-item').length;
-      const done = document.querySelectorAll('.cl-item.done').length;
-      const pct = total ? (done / total) * 100 : 0;
-      const fill = document.getElementById('clBarFill');
-      const stat = document.getElementById('clStat');
-      if (fill) fill.style.width = pct + '%';
-      if (stat) stat.textContent = done + ' / ' + total;
-    }
-
-    let gameDroppedCount = 0, gameTotal = 0, gameCorrect = 0;
-
-    function initGame() {
-      const draggables = document.querySelectorAll('.draggable');
-      gameTotal = draggables.length;
-      if (!gameTotal) return;
-      const buckets = document.querySelectorAll('.bucket');
-      draggables.forEach(d => {
-        d.addEventListener('dragstart', (e) => {
-          e.dataTransfer.setData('text/plain', d.dataset.type);
-          d.classList.add('dragging');
-        });
-        d.addEventListener('dragend', () => d.classList.remove('dragging'));
-        d.addEventListener('click', () => {
-          if (d.classList.contains('dropped')) return;
-          const existing = d.querySelector('.tap-picker');
-          if (existing) { existing.remove(); return; }
-          const picker = document.createElement('div');
-          picker.className = 'tap-picker';
-          buckets.forEach(b => {
-            const btn = document.createElement('button');
-            btn.type = 'button';
-            btn.className = 'tap-pick';
-            btn.textContent = b.querySelector('.bucket-title').textContent;
-            btn.style.background = b.dataset.color || '#2563EB';
-            btn.style.color = 'white';
-            btn.addEventListener('click', (e) => { e.stopPropagation(); handleDrop(d, b); });
-            picker.appendChild(btn);
-          });
-          d.appendChild(picker);
-        });
-      });
-      buckets.forEach(b => {
-        b.addEventListener('dragover', (e) => { e.preventDefault(); b.classList.add('drag-over'); });
-        b.addEventListener('dragleave', () => b.classList.remove('drag-over'));
-        b.addEventListener('drop', (e) => {
-          e.preventDefault();
-          b.classList.remove('drag-over');
-          const dragged = document.querySelector('.draggable.dragging');
-          if (dragged) handleDrop(dragged, b);
-        });
-      });
-    }
-
-    function handleDrop(item, bucket) {
-      if (item.classList.contains('dropped')) return;
-      const isCorrect = item.dataset.type === bucket.dataset.bucket;
-      const dropped = document.createElement('div');
-      dropped.className = 'dropped-item ' + (isCorrect ? 'correct' : 'wrong');
-      dropped.textContent = item.dataset.label + (isCorrect ? ' ✓' : ' ✗');
-      bucket.querySelector('.bucket-zone').appendChild(dropped);
-      item.classList.add('dropped');
-      gameDroppedCount++;
-      if (isCorrect) gameCorrect++;
-      if (gameDroppedCount === gameTotal) {
-        const score = document.getElementById('gameScore');
-        document.getElementById('gameScoreText').innerHTML = 'Điểm của em: <strong style="font-size:1.3rem;color:' + (gameCorrect === gameTotal ? '#10B981' : '#F59E0B') + ';">' + gameCorrect + ' / ' + gameTotal + '</strong>' + (gameCorrect === gameTotal ? ' — Xuất sắc!' : ' — Cố lên nhé!');
-        score.style.display = 'block';
-      }
-    }
-
-    function restartGame() {
-      gameDroppedCount = 0; gameCorrect = 0;
-      document.querySelectorAll('.draggable').forEach(d => {
-        d.classList.remove('dropped');
-        const p = d.querySelector('.tap-picker');
-        if (p) p.remove();
-      });
-      document.querySelectorAll('.bucket-zone').forEach(z => z.innerHTML = '');
-      const score = document.getElementById('gameScore');
-      if (score) score.style.display = 'none';
-    }
-
-    document.addEventListener('DOMContentLoaded', () => {
-      initNotebookInputs();
-      initChecklist();
-      initGame();
-    });
-
-    if (window.innerWidth < 1024) {
+if (window.innerWidth < 1024) {
       document.getElementById('sidebar').classList.add('collapsed');
       document.getElementById('app').classList.add('sidebar-collapsed');
     }
-  </script>
-
-</body>
-
-</html>
+</script>

@@ -11,6 +11,34 @@ from fastapi.templating import Jinja2Templates
 from .config import get_settings
 from .lesson_repository import LessonRepository
 from .models import HealthStatus, Lesson, LessonList
+from .slide_fragment import parse_fragment
+
+
+# Màu chấm sidebar cho từng module (giống style cũ trong các slide).
+MODULE_COLORS: dict[str, str] = {
+    "M1": "#10B981",
+    "M2": "#3B82F6",
+    "M3": "#F59E0B",
+    "M4": "#F97316",
+    "M5": "#A855F7",
+    "M6": "#10B981",
+}
+
+
+def _group_lessons_by_module(lessons: list[Lesson]) -> dict[str, dict]:
+    """Gom lessons theo module, giữ thứ tự xuất hiện. Trả dict[module_code -> {name, color, lessons}]."""
+    modules: dict[str, dict] = {}
+    for l in lessons:
+        bucket = modules.setdefault(
+            l.module,
+            {
+                "name": l.module_name,
+                "color": MODULE_COLORS.get(l.module, "#2563EB"),
+                "lessons": [],
+            },
+        )
+        bucket["lessons"].append(l)
+    return modules
 
 
 settings = get_settings()
@@ -79,8 +107,8 @@ async def home(request: Request) -> HTMLResponse:
 
 
 @app.get("/lesson/{slug}", response_class=HTMLResponse, tags=["Web"])
-async def view_lesson(slug: str) -> FileResponse:
-    """Mở slide bài giảng theo slug."""
+async def view_lesson(request: Request, slug: str):
+    """Mở slide bài giảng theo slug — render lesson.html template với fragment được inject."""
     lesson = repo.get_by_slug(slug)
     if lesson is None:
         raise HTTPException(status_code=404, detail=f"Không tìm thấy bài học: {slug}")
@@ -93,7 +121,27 @@ async def view_lesson(slug: str) -> FileResponse:
             status_code=404,
             detail=f"File slide không tồn tại: {lesson.file}",
         )
-    return FileResponse(file_path, media_type="text/html")
+
+    # Template chưa cấu hình → fallback serve file thẳng (giữ cho dev không backend)
+    if templates is None:
+        return FileResponse(file_path, media_type="text/html")
+
+    fragment = parse_fragment(file_path)
+    all_lessons = repo.list_all()
+
+    return templates.TemplateResponse(
+        request,
+        "lesson.html",
+        {
+            "current": lesson,
+            "modules": _group_lessons_by_module(all_lessons),
+            "total_lessons": len(all_lessons),
+            "slide_content": fragment.slide_content,
+            "lesson_style": fragment.lesson_style,
+            "lesson_script": fragment.lesson_script,
+            "notebook_config_json": fragment.notebook_config_json,
+        },
+    )
 
 
 # ============================================================
