@@ -96,9 +96,19 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 .module-title {
   font-size: 0.7rem; font-weight: 700; color: var(--primary-light);
   letter-spacing: 0.12em; text-transform: uppercase;
-  padding: 0.5rem 0.5rem; display: flex; align-items: center; gap: 0.4rem;
+  padding: 0.5rem 0.5rem; display: flex; align-items: center;
+  justify-content: space-between; gap: 0.4rem;
+  cursor: pointer; user-select: none; border-radius: 8px;
+  transition: background 0.2s;
 }
+.module-title:hover { background: rgba(99, 102, 241, 0.12); }
+.module-label { display: flex; align-items: center; gap: 0.4rem; }
 .module-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary-light); }
+.module-chevron { font-size: 0.7rem; color: var(--text-muted); transition: transform 0.25s ease; flex-shrink: 0; }
+.module-section.collapsed .module-chevron { transform: rotate(-90deg); }
+
+.module-lessons { overflow: hidden; max-height: 600px; transition: max-height 0.3s ease; }
+.module-section.collapsed .module-lessons { max-height: 0; }
 
 .lesson-item {
   display: flex; align-items: center; gap: 0.5rem;
@@ -521,10 +531,13 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
     </div>
   </a>
   {% for module_code, module in modules.items() %}
-  <div class="module-section">
-    <div class="module-title">
-      <span class="module-dot" style="background:{{ module.color }};"></span>{{ module_code }} · {{ module.name }}
+  {% set has_current = current.slug in (module.lessons | map(attribute='slug') | list) %}
+  <div class="module-section{% if not has_current %} collapsed{% endif %}">
+    <div class="module-title" onclick="toggleModule(this)" role="button" aria-expanded="{{ 'true' if has_current else 'false' }}" tabindex="0">
+      <span class="module-label"><span class="module-dot" style="background:{{ module.color }};"></span>{{ module_code }} · {{ module.name }}</span>
+      <span class="module-chevron">▾</span>
     </div>
+    <div class="module-lessons">
     {% for l in module.lessons %}
       {% if l.slug == current.slug %}
         <a class="lesson-item active" title="{{ l.description or '' }}"><span class="lesson-num">{{ l.id }}</span><span>{{ l.title }}</span></a>
@@ -534,6 +547,7 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
         <a class="lesson-item disabled" title="{{ l.description or 'Sắp ra mắt' }}"><span class="lesson-num">{{ l.id }}</span><span>{{ l.title }}</span></a>
       {% endif %}
     {% endfor %}
+    </div>
   </div>
   {% endfor %}
 </aside>
@@ -653,6 +667,18 @@ function toggleSidebar() {
   document.getElementById('sidebar').classList.toggle('collapsed');
   document.getElementById('app').classList.toggle('sidebar-collapsed');
 }
+
+/* Module dropdown — click tên module để xổ ra / thu lại danh sách bài */
+function toggleModule(titleEl) {
+  const section = titleEl.closest('.module-section');
+  const collapsed = section.classList.toggle('collapsed');
+  titleEl.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+}
+document.querySelectorAll('.module-title').forEach(t => {
+  t.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggleModule(t); }
+  });
+});
 
 /* Notebook — câu hỏi đọc từ <script id="lesson-config"> */
 let NB_QUESTIONS = {};
