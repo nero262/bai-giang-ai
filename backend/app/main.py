@@ -47,6 +47,18 @@ if settings.SLIDES_DIR.exists():
         name="slides-static",
     )
 
+    # Slide HTML tham chiếu ảnh bằng đường dẫn TƯƠNG ĐỐI (vd "buoi_02_images/x.png").
+    # Lesson render tại /lesson/<slug>, nên ảnh phải truy cập được ở
+    # /lesson/<tên_thư_mục_ảnh>/. Mount riêng từng thư mục *_images để khớp,
+    # đồng thời không đụng route động /lesson/{slug}.
+    for _img_dir in sorted(settings.SLIDES_DIR.glob("*_images")):
+        if _img_dir.is_dir():
+            app.mount(
+                f"/lesson/{_img_dir.name}",
+                StaticFiles(directory=_img_dir),
+                name=f"slides-img-{_img_dir.name}",
+            )
+
 templates = (
     Jinja2Templates(directory=str(settings.TEMPLATES_DIR))
     if settings.TEMPLATES_DIR.exists()

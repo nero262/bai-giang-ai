@@ -64,6 +64,15 @@ def build(out_dir: Path) -> None:
     if STATIC_DIR.exists():
         shutil.copytree(STATIC_DIR, out_dir / "static")
 
+    # Copy thư mục ảnh của slide (vd: slides/buoi_02_images/) → dist/lesson/<tên>/
+    # Slide HTML tham chiếu ảnh bằng đường dẫn TƯƠNG ĐỐI (vd "buoi_02_images/x.png"),
+    # nên ảnh phải nằm cạnh file lesson/<slug>.html mới hiển thị trên GitHub Pages.
+    for img_dir in sorted(SLIDES_DIR.glob("*_images")):
+        if img_dir.is_dir():
+            shutil.copytree(img_dir, out_dir / "lesson" / img_dir.name)
+            n_img = sum(1 for _ in img_dir.iterdir())
+            print(f"  + lesson/{img_dir.name}/ ({n_img} ảnh)")
+
     # ---- Trang chủ (ở gốc dist) ----
     index_html = index_tpl.render(
         app_name=APP_NAME,
