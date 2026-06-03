@@ -1,0 +1,3109 @@
+<!--
+  Slide fragment cho Buổi 2 — Prompt chuẩn & Trợ lý ôn tập AI.
+  Chrome (sidebar/top-bar/slide-engine/quiz/checklist/flashcard)
+  đến từ frontend/templates/lesson.html. File này chỉ chứa nội dung slide,
+  CSS riêng. Sinh từ outline/Student_B2.docx.
+-->
+
+
+<style>
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  :root {
+    /* Modern Tech palette — Blue + Slate (clean, professional) — giữ từ buoi_01.html gốc */
+    --bg: #0F172A;
+    --bg-light: #1E293B;
+    --surface: #FFFFFF;
+    --surface-alt: #F1F5F9;
+    --surface-2: #E2E8F0;
+    --border: #E2E8F0;
+    --text: #0F172A;
+    --text-light: #FFFFFF;
+    --text-muted: #94A3B8;
+    --text-dim: #475569;
+
+    --primary: #2563EB;
+    /* Royal Blue */
+    --primary-light: #3B82F6;
+    --primary-dark: #1D4ED8;
+    --accent: #06B6D4;
+    /* Cyan accent */
+    --success: #059669;
+    --warning: #D97706;
+    --danger: #DC2626;
+
+    /* 4 loại câu hỏi — dịu mắt, đồng bộ */
+    --box-blue: #EFF6FF;
+    --box-blue-border: #2563EB;
+    --box-blue-dark: #1E3A8A;
+    --box-yellow: #FFFBEB;
+    --box-yellow-border: #D97706;
+    --box-yellow-dark: #78350F;
+    --box-purple: #EEF2FF;
+    --box-purple-border: #6366F1;
+    --box-purple-dark: #3730A3;
+    --box-orange: #FFF7ED;
+    --box-orange-border: #EA580C;
+    --box-orange-dark: #7C2D12;
+
+    /* Gradient hệ Blue-Cyan */
+    --grad-primary: linear-gradient(135deg, #2563EB 0%, #0EA5E9 100%);
+    --grad-blue: linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%);
+    --grad-yellow: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
+    --grad-purple: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
+    --grad-orange: linear-gradient(135deg, #EA580C 0%, #F97316 100%);
+    --grad-success: linear-gradient(135deg, #059669 0%, #06B6D4 100%);
+    --grad-cover: linear-gradient(135deg, #0F172A 0%, #1E40AF 60%, #0EA5E9 100%);
+
+    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
+    --shadow-md: 0 2px 8px rgba(15, 23, 42, 0.08);
+    --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.12);
+
+    --radius-sm: 8px;
+    --radius-md: 12px;
+    --radius-lg: 16px;
+
+    --font: 'Be Vietnam Pro', -apple-system, sans-serif;
+    --font-mono: 'JetBrains Mono', monospace;
+  }
+
+  *:focus {
+    outline: none;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--primary);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  html,
+  body {
+    height: 100%;
+    overflow: hidden;
+  }
+
+  body {
+    font-family: var(--font);
+    background: var(--surface-alt);
+    color: var(--text);
+    line-height: 1.6;
+  }
+
+  .app {
+    display: flex;
+    height: 100vh;
+    position: relative;
+  }
+
+  /* SIDEBAR */
+  .sidebar {
+    width: 280px;
+    background: var(--bg);
+    color: white;
+    padding: 1.5rem 1rem;
+    overflow-y: auto;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    flex-shrink: 0;
+    z-index: 50;
+    scrollbar-width: thin;
+    scrollbar-color: #475569 #1E293B;
+  }
+
+  .app.sidebar-collapsed .sidebar {
+    transform: translateX(-280px);
+    position: absolute;
+    height: 100vh;
+  }
+
+  .sidebar::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  .sidebar::-webkit-scrollbar-track {
+    background: #1E293B;
+  }
+
+  .sidebar::-webkit-scrollbar-thumb {
+    background: #475569;
+    border-radius: 3px;
+  }
+
+  .sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid #1E293B;
+    margin-bottom: 1rem;
+  }
+
+  .brand-logo {
+    width: 36px;
+    height: 36px;
+    background: var(--grad-primary);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1rem;
+    color: white;
+  }
+
+  .brand-text {
+    font-size: 0.95rem;
+    font-weight: 700;
+  }
+
+  .brand-sub {
+    font-size: 0.72rem;
+    color: var(--text-muted);
+  }
+
+  .module-section {
+    margin-bottom: 1rem;
+  }
+
+  .module-title {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: var(--primary-light);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    padding: 0.5rem 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+  }
+
+  .module-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary-light);
+  }
+
+  .lesson-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.55rem 0.7rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    margin-bottom: 2px;
+    text-decoration: none;
+    position: relative;
+  }
+
+  .lesson-item:hover:not(.disabled) {
+    background: rgba(99, 102, 241, 0.1);
+    color: white;
+  }
+
+  .lesson-item.active {
+    background: var(--grad-primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+  }
+
+  .lesson-item.disabled {
+    color: #475569;
+    cursor: not-allowed;
+    opacity: 0.55;
+  }
+
+  .lesson-item.disabled::after {
+    content: 'Sắp ra mắt';
+    margin-left: auto;
+    font-size: 0.62rem;
+    background: #1E293B;
+    padding: 1px 6px;
+    border-radius: 100px;
+    color: #64748B;
+  }
+
+  .lesson-item.active::after {
+    content: 'Đang học';
+    margin-left: auto;
+    font-size: 0.62rem;
+    background: rgba(255, 255, 255, 0.25);
+    padding: 1px 6px;
+    border-radius: 100px;
+    color: white;
+  }
+
+  .lesson-num {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: #1E293B;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.7rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  .lesson-item.active .lesson-num {
+    background: rgba(255, 255, 255, 0.2);
+  }
+
+  /* MAIN */
+  .main {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .top-bar {
+    padding: 0.75rem 1.5rem;
+    background: white;
+    border-bottom: 1px solid #E2E8F0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 10;
+  }
+
+  .top-collapse-btn {
+    background: var(--surface-alt);
+    border: 1px solid #E2E8F0;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1rem;
+    color: var(--text);
+  }
+
+  .top-collapse-btn:hover {
+    background: #E2E8F0;
+  }
+
+  .top-title {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .lesson-badge {
+    background: var(--grad-primary);
+    color: white;
+    padding: 0.3rem 0.8rem;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 700;
+  }
+
+  .top-title-text {
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .top-actions {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+  }
+
+  .btn-action {
+    background: var(--surface-alt);
+    border: 1px solid #E2E8F0;
+    padding: 0.4rem 0.9rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.82rem;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-weight: 500;
+  }
+
+  .btn-action:hover {
+    background: #E2E8F0;
+  }
+
+  .btn-action.notebook {
+    background: var(--grad-purple);
+    color: white;
+    border: none;
+  }
+
+  .btn-action.notebook:hover {
+    transform: translateY(-1px);
+  }
+
+  .progress-track {
+    height: 3px;
+    background: #E2E8F0;
+    position: relative;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: var(--grad-primary);
+    width: 0;
+    transition: width 0.4s ease;
+  }
+
+  .slides-container {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .slide {
+    position: absolute;
+    inset: 0;
+    padding: 2rem 4%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateX(50px);
+    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+  }
+
+  .slide.active {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(0);
+  }
+
+  .slide-body {
+    width: 100%;
+    max-width: 1100px;
+    padding: 1rem 0;
+  }
+
+  .eyebrow {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--primary);
+    padding: 0.35rem 0.9rem;
+    background: rgba(99, 102, 241, 0.1);
+    border-radius: 100px;
+    margin-bottom: 1.2rem;
+  }
+
+  .hero-title {
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.025em;
+    margin-bottom: 1.2rem;
+    text-align: center;
+  }
+
+  .hero-title .grad-text {
+    background: var(--grad-primary);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  .slide-title {
+    font-size: clamp(1.6rem, 3vw, 2.4rem);
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 1.2rem;
+    text-align: center;
+  }
+
+  .slide-subtitle {
+    font-size: clamp(0.95rem, 1.4vw, 1.15rem);
+    color: var(--text-dim);
+    text-align: center;
+    margin-bottom: 1.5rem;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+
+  /* COVER SLIDE */
+  .slide-cover {
+    background: var(--bg);
+    color: white;
+    overflow: hidden;
+  }
+
+  .slide-cover .hero-title {
+    color: white;
+  }
+
+  .slide-cover .eyebrow {
+    color: white;
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+  }
+
+  .slide-cover .slide-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .cover-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(80px);
+    opacity: 0.6;
+    pointer-events: none;
+  }
+
+  .cover-orb.orb-1 {
+    width: 400px;
+    height: 400px;
+    background: #6366F1;
+    top: -100px;
+    left: -100px;
+  }
+
+  .cover-orb.orb-2 {
+    width: 350px;
+    height: 350px;
+    background: #EC4899;
+    bottom: -100px;
+    right: -100px;
+  }
+
+  .cover-orb.orb-3 {
+    width: 300px;
+    height: 300px;
+    background: #8B5CF6;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0.3;
+  }
+
+  .cover-content {
+    position: relative;
+    z-index: 2;
+    text-align: center;
+  }
+
+  .cover-chips {
+    display: flex;
+    gap: 0.6rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+  }
+
+  .cover-chip {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    padding: 0.5rem 1.1rem;
+    border-radius: 100px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  /* QUESTION BOXES */
+  .qbox {
+    border-radius: 16px;
+    padding: 1.3rem 1.5rem;
+    margin: 1rem 0;
+    width: 100%;
+    max-width: 800px;
+    position: relative;
+    border-left: 5px solid;
+  }
+
+  .qbox-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.7rem;
+  }
+
+  .qbox-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1rem;
+    font-weight: 900;
+    color: white;
+  }
+
+  .qbox-content {
+    font-size: 0.98rem;
+    line-height: 1.55;
+    font-weight: 500;
+  }
+
+  .qbox-tip {
+    margin-top: 0.7rem;
+    padding-top: 0.7rem;
+    border-top: 1px dashed currentColor;
+    font-size: 0.85rem;
+    opacity: 0.85;
+  }
+
+  .qbox-tip-label {
+    font-weight: 700;
+    margin-right: 0.3rem;
+  }
+
+  .qbox-blue {
+    background: var(--box-blue);
+    border-left-color: var(--box-blue-border);
+    color: var(--box-blue-dark);
+  }
+
+  .qbox-blue .qbox-icon {
+    background: var(--box-blue-border);
+  }
+
+  .qbox-yellow {
+    background: var(--box-yellow);
+    border-left-color: var(--box-yellow-border);
+    color: var(--box-yellow-dark);
+  }
+
+  .qbox-yellow .qbox-icon {
+    background: var(--box-yellow-border);
+  }
+
+  .qbox-purple {
+    background: var(--box-purple);
+    border-left-color: var(--box-purple-border);
+    color: var(--box-purple-dark);
+  }
+
+  .qbox-purple .qbox-icon {
+    background: var(--box-purple-border);
+  }
+
+  .qbox-orange {
+    background: var(--box-orange);
+    border-left-color: var(--box-orange-border);
+    color: var(--box-orange-dark);
+  }
+
+  .qbox-orange .qbox-icon {
+    background: var(--box-orange-border);
+  }
+
+  /* NOTEBOOK INPUT */
+  .nb-input-wrap {
+    margin-top: 1rem;
+    background: white;
+    border-radius: 12px;
+    padding: 1rem;
+    border: 2px dashed var(--box-purple-border);
+  }
+
+  .nb-input-wrap label {
+    display: block;
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--box-purple-dark);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+  }
+
+  .nb-input {
+    width: 100%;
+    border: none;
+    outline: none;
+    font-family: inherit;
+    font-size: 0.95rem;
+    padding: 0.5rem 0;
+    background: transparent;
+    color: var(--text);
+    resize: vertical;
+    min-height: 50px;
+  }
+
+  .nb-save-status {
+    font-size: 0.75rem;
+    color: var(--success);
+    font-weight: 500;
+    margin-top: 0.4rem;
+    display: none;
+  }
+
+  .nb-save-status.show {
+    display: block;
+  }
+
+  /* CARDS */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .card {
+    background: white;
+    border-radius: 14px;
+    padding: 1.2rem;
+    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
+    transition: all 0.3s;
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
+  }
+
+  .card-icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 12px;
+    background: var(--grad-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 1rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+    letter-spacing: -0.01em;
+  }
+
+  .card p {
+    font-size: 0.86rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* COMPARE TABLE */
+  .cmp-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background: white;
+    border-radius: 14px;
+    overflow: hidden;
+    margin-top: 1rem;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+  }
+
+  .cmp-table th,
+  .cmp-table td {
+    padding: 0.85rem 1rem;
+    text-align: left;
+    border-bottom: 1px solid #F1F5F9;
+    font-size: 0.92rem;
+  }
+
+  .cmp-table th {
+    font-weight: 700;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .cmp-table th:first-child {
+    background: var(--surface-alt);
+    color: var(--text-dim);
+  }
+
+  .cmp-table th:nth-child(2) {
+    background: #FFF3E0;
+    color: #C2410C;
+  }
+
+  .cmp-table th:nth-child(3) {
+    background: #DCFCE7;
+    color: #15803D;
+  }
+
+  .cmp-table td:first-child {
+    font-weight: 600;
+    background: var(--surface-alt);
+    color: var(--text-dim);
+    font-size: 0.85rem;
+  }
+
+  .cmp-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* DRAG-DROP GAME */
+  .game-area {
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .game-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem;
+    justify-content: center;
+    padding: 1rem;
+    background: var(--surface-alt);
+    border-radius: 14px;
+    min-height: 80px;
+    margin-bottom: 1rem;
+  }
+
+  .draggable {
+    background: white;
+    padding: 0.6rem 1.1rem;
+    border-radius: 100px;
+    cursor: grab;
+    font-size: 0.88rem;
+    font-weight: 500;
+    border: 2px solid #E2E8F0;
+    transition: all 0.2s;
+    user-select: none;
+    touch-action: none;
+    position: relative;
+  }
+
+  .draggable:active {
+    cursor: grabbing;
+    transform: scale(1.05);
+  }
+
+  .draggable.dragging {
+    opacity: 0.5;
+  }
+
+  .draggable.dropped {
+    display: none;
+  }
+
+  .tap-picker {
+    position: absolute;
+    top: calc(100% + 4px);
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: 4px;
+    background: var(--bg);
+    padding: 4px;
+    border-radius: 100px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+    z-index: 10;
+  }
+
+  .tap-pick {
+    border: none;
+    padding: 6px 12px;
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: inherit;
+  }
+
+  .tap-pick.predictive {
+    background: #FB923C;
+    color: white;
+  }
+
+  .tap-pick.generative {
+    background: #34D399;
+    color: white;
+  }
+
+  .game-buckets {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
+
+  .bucket {
+    background: white;
+    border-radius: 14px;
+    padding: 1.2rem;
+    min-height: 160px;
+    border: 2px dashed #E2E8F0;
+    transition: all 0.2s;
+  }
+
+  .bucket.predictive {
+    border-color: #FB923C;
+    background: #FFF7ED;
+  }
+
+  .bucket.generative {
+    border-color: #34D399;
+    background: #ECFDF5;
+  }
+
+  .bucket.drag-over {
+    border-style: solid;
+    transform: scale(1.02);
+  }
+
+  .bucket-title {
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-size: 0.95rem;
+  }
+
+  .bucket.predictive .bucket-title {
+    color: #C2410C;
+  }
+
+  .bucket.generative .bucket-title {
+    color: #15803D;
+  }
+
+  .bucket-zone {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .dropped-item {
+    background: white;
+    padding: 0.4rem 0.9rem;
+    border-radius: 100px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    border: 1px solid currentColor;
+  }
+
+  .dropped-item.correct {
+    background: #DCFCE7;
+    color: #15803D;
+    border-color: #15803D;
+  }
+
+  .dropped-item.wrong {
+    background: #FEE2E2;
+    color: #B91C1C;
+    border-color: #B91C1C;
+  }
+
+  .game-score {
+    margin-top: 1rem;
+    text-align: center;
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--primary);
+  }
+
+  .btn-restart {
+    margin-top: 0.5rem;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-family: inherit;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  /* QUIZ */
+  .quiz {
+    background: white;
+    border-radius: 16px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+    width: 100%;
+    max-width: 750px;
+    margin-top: 0.5rem;
+  }
+
+  .quiz-q {
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+    line-height: 1.4;
+  }
+
+  .quiz-opts {
+    counter-reset: opts;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .quiz-opt {
+    padding: 0.85rem 1.1rem;
+    border: 2px solid #E2E8F0;
+    border-radius: 10px;
+    background: white;
+    cursor: pointer;
+    text-align: left;
+    font-size: 0.95rem;
+    font-family: inherit;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+  }
+
+  .quiz-opt::before {
+    counter-increment: opts;
+    content: counter(opts, upper-alpha);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #F1F5F9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.78rem;
+    color: var(--text-dim);
+    flex-shrink: 0;
+  }
+
+  .quiz-opt:hover {
+    border-color: var(--primary);
+    background: #F5F7FF;
+  }
+
+  .quiz-opt:hover::before {
+    background: var(--primary);
+    color: white;
+  }
+
+  .quiz-opt.correct {
+    border-color: var(--success);
+    background: #ECFDF5;
+  }
+
+  .quiz-opt.correct::before {
+    background: var(--success);
+    color: white;
+  }
+
+  .quiz-opt.wrong {
+    border-color: var(--danger);
+    background: #FEF2F2;
+  }
+
+  .quiz-opt.wrong::before {
+    background: var(--danger);
+    color: white;
+  }
+
+  .quiz-opt.disabled {
+    pointer-events: none;
+    opacity: 0.6;
+  }
+
+  .quiz-fb {
+    margin-top: 1rem;
+    padding: 0.9rem;
+    border-radius: 10px;
+    font-weight: 500;
+    font-size: 0.9rem;
+    display: none;
+  }
+
+  .quiz-fb.show {
+    display: block;
+  }
+
+  .quiz-fb.correct {
+    background: #ECFDF5;
+    color: #065F46;
+    border-left: 4px solid var(--success);
+  }
+
+  .quiz-fb.wrong {
+    background: #FEF2F2;
+    color: #B91C1C;
+    border-left: 4px solid var(--danger);
+  }
+
+  /* FLASHCARD */
+  .fc-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.8rem;
+    margin-top: 1rem;
+    width: 100%;
+  }
+
+  .fc {
+    perspective: 1000px;
+    height: 150px;
+    cursor: pointer;
+  }
+
+  .fc-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+
+  .fc.flipped .fc-inner {
+    transform: rotateY(180deg);
+  }
+
+  .fc-front,
+  .fc-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    border-radius: 14px;
+    padding: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .fc-front {
+    background: white;
+    border: 2px solid #E2E8F0;
+  }
+
+  .fc-front .fc-term {
+    font-weight: 800;
+    font-size: 1.05rem;
+    color: var(--primary);
+    letter-spacing: 0.02em;
+  }
+
+  .fc-front .fc-vi {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    margin-top: 0.3rem;
+  }
+
+  .fc-back {
+    background: var(--grad-primary);
+    color: white;
+    transform: rotateY(180deg);
+    font-size: 0.85rem;
+    line-height: 1.4;
+  }
+
+  /* STEPS */
+  .steps {
+    list-style: none;
+    counter-reset: step;
+    width: 100%;
+    max-width: 800px;
+    margin-top: 1rem;
+  }
+
+  .steps li {
+    counter-increment: step;
+    padding: 0.85rem 1.2rem 0.85rem 3.8rem;
+    position: relative;
+    background: white;
+    border-radius: 12px;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
+    font-size: 0.94rem;
+    line-height: 1.5;
+  }
+
+  .steps li::before {
+    content: counter(step);
+    position: absolute;
+    left: 0.85rem;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 36px;
+    height: 36px;
+    background: var(--grad-primary);
+    color: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 1rem;
+  }
+
+  .steps li code {
+    background: #F1F5F9;
+    padding: 0.1rem 0.4rem;
+    border-radius: 4px;
+    font-family: var(--font-mono);
+    font-size: 0.85em;
+    color: var(--primary);
+  }
+
+  /* HIGHLIGHT BOX */
+  .hl-box {
+    background: linear-gradient(135deg, #FEF3C7 0%, #FED7AA 100%);
+    border-radius: 14px;
+    padding: 1.1rem 1.3rem;
+    margin: 1rem 0;
+    width: 100%;
+    max-width: 800px;
+    border-left: 4px solid var(--warning);
+  }
+
+  .hl-box.danger {
+    background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
+    border-left-color: var(--danger);
+  }
+
+  .hl-box.success {
+    background: linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%);
+    border-left-color: var(--success);
+  }
+
+  .hl-box.info {
+    background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
+    border-left-color: #3B82F6;
+  }
+
+  .hl-label {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    margin-bottom: 0.4rem;
+    text-transform: uppercase;
+  }
+
+  .hl-box p {
+    font-size: 0.95rem;
+  }
+
+  /* TIMELINE */
+  .timeline {
+    position: relative;
+    padding-left: 2rem;
+    margin-top: 1rem;
+    width: 100%;
+    max-width: 850px;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 9px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--primary-light), var(--accent));
+    border-radius: 100px;
+  }
+
+  .tl-item {
+    position: relative;
+    padding-bottom: 1rem;
+  }
+
+  .tl-dot {
+    position: absolute;
+    left: -1.85rem;
+    top: 0.4rem;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border: 3px solid var(--primary);
+    border-radius: 50%;
+  }
+
+  .tl-content {
+    background: white;
+    padding: 0.85rem 1.1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+  }
+
+  .tl-year {
+    font-size: 0.78rem;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 0.05em;
+  }
+
+  .tl-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin: 0.2rem 0;
+  }
+
+  .tl-desc {
+    font-size: 0.86rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* MODULE ROADMAP */
+  .modmap {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 1rem;
+    max-width: 1000px;
+  }
+
+  @media (max-width: 768px) {
+    .modmap {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .modmap-item {
+    background: white;
+    border-radius: 14px;
+    padding: 0.9rem 0.6rem;
+    text-align: center;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+    position: relative;
+    border-top: 3px solid;
+  }
+
+  .modmap-item:nth-child(1) {
+    border-top-color: #10B981;
+  }
+
+  .modmap-item:nth-child(2) {
+    border-top-color: #3B82F6;
+  }
+
+  .modmap-item:nth-child(3) {
+    border-top-color: #F59E0B;
+  }
+
+  .modmap-item:nth-child(4) {
+    border-top-color: #F97316;
+  }
+
+  .modmap-item:nth-child(5) {
+    border-top-color: #A855F7;
+  }
+
+  .modmap-item:nth-child(6) {
+    border-top-color: #10B981;
+  }
+
+  .modmap-mod {
+    font-size: 0.7rem;
+    font-weight: 800;
+    color: var(--primary);
+    letter-spacing: 0.08em;
+  }
+
+  .modmap-name {
+    font-size: 0.88rem;
+    font-weight: 700;
+    margin: 0.2rem 0;
+  }
+
+  .modmap-buoi {
+    font-size: 0.75rem;
+    color: var(--text-dim);
+    margin-bottom: 0.4rem;
+  }
+
+  .modmap-out {
+    font-size: 0.72rem;
+    color: var(--text);
+    line-height: 1.3;
+  }
+
+  /* CHECKLIST */
+  .cl-container {
+    width: 100%;
+    max-width: 700px;
+    margin-top: 1rem;
+  }
+
+  .cl-progress {
+    background: white;
+    border-radius: 12px;
+    padding: 0.7rem 1rem;
+    margin-bottom: 0.8rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
+  }
+
+  .cl-bar {
+    flex: 1;
+    height: 8px;
+    background: #E2E8F0;
+    border-radius: 100px;
+    overflow: hidden;
+  }
+
+  .cl-bar-fill {
+    height: 100%;
+    background: var(--grad-success);
+    width: 0;
+    transition: width 0.4s ease;
+    border-radius: 100px;
+  }
+
+  .cl-stat {
+    font-weight: 700;
+    font-size: 0.9rem;
+    color: var(--success);
+  }
+
+  .cl-list {
+    list-style: none;
+  }
+
+  .cl-item {
+    background: white;
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+    margin-bottom: 0.4rem;
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+  }
+
+  .cl-item:hover {
+    background: var(--surface-alt);
+  }
+
+  .cl-check {
+    width: 22px;
+    height: 22px;
+    border: 2px solid #CBD5E1;
+    border-radius: 6px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 900;
+    font-size: 0.85rem;
+    color: white;
+    transition: all 0.2s;
+  }
+
+  .cl-item.done .cl-check {
+    background: var(--success);
+    border-color: var(--success);
+  }
+
+  .cl-item.done .cl-check::after {
+    content: '✓';
+  }
+
+  .cl-item.done span {
+    text-decoration: line-through;
+    color: var(--text-muted);
+  }
+
+  /* PROMPT BOX */
+  .prompt-box {
+    background: var(--bg);
+    color: #CDD6F4;
+    border-radius: 14px;
+    padding: 1.1rem 1.4rem;
+    font-family: var(--font-mono);
+    font-size: 0.88rem;
+    line-height: 1.7;
+    margin: 0.8rem 0;
+    width: 100%;
+    max-width: 800px;
+    border-left: 4px solid var(--warning);
+    text-align: left;
+    white-space: pre-wrap;
+    position: relative;
+  }
+
+  .prompt-box .prompt-label {
+    display: block;
+    font-size: 0.65rem;
+    color: var(--warning);
+    font-weight: 700;
+    letter-spacing: 0.15em;
+    margin-bottom: 0.4rem;
+    font-family: var(--font);
+  }
+
+  /* NAV */
+  .nav-bar {
+    position: fixed;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: white;
+    padding: 0.4rem;
+    border-radius: 100px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
+    z-index: 40;
+  }
+
+  .nav-btn {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    border: none;
+    background: var(--surface-alt);
+    color: var(--text);
+    font-size: 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    transition: all 0.2s;
+  }
+
+  .nav-btn:hover {
+    background: var(--primary);
+    color: white;
+  }
+
+  .nav-btn:disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+  }
+
+  .nav-counter {
+    padding: 0 0.7rem;
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    min-width: 64px;
+    text-align: center;
+  }
+
+  /* NOTEBOOK */
+  .nb-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.75);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+  }
+
+  .nb-overlay.show {
+    display: flex;
+  }
+
+  .nb-panel {
+    background: white;
+    border-radius: 20px;
+    padding: 1.5rem 1.8rem;
+    max-width: 700px;
+    width: 100%;
+    max-height: 85vh;
+    overflow-y: auto;
+  }
+
+  .nb-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+  }
+
+  .nb-title {
+    font-size: 1.4rem;
+    font-weight: 800;
+    color: var(--box-purple-dark);
+  }
+
+  .nb-close {
+    background: var(--surface-alt);
+    border: none;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 1.2rem;
+  }
+
+  .nb-entry {
+    background: var(--surface-alt);
+    border-radius: 12px;
+    padding: 1rem;
+    margin-bottom: 0.7rem;
+  }
+
+  .nb-entry h4 {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--box-purple-dark);
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  .nb-entry .nb-q {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+    font-style: italic;
+  }
+
+  .nb-entry .nb-answer {
+    background: white;
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    font-size: 0.92rem;
+    border-left: 3px solid var(--box-purple-border);
+    min-height: 40px;
+    color: var(--text);
+  }
+
+  .nb-entry .nb-answer:empty::before {
+    content: '(chưa viết)';
+    color: var(--text-muted);
+    font-style: italic;
+  }
+
+  .nb-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 1rem;
+  }
+
+  .btn-purple,
+  .btn-secondary {
+    flex: 1;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 600;
+    font-size: 0.85rem;
+  }
+
+  .btn-purple {
+    background: var(--grad-purple);
+    color: white;
+  }
+
+  .btn-secondary {
+    background: var(--surface-alt);
+    color: var(--text);
+  }
+
+  .btn-purple:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
+
+  .nb-submit-status {
+    display: none;
+    margin-top: 0.8rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 10px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    background: var(--surface-alt);
+    color: var(--text-dim);
+  }
+
+  .nb-submit-status.show {
+    display: block;
+  }
+
+  .nb-submit-status.success {
+    background: #ECFDF5;
+    color: #065F46;
+    border-left: 4px solid var(--success);
+  }
+
+  .nb-submit-status.error {
+    background: #FEF2F2;
+    color: #B91C1C;
+    border-left: 4px solid var(--danger);
+  }
+
+  /* SCHOOL CARDS (4 trường phái) */
+  .school-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .school-card {
+    background: white;
+    border-radius: 14px;
+    padding: 1.1rem 1.2rem;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+    border-top: 4px solid var(--primary);
+  }
+
+  .school-num {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    background: var(--grad-primary);
+    color: white;
+    padding: 0.2rem 0.7rem;
+    border-radius: 100px;
+    margin-bottom: 0.5rem;
+  }
+
+  .school-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.4rem;
+    line-height: 1.3;
+  }
+
+  .school-en {
+    font-size: 0.78rem;
+    color: var(--primary);
+    font-weight: 600;
+    font-style: italic;
+    margin-bottom: 0.5rem;
+  }
+
+  .school-desc {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  /* METAPHOR CARDS (Model/LLM/Token) */
+  .met-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+  }
+
+  .met-card {
+    background: white;
+    border-radius: 16px;
+    padding: 1.4rem 1.3rem;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.07);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .met-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+  }
+
+  .met-card.model::before {
+    background: linear-gradient(90deg, #F59E0B, #EF4444);
+  }
+
+  .met-card.llm::before {
+    background: linear-gradient(90deg, #3B82F6, #6366F1);
+  }
+
+  .met-card.token::before {
+    background: linear-gradient(90deg, #10B981, #06B6D4);
+  }
+
+  .met-emoji {
+    font-size: 2.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .met-term {
+    font-size: 1.2rem;
+    font-weight: 900;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.3rem;
+  }
+
+  .met-metaphor {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--primary);
+    margin-bottom: 0.5rem;
+  }
+
+  .met-desc {
+    font-size: 0.85rem;
+    color: var(--text-dim);
+    line-height: 1.55;
+  }
+
+  /* ANIM */
+  .slide.active .stagger>* {
+    opacity: 0;
+    animation: slideUp 0.5s ease forwards;
+  }
+
+  .slide.active .stagger>*:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+
+  .slide.active .stagger>*:nth-child(2) {
+    animation-delay: 0.12s;
+  }
+
+  .slide.active .stagger>*:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+
+  .slide.active .stagger>*:nth-child(4) {
+    animation-delay: 0.28s;
+  }
+
+  .slide.active .stagger>*:nth-child(5) {
+    animation-delay: 0.36s;
+  }
+
+  .slide.active .stagger>*:nth-child(6) {
+    animation-delay: 0.44s;
+  }
+
+  .slide.active .stagger>*:nth-child(7) {
+    animation-delay: 0.52s;
+  }
+
+  .slide.active .stagger>*:nth-child(8) {
+    animation-delay: 0.6s;
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* VIDEO */
+  .video-frame {
+    position: relative;
+    padding-bottom: 56.25%;
+    height: 0;
+    border-radius: 14px;
+    overflow: hidden;
+    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.15);
+    margin: 1rem 0;
+    width: 100%;
+    max-width: 780px;
+  }
+
+  .video-frame iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: none;
+  }
+
+  @media (max-width: 1024px) {
+    .sidebar {
+      position: absolute;
+      transform: translateX(-280px);
+      height: 100vh;
+    }
+
+    .sidebar.open {
+      transform: translateX(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .slide {
+      padding: 1.5rem 5%;
+    }
+
+    .card-grid {
+      grid-template-columns: 1fr;
+    }
+
+    .top-title-text {
+      display: none;
+    }
+
+    .game-buckets {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media print {
+
+    .sidebar,
+    .nav-bar,
+    .top-bar,
+    .top-collapse-btn,
+    .nb-overlay {
+      display: none !important;
+    }
+
+    .slide {
+      position: relative;
+      opacity: 1;
+      visibility: visible;
+      transform: none;
+      page-break-after: always;
+      min-height: 100vh;
+    }
+
+    html,
+    body,
+    .main,
+    .slides-container {
+      overflow: visible;
+      height: auto;
+    }
+  }
+
+
+  /* ============ ALIGNMENT FIXES ============ */
+  /* 1. Equal heights for all card grids via flex */
+  .card-grid,
+  .school-grid,
+  .met-grid,
+  .fc-grid,
+  .app-grid-mini,
+  .modmap {
+    align-items: stretch;
+  }
+
+  /* 2. .card - equal heights with consistent vertical rhythm */
+  .card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .card-icon {
+    flex-shrink: 0;
+    margin-bottom: 0.8rem;
+  }
+
+  .card h3 {
+    flex-shrink: 0;
+    margin-bottom: 0.4rem;
+    line-height: 1.35;
+    min-height: 2.7em;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .card p {
+    flex-grow: 1;
+    margin: 0;
+    line-height: 1.5;
+  }
+
+  /* 3. School cards (4 trường phái) - equal heights */
+  .school-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .school-num {
+    align-self: flex-start;
+  }
+
+  .school-title {
+    min-height: 2.6em;
+    display: flex;
+    align-items: flex-start;
+  }
+
+  .school-en {
+    min-height: 1.4em;
+  }
+
+  .school-desc {
+    flex-grow: 1;
+    margin: 0;
+  }
+
+  /* 4. Metaphor cards (Model/LLM/Token) */
+  .met-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .met-emoji {
+    flex-shrink: 0;
+    line-height: 1;
+  }
+
+  .met-term {
+    flex-shrink: 0;
+  }
+
+  .met-metaphor {
+    min-height: 1.4em;
+    flex-shrink: 0;
+  }
+
+  .met-desc {
+    flex-grow: 1;
+    margin: 0;
+  }
+
+  /* 5. App mini cards (Buổi 1 không dùng nhưng đảm bảo nhất quán) */
+  .app-mini-card {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  /* 6. Module roadmap cards - equal heights */
+  .modmap-item {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .modmap-mod,
+  .modmap-name,
+  .modmap-buoi {
+    flex-shrink: 0;
+  }
+
+  .modmap-out {
+    flex-grow: 1;
+    margin: 0;
+  }
+
+  /* 7. Flashcards - all same size */
+  .fc {
+    height: 160px;
+  }
+
+  /* 8. Feature/qbox cards in card-grid (slide 2 - 4 loại câu hỏi) */
+  .card-grid .qbox {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+  }
+
+  .card-grid .qbox-content {
+    flex-grow: 1;
+  }
+
+  /* 9. Slide body — center content vertically when there's room */
+  .slide-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* 10. Eyebrow/title always centered */
+  .eyebrow,
+  .slide-title,
+  .slide-subtitle {
+    align-self: center;
+  }
+
+  /* 11. Grid containers - center horizontally */
+  .card-grid,
+  .school-grid,
+  .met-grid,
+  .fc-grid,
+  .app-grid-mini,
+  .modmap,
+  .compare,
+  .game-buckets {
+    align-self: stretch;
+  }
+
+  /* 12. Timeline content cards equal padding */
+  .tl-content {
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* 13. Steps list - consistent padding regardless of content */
+  .steps li {
+    display: flex;
+    align-items: center;
+  }
+
+  .steps li::before {
+    position: relative;
+    left: 0;
+    top: 0;
+    transform: none;
+    margin-right: 1rem;
+    flex-shrink: 0;
+  }
+
+  /* 14. Quiz options - icon and text aligned */
+  .quiz-opt {
+    align-items: center;
+  }
+
+  /* 15. Cmp-table - row heights equal */
+  .cmp-table tr td {
+    vertical-align: top;
+  }
+
+  /* 16. HL-box consistent width */
+  .hl-box {
+    align-self: stretch;
+    max-width: 100%;
+  }
+
+  /* 17. Game-items center & wrap properly */
+  .game-items {
+    align-items: center;
+  }
+
+  /* 18. Cover content centering */
+  .slide-cover .slide-body,
+  .slide-cover .cover-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* 19. Cards in 3-card layouts should look identical */
+  .card-grid>.card {
+    text-align: left;
+  }
+
+  /* 20. Make all icon containers same size and aligned top-left */
+  .card-icon,
+  .school-card .card-icon,
+  .met-card .card-icon {
+    align-self: flex-start;
+  }
+
+
+  /* ============ BRAND CARDS (Slide 9) ============ */
+  .brand-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    margin-top: 1rem;
+    align-items: stretch;
+  }
+
+  .brand-card {
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+    display: flex;
+    flex-direction: column;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .brand-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.14);
+  }
+
+  .brand-head {
+    height: 130px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+  }
+
+  .brand-head svg {
+    width: 56px;
+    height: 56px;
+    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
+  }
+
+  .brand-body {
+    padding: 1.1rem 1.1rem 1.3rem;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+  }
+
+  .brand-body h3 {
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+    letter-spacing: -0.01em;
+    color: var(--text);
+  }
+
+  .brand-body p {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin: 0;
+    flex-grow: 1;
+  }
+
+  .brand-footer {
+    margin-top: 1.2rem;
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    text-align: center;
+    max-width: 700px;
+    align-self: center;
+  }
+
+  .brand-footer strong {
+    color: var(--primary);
+    font-weight: 700;
+  }
+
+  /* ============ DOCFIG (illustration images) ============ */
+  .docfig {
+    margin: 1.2rem 0;
+    width: 100%;
+    max-width: 950px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    align-self: center;
+    background: white;
+    padding: 1rem;
+    border-radius: 16px;
+    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.1);
+  }
+
+  .docfig img {
+    width: 100%;
+    max-width: 900px;
+    height: auto;
+    border-radius: 10px;
+    display: block;
+  }
+
+  .docfig figcaption {
+    margin-top: 0.8rem;
+    font-size: 0.88rem;
+    color: var(--text);
+    font-style: italic;
+    text-align: center;
+    font-weight: 500;
+  }
+
+  /* ============ SUBTLE ANIMATIONS ============ */
+  .slide.active .docfig img {
+    animation: fadeInScale 0.7s ease forwards;
+  }
+
+  .slide.active .brand-card {
+    animation: fadeInUp 0.5s ease forwards;
+    opacity: 0;
+  }
+
+  .slide.active .brand-card:nth-child(1) {
+    animation-delay: 0.05s;
+  }
+
+  .slide.active .brand-card:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .slide.active .brand-card:nth-child(3) {
+    animation-delay: 0.25s;
+  }
+
+  .slide.active .brand-card:nth-child(4) {
+    animation-delay: 0.35s;
+  }
+
+  .slide.active .brand-card:nth-child(5) {
+    animation-delay: 0.45s;
+  }
+
+  @keyframes fadeInScale {
+    from {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  /* Pulse animation removed for cleaner look */
+
+  /* ============ SCHOOL FLIP CARDS (Slide 6 — thẻ lật) ============ */
+  .school-flip {
+    perspective: 1200px;
+    height: 300px;
+    cursor: pointer;
+  }
+
+  .school-flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+
+  .school-flip.flipped .school-flip-inner {
+    transform: rotateY(180deg);
+  }
+
+  .school-flip-front,
+  .school-flip-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 14px;
+    padding: 1.3rem 1.2rem;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .school-flip-front {
+    background: white;
+    border-top: 4px solid var(--sf-color, var(--primary));
+    align-items: flex-start;
+  }
+
+  .school-flip-front .school-num {
+    align-self: flex-start;
+  }
+
+  .school-flip-front .school-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin: 0.7rem 0 0.45rem;
+    line-height: 1.3;
+    text-align: left;
+  }
+
+  .school-flip-front .school-en {
+    font-size: 0.82rem;
+    color: var(--primary);
+    font-weight: 600;
+    font-style: italic;
+    text-align: left;
+  }
+
+  .school-flip-hint {
+    margin-top: auto;
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .school-flip-back {
+    background: var(--sf-grad, var(--grad-primary));
+    color: white;
+    transform: rotateY(180deg);
+    justify-content: center;
+  }
+
+  .school-flip-back .school-desc {
+    font-size: 0.88rem;
+    line-height: 1.55;
+    color: white;
+    text-align: left;
+    flex: 0 0 auto;
+  }
+
+  .school-flip-back .school-desc strong {
+    color: #FDE68A;
+  }
+
+  .school-flip-back .school-desc em {
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  /* SLIDE 7 — bố cục 2 cột: nội dung trái + video phải */
+  .agent-split {
+    display: flex;
+    gap: 1.5rem;
+    width: 100%;
+    margin-top: 1rem;
+    align-items: stretch;
+  }
+
+  .agent-left {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .agent-right {
+    flex: 1 1 0;
+    min-width: 0;
+    display: flex;
+  }
+
+  .agent-flip-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.9rem;
+    margin-top: 1rem;
+  }
+
+  .agent-flip {
+    perspective: 1200px;
+    height: 180px;
+    cursor: pointer;
+  }
+
+  .agent-flip-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transform-style: preserve-3d;
+  }
+
+  .agent-flip.flipped .agent-flip-inner {
+    transform: rotateY(180deg);
+  }
+
+  .agent-flip-front,
+  .agent-flip-back {
+    position: absolute;
+    inset: 0;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border-radius: 14px;
+    padding: 1rem;
+    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .agent-flip-front {
+    background: white;
+    border-top: 4px solid var(--sf-color, var(--primary));
+    align-items: flex-start;
+  }
+
+  .agent-flip-front .card-icon {
+    margin-bottom: 0.55rem;
+  }
+
+  .agent-flip-front h3 {
+    font-size: 0.98rem;
+    font-weight: 700;
+    margin: 0 0 0.3rem;
+    letter-spacing: -0.01em;
+    text-align: left;
+  }
+
+  .agent-flip-front p {
+    font-size: 0.82rem;
+    color: var(--text-dim);
+    line-height: 1.45;
+    text-align: left;
+    margin: 0;
+  }
+
+  .agent-flip-hint {
+    margin-top: auto;
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+  }
+
+  .agent-flip-back {
+    background: var(--sf-grad, var(--grad-primary));
+    color: white;
+    transform: rotateY(180deg);
+    justify-content: center;
+  }
+
+  .agent-flip-back p {
+    font-size: 0.8rem;
+    line-height: 1.5;
+    color: white;
+    margin: 0;
+    text-align: left;
+  }
+
+  .agent-flip-back strong {
+    color: #FDE68A;
+  }
+
+  .video-frame {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    background: white;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+    min-height: 420px;
+  }
+
+  .video-frame-header {
+    padding: 0.75rem 1rem;
+    background: var(--grad-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+  }
+
+  .video-frame-header .vft {
+    font-weight: 800;
+    font-size: 1rem;
+  }
+
+  .video-frame-header .video-open {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: white;
+    text-decoration: none;
+    background: rgba(255, 255, 255, 0.2);
+    padding: 0.3rem 0.65rem;
+    border-radius: 100px;
+    white-space: nowrap;
+  }
+
+  .video-frame-header .video-open:hover {
+    background: rgba(255, 255, 255, 0.32);
+  }
+
+  .video-embed {
+    flex: 1;
+    min-height: 0;
+    background: #0f172a;
+  }
+
+  .video-embed iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+  }
+
+  @media (max-width: 900px) {
+    .agent-split {
+      flex-direction: column;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .agent-flip-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ===== Bổ sung riêng cho Buổi 2 ===== */
+  .illus { margin: 0.6rem 0 0.2rem; }
+  .illus img {
+    border: 1px solid var(--border);
+    box-shadow: var(--shadow-md);
+    background: #fff;
+  }
+  .mini-steps { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 0.8rem; margin-top: 1rem; }
+  .ms-item { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1rem; box-shadow: var(--shadow-sm); position: relative; }
+  .ms-num { width: 30px; height: 30px; border-radius: 50%; background: var(--grad-primary); color: #fff; font-weight: 700; display: flex; align-items: center; justify-content: center; font-size: 0.9rem; margin-bottom: 0.5rem; }
+  .ms-item h4 { font-size: 0.98rem; font-weight: 700; color: var(--text); margin-bottom: 0.25rem; }
+  .ms-item p { font-size: 0.85rem; color: var(--text-dim); line-height: 1.45; }
+  .ms-eg { display:block; margin-top:0.4rem; font-size:0.8rem; color:var(--primary-dark); font-style:italic; }
+
+  /* ===== Sửa bố cục Buổi 2 (lần 2) ===== */
+  .mini-steps { width: 100%; }
+  .card h3 code { font-family: var(--font-mono); color: var(--primary); font-size: 0.95em; }
+  @media (max-width: 860px) { .mini-steps { grid-template-columns: 1fr !important; } }
+</style>
+
+<!-- 1 · COVER -->
+<section class="slide active slide-cover" data-slide="1" data-title="Chào mừng">
+  <div class="cover-orb orb-1"></div>
+  <div class="cover-orb orb-2"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">BUỔI 2 · MODULE 1 — NỀN TẢNG AI</span>
+    <h1 class="hero-title">Hỏi đúng cách,<br /><span class="grad-text">học cùng trợ lý AI</span></h1>
+    <p class="slide-subtitle">Gemini · NotebookLM · Gem trợ lý ôn tập · Prompt chuẩn R-C-T-F-E · Kiểm tra kết quả AI</p>
+    <div class="cover-chips">
+      <span class="cover-chip">120 phút</span>
+      <span class="cover-chip">Học theo nhóm nhỏ</span>
+      <span class="cover-chip">Output: 1 hệ thống ôn tập cá nhân</span>
+    </div>
+  </div>
+</section>
+
+<!-- 2 · CÁCH HỌC -->
+<section class="slide" data-slide="2" data-title="4 loại câu hỏi tương tác">
+  <div class="slide-body">
+    <span class="eyebrow">CÁCH HỌC HÔM NAY</span>
+    <h2 class="slide-title">Mỗi phần bắt đầu từ một tình huống thật</h2>
+    <p class="slide-subtitle">Bạn nghĩ cách làm khi chưa có AI → nhận ra điểm yếu → thực hành với AI → cách làm tối ưu.</p>
+    <div class="card-grid stagger" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="qbox qbox-blue" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#3B82F6;">?</div>Tình huống thật</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Một bài toán học tập quen thuộc bạn từng gặp ở lớp.</div>
+      </div>
+      <div class="qbox qbox-yellow" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#F59E0B;">!</div>Hỏi bạn cặp</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Cùng bạn thử cách cũ và cách mới, so sánh kết quả.</div>
+      </div>
+      <div class="qbox qbox-purple" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#A855F7;">★</div>Cách làm tối ưu</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Cuối mỗi phần có "cách làm tối ưu" giúp bạn dùng AI hiệu quả và đúng cách hơn.</div>
+      </div>
+      <div class="qbox qbox-orange" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#F97316;">+</div>Thực hành với AI</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Mỗi phần có 1 bài tập nhỏ để bạn tự tay làm trên máy.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 · LỘ TRÌNH 2 GIỜ -->
+<section class="slide" data-slide="3" data-title="Lộ trình 2 giờ">
+  <div class="slide-body">
+    <span class="eyebrow">BẠN SẼ ĐI QUA</span>
+    <h2 class="slide-title">Lộ trình 2 giờ — 5 chặng</h2>
+    <figure class="docfig illus">
+      <img src="/slides-static/buoi_02_images/flow_2h.png" alt="Lộ trình 2 giờ qua 5 công cụ AI" loading="lazy">
+    </figure>
+    <div class="qbox qbox-tip" style="margin-top:0.8rem;">
+      <div class="qbox-header"><div class="qbox-icon" style="background:#059669;">i</div>Nguyên tắc an toàn</div>
+      <div class="qbox-content" style="font-size:0.9rem;">AI hỗ trợ học tập, <strong>không học thay bạn</strong>. Không nhập thông tin riêng tư. Luôn kiểm tra lại bằng sách giáo khoa, tài liệu thầy cô hoặc nguồn đã tải lên.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 5 · TỪ KHÓA (flashcards) -->
+<section class="slide" data-slide="4" data-title="Từ khóa cần biết">
+  <div class="slide-body">
+    <span class="eyebrow">BẤM VÀO THẺ ĐỂ LẬT</span>
+    <h2 class="slide-title">7 từ khóa bạn sẽ nghe hôm nay</h2>
+    <div class="fc-grid">
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Gemini</div><div class="fc-vi">AI hỏi-đáp của Google</div></div>
+        <div class="fc-back">Hỏi đáp, giải thích bài, tạo dàn ý, luyện tập, phân tích file — như một gia sư đa năng.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">NotebookLM</div><div class="fc-vi">Học từ tài liệu của bạn</div></div>
+        <div class="fc-back">AI làm việc dựa trên nguồn bạn đưa vào: PDF, Docs, web, YouTube — trả lời có trích dẫn.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Source / Nguồn</div><div class="fc-vi">Căn cứ để AI trả lời</div></div>
+        <div class="fc-back">Tài liệu AI dùng làm cơ sở: file PDF, link web, video YouTube, Google Docs.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Citation / Trích dẫn</div><div class="fc-vi">Dấu chỉ nguồn câu trả lời</div></div>
+        <div class="fc-back">Cho biết câu trả lời dựa vào đoạn nào trong nguồn — bấm vào để tự kiểm chứng.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Gem</div><div class="fc-vi">Trợ lý AI tùy chỉnh</div></div>
+        <div class="fc-back">Trợ lý trong Gemini có tên, hướng dẫn cố định và nguồn kiến thức riêng. VD: "Gia sư Toán lớp 7".</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Prompt</div><div class="fc-vi">Yêu cầu bạn nhập cho AI</div></div>
+        <div class="fc-back">Câu lệnh/yêu cầu. Hỏi càng rõ, AI giúp càng tốt — đó là lý do có khung R-C-T-F-E.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">R-C-T-F-E</div><div class="fc-vi">Khung prompt chuẩn</div></div>
+        <div class="fc-back">Role · Context · Task · Format · Example — 5 mảnh ghép giúp AI hiểu đúng ý bạn.</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 6 · DIVIDER PHẦN 1 -->
+<section class="slide slide-cover" data-slide="5" data-title="Phần 1 — Gemini">
+  <div class="cover-orb orb-1"></div>
+  <div class="cover-orb orb-2"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">PHẦN 1 · 10–35 PHÚT</span>
+    <h1 class="hero-title">Gemini<br /><span class="grad-text">từ "học một mình" sang "có gia sư"</span></h1>
+    <p class="slide-subtitle">Dùng Gemini như một gia sư: giải thích theo đúng trình độ, có ví dụ, rồi tự kiểm tra.</p>
+  </div>
+</section>
+
+<!-- 7 · TÌNH HUỐNG 1 -->
+<section class="slide" data-slide="6" data-title="Tình huống 1 — Quang hợp">
+  <div class="slide-body">
+    <span class="eyebrow">TÌNH HUỐNG 1</span>
+    <h2 class="slide-title">Tối nay phải học "Quang hợp" nhưng đọc sách vẫn khó hiểu</h2>
+    <table class="cmp-table">
+      <thead><tr><th>&nbsp;</th><th>Nếu KHÔNG dùng AI</th><th>Khi DÙNG AI</th></tr></thead>
+      <tbody>
+        <tr><td>Cách làm</td><td>Đọc sách 3 lần, gạch chân, hỏi bạn hoặc tìm video</td><td>Nhờ Gemini giải thích theo trình độ lớp 6/7, có ví dụ đời sống</td></tr>
+        <tr><td>Điểm yếu</td><td>Dễ quá tải, không biết phần nào quan trọng, mỗi nguồn giải thích một kiểu</td><td><strong>Đúng trình độ của bạn</strong>, có câu hỏi tự kiểm tra ngay sau khi học</td></tr>
+        <tr><td>Thời gian</td><td>Tốn nhiều, có thể gặp thông tin sai chương trình</td><td>Nhanh hơn — nhưng vẫn cần đối chiếu sách giáo khoa</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 8 · PROMPT MẪU GEMINI -->
+<section class="slide" data-slide="7" data-title="Prompt mẫu với Gemini">
+  <div class="slide-body">
+    <span class="eyebrow">THỬ NGAY</span>
+    <h2 class="slide-title">Một prompt tốt cho bài Quang hợp</h2>
+    <div class="prompt-box">
+      <span class="prompt-label">PROMPT MẪU DÙNG VỚI GEMINI</span>
+      "Bạn là gia sư Sinh học THCS. Mình đang học bài quang hợp và chưa hiểu vì sao cây cần ánh sáng. Hãy giải thích cho học sinh lớp 6 bằng 5 ý ngắn, có ví dụ đời sống, sau đó tạo 5 câu hỏi trắc nghiệm kèm đáp án."
+    </div>
+    <div class="hl-box success">
+      <span class="hl-label">KẾT QUẢ MONG MUỐN</span>
+      <p>Hiểu bài bằng ngôn ngữ đơn giản · Có câu hỏi luyện tập ngay · Yêu cầu giải thích lại theo cách khác nếu chưa hiểu · Tiết kiệm thời gian tìm kiếm rời rạc.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 · CÁCH DÙNG GEMINI + 3 LƯỢT HỎI -->
+<!-- Cách dùng Gemini -->
+<section class="slide" data-slide="8" data-title="Cách dùng Gemini">
+  <div class="slide-body">
+    <span class="eyebrow">ĐĂNG NHẬP & DÙNG · gemini.google.com</span>
+    <h2 class="slide-title">Công thức 3 lượt hỏi tối ưu</h2>
+    <p class="slide-subtitle">Sau khi đăng nhập, hỏi theo 3 lượt — mỗi lượt một mục tiêu rõ ràng.</p>
+    <div class="mini-steps" style="grid-template-columns: repeat(3, 1fr);">
+      <div class="ms-item"><div class="ms-num">1</div><h4>Hiểu bài</h4><p>"Giải thích khái niệm bằng ngôn ngữ học sinh THCS."<span class="ms-eg">→ nắm ý chính</span></p></div>
+      <div class="ms-item"><div class="ms-num">2</div><h4>Luyện tập</h4><p>"Tạo câu hỏi từ dễ đến khó, có đáp án và giải thích."<span class="ms-eg">→ tự làm bài</span></p></div>
+      <div class="ms-item"><div class="ms-num">3</div><h4>Kiểm tra lỗi</h4><p>"Hãy hỏi lại mình 5 câu, đừng đưa đáp án trước."<span class="ms-eg">→ tự đánh giá</span></p></div>
+    </div>
+    <div class="qbox qbox-blue" style="margin-top:1rem;max-width:none;">
+      <div class="qbox-header"><div class="qbox-icon" style="background:#2563EB;">i</div>Mẹo</div>
+      <div class="qbox-content" style="font-size:0.9rem;">Đừng chỉ gõ một từ khóa như "quang hợp". Sau khi AI trả lời, hỏi tiếp để sửa: "ngắn hơn", "dễ hơn", "cho ví dụ đời sống".</div>
+    </div>
+  </div>
+</section>
+
+<!-- 10 · QUIZ + BÀI TẬP 1 -->
+<section class="slide" data-slide="9" data-title="Quiz + Bài tập 1">
+  <div class="slide-body">
+    <span class="eyebrow">KIỂM TRA NHANH</span>
+    <h2 class="slide-title">Hỏi Gemini thế nào là tốt?</h2>
+    <div class="quiz" data-correct="2" data-explanation="Prompt rõ mục tiêu, trình độ và yêu cầu cụ thể giúp AI trả lời đúng ý — thay vì chỉ gõ một từ khóa.">
+      <p class="quiz-q">Câu hỏi nào sẽ giúp Gemini trả lời <strong>đúng ý bạn nhất</strong>?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">"quang hợp"</button>
+        <button class="quiz-opt" data-index="1">"giải bài này hộ mình"</button>
+        <button class="quiz-opt" data-index="2">"Giải thích quang hợp cho HS lớp 6 bằng 5 ý ngắn, có ví dụ, rồi cho 5 câu hỏi"</button>
+        <button class="quiz-opt" data-index="3">"quang hợp là gì thế"</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+    <div class="qbox qbox-orange" style="margin-top:0.8rem;">
+      <div class="qbox-header"><div class="qbox-icon">+</div>BÀI TẬP THỰC HÀNH 1</div>
+      <div class="qbox-content" style="font-size:0.9rem;">Chọn một bài đang học → viết prompt nhờ Gemini giải thích cho HS THCS → yêu cầu tạo 5 câu hỏi → ghi lại: phần nào tiết kiệm thời gian nhất, phần nào vẫn cần kiểm tra bằng SGK?</div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 · DIVIDER PHẦN 2 -->
+<section class="slide slide-cover" data-slide="10" data-title="Phần 2 — NotebookLM">
+  <div class="cover-orb orb-1"></div>
+  <div class="cover-orb orb-2"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">PHẦN 2 · 35–70 PHÚT</span>
+    <h1 class="hero-title">NotebookLM<br /><span class="grad-text">học từ đúng tài liệu, không lan man</span></h1>
+    <p class="slide-subtitle">Đưa tài liệu thầy cô vào một notebook, hỏi AI dựa trên nguồn, và kiểm tra bằng trích dẫn.</p>
+  </div>
+</section>
+
+<!-- 12 · TÌNH HUỐNG 2 + HOW IT WORKS -->
+<section class="slide" data-slide="11" data-title="NotebookLM hoạt động thế nào">
+  <div class="slide-body">
+    <span class="eyebrow">TÌNH HUỐNG 2 · File ôn tập Lịch sử 12 trang</span>
+    <h2 class="slide-title">Học từ đúng nguồn — câu trả lời có trích dẫn</h2>
+    <figure class="docfig illus">
+      <img src="/slides-static/buoi_02_images/notebooklm.png" alt="Cách NotebookLM hoạt động: nguồn vào notebook, trả lời có trích dẫn" loading="lazy">
+    </figure>
+    <div class="qbox qbox-tip" style="margin-top:0.6rem;">
+      <div class="qbox-header"><div class="qbox-icon" style="background:#059669;">i</div>Điểm mạnh khác biệt</div>
+      <div class="qbox-content" style="font-size:0.9rem;">Khác Gemini thường: NotebookLM <strong>chỉ trả lời dựa trên nguồn bạn đưa vào</strong> và cho bạn bấm trích dẫn để kiểm tra lại đoạn gốc.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 · TẠO NOTEBOOK -->
+<section class="slide" data-slide="12" data-title="Tạo notebook & thêm nguồn">
+  <div class="slide-body">
+    <span class="eyebrow">notebooklm.google.com</span>
+    <h2 class="slide-title">Tạo notebook & thêm nguồn — 5 bước</h2>
+    <div class="mini-steps">
+      <div class="ms-item"><div class="ms-num">1</div><h4>Tạo notebook</h4><p>Cho một chủ đề rõ ràng.<span class="ms-eg">"Ôn tập Sinh học - Quang hợp"</span></p></div>
+      <div class="ms-item"><div class="ms-num">2</div><h4>Thêm nguồn</h4><p>PDF, Google Docs, Slides, web, YouTube được phép dùng.</p></div>
+      <div class="ms-item"><div class="ms-num">3</div><h4>Đặt câu hỏi</h4><p>"Tóm tắt nội dung chính", "Tạo câu hỏi trắc nghiệm".</p></div>
+      <div class="ms-item"><div class="ms-num">4</div><h4>Bấm trích dẫn</h4><p>Kiểm tra câu trả lời dựa vào đoạn nào trong nguồn.</p></div>
+      <div class="ms-item"><div class="ms-num">5</div><h4>Đối chiếu</h4><p>Nếu không có căn cứ trong nguồn → hỏi lại hoặc kiểm tra tài liệu gốc.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 · TÍNH NĂNG + TỐI ƯU + BÀI TẬP 2 -->
+<section class="slide" data-slide="13" data-title="Tính năng NotebookLM">
+  <div class="slide-body">
+    <span class="eyebrow">NÊN DÙNG KHI HỌC</span>
+    <h2 class="slide-title">Các tính năng đáng dùng</h2>
+    <div class="card-grid stagger" style="grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));">
+      <div class="card"><div class="card-icon">💬</div><h3>Chat với notebook</h3><p>Hỏi đáp dựa trên nguồn đã tải lên</p></div>
+      <div class="card"><div class="card-icon">📝</div><h3>Tóm tắt nguồn</h3><p>Nắm nhanh ý chính của tài liệu dài</p></div>
+      <div class="card"><div class="card-icon">🔖</div><h3>Trích dẫn</h3><p>Bấm để xem lại đoạn gốc trong tài liệu</p></div>
+      <div class="card"><div class="card-icon">🧠</div><h3>Mind Map (nếu có)</h3><p>Nhìn quan hệ giữa các ý</p></div>
+      <div class="card"><div class="card-icon">🎧</div><h3>Audio/Video Overview</h3><p>Nghe/xem phần tổng quan để ôn lại</p></div>
+      <div class="card"><div class="card-icon">🃏</div><h3>Flashcards/Quizzes</h3><p>Tự kiểm tra kiến thức từ tài liệu</p></div>
+    </div>
+    <div class="qbox qbox-orange" style="margin-top:0.7rem;">
+      <div class="qbox-header"><div class="qbox-icon">+</div>BÀI TẬP THỰC HÀNH 2</div>
+      <div class="qbox-content" style="font-size:0.9rem;">Tạo notebook "Ôn tập 15 phút" → tải 1 tài liệu ngắn → hỏi "Tóm tắt 5 ý quan trọng nhất" → "Tạo 5 trắc nghiệm + 2 tự luận" → chọn 1 câu trả lời và kiểm tra lại bằng trích dẫn.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 16 · DIVIDER PHẦN 3 -->
+<section class="slide slide-cover" data-slide="14" data-title="Phần 3 — Gem">
+  <div class="cover-orb orb-1"></div>
+  <div class="cover-orb orb-2"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">PHẦN 3 · 70–95 PHÚT</span>
+    <h1 class="hero-title">Tạo Gem trợ lý ôn tập<br /><span class="grad-text">biến cách học tốt thành thói quen</span></h1>
+    <p class="slide-subtitle">Viết hướng dẫn một lần — trợ lý luôn nhớ cách giúp bạn, không phải nhập lại mỗi buổi.</p>
+  </div>
+</section>
+
+<!-- 17 · TÌNH HUỐNG 3 + GEM IMG -->
+<section class="slide" data-slide="15" data-title="Gem là gì">
+  <div class="slide-body">
+    <span class="eyebrow">TÌNH HUỐNG 3 · Phải nhắc AI mỗi lần học</span>
+    <h2 class="slide-title">Gem = Hướng dẫn cố định + Nguồn kiến thức</h2>
+    <figure class="docfig illus">
+      <img src="/slides-static/buoi_02_images/gem.png" alt="Gem gồm hướng dẫn cố định và nguồn kiến thức tạo thành trợ lý riêng" loading="lazy">
+    </figure>
+  </div>
+</section>
+
+<!-- 18 · TẠO GEM + MẪU HƯỚNG DẪN -->
+<!-- Tạo Gem -->
+<section class="slide" data-slide="16" data-title="Tạo Gem">
+  <div class="slide-body">
+    <span class="eyebrow">gemini.google.com → Gems</span>
+    <h2 class="slide-title">Tạo Gem — 5 bước</h2>
+    <div class="mini-steps" style="grid-template-columns: repeat(5, 1fr);">
+      <div class="ms-item"><div class="ms-num">1</div><h4>Mở Gems</h4><p>Thanh bên → Explore / New Gem</p></div>
+      <div class="ms-item"><div class="ms-num">2</div><h4>Đặt tên</h4><p>"Gia sư Sinh học THCS"</p></div>
+      <div class="ms-item"><div class="ms-num">3</div><h4>Dán hướng dẫn</h4><p>Quy tắc hành vi cố định</p></div>
+      <div class="ms-item"><div class="ms-num">4</div><h4>Thêm nguồn</h4><p>File · Drive · notebook</p></div>
+      <div class="ms-item"><div class="ms-num">5</div><h4>Thử & Lưu</h4><p>Dùng lại buổi sau</p></div>
+    </div>
+    <div class="prompt-box" style="margin-top:1rem;max-width:none;">
+      <span class="prompt-label">MẪU HƯỚNG DẪN CHO GEM "TRỢ LÝ ÔN TẬP THCS"</span>
+      1. Giải thích ngắn gọn, đúng trình độ THCS. 2. Luôn hỏi mình đã hiểu chưa. 3. Gợi ý từng bước, không đưa đáp án ngay. 4. Ưu tiên nguồn đã tải lên, nhắc kiểm tra trích dẫn. 5. Trình bày rõ ràng bằng bảng / gạch đầu dòng.
+    </div>
+  </div>
+</section>
+
+<!-- 19 · TỐI ƯU GEM + BÀI TẬP 3 + QUIZ -->
+<section class="slide" data-slide="17" data-title="Tối ưu Gem + Bài tập 3">
+  <div class="slide-body">
+    <span class="eyebrow">CÁCH LÀM TỐI ƯU</span>
+    <h2 class="slide-title">Mỗi Gem một mục tiêu rõ ràng</h2>
+    <div class="quiz" data-correct="2" data-explanation="Hướng dẫn Gem bằng quy tắc hành vi ('đừng đưa đáp án ngay', 'hỏi từng câu') mới giúp nó hỗ trợ học đúng cách.">
+      <p class="quiz-q">Điều gì giúp Gem trở thành trợ lý ôn tập tốt?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Đặt một cái tên thật kêu</button>
+        <button class="quiz-opt" data-index="1">Nhồi tất cả các môn vào một Gem</button>
+        <button class="quiz-opt" data-index="2">Viết quy tắc hành vi rõ: "gợi ý từng bước, không đưa đáp án ngay"</button>
+        <button class="quiz-opt" data-index="3">Không thêm nguồn kiến thức nào cả</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+    <div class="qbox qbox-orange" style="margin-top:0.8rem;">
+      <div class="qbox-header"><div class="qbox-icon">+</div>BÀI TẬP THỰC HÀNH 3</div>
+      <div class="qbox-content" style="font-size:0.9rem;">Tạo Gem "Trợ lý ôn tập của tôi" → viết ít nhất 5 quy tắc → thêm 1 nguồn → hỏi "Kiểm tra mình bằng 5 câu, hỏi từng câu một" → đánh giá: có hỏi từng câu không? có đưa đáp án quá sớm không?</div>
+    </div>
+  </div>
+</section>
+
+<!-- 20 · DIVIDER PHẦN 4 -->
+<section class="slide slide-cover" data-slide="18" data-title="Phần 4 — Prompt R-C-T-F-E">
+  <div class="cover-orb orb-1"></div>
+  <div class="cover-orb orb-2"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">PHẦN 4 · 95–110 PHÚT</span>
+    <h1 class="hero-title">Prompt chuẩn R-C-T-F-E<br /><span class="grad-text">hỏi đúng thì AI giúp tốt hơn</span></h1>
+    <p class="slide-subtitle">Role · Context · Task · Format · Example — để AI biết bạn là ai, cần gì, trả lời ra sao.</p>
+  </div>
+</section>
+
+<!-- 21 · TÌNH HUỐNG 4 + KHUNG RCTFE -->
+<section class="slide" data-slide="19" data-title="Khung R-C-T-F-E">
+  <div class="slide-body">
+    <span class="eyebrow">TÌNH HUỐNG 4 · Hai bạn hỏi cùng bài, kết quả khác nhau</span>
+    <h2 class="slide-title">5 mảnh ghép của một prompt chuẩn</h2>
+    <figure class="docfig illus">
+      <img src="/slides-static/buoi_02_images/rctfe.png" alt="Khung prompt chuẩn Role Context Task Format Example" loading="lazy">
+    </figure>
+  </div>
+</section>
+
+<!-- 22 · SO SÁNH PROMPT -->
+<section class="slide" data-slide="20" data-title="Prompt thường vs chuẩn">
+  <div class="slide-body">
+    <span class="eyebrow">TRƯỚC & SAU</span>
+    <h2 class="slide-title">Cùng một bài — hỏi sơ sài hay hỏi chuẩn?</h2>
+    <figure class="docfig illus">
+      <img src="/slides-static/buoi_02_images/prompt_compare.png" alt="So sánh prompt chưa chuẩn và prompt R-C-T-F-E" loading="lazy">
+    </figure>
+    <div class="qbox qbox-tip" style="margin-top:0.5rem;">
+      <div class="qbox-header"><div class="qbox-icon" style="background:#2563EB;">i</div>Mẹo nếu bí</div>
+      <div class="qbox-content" style="font-size:0.9rem;">Chưa biết viết prompt chuẩn? Nhờ chính AI: <em>"Đóng vai chuyên gia AI, hãy biến prompt sau theo chuẩn R-C-T-F-E: &lt;prompt đơn giản của bạn&gt;"</em></div>
+    </div>
+  </div>
+</section>
+
+<!-- Phần 4 · Bản hướng dẫn đầy đủ cho Gem -->
+<section class="slide" data-slide="21" data-title="Hướng dẫn đầy đủ cho Gem">
+  <div class="slide-body">
+    <span class="eyebrow">PHẦN 4 · DÙNG PROMPT CHUẨN TRONG GEM</span>
+    <h2 class="slide-title">Bản hướng dẫn đầy đủ cho trợ lý ôn tập</h2>
+    <p class="slide-subtitle">Dán 4 khối quy tắc này vào ô Hướng dẫn (Instructions) của Gem.</p>
+    <div class="card-grid stagger" style="grid-template-columns: repeat(auto-fit, minmax(280px,1fr));">
+      <div class="card"><div class="card-icon">①</div><h3>Vai trò</h3><p>Trợ lý ôn tập cá nhân môn [tên môn]. Giúp người học <strong>HIỂU SÂU & ÔN CHỦ ĐỘNG</strong>, không làm hộ bài.</p></div>
+      <div class="card"><div class="card-icon">②</div><h3>Quy tắc bám nguồn</h3><p>Chỉ trả lời theo tài liệu đã cung cấp. Không có thì nói rõ "không có trong tài liệu", <strong>không bịa</strong> số liệu/tên/ngày. Chỉ rõ ý nằm ở phần nào.</p></div>
+      <div class="card"><div class="card-icon">③</div><h3>Định dạng đầu ra</h3><p>Tiếng Việt, ngắn gọn, gạch đầu dòng. Khái niệm khó: thêm 1 ví dụ đời thường + 1 phép so sánh. Đáp án đặt cuối, sau dòng "--- Đáp án ---".</p></div>
+      <div class="card"><div class="card-icon">④</div><h3>Nguyên tắc đạo đức</h3><p>Không viết bài hoàn chỉnh để nộp — đưa <strong>DÀN Ý & GỢI Ý</strong>. Khi không chắc, nói rõ mức độ chắc chắn.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- Phần 4 · Lệnh tắt trong Gem -->
+<section class="slide" data-slide="22" data-title="Các lệnh gõ nhanh trong Gem">
+  <div class="slide-body">
+    <span class="eyebrow">PHẦN 4 · LỆNH GÕ NHANH</span>
+    <h2 class="slide-title">Các lệnh bạn có thể gõ cho Gem</h2>
+    <p class="slide-subtitle">Sau khi cài hướng dẫn, chỉ cần gõ lệnh tắt — không phải nhắc lại yêu cầu dài.</p>
+    <div class="card-grid stagger" style="grid-template-columns: repeat(auto-fit, minmax(210px,1fr));">
+      <div class="card"><div class="card-icon">/</div><h3><code>/tomtat</code></h3><p>Tóm tắt 3 mức: 1 câu · 1 đoạn · dàn ý các ý chính.</p></div>
+      <div class="card"><div class="card-icon">/</div><h3><code>/thuatngu</code></h3><p>Liệt kê thuật ngữ quan trọng kèm giải thích ngắn.</p></div>
+      <div class="card"><div class="card-icon">/</div><h3><code>/cauhoi N</code></h3><p>Tạo N câu hỏi ôn tập (trộn trắc nghiệm + tự luận), đáp án ẩn ở cuối.</p></div>
+      <div class="card"><div class="card-icon">/</div><h3><code>/flashcard N</code></h3><p>Tạo N thẻ hỏi-đáp dạng bảng 2 cột (Hỏi | Đáp).</p></div>
+      <div class="card"><div class="card-icon">/</div><h3><code>/giaithich</code></h3><p>Giải thích một khái niệm thật đơn giản, có ví dụ.</p></div>
+    </div>
+    <div class="qbox qbox-blue" style="margin-top:1rem;max-width:none;">
+      <div class="qbox-header"><div class="qbox-icon" style="background:#2563EB;">i</div>Vì sao tiện?</div>
+      <div class="qbox-content" style="font-size:0.9rem;">Mỗi lệnh là một thói quen ôn tập — bạn ôn nhanh hơn mà vẫn giữ đúng cách học tốt đã cài trong Gem.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 23 · QUIZ RCTFE + BÀI TẬP 4 -->
+<section class="slide" data-slide="23" data-title="Quiz R-C-T-F-E">
+  <div class="slide-body">
+    <span class="eyebrow">KIỂM TRA NHANH</span>
+    <h2 class="slide-title">Nhận diện thành phần prompt</h2>
+    <div class="quiz" data-correct="0" data-explanation="'Bạn là gia sư Toán lớp 6' là Role — vai trò bạn giao cho AI.">
+      <p class="quiz-q">Câu "<strong>Bạn là gia sư Toán lớp 6</strong>" thuộc thành phần nào của R-C-T-F-E?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Role — Vai trò</button>
+        <button class="quiz-opt" data-index="1">Context — Bối cảnh</button>
+        <button class="quiz-opt" data-index="2">Task — Nhiệm vụ</button>
+        <button class="quiz-opt" data-index="3">Format — Định dạng</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+    <div class="qbox qbox-orange" style="margin-top:0.8rem;">
+      <div class="qbox-header"><div class="qbox-icon">+</div>BÀI TẬP THỰC HÀNH 4</div>
+      <div class="qbox-content" style="font-size:0.9rem;">Viết 1 prompt chưa chuẩn cho bài đang học → tự sửa theo đủ 5 phần R-C-T-F-E → chạy cả hai trên Gemini → so sánh: đúng trọng tâm, dễ hiểu, có bài tập, giúp bạn tự học.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 25 · DIVIDER PHẦN 5 -->
+<section class="slide slide-cover" data-slide="24" data-title="Phần 5 — Kiểm tra kết quả AI">
+  <div class="cover-orb orb-1"></div>
+  <div class="cover-orb orb-2"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">PHẦN 5 · 110–120 PHÚT</span>
+    <h1 class="hero-title">Kiểm tra chất lượng AI<br /><span class="grad-text">tin có kiểm chứng</span></h1>
+    <p class="slide-subtitle">Đừng tin ngay — hãy kiểm thử để biết trợ lý có trung thực không.</p>
+  </div>
+</section>
+
+<!-- 26 · TÌNH HUỐNG 5 + 3 PHÉP THỬ -->
+<section class="slide" data-slide="25" data-title="3 phép thử">
+  <div class="slide-body">
+    <span class="eyebrow">TÌNH HUỐNG 5 · AI trả lời rất tự tin</span>
+    <h2 class="slide-title">3 phép thử để biết AI có trung thực không</h2>
+    <div class="card-grid stagger">
+      <div class="card"><div class="card-icon">🎯</div><h3>Phép thử bám nguồn</h3><p>Hỏi một điều KHÔNG có trong tài liệu. Trợ lý tốt sẽ nói "không có trong tài liệu", không bịa.</p></div>
+      <div class="card"><div class="card-icon">🔍</div><h3>Phép thử đối chiếu</h3><p>Chọn 2–3 ý trong bản tóm tắt, mở tài liệu gốc kiểm tra xem có đúng không.</p></div>
+      <div class="card"><div class="card-icon">❓</div><h3>Phép thử câu hỏi</h3><p>Kiểm tra đáp án câu hỏi do AI tạo có khớp nội dung tài liệu không.</p></div>
+    </div>
+    <div class="qbox qbox-tip" style="margin-top:0.7rem;">
+      <div class="qbox-header"><div class="qbox-icon" style="background:#059669;">i</div>Nếu AI hay bịa</div>
+      <div class="qbox-content" style="font-size:0.9rem;">Quay lại sửa phần Hướng dẫn của Gem (nhấn mạnh quy tắc bám nguồn) rồi Lưu lại.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 27 · CHECKLIST 7 BƯỚC + PROMPT TỰ KIỂM TRA -->
+<section class="slide" data-slide="26" data-title="Checklist 7 bước kiểm tra AI">
+  <div class="slide-body">
+    <span class="eyebrow">CÔNG CỤ KIỂM TRA</span>
+    <h2 class="slide-title">Checklist 7 bước kiểm tra kết quả AI</h2>
+    <figure class="docfig illus">
+      <img src="/slides-static/buoi_02_images/checklist7.png" alt="7 bước kiểm tra chất lượng kết quả AI" loading="lazy">
+    </figure>
+    <div class="prompt-box" style="margin-top:0.4rem;">
+      <span class="prompt-label">PROMPT TỰ KIỂM TRA (dán cho AI)</span>
+      "Hãy tự kiểm tra câu trả lời vừa rồi theo 7 tiêu chí: đúng nhiệm vụ, phù hợp trình độ THCS, có căn cứ, đủ ý, logic, không bịa, giúp mình học. Nếu có điểm yếu, hãy sửa lại và nói rõ đã sửa gì."
+    </div>
+  </div>
+</section>
+
+<!-- 28 · BÀI THỰC HÀNH TỔNG HỢP -->
+<!-- Thực hành tổng hợp -->
+<section class="slide" data-slide="27" data-title="Thực hành tổng hợp cuối buổi">
+  <div class="slide-body">
+    <span class="eyebrow">NHIỆM VỤ 20 PHÚT</span>
+    <h2 class="slide-title">Tạo hệ thống ôn tập cá nhân</h2>
+    <p class="slide-subtitle">Chọn một chủ đề thật: Phân số · Quang hợp · Khởi nghĩa Lam Sơn · Phân tích nhân vật…</p>
+    <div class="mini-steps" style="grid-template-columns: repeat(5, 1fr);">
+      <div class="ms-item"><div class="ms-num">1</div><h4>Notebook</h4><p>Mở/tạo notebook, thêm ít nhất 1 nguồn</p></div>
+      <div class="ms-item"><div class="ms-num">2</div><h4>Tóm tắt</h4><p>Hỏi 5 ý chính + 5 câu hỏi ôn tập</p></div>
+      <div class="ms-item"><div class="ms-num">3</div><h4>Gem</h4><p>Tạo "Trợ lý ôn tập [môn]" + hướng dẫn</p></div>
+      <div class="ms-item"><div class="ms-num">4</div><h4>Prompt</h4><p>Dùng R-C-T-F-E để Gem kiểm tra từng câu</p></div>
+      <div class="ms-item"><div class="ms-num">5</div><h4>Kiểm tra</h4><p>Dùng checklist 7 bước đánh giá 1 câu trả lời</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 29 · CHECKLIST CUỐI BUỔI (interactive) -->
+<!-- Checklist cuối buổi -->
+<section class="slide" data-slide="28" data-title="Checklist cuối buổi">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 2 — BẤM ĐỂ TICK</span>
+    <h2 class="slide-title">Bạn đã làm được gì?</h2>
+    <div class="cl-container">
+      <div class="cl-progress">
+        <div style="font-weight:700;font-size:0.85rem;">Tiến độ:</div>
+        <div class="cl-bar"><div class="cl-bar-fill" id="clBarFill"></div></div>
+        <div class="cl-stat" id="clStat">0 / 7</div>
+      </div>
+      <ul class="cl-list" id="clList">
+        <li class="cl-item"><div class="cl-check"></div><span>Đăng nhập được Gemini và NotebookLM</span></li>
+        <li class="cl-item"><div class="cl-check"></div><span>Dùng công thức 3 lượt hỏi với Gemini</span></li>
+        <li class="cl-item"><div class="cl-check"></div><span>Tạo notebook và thêm nguồn học tập</span></li>
+        <li class="cl-item"><div class="cl-check"></div><span>Hỏi NotebookLM và kiểm tra trích dẫn</span></li>
+        <li class="cl-item"><div class="cl-check"></div><span>Tạo được 1 Gem trợ lý ôn tập</span></li>
+        <li class="cl-item"><div class="cl-check"></div><span>Viết prompt đủ Role-Context-Task-Format-Example</span></li>
+        <li class="cl-item"><div class="cl-check"></div><span>Dùng checklist 7 bước kiểm tra 1 câu trả lời AI</span></li>
+      </ul>
+    </div>
+    <div class="hl-box success">
+      <span class="hl-label">NẾU CHƯA TICK ĐƯỢC TẤT CẢ</span>
+      <p>Đừng lo! Nhắn riêng GV trong Zalo lớp — GV sẽ hỗ trợ trước buổi sau. <strong>KHÔNG AI BỊ BỎ LẠI.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- 30 · CÂU HỎI ÔN VỀ NHÀ -->
+<section class="slide" data-slide="29" data-title="Câu hỏi ôn về nhà">
+  <div class="slide-body">
+    <span class="eyebrow">BTVN — CHỌN 3 CÂU TRẢ LỜI VÀO SỔ</span>
+    <h2 class="slide-title">Câu hỏi ôn tập về nhà</h2>
+    <div class="card-grid stagger" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+      <div class="card"><div class="card-icon">1</div><p style="margin:0;">Vì sao không nên hỏi AI một câu quá ngắn như "Giải bài này"?</p></div>
+      <div class="card"><div class="card-icon">2</div><p style="margin:0;">NotebookLM khác Gemini thường ở điểm nào khi học từ tài liệu thầy cô?</p></div>
+      <div class="card"><div class="card-icon">3</div><p style="margin:0;">Một notebook nên chứa nhiều môn hay một chủ đề rõ ràng? Vì sao?</p></div>
+      <div class="card"><div class="card-icon">4</div><p style="margin:0;">Viết 1 prompt theo khung R-C-T-F-E cho môn bạn đang học.</p></div>
+      <div class="card"><div class="card-icon">5</div><p style="margin:0;">Nêu 3 dấu hiệu cho thấy câu trả lời AI cần kiểm tra lại.</p></div>
+      <div class="card"><div class="card-icon">6</div><p style="margin:0;">Khi AI đưa đáp án quá nhanh, bạn nên yêu cầu AI làm gì để vẫn tự học được?</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- 32 · COVER ENDING -->
+<section class="slide slide-cover" data-slide="30" data-title="Hẹn buổi sau">
+  <div class="cover-orb orb-1"></div>
+  <div class="cover-orb orb-2"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">HẾT BUỔI 2</span>
+    <h1 class="hero-title">Bạn đã có<br /><span class="grad-text">trợ lý học tập của riêng mình</span></h1>
+    <p class="slide-subtitle" style="font-size:1.1rem;">Giờ bạn biết hỏi đúng cách, học từ đúng nguồn và tự kiểm tra kết quả AI. Buổi sau — AI làm <strong style="color:#FBBF24;">trợ giảng Socratic</strong>!</p>
+    <div class="cover-chips">
+      <span class="cover-chip">Mang Gem & Notebook đã tạo</span>
+      <span class="cover-chip">Ôn lại checklist 7 bước</span>
+      <span class="cover-chip">Nộp BTVN trước buổi sau</span>
+    </div>
+    <p style="margin-top:2rem;color:rgba(255,255,255,0.85);font-size:1rem;">Cảm ơn bạn đã tham gia Buổi 2!</p>
+  </div>
+</section>

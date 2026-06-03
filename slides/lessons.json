@@ -19,16 +19,20 @@
   {
     "id": 2,
     "slug": "buoi_02",
-    "title": "Prompt Engineering — RCTFE",
+    "title": "Prompt chuẩn & Trợ lý ôn tập AI",
     "module": "M1",
     "module_name": "Nền tảng AI",
     "duration_min": 120,
     "file": "buoi_02.html",
-    "available": false,
-    "description": "Khung RCTFE để hỏi AI hiệu quả: Role, Context, Task, Format, Example.",
+    "available": true,
+    "description": "Dùng Gemini như gia sư, học từ tài liệu bằng NotebookLM (có trích dẫn), tạo Gem trợ lý ôn tập, viết prompt chuẩn RCTFE và checklist 7 bước kiểm tra kết quả AI.",
     "tags": [
+      "gemini",
+      "notebooklm",
+      "gem",
       "prompt",
-      "rctfe"
+      "rctfe",
+      "kiem-tra-ai"
     ]
   },
   {
