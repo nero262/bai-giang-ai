@@ -1,0 +1,1123 @@
+<!--
+  Slide fragment cho Buổi 3 — "AI có kiểm chứng: RAG, LLM, Vibe Coding & tạo game bằng z.ai".
+  Chrome (sidebar/top-bar/slide-engine/notebook/quiz/drag-drop) đến từ
+  frontend/templates/lesson.html. File này chỉ chứa nội dung slide,
+  CSS riêng cho buổi 3, cấu hình Sổ Tay và JS riêng (game Rắn săn mồi + flashcard).
+-->
+
+<script type="application/json" id="nb-questions">
+{
+  "1": {"title": "SỔ TAY #1 — Ôn bài cũ", "q": "Trong buổi trước (Gemini, NotebookLM, Gem, prompt R-C-T-F-E), công cụ nào em thấy hữu ích nhất cho việc học? Vì sao?"},
+  "2": {"title": "SỔ TAY #2 — Hiểu RAG", "q": "Hãy giải thích RAG bằng ví dụ 'học từ file thầy cô gửi', viết 3-5 câu bằng lời của em."},
+  "3": {"title": "SỔ TAY #3 — Ý tưởng game", "q": "Game em muốn tạo hôm nay là gì? Mô tả luật chơi và điều kiện thắng/thua trong 1-2 câu."},
+  "4": {"title": "SỔ TAY #4 — Vòng lặp sửa lỗi", "q": "Sau khi chạy thử game, em gặp lỗi gì? Em đã mô tả lỗi và yêu cầu AI sửa như thế nào?"},
+  "5": {"title": "SỔ TAY #5 — Cuối buổi", "q": "Điều em tự hào nhất hôm nay là gì, và 1 điều em vẫn muốn hỏi thêm về RAG / LLM / vibe coding?"}
+}
+</script>
+
+<style>
+  /* ===== BUỔI 3 — Lesson-specific styles ===== */
+
+  /* Cover */
+  .b3-cover { overflow: hidden; }
+  .cover-orb { position: absolute; border-radius: 50%; filter: blur(50px); opacity: 0.55; z-index: 0; }
+  .cover-orb.orb-1 { width: 340px; height: 340px; background: #2563EB; top: -80px; left: -60px; }
+  .cover-orb.orb-2 { width: 300px; height: 300px; background: #06B6D4; bottom: -90px; right: -40px; }
+  .cover-orb.orb-3 { width: 220px; height: 220px; background: #6366F1; top: 40%; right: 30%; opacity: 0.35; }
+  .cover-content { position: relative; z-index: 1; }
+  /* Slide 1 cover: fill full slide height & center content so empty space is balanced */
+  .b3-cover .cover-content { min-height: 100%; width: 100%; justify-content: center; padding-top: 0; padding-bottom: 0; }
+  .hero-title { font-size: clamp(2.2rem, 5vw, 3.4rem); font-weight: 800; line-height: 1.08; margin: 0.4rem 0 0.8rem; letter-spacing: -0.02em; }
+  .grad-text { background: linear-gradient(135deg, #38BDF8 0%, #818CF8 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; }
+  .cover-chips { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; margin-top: 1.4rem; }
+  .cover-chip { padding: 0.45rem 1rem; border-radius: 999px; background: rgba(255,255,255,0.14); border: 1px solid rgba(255,255,255,0.25); backdrop-filter: blur(8px); font-size: 0.88rem; font-weight: 600; color: white; }
+
+  /* Section divider cover */
+  .b3-part .part-num { font-size: 5rem; font-weight: 900; line-height: 1; opacity: 0.22; }
+  .b3-part .part-kicker { font-size: 0.85rem; letter-spacing: 0.22em; text-transform: uppercase; opacity: 0.8; font-weight: 700; }
+
+  /* Two-column */
+  .b3-two { display: grid; grid-template-columns: 1fr 1fr; gap: 1.1rem; width: 100%; margin-top: 0.6rem; }
+  @media (max-width: 820px) { .b3-two { grid-template-columns: 1fr; } }
+
+  /* Keyword definition cards */
+  .kw-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.9rem; width: 100%; margin-top: 0.6rem; }
+  .kw-card { background: var(--surface); border: 1px solid var(--border); border-left: 4px solid var(--primary); border-radius: var(--radius-md); padding: 0.95rem 1.1rem; box-shadow: var(--shadow-sm); text-align: left; }
+  .kw-card .kw-term { font-weight: 800; color: var(--primary-dark); font-size: 1.02rem; margin-bottom: 0.25rem; }
+  .kw-card .kw-def { font-size: 0.9rem; color: var(--text-dim); line-height: 1.5; }
+  .kw-card.k-cyan { border-left-color: var(--accent); } .kw-card.k-cyan .kw-term { color: #0E7490; }
+  .kw-card.k-purple { border-left-color: var(--box-purple-border); } .kw-card.k-purple .kw-term { color: var(--box-purple-dark); }
+  .kw-card.k-orange { border-left-color: var(--box-orange-border); } .kw-card.k-orange .kw-term { color: var(--box-orange-dark); }
+  .kw-card.k-green { border-left-color: var(--success); } .kw-card.k-green .kw-term { color: #065F46; }
+
+  /* Numbered process steps (vertical) */
+  .pstep { display: flex; flex-direction: column; gap: 0.6rem; width: 100%; margin-top: 0.6rem; }
+  .pstep-item { display: flex; gap: 0.85rem; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.8rem 1rem; box-shadow: var(--shadow-sm); text-align: left; }
+  .pstep-n { flex-shrink: 0; width: 34px; height: 34px; border-radius: 50%; background: var(--grad-primary); color: white; font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 0.95rem; }
+  .pstep-item h4 { font-size: 0.98rem; margin: 0.1rem 0 0.15rem; color: var(--text); }
+  .pstep-item p { font-size: 0.86rem; color: var(--text-dim); line-height: 1.45; margin: 0; }
+
+  /* Metaphor cards */
+  .met-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px,1fr)); gap: 0.9rem; width: 100%; margin-top: 0.6rem; }
+  .met-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 1.1rem; box-shadow: var(--shadow-sm); }
+  .met-emoji { font-size: 2rem; } .met-term { font-weight: 800; color: var(--primary-dark); margin: 0.3rem 0; }
+  .met-desc { font-size: 0.88rem; color: var(--text-dim); line-height: 1.5; }
+
+  /* Prompt box (lesson copy of chrome style for safety) */
+  .prompt-box { background: #0F172A; color: #E2E8F0; border-radius: var(--radius-md); padding: 1.1rem 1.2rem; width: 100%; text-align: left; font-size: 0.9rem; line-height: 1.6; box-shadow: var(--shadow-md); margin-top: 0.6rem; position: relative; }
+  .prompt-box .pb-label { display: inline-block; font-size: 0.7rem; letter-spacing: 0.12em; text-transform: uppercase; color: #38BDF8; font-weight: 800; margin-bottom: 0.5rem; }
+  .prompt-box code, .prompt-box .pb-ph { color: #FCD34D; }
+  .prompt-box .pb-line { display: block; margin: 0.15rem 0; }
+  .prompt-box .pb-tag { color: #818CF8; font-weight: 700; }
+
+  /* SVG diagram frame */
+  .diagram { width: 100%; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem; box-shadow: var(--shadow-sm); margin-top: 0.6rem; }
+  .diagram svg { width: 100%; height: auto; display: block; }
+  .dg-cap { font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 0.5rem; }
+
+  /* Spec table */
+  .spec-table { width: 100%; border-collapse: collapse; margin-top: 0.6rem; font-size: 0.88rem; box-shadow: var(--shadow-sm); border-radius: var(--radius-md); overflow: hidden; }
+  .spec-table th { background: var(--grad-blue); color: white; text-align: left; padding: 0.65rem 0.85rem; font-size: 0.82rem; }
+  .spec-table td { padding: 0.6rem 0.85rem; border-bottom: 1px solid var(--border); background: var(--surface); text-align: left; vertical-align: top; }
+  .spec-table td:first-child { font-weight: 700; color: var(--primary-dark); white-space: nowrap; }
+  .spec-table tr:last-child td { border-bottom: none; }
+
+  /* Test checklist table */
+  .test-table { width: 100%; border-collapse: collapse; margin-top: 0.6rem; font-size: 0.85rem; box-shadow: var(--shadow-sm); border-radius: var(--radius-md); overflow: hidden; }
+  .test-table th { background: var(--grad-success); color: white; padding: 0.6rem 0.8rem; text-align: left; font-size: 0.8rem; }
+  .test-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid var(--border); background: var(--surface); text-align: left; }
+  .test-table td.tick { text-align: center; font-size: 1.1rem; color: var(--success); }
+
+  /* Flashcards */
+  .fc-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 0.9rem; width: 100%; margin-top: 0.6rem; }
+  .fc { perspective: 1100px; height: 180px; cursor: pointer; }
+  .fc-inner { position: relative; width: 100%; height: 100%; transition: transform 0.55s; transform-style: preserve-3d; }
+  .fc.flipped .fc-inner { transform: rotateY(180deg); }
+  .fc-front, .fc-back { position: absolute; inset: 0; backface-visibility: hidden; display: flex; align-items: center; justify-content: center; padding: 1rem; border-radius: var(--radius-md); text-align: center; }
+  .fc-front { background: var(--surface); border: 2px solid var(--box-purple-border); font-weight: 800; font-size: 1.05rem; color: var(--box-purple-dark); flex-direction: column; gap: 0.4rem; }
+  .fc-front small { font-size: 0.72rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--text-muted); font-weight: 700; }
+  .fc-back { background: var(--grad-purple); color: white; transform: rotateY(180deg); font-size: 0.9rem; line-height: 1.5; }
+
+  /* Summary grid */
+  .sum-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap: 0.8rem; width: 100%; margin-top: 0.6rem; }
+  .sum-item { display: flex; gap: 0.7rem; align-items: flex-start; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 0.8rem 0.9rem; box-shadow: var(--shadow-sm); text-align: left; }
+  .sum-n { flex-shrink: 0; width: 28px; height: 28px; border-radius: 8px; background: var(--box-blue); color: var(--primary-dark); font-weight: 800; display: flex; align-items: center; justify-content: center; font-size: 0.85rem; }
+  .sum-item p { font-size: 0.86rem; line-height: 1.4; margin: 0; color: var(--text-dim); }
+
+  /* Embedded Snake game */
+  .snk-wrap { width: 100%; max-width: 720px; margin-top: 0.6rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius-lg); padding: 1rem; box-shadow: var(--shadow-md); }
+  .snk-top { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.6rem; margin-bottom: 0.7rem; }
+  .snk-score { font-weight: 800; color: var(--primary-dark); font-size: 1rem; }
+  .snk-score span { font-variant-numeric: tabular-nums; }
+  .snk-btns { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+  .snk-btn { border: none; border-radius: 10px; padding: 0.45rem 1rem; font-family: inherit; font-weight: 700; font-size: 0.85rem; cursor: pointer; color: white; }
+  .snk-btn.start { background: var(--success); } .snk-btn.pause { background: var(--warning); } .snk-btn.reset { background: var(--text-dim); }
+  .snk-btn:hover { filter: brightness(1.08); }
+  .snk-canvas-wrap { position: relative; width: 100%; aspect-ratio: 1 / 1; max-width: 420px; margin: 0 auto; }
+  #snkCanvas { width: 100%; height: 100%; background: #0F172A; border-radius: var(--radius-md); display: block; touch-action: none; }
+  .snk-overlay { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 0.5rem; background: rgba(15,23,42,0.78); color: white; border-radius: var(--radius-md); text-align: center; padding: 1rem; }
+  .snk-overlay.hide { display: none; }
+  .snk-overlay h4 { font-size: 1.3rem; margin: 0; }
+  .snk-overlay p { font-size: 0.85rem; opacity: 0.85; margin: 0; }
+  .snk-hint { font-size: 0.8rem; color: var(--text-muted); text-align: center; margin-top: 0.6rem; }
+
+  /* Callout (lesson copy) */
+  .b3-callout { display: flex; gap: 0.7rem; align-items: flex-start; padding: 0.9rem 1rem; border-radius: var(--radius-md); width: 100%; margin-top: 0.6rem; text-align: left; }
+  .b3-callout .ci { font-size: 1.3rem; flex-shrink: 0; }
+  .b3-callout.tip { background: #ECFDF5; border-left: 4px solid var(--success); }
+  .b3-callout.warn { background: #FFFBEB; border-left: 4px solid var(--warning); }
+  .b3-callout.info { background: var(--box-blue); border-left: 4px solid var(--primary); }
+  .b3-callout p { font-size: 0.9rem; line-height: 1.5; margin: 0; color: var(--text-dim); }
+  .b3-callout strong { color: var(--text); }
+
+  /* compare table */
+  .cmp2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; width: 100%; margin-top: 0.6rem; }
+  @media (max-width: 820px){ .cmp2 { grid-template-columns: 1fr; } }
+  .cmp2 .cmp-col { border-radius: var(--radius-md); padding: 1rem; text-align: left; box-shadow: var(--shadow-sm); }
+  .cmp2 .cmp-col.a { background: var(--box-orange); border: 1px solid var(--box-orange-border); }
+  .cmp2 .cmp-col.b { background: var(--box-blue); border: 1px solid var(--box-blue-border); }
+  .cmp2 .cmp-col h4 { margin: 0 0 0.5rem; font-size: 1rem; }
+  .cmp2 .cmp-col.a h4 { color: var(--box-orange-dark); } .cmp2 .cmp-col.b h4 { color: var(--box-blue-dark); }
+  .cmp2 .cmp-col ul { margin: 0; padding-left: 1.1rem; } .cmp2 .cmp-col li { font-size: 0.86rem; margin-bottom: 0.35rem; color: var(--text-dim); }
+</style>
+
+<!-- ============ SLIDE 1 — COVER ============ -->
+<section class="slide active slide-cover b3-cover" data-slide="1" data-title="Mở đầu Buổi 3">
+  <div class="cover-orb orb-1"></div>
+  <div class="cover-orb orb-2"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">BUỔI 3 · MODULE 1 — NỀN TẢNG AI</span>
+    <h1 class="hero-title">AI có <span class="grad-text">kiểm chứng</span><br/>& tự tay tạo game</h1>
+    <p class="slide-subtitle">RAG · LLM · Vibe Coding — rồi dùng z.ai tạo game đầu tiên của bạn</p>
+    <div class="cover-chips">
+      <span class="cover-chip">120 phút</span>
+      <span class="cover-chip">5 học sinh THCS &amp; THPT</span>
+      <span class="cover-chip">Output: 1 game chạy được</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 2 — LỘ TRÌNH 2 GIỜ ============ -->
+<section class="slide" data-slide="2" data-title="Lộ trình 2 giờ">
+  <div class="slide-body">
+    <span class="eyebrow">BẢN ĐỒ BUỔI HỌC</span>
+    <h2 class="slide-title">Lộ trình 2 giờ — 6 chặng</h2>
+    <div class="pstep stagger">
+      <div class="pstep-item"><div class="pstep-n">1</div><div><h4>0–15′ · Ôn bài cũ</h4><p>Gemini, NotebookLM, Gem, prompt R-C-T-F-E, bám nguồn, checklist kiểm tra AI.</p></div></div>
+      <div class="pstep-item"><div class="pstep-n">2</div><div><h4>15–35′ · Hiểu RAG</h4><p>AI trả lời dựa trên nguồn như thế nào — mô phỏng bằng NotebookLM.</p></div></div>
+      <div class="pstep-item"><div class="pstep-n">3</div><div><h4>35–55′ · Hiểu LLM</h4><p>Mô hình ngôn ngữ lớn được huấn luyện & triển khai ra sao, vì sao có thể sai.</p></div></div>
+      <div class="pstep-item"><div class="pstep-n">4</div><div><h4>55–75′ · Vibe coding</h4><p>Dùng ngôn ngữ tự nhiên để mô tả & tạo phần mềm. Viết đặc tả game.</p></div></div>
+      <div class="pstep-item"><div class="pstep-n">5</div><div><h4>75–110′ · Tạo game bằng z.ai</h4><p>Tạo game, chạy thử, ghi lỗi, sửa lỗi, thêm tính năng.</p></div></div>
+      <div class="pstep-item"><div class="pstep-n">6</div><div><h4>110–120′ · Tổng kết</h4><p>Tự đánh giá bằng checklist & nhận bài tập về nhà.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 3 — OUTPUT BUỔI ============ -->
+<section class="slide" data-slide="3" data-title="Bạn sẽ làm được gì">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 3 — BẠN PHẢI CÓ</span>
+    <h2 class="slide-title">5 sản phẩm sau 2 giờ</h2>
+    <div class="card-grid stagger">
+      <div class="card"><div class="card-icon">1</div><h3>1 prompt bám nguồn</h3><p>Dùng cho NotebookLM/Gemini/Gem theo tư duy RAG</p></div>
+      <div class="card"><div class="card-icon">2</div><h3>Giải thích RAG</h3><p>3–5 câu bằng lời của chính bạn</p></div>
+      <div class="card"><div class="card-icon">3</div><h3>Giải thích LLM</h3><p>Vì sao LLM có thể sai nếu không có nguồn</p></div>
+      <div class="card"><div class="card-icon">4</div><h3>1 game chạy được</h3><p>Tạo bằng z.ai / công cụ AI-first</p></div>
+      <div class="card"><div class="card-icon">5</div><h3>1 bảng kiểm thử</h3><p>Ít nhất 5 tiêu chí, đã chạy lại sau khi sửa</p></div>
+    </div>
+    <div class="hl-box success"><span class="hl-label">NGUYÊN TẮC AN TOÀN</span><p>Không nhập mật khẩu, thông tin cá nhân, số điện thoại hay nội dung riêng tư vào công cụ AI.</p></div>
+  </div>
+</section>
+
+<!-- ============ PHẦN 1 DIVIDER ============ -->
+<section class="slide slide-cover b3-part" data-slide="4" data-title="Phần 1 — Ôn bài cũ">
+  <div class="cover-content slide-body">
+    <div class="part-num">01</div>
+    <div class="part-kicker">Phần 1 · 0–15 phút</div>
+    <h2 class="hero-title" style="font-size:clamp(1.8rem,4vw,2.6rem);">Ôn bài cũ —<br/>dùng AI để học <span class="grad-text">có kiểm chứng</span></h2>
+    <p class="slide-subtitle">Nhớ lại Gemini, NotebookLM, Gem, prompt R-C-T-F-E và checklist 7 bước.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 5 — TỪ KHOÁ BÀI CŨ ============ -->
+<section class="slide" data-slide="5" data-title="Từ khoá bài cũ">
+  <div class="slide-body">
+    <span class="eyebrow">5 TỪ KHOÁ CẦN NHỚ</span>
+    <h2 class="slide-title">Bộ công cụ buổi trước</h2>
+    <div class="kw-grid stagger">
+      <div class="kw-card"><div class="kw-term">Gemini</div><div class="kw-def">AI của Google: hỏi đáp, giải thích bài, tạo dàn ý, luyện tập, phân tích file.</div></div>
+      <div class="kw-card k-cyan"><div class="kw-term">NotebookLM</div><div class="kw-def">Học từ <strong>nguồn bạn đưa vào</strong> (PDF, Docs, web, YouTube) — trả lời có trích dẫn.</div></div>
+      <div class="kw-card k-purple"><div class="kw-term">Gem</div><div class="kw-def">Trợ lý AI tuỳ chỉnh trong Gemini, có tên & hướng dẫn cố định. VD: "Gia sư Toán lớp 7".</div></div>
+      <div class="kw-card k-orange"><div class="kw-term">Prompt R-C-T-F-E</div><div class="kw-def">Khung viết prompt: Role · Context · Task · Format · Example.</div></div>
+      <div class="kw-card k-green"><div class="kw-term">Bám nguồn (Grounding)</div><div class="kw-def">Yêu cầu AI chỉ trả lời theo tài liệu; không có thì nói "không có trong tài liệu".</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 6 — QUY TRÌNH HỌC 3 LƯỢT ============ -->
+<section class="slide" data-slide="6" data-title="Quy trình học tối ưu">
+  <div class="slide-body">
+    <span class="eyebrow">CÁCH HỌC THÔNG MINH VỚI GEMINI</span>
+    <h2 class="slide-title">Học theo 3 lượt</h2>
+    <div class="card-grid stagger">
+      <div class="card"><div class="card-icon">1</div><h3>Hiểu bài</h3><p>Yêu cầu AI giải thích khái niệm bằng ngôn ngữ đúng trình độ của bạn.</p></div>
+      <div class="card"><div class="card-icon">2</div><h3>Luyện tập</h3><p>Yêu cầu AI tạo câu hỏi từ dễ đến khó, đáp án đặt ở cuối.</p></div>
+      <div class="card"><div class="card-icon">3</div><h3>Kiểm tra hiểu</h3><p>AI hỏi bạn từng câu một; nếu sai chỉ gợi ý để bạn tự sửa.</p></div>
+    </div>
+    <div class="b3-callout info"><span class="ci">✅</span><p><strong>Checklist 7 bước kiểm tra AI:</strong> đúng nhiệm vụ · phù hợp trình độ · có căn cứ từ nguồn · đủ ý · logic từng bước · không bịa · giúp bạn học.</p></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 7 — SỔ TAY #1 ============ -->
+<section class="slide" data-slide="7" data-title="Sổ Tay #1">
+  <div class="slide-body">
+    <span class="eyebrow">HỘP MÀU TÍM — VIẾT SỔ TAY</span>
+    <h2 class="slide-title">Bạn nhớ gì từ buổi trước?</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #1 — Ôn bài cũ</div>
+      <div class="qbox-content">Trong các công cụ đã học, <strong>công cụ nào bạn thấy hữu ích nhất</strong> cho việc học? Vì sao?</div>
+      <div class="nb-input-wrap">
+        <label>Câu trả lời của bạn:</label>
+        <textarea class="nb-input" data-nb-id="1" placeholder="Viết ngắn 1-2 câu..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Gợi ý:</span>Nghĩ tới lần gần nhất bạn dùng AI để học — nó giúp bạn tiết kiệm bước nào?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 8 — QUIZ ÔN BÀI ============ -->
+<section class="slide" data-slide="8" data-title="Quiz: Ôn bài cũ">
+  <div class="slide-body">
+    <span class="eyebrow">KIỂM TRA NHANH</span>
+    <h2 class="slide-title">Prompt R-C-T-F-E gồm gì?</h2>
+    <div class="quiz" data-correct="1" data-explanation="R-C-T-F-E = Role (vai trò) · Context (bối cảnh) · Task (nhiệm vụ) · Format (định dạng) · Example (ví dụ).">
+      <p class="quiz-q">5 thành phần của khung prompt <strong>R-C-T-F-E</strong> là gì?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Read · Copy · Test · Fix · Export</button>
+        <button class="quiz-opt" data-index="1">Role · Context · Task · Format · Example</button>
+        <button class="quiz-opt" data-index="2">Run · Code · Train · Fine-tune · Eval</button>
+        <button class="quiz-opt" data-index="3">Retrieval · Chat · Token · File · Engine</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PHẦN 2 DIVIDER ============ -->
+<section class="slide slide-cover b3-part" data-slide="9" data-title="Phần 2 — RAG">
+  <div class="cover-content slide-body">
+    <div class="part-num">02</div>
+    <div class="part-kicker">Phần 2 · 15–35 phút</div>
+    <h2 class="hero-title" style="font-size:clamp(1.8rem,4vw,2.6rem);">RAG — làm cho AI<br/>trả lời <span class="grad-text">dựa trên tài liệu</span></h2>
+    <p class="slide-subtitle">Retrieval-Augmented Generation: tìm nguồn → đưa vào ngữ cảnh → AI trả lời có căn cứ.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 10 — TÌNH HUỐNG ============ -->
+<section class="slide" data-slide="10" data-title="Tình huống dẫn nhập">
+  <div class="slide-body">
+    <span class="eyebrow">VẤN ĐỀ THỰC TẾ</span>
+    <h2 class="slide-title">Vì sao AI hay trả lời chung chung?</h2>
+    <div class="cmp2">
+      <div class="cmp-col a">
+        <h4>❌ Không có nguồn</h4>
+        <ul>
+          <li>Bạn hỏi: "Tóm tắt bài thầy cô vừa giao".</li>
+          <li>Nhưng AI <strong>chưa hề đọc file</strong> của thầy cô.</li>
+          <li>→ Trả lời chung chung hoặc sai nội dung bài.</li>
+        </ul>
+      </div>
+      <div class="cmp-col b">
+        <h4>✅ Có RAG</h4>
+        <ul>
+          <li>Hệ thống tìm đúng đoạn tài liệu liên quan trước.</li>
+          <li>Đưa đoạn đó vào ngữ cảnh cho AI.</li>
+          <li>→ AI trả lời có căn cứ, biết nói "không có trong tài liệu".</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 11 — RAG LÀ GÌ + DIAGRAM ============ -->
+<section class="slide" data-slide="11" data-title="Luồng RAG 5 bước">
+  <div class="slide-body">
+    <span class="eyebrow">RAG = RETRIEVAL + AUGMENTATION + GENERATION</span>
+    <h2 class="slide-title">Luồng RAG theo 5 bước dễ nhớ</h2>
+    <div class="diagram">
+      <svg viewBox="0 0 920 240" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sơ đồ luồng RAG 5 bước">
+        <defs>
+          <linearGradient id="ragG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2563EB"/><stop offset="1" stop-color="#06B6D4"/></linearGradient>
+          <marker id="arrR" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#64748B"/></marker>
+        </defs>
+        <!-- doc store -->
+        <g>
+          <rect x="690" y="20" width="120" height="80" rx="10" fill="#EFF6FF" stroke="#2563EB" stroke-width="1.5"/>
+          <text x="750" y="48" text-anchor="middle" font-size="13" font-weight="700" fill="#1E3A8A">Kho tài liệu</text>
+          <text x="750" y="68" text-anchor="middle" font-size="11" fill="#475569">PDF · Docs</text>
+          <text x="750" y="84" text-anchor="middle" font-size="11" fill="#475569">bài giảng</text>
+        </g>
+        <!-- step boxes -->
+        <g font-family="Inter, sans-serif">
+          <rect x="20" y="95" width="150" height="60" rx="10" fill="url(#ragG)"/>
+          <text x="95" y="120" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">1 · Câu hỏi</text>
+          <text x="95" y="140" text-anchor="middle" font-size="10.5" fill="#E0E7FF">Bạn hỏi rõ ràng</text>
+
+          <rect x="200" y="95" width="160" height="60" rx="10" fill="#fff" stroke="#2563EB" stroke-width="1.5"/>
+          <text x="280" y="118" text-anchor="middle" font-size="13" font-weight="800" fill="#1E3A8A">2 · Retrieval</text>
+          <text x="280" y="138" text-anchor="middle" font-size="10.5" fill="#475569">Tìm đoạn liên quan</text>
+
+          <rect x="390" y="95" width="170" height="60" rx="10" fill="#fff" stroke="#06B6D4" stroke-width="1.5"/>
+          <text x="475" y="118" text-anchor="middle" font-size="13" font-weight="800" fill="#0E7490">3 · Augment</text>
+          <text x="475" y="138" text-anchor="middle" font-size="10.5" fill="#475569">Đưa vào ngữ cảnh</text>
+
+          <rect x="590" y="120" width="150" height="60" rx="10" fill="url(#ragG)"/>
+          <text x="665" y="145" text-anchor="middle" font-size="13" font-weight="800" fill="#fff">4 · LLM sinh</text>
+          <text x="665" y="165" text-anchor="middle" font-size="10.5" fill="#E0E7FF">Viết câu trả lời</text>
+
+          <rect x="380" y="190" width="200" height="44" rx="10" fill="#ECFDF5" stroke="#059669" stroke-width="1.5"/>
+          <text x="480" y="217" text-anchor="middle" font-size="12.5" font-weight="800" fill="#065F46">5 · Trả lời có trích dẫn ✓</text>
+        </g>
+        <!-- arrows -->
+        <line x1="170" y1="125" x2="198" y2="125" stroke="#64748B" stroke-width="2" marker-end="url(#arrR)"/>
+        <line x1="360" y1="125" x2="388" y2="125" stroke="#64748B" stroke-width="2" marker-end="url(#arrR)"/>
+        <line x1="475" y1="95" x2="475" y2="70" stroke="#64748B" stroke-width="2"/>
+        <line x1="475" y1="70" x2="688" y2="60" stroke="#64748B" stroke-width="2" marker-end="url(#arrR)"/>
+        <line x1="560" y1="135" x2="588" y2="145" stroke="#64748B" stroke-width="2" marker-end="url(#arrR)"/>
+        <line x1="640" y1="180" x2="560" y2="200" stroke="#64748B" stroke-width="2" marker-end="url(#arrR)"/>
+      </svg>
+      <div class="dg-cap">Hỏi → tìm nguồn → đưa vào ngữ cảnh → AI sinh câu trả lời → bạn kiểm tra bằng trích dẫn.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 12 — VÌ SAO CẦN RAG ============ -->
+<section class="slide" data-slide="12" data-title="Vì sao cần RAG">
+  <div class="slide-body">
+    <span class="eyebrow">5 LÝ DO TRONG THỰC TẾ</span>
+    <h2 class="slide-title">Vì sao cần RAG?</h2>
+    <div class="kw-grid stagger">
+      <div class="kw-card"><div class="kw-term">Kiến thức thay đổi</div><div class="kw-def">LLM có thể không biết tài liệu mới nhất của lớp, công ty, dự án.</div></div>
+      <div class="kw-card k-cyan"><div class="kw-term">Tài liệu riêng</div><div class="kw-def">Bài giảng, quy định trường, tài liệu nội bộ không nằm trong "trí nhớ" mô hình.</div></div>
+      <div class="kw-card k-purple"><div class="kw-term">Cần kiểm chứng</div><div class="kw-def">Đối chiếu câu trả lời với nguồn, giảm học nhầm.</div></div>
+      <div class="kw-card k-orange"><div class="kw-term">Giới hạn phạm vi</div><div class="kw-def">"Chỉ trả lời theo tài liệu này" → AI ít đi xa khỏi bài học.</div></div>
+      <div class="kw-card k-green"><div class="kw-term">Tiết kiệm thời gian</div><div class="kw-def">Hỏi để tìm đúng đoạn cần đọc kỹ, thay vì đọc 20 trang.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 13 — THỰC HÀNH MÔ PHỎNG RAG ============ -->
+<section class="slide" data-slide="13" data-title="Thực hành mô phỏng RAG">
+  <div class="slide-body">
+    <span class="eyebrow">THỰC HÀNH VỚI NOTEBOOKLM</span>
+    <h2 class="slide-title">Prompt bám nguồn — copy &amp; dùng ngay</h2>
+    <div class="prompt-box">
+      <span class="pb-label">Prompt bám nguồn (NotebookLM / Gem)</span>
+      <span class="pb-line">Dựa trên nguồn đã tải lên, hãy trả lời câu hỏi sau: <span class="pb-ph">[câu hỏi của bạn]</span>.</span>
+      <span class="pb-line">Chỉ dùng thông tin có trong nguồn. Nếu nguồn không có, hãy nói rõ "không có trong tài liệu".</span>
+      <span class="pb-line">Mỗi ý cần kèm căn cứ từ nguồn (trích dẫn).</span>
+    </div>
+    <div class="b3-callout tip"><span class="ci">🧪</span><p><strong>Phép thử "không có trong tài liệu":</strong> hỏi một câu chắc chắn không nằm trong nguồn. Trợ lý tốt phải nói thiếu thông tin — chứ không bịa.</p></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 14 — QUIZ RAG ============ -->
+<section class="slide" data-slide="14" data-title="Quiz: RAG">
+  <div class="slide-body">
+    <span class="eyebrow">KIỂM TRA NHANH</span>
+    <h2 class="slide-title">Bước Retrieval làm gì?</h2>
+    <div class="quiz" data-correct="2" data-explanation="Retrieval = bước TÌM phần tài liệu liên quan nhất với câu hỏi, trước khi đưa vào ngữ cảnh cho LLM.">
+      <p class="quiz-q">Trong RAG, bước <strong>Retrieval (Truy xuất)</strong> chịu trách nhiệm gì?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Viết câu trả lời cuối cùng</button>
+        <button class="quiz-opt" data-index="1">Huấn luyện lại mô hình từ đầu</button>
+        <button class="quiz-opt" data-index="2">Tìm phần tài liệu liên quan nhất với câu hỏi</button>
+        <button class="quiz-opt" data-index="3">Chia văn bản thành token</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 15 — SỔ TAY #2 ============ -->
+<section class="slide" data-slide="15" data-title="Sổ Tay #2">
+  <div class="slide-body">
+    <span class="eyebrow">HỘP MÀU TÍM — VIẾT SỔ TAY</span>
+    <h2 class="slide-title">Giải thích RAG bằng lời của bạn</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #2 — Hiểu RAG</div>
+      <div class="qbox-content">Giải thích RAG bằng ví dụ <strong>"học từ file thầy cô gửi"</strong> — viết 3–5 câu.</div>
+      <div class="nb-input-wrap">
+        <label>Giải thích của bạn:</label>
+        <textarea class="nb-input" data-nb-id="2" placeholder="Ví dụ: Khi mình hỏi, hệ thống tìm đúng đoạn trong file thầy cô gửi..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mẹo:</span>Nhắc tới 3 từ khoá: <em>tìm nguồn</em>, <em>đưa vào ngữ cảnh</em>, <em>trả lời có căn cứ</em>.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PHẦN 3 DIVIDER ============ -->
+<section class="slide slide-cover b3-part" data-slide="16" data-title="Phần 3 — LLM">
+  <div class="cover-content slide-body">
+    <div class="part-num">03</div>
+    <div class="part-kicker">Phần 3 · 35–55 phút</div>
+    <h2 class="hero-title" style="font-size:clamp(1.8rem,4vw,2.6rem);">LLM — mô hình<br/>ngôn ngữ <span class="grad-text">lớn</span></h2>
+    <p class="slide-subtitle">LLM học từ dữ liệu thế nào, tạo câu trả lời ra sao, và vì sao có thể sai.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 17 — LLM LÀ GÌ + DIAGRAM TOKEN ============ -->
+<section class="slide" data-slide="17" data-title="LLM là gì">
+  <div class="slide-body">
+    <span class="eyebrow">DỰ ĐOÁN TOKEN TIẾP THEO</span>
+    <h2 class="slide-title">LLM hoạt động như thế nào?</h2>
+    <div class="diagram">
+      <svg viewBox="0 0 900 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sơ đồ LLM dự đoán token">
+        <defs><linearGradient id="llmG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6366F1"/><stop offset="1" stop-color="#4338CA"/></linearGradient>
+          <marker id="arrL" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#64748B"/></marker></defs>
+        <!-- input tokens -->
+        <text x="20" y="40" font-size="12" font-weight="700" fill="#475569">Văn bản đầu vào → cắt thành token</text>
+        <g font-family="JetBrains Mono, monospace">
+          <rect x="20" y="55" width="70" height="40" rx="8" fill="#EEF2FF" stroke="#6366F1"/><text x="55" y="80" text-anchor="middle" font-size="13" fill="#3730A3">Hôm</text>
+          <rect x="100" y="55" width="70" height="40" rx="8" fill="#EEF2FF" stroke="#6366F1"/><text x="135" y="80" text-anchor="middle" font-size="13" fill="#3730A3">nay</text>
+          <rect x="180" y="55" width="70" height="40" rx="8" fill="#EEF2FF" stroke="#6366F1"/><text x="215" y="80" text-anchor="middle" font-size="13" fill="#3730A3">em</text>
+          <rect x="260" y="55" width="70" height="40" rx="8" fill="#EEF2FF" stroke="#6366F1"/><text x="295" y="80" text-anchor="middle" font-size="13" fill="#3730A3">học</text>
+        </g>
+        <!-- model -->
+        <rect x="370" y="40" width="150" height="120" rx="14" fill="url(#llmG)"/>
+        <text x="445" y="92" text-anchor="middle" font-size="16" font-weight="800" fill="#fff">LLM</text>
+        <text x="445" y="114" text-anchor="middle" font-size="10.5" fill="#E0E7FF">đoán token</text>
+        <text x="445" y="130" text-anchor="middle" font-size="10.5" fill="#E0E7FF">tiếp theo</text>
+        <line x1="330" y1="75" x2="368" y2="90" stroke="#64748B" stroke-width="2" marker-end="url(#arrL)"/>
+        <!-- output probs -->
+        <text x="560" y="40" font-size="12" font-weight="700" fill="#475569">Xác suất token kế tiếp</text>
+        <g font-family="Inter, sans-serif">
+          <text x="560" y="68" font-size="12" fill="#1E293B">"AI"</text><rect x="600" y="58" width="230" height="14" rx="7" fill="#E2E8F0"/><rect x="600" y="58" width="200" height="14" rx="7" fill="#2563EB"/><text x="840" y="69" font-size="11" fill="#475569">0.62</text>
+          <text x="560" y="98" font-size="12" fill="#1E293B">"bài"</text><rect x="600" y="88" width="230" height="14" rx="7" fill="#E2E8F0"/><rect x="600" y="88" width="95" height="14" rx="7" fill="#06B6D4"/><text x="840" y="99" font-size="11" fill="#475569">0.21</text>
+          <text x="560" y="128" font-size="12" fill="#1E293B">"Toán"</text><rect x="600" y="118" width="230" height="14" rx="7" fill="#E2E8F0"/><rect x="600" y="118" width="55" height="14" rx="7" fill="#94A3B8"/><text x="840" y="129" font-size="11" fill="#475569">0.11</text>
+        </g>
+        <line x1="520" y1="100" x2="556" y2="90" stroke="#64748B" stroke-width="2" marker-end="url(#arrL)"/>
+        <text x="445" y="205" text-anchor="middle" font-size="12" fill="#475569">LLM lặp lại việc này hàng nghìn lần để viết cả câu trả lời — nó <tspan font-weight="700" fill="#B91C1C">đoán</tspan>, không "tra cứu".</text>
+      </svg>
+      <div class="dg-cap">LLM = mô hình đoán token tiếp theo dựa trên mẫu đã học — rất trôi chảy nhưng có thể sai.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 18 — HUẤN LUYỆN LLM ============ -->
+<section class="slide" data-slide="18" data-title="LLM được huấn luyện">
+  <div class="slide-body">
+    <span class="eyebrow">TỪ DỮ LIỆU THÔ ĐẾN SẢN PHẨM</span>
+    <h2 class="slide-title">LLM được huấn luyện theo 6 bước</h2>
+    <div class="pstep stagger">
+      <div class="pstep-item"><div class="pstep-n">1</div><div><h4>Thu thập &amp; làm sạch dữ liệu</h4><p>Văn bản, mã nguồn, tài liệu, hội thoại mẫu — được lọc kỹ.</p></div></div>
+      <div class="pstep-item"><div class="pstep-n">2</div><div><h4>Chia văn bản thành token</h4><p>Máy không hiểu chữ như người; nó xử lý chữ thành các đơn vị số hoá.</p></div></div>
+      <div class="pstep-item"><div class="pstep-n">3</div><div><h4>Học dự đoán phần tiếp theo</h4><p>Luyện rất nhiều lần để đoán token kế tiếp trong văn bản.</p></div></div>
+      <div class="pstep-item"><div class="pstep-n">4</div><div><h4>Học làm theo hướng dẫn</h4><p>Huấn luyện thêm bằng ví dụ hỏi–đáp để biết trả lời theo yêu cầu (fine-tuning).</p></div></div>
+      <div class="pstep-item"><div class="pstep-n">5</div><div><h4>Đánh giá &amp; tăng an toàn</h4><p>Kiểm tra độ chính xác, khả năng từ chối yêu cầu nguy hiểm, giảm thông tin sai.</p></div></div>
+      <div class="pstep-item"><div class="pstep-n">6</div><div><h4>Triển khai thành sản phẩm</h4><p>Đưa vào chatbot, công cụ học tập, công cụ coding hoặc API.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 19 — TOKEN & HALLUCINATION ============ -->
+<section class="slide" data-slide="19" data-title="3 thuật ngữ LLM">
+  <div class="slide-body">
+    <span class="eyebrow">3 THUẬT NGỮ QUAN TRỌNG</span>
+    <h2 class="slide-title">Token · Hallucination · Context window</h2>
+    <div class="met-grid stagger">
+      <div class="met-card"><div class="met-emoji">🧩</div><div class="met-term">Token</div><div class="met-desc">Đơn vị nhỏ của văn bản: một từ, một phần của từ hoặc dấu câu. Câu "Tôi học AI" được tách thành nhiều token.</div></div>
+      <div class="met-card"><div class="met-emoji">👻</div><div class="met-term">Hallucination</div><div class="met-desc">AI tạo câu nghe đúng nhưng thực tế sai hoặc không có nguồn — bịa tên tác giả, số liệu, năm tháng.</div></div>
+      <div class="met-card"><div class="met-emoji">🪟</div><div class="met-term">Context window</div><div class="met-desc">Lượng thông tin mô hình "nhìn thấy" trong một lần xử lý. Đưa quá nhiều, hệ thống phải chọn lọc.</div></div>
+    </div>
+    <div class="b3-callout warn"><span class="ci">⚠️</span><p><strong>Điều quan trọng:</strong> LLM không "hiểu" như con người và không tự biết tài liệu riêng của bạn. Nó đoán dựa trên mẫu đã học + ngữ cảnh bạn đưa vào.</p></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 20 — LLM VẪN CẦN RAG ============ -->
+<section class="slide" data-slide="20" data-title="Có LLM vẫn cần RAG">
+  <div class="slide-body">
+    <span class="eyebrow">GHÉP 2 MẢNH LẠI</span>
+    <h2 class="slide-title">Có LLM rồi, vì sao vẫn cần RAG?</h2>
+    <div class="met-grid stagger" style="grid-template-columns:repeat(auto-fit,minmax(230px,1fr));">
+      <div class="met-card" style="border-left:4px solid var(--box-purple-border)"><div class="met-term" style="color:var(--box-purple-dark)">LLM = học sinh giỏi nói</div><div class="met-desc">Viết và nói rất trôi chảy, nhưng dựa vào trí nhớ chung — có thể không biết bài riêng của lớp bạn.</div></div>
+      <div class="met-card" style="border-left:4px solid var(--primary)"><div class="met-term" style="color:var(--primary-dark)">RAG = mở đúng trang sách</div><div class="met-desc">Đưa đúng tài liệu vào câu hỏi trước khi trả lời → câu trả lời có căn cứ, ít bịa hơn.</div></div>
+    </div>
+    <div class="b3-callout info"><span class="ci">💡</span><p>Trong học tập: RAG giúp bạn học đúng tài liệu thầy cô giao, biết yêu cầu AI nói "không có trong tài liệu" thay vì đoán mò.</p></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 21 — DRAG-DROP GAME ============ -->
+<section class="slide" data-slide="21" data-title="Game: Trí nhớ mô hình hay cần nguồn?">
+  <div class="slide-body">
+    <span class="eyebrow">QUICK SELF-TEST · KÉO THẢ</span>
+    <h2 class="slide-title">Câu nào LLM tự trả lời được, câu nào cần RAG?</h2>
+    <p class="slide-subtitle">Kéo (hoặc bấm rồi chọn nhóm) từng thẻ vào đúng cột.</p>
+    <div class="game-area">
+      <div class="game-items" id="gameItems">
+        <div class="draggable" draggable="true" data-type="llm">"Giải thích định luật Ohm là gì?"</div>
+        <div class="draggable" draggable="true" data-type="rag">"Tóm tắt file bài giảng thầy gửi hôm nay"</div>
+        <div class="draggable" draggable="true" data-type="llm">"Dịch câu này sang tiếng Anh"</div>
+        <div class="draggable" draggable="true" data-type="rag">"Đề kiểm tra tuần này của lớp mình có mấy phần?"</div>
+        <div class="draggable" draggable="true" data-type="rag">"Quy định nộp bài trong tài liệu nội bộ trường mình"</div>
+      </div>
+      <div class="game-buckets">
+        <div class="bucket llm" data-bucket="llm"><div class="bucket-title">LLM tự trả lời (kiến thức chung)</div><div class="bucket-zone"></div></div>
+        <div class="bucket rag" data-bucket="rag"><div class="bucket-title">Cần RAG (tài liệu riêng)</div><div class="bucket-zone"></div></div>
+      </div>
+      <div class="game-score" id="gameScore" style="display:none;">
+        <div id="gameScoreText"></div>
+        <button class="btn-restart" onclick="restartGame()">Chơi lại</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PHẦN 4 DIVIDER ============ -->
+<section class="slide slide-cover b3-part" data-slide="22" data-title="Phần 4 — Vibe coding">
+  <div class="cover-content slide-body">
+    <div class="part-num">04</div>
+    <div class="part-kicker">Phần 4 · 55–75 phút</div>
+    <h2 class="hero-title" style="font-size:clamp(1.8rem,4vw,2.6rem);">Vibe coding —<br/>mô tả ý tưởng, <span class="grad-text">AI tạo sản phẩm</span></h2>
+    <p class="slide-subtitle">Không phải "khỏi cần suy nghĩ", mà là vòng lặp: mô tả rõ → tạo → chạy thử → sửa.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 23 — VIBE LOOP DIAGRAM ============ -->
+<section class="slide" data-slide="23" data-title="Vòng lặp vibe coding">
+  <div class="slide-body">
+    <span class="eyebrow">VÒNG LẶP TẠO SẢN PHẨM</span>
+    <h2 class="slide-title">Vibe coding là gì?</h2>
+    <div class="diagram">
+      <svg viewBox="0 0 760 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Vòng lặp vibe coding 5 bước">
+        <defs><marker id="arrV" markerWidth="11" markerHeight="11" refX="6" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#2563EB"/></marker></defs>
+        <circle cx="380" cy="150" r="118" fill="none" stroke="#E2E8F0" stroke-width="2" stroke-dasharray="5 6"/>
+        <!-- 5 nodes around circle -->
+        <g font-family="Inter, sans-serif" font-size="12" font-weight="700">
+          <g><circle cx="380" cy="36" r="30" fill="#2563EB"/><text x="380" y="33" text-anchor="middle" fill="#fff" font-size="11">Mô tả</text><text x="380" y="46" text-anchor="middle" fill="#fff" font-size="11">rõ</text></g>
+          <g><circle cx="492" cy="110" r="30" fill="#06B6D4"/><text x="492" y="107" text-anchor="middle" fill="#fff" font-size="11">AI tạo</text><text x="492" y="120" text-anchor="middle" fill="#fff" font-size="11">bản đầu</text></g>
+          <g><circle cx="448" cy="240" r="30" fill="#6366F1"/><text x="448" y="237" text-anchor="middle" fill="#fff" font-size="11">Chạy</text><text x="448" y="250" text-anchor="middle" fill="#fff" font-size="11">thử</text></g>
+          <g><circle cx="312" cy="240" r="30" fill="#D97706"/><text x="312" y="237" text-anchor="middle" fill="#fff" font-size="11">Ghi</text><text x="312" y="250" text-anchor="middle" fill="#fff" font-size="11">lỗi</text></g>
+          <g><circle cx="268" cy="110" r="30" fill="#059669"/><text x="268" y="107" text-anchor="middle" fill="#fff" font-size="11">Sửa</text><text x="268" y="120" text-anchor="middle" fill="#fff" font-size="11">từng vòng</text></g>
+        </g>
+        <!-- curved arrows between nodes -->
+        <path d="M410,42 A118,118 0 0,1 470,86" fill="none" stroke="#2563EB" stroke-width="2.4" marker-end="url(#arrV)"/>
+        <path d="M500,140 A118,118 0 0,1 472,216" fill="none" stroke="#2563EB" stroke-width="2.4" marker-end="url(#arrV)"/>
+        <path d="M420,256 A118,118 0 0,1 342,256" fill="none" stroke="#2563EB" stroke-width="2.4" marker-end="url(#arrV)"/>
+        <path d="M288,216 A118,118 0 0,1 260,140" fill="none" stroke="#2563EB" stroke-width="2.4" marker-end="url(#arrV)"/>
+        <path d="M290,86 A118,118 0 0,1 350,42" fill="none" stroke="#2563EB" stroke-width="2.4" marker-end="url(#arrV)"/>
+        <text x="380" y="148" text-anchor="middle" font-size="14" font-weight="800" fill="#1E293B">VÒNG LẶP</text>
+        <text x="380" y="168" text-anchor="middle" font-size="11" fill="#64748B">lặp lại đến khi đạt</text>
+      </svg>
+      <div class="dg-cap">Mỗi vòng làm sản phẩm tốt hơn một chút — đây là "iteration".</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 24 — VAI TRÒ CỦA BẠN ============ -->
+<section class="slide" data-slide="24" data-title="Vai trò của bạn">
+  <div class="slide-body">
+    <span class="eyebrow">BẠN KHÔNG CHỈ "BẤM CHO AI LÀM"</span>
+    <h2 class="slide-title">4 vai trò của bạn khi vibe coding</h2>
+    <div class="card-grid stagger">
+      <div class="card"><div class="card-icon">📝</div><h3>Người ra đề</h3><p>Nói rõ game làm gì, dành cho ai, luật chơi ra sao.</p></div>
+      <div class="card"><div class="card-icon">🎮</div><h3>Người kiểm thử</h3><p>Chơi thử game và ghi lỗi thật cụ thể.</p></div>
+      <div class="card"><div class="card-icon">⚖️</div><h3>Người quyết định</h3><p>Chọn tính năng nào giữ, bỏ; giao diện nào dễ dùng.</p></div>
+      <div class="card"><div class="card-icon">📚</div><h3>Người học</h3><p>Đọc lại phần code chính để hiểu sản phẩm hoạt động thế nào.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 25 — RCTFE DIAGRAM ============ -->
+<section class="slide" data-slide="25" data-title="Prompt R-C-T-F-E">
+  <div class="slide-body">
+    <span class="eyebrow">CÔNG THỨC PROMPT TẠO SẢN PHẨM</span>
+    <h2 class="slide-title">R-C-T-F-E để tạo game</h2>
+    <div class="diagram">
+      <svg viewBox="0 0 880 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="5 thành phần R-C-T-F-E">
+        <g font-family="Inter, sans-serif">
+          <rect x="20" y="20" width="840" height="38" rx="8" fill="#EFF6FF"/><circle cx="44" cy="39" r="14" fill="#2563EB"/><text x="44" y="44" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">R</text><text x="70" y="44" font-size="13.5" fill="#1E293B"><tspan font-weight="800" fill="#1E3A8A">Role</tspan> — Bạn là lập trình viên game web &amp; gia sư lập trình cho học sinh phổ thông.</text>
+          <rect x="20" y="64" width="840" height="38" rx="8" fill="#ECFEFF"/><circle cx="44" cy="83" r="14" fill="#06B6D4"/><text x="44" y="88" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">C</text><text x="70" y="88" font-size="13.5" fill="#1E293B"><tspan font-weight="800" fill="#0E7490">Context</tspan> — Mình mới học AI, chưa giỏi lập trình; muốn 1 file HTML duy nhất để dễ chạy.</text>
+          <rect x="20" y="108" width="840" height="38" rx="8" fill="#EEF2FF"/><circle cx="44" cy="127" r="14" fill="#6366F1"/><text x="44" y="132" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">T</text><text x="70" y="132" font-size="13.5" fill="#1E293B"><tspan font-weight="800" fill="#3730A3">Task</tspan> — Tạo game [tên game] với luật [luật chơi]; giải thích ngắn gọn cấu trúc code.</text>
+          <rect x="20" y="152" width="840" height="38" rx="8" fill="#FFF7ED"/><circle cx="44" cy="171" r="14" fill="#EA580C"/><text x="44" y="176" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">F</text><text x="70" y="176" font-size="13.5" fill="#1E293B"><tspan font-weight="800" fill="#7C2D12">Format</tspan> — Trả về 3 phần: cách chơi · toàn bộ code 1 file HTML · hướng dẫn kiểm thử.</text>
+          <rect x="20" y="196" width="840" height="38" rx="8" fill="#ECFDF5"/><circle cx="44" cy="215" r="14" fill="#059669"/><text x="44" y="220" text-anchor="middle" font-size="14" font-weight="800" fill="#fff">E</text><text x="70" y="220" font-size="13.5" fill="#1E293B"><tspan font-weight="800" fill="#065F46">Example</tspan> — Tiêu chí đạt: bấm Start chạy · có điểm số · thua hiện Game Over · có Restart.</text>
+        </g>
+      </svg>
+      <div class="dg-cap">Prompt càng rõ 5 phần này, AI càng dễ tạo đúng game bạn muốn.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 26 — BẢNG ĐẶC TẢ ============ -->
+<section class="slide" data-slide="26" data-title="Bảng đặc tả game">
+  <div class="slide-body">
+    <span class="eyebrow">TRƯỚC KHI BẢO AI VIẾT CODE</span>
+    <h2 class="slide-title">Viết bảng đặc tả — ví dụ game Rắn</h2>
+    <table class="spec-table">
+      <tr><th style="width:32%">Mục cần mô tả</th><th>Ví dụ cho game Rắn săn mồi</th></tr>
+      <tr><td>Mục tiêu game</td><td>Điều khiển rắn ăn táo để tăng điểm và dài ra.</td></tr>
+      <tr><td>Người chơi điều khiển</td><td>Rắn bằng phím mũi tên hoặc WASD.</td></tr>
+      <tr><td>Luật tăng điểm</td><td>Ăn 1 táo → điểm +1, rắn dài thêm 1 đoạn.</td></tr>
+      <tr><td>Điều kiện thua</td><td>Rắn đâm tường hoặc đâm vào thân mình.</td></tr>
+      <tr><td>Giao diện</td><td>Nền đơn giản, có ô chơi, điểm số, nút Start &amp; Restart.</td></tr>
+      <tr><td>Độ khó</td><td>Sau mỗi 5 điểm, tốc độ tăng nhẹ.</td></tr>
+      <tr><td>Yêu cầu kỹ thuật</td><td>Một file HTML duy nhất, không dùng thư viện ngoài.</td></tr>
+      <tr><td>Tiêu chí đạt</td><td>Game chạy, điều khiển không trễ, Restart hoạt động, điểm hiển thị đúng.</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ SLIDE 27 — SỔ TAY #3 ============ -->
+<section class="slide" data-slide="27" data-title="Sổ Tay #3">
+  <div class="slide-body">
+    <span class="eyebrow">HỘP MÀU TÍM — VIẾT SỔ TAY</span>
+    <h2 class="slide-title">Chốt ý tưởng game của bạn</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #3 — Ý tưởng game</div>
+      <div class="qbox-content">Game bạn muốn tạo hôm nay là gì? Mô tả <strong>luật chơi</strong> và <strong>điều kiện thắng/thua</strong> trong 1–2 câu.</div>
+      <div class="nb-input-wrap">
+        <label>Đặc tả ngắn của bạn:</label>
+        <textarea class="nb-input" data-nb-id="3" placeholder="VD: Game Rắn — ăn táo +1 điểm, đâm tường thì thua..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mẹo:</span>Đây chính là "Task" trong prompt R-C-T-F-E của bạn ở slide tiếp theo.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PHẦN 5 DIVIDER ============ -->
+<section class="slide slide-cover b3-part" data-slide="28" data-title="Phần 5 — z.ai">
+  <div class="cover-content slide-body">
+    <div class="part-num">05</div>
+    <div class="part-kicker">Phần 5 · 75–110 phút</div>
+    <h2 class="hero-title" style="font-size:clamp(1.8rem,4vw,2.6rem);">Thực hành z.ai —<br/>tạo <span class="grad-text">game đầu tiên</span></h2>
+    <p class="slide-subtitle">Giao việc rõ ràng cho công cụ AI-first, rồi chạy thử và sửa từng vòng.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 29 — CHUẨN BỊ z.ai ============ -->
+<section class="slide" data-slide="29" data-title="Chuẩn bị z.ai">
+  <div class="slide-body">
+    <span class="eyebrow">z.ai LÀ GÌ &amp; CHUẨN BỊ</span>
+    <h2 class="slide-title">Trước khi mở z.ai</h2>
+    <div class="b3-two">
+      <div class="qbox qbox-blue" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">i</div>z.ai trong buổi này</div>
+        <div class="qbox-content">Một công cụ AI-first hỗ trợ tạo website/code theo yêu cầu. Bạn dùng nó như <strong>trợ lý tạo game web đơn giản</strong> — không cần học hết tính năng.</div>
+        <div class="qbox-tip"><span class="qbox-tip-label">Nếu giao diện khác:</span>tìm vùng tương đương — ô nhập yêu cầu, khu trả lời, khu code/preview, nút tạo mới/chạy thử.</div>
+      </div>
+      <div class="kw-grid" style="grid-template-columns:1fr;">
+        <div class="kw-card"><div class="kw-term">🌐 Trình duyệt</div><div class="kw-def">Chrome / Edge / Firefox.</div></div>
+        <div class="kw-card k-cyan"><div class="kw-term">🔑 Tài khoản được phép</div><div class="kw-def">Phụ huynh hoặc giáo viên cho phép sử dụng.</div></div>
+        <div class="kw-card k-purple"><div class="kw-term">📁 Thư mục lưu</div><div class="kw-def">VD: <code>AI_Game_Buoi3</code>.</div></div>
+        <div class="kw-card k-orange"><div class="kw-term">🎯 Chọn 1 game</div><div class="kw-def">Rắn săn mồi · Khủng long · Ăn nấm tránh quái.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 30 — QUY TRÌNH 8 BƯỚC ============ -->
+<section class="slide" data-slide="30" data-title="Quy trình 8 bước z.ai">
+  <div class="slide-body">
+    <span class="eyebrow">QUY TRÌNH CHUNG (KHÔNG PHỤ THUỘC NÚT BẤM)</span>
+    <h2 class="slide-title">8 bước tạo game bằng z.ai</h2>
+    <div class="b3-two">
+      <div class="pstep" style="margin:0;">
+        <div class="pstep-item"><div class="pstep-n">1</div><div><h4>Mở z.ai &amp; đăng nhập</h4><p>Nếu chưa được phép, báo giáo viên để dùng công cụ thay thế.</p></div></div>
+        <div class="pstep-item"><div class="pstep-n">2</div><div><h4>Tạo cuộc trò chuyện mới</h4><p>Đặt tên: "Game rắn săn mồi — bản 1".</p></div></div>
+        <div class="pstep-item"><div class="pstep-n">3</div><div><h4>Dán prompt đặc tả</h4><p>Dùng prompt R-C-T-F-E của bạn.</p></div></div>
+        <div class="pstep-item"><div class="pstep-n">4</div><div><h4>Yêu cầu 1 file HTML duy nhất</h4><p>Dễ lưu <code>index.html</code> và mở bằng trình duyệt.</p></div></div>
+      </div>
+      <div class="pstep" style="margin:0;">
+        <div class="pstep-item"><div class="pstep-n">5</div><div><h4>Lưu code / dùng Preview</h4><p>Có nút Preview/Run thì bấm chạy thử; không thì lưu file rồi mở.</p></div></div>
+        <div class="pstep-item"><div class="pstep-n">6</div><div><h4>Chơi thử theo checklist</h4><p>Start → điều khiển → ăn vật phẩm → kiểm tra điểm → thử thua → Restart.</p></div></div>
+        <div class="pstep-item"><div class="pstep-n">7</div><div><h4>Ghi lỗi thật cụ thể</h4><p>Không nói "game lỗi"; hãy nói "bấm phím trái không phản hồi".</p></div></div>
+        <div class="pstep-item"><div class="pstep-n">8</div><div><h4>Yêu cầu AI sửa đúng lỗi</h4><p>"Sửa lỗi điểm không tăng, giữ nguyên giao diện &amp; luật chơi còn lại".</p></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 31 — GAME MẪU 1: RẮN (PLAYABLE) ============ -->
+<section class="slide" data-slide="31" data-title="Game mẫu 1: Rắn (chơi thử)">
+  <div class="slide-body">
+    <span class="eyebrow">GAME MẪU 1 · CHƠI THỬ NGAY TRÊN SLIDE</span>
+    <h2 class="slide-title">🐍 Rắn săn mồi — bản demo</h2>
+    <p class="slide-subtitle">Đây là kiểu game bạn sẽ yêu cầu z.ai tạo. Bấm <strong>Bắt đầu</strong> rồi dùng phím mũi tên / WASD.</p>
+    <div class="snk-wrap">
+      <div class="snk-top">
+        <div class="snk-score">Điểm: <span id="snkScore">0</span> &nbsp;·&nbsp; Tốc độ: <span id="snkSpeed">1</span></div>
+        <div class="snk-btns">
+          <button class="snk-btn start" id="snkStartBtn" type="button">▶ Bắt đầu</button>
+          <button class="snk-btn pause" id="snkPauseBtn" type="button">⏸ Tạm dừng</button>
+          <button class="snk-btn reset" id="snkResetBtn" type="button">↺ Chơi lại</button>
+        </div>
+      </div>
+      <div class="snk-canvas-wrap">
+        <canvas id="snkCanvas" width="420" height="420"></canvas>
+        <div class="snk-overlay" id="snkOverlay">
+          <h4>🐍 Rắn săn mồi</h4>
+          <p>Mũi tên / WASD để đổi hướng · ăn táo +1 điểm</p>
+          <p>Đâm tường hoặc thân mình → Game Over</p>
+        </div>
+      </div>
+      <div class="snk-hint">Trên điện thoại/máy tính bảng: vuốt theo hướng muốn đi.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 32 — PROMPT GAME RẮN ============ -->
+<section class="slide" data-slide="32" data-title="Prompt game Rắn">
+  <div class="slide-body">
+    <span class="eyebrow">PROMPT TẠO GAME RẮN — COPY &amp; DÙNG</span>
+    <h2 class="slide-title">Yêu cầu z.ai tạo game Rắn</h2>
+    <div class="prompt-box" style="font-size:0.84rem;">
+      <span class="pb-label">Prompt R-C-T-F-E · Game Rắn săn mồi</span>
+      <span class="pb-line"><span class="pb-tag">Role:</span> Bạn là lập trình viên game web &amp; gia sư lập trình cho học sinh phổ thông.</span>
+      <span class="pb-line">Mình muốn tạo game <strong>Rắn săn mồi</strong> chạy trên trình duyệt bằng HTML/CSS/JavaScript, trong <strong>một file HTML duy nhất</strong>. Yêu cầu:</span>
+      <span class="pb-line">1. Vùng chơi dạng lưới · 2. Điều khiển bằng mũi tên/WASD · 3. Ăn táo +1 điểm &amp; dài ra</span>
+      <span class="pb-line">4. Mỗi 5 điểm tốc độ tăng nhẹ · 5. Đâm tường/thân → Game Over · 6. Có Start, Pause, Restart</span>
+      <span class="pb-line">7. Có dòng hướng dẫn cho người mới · 8. Giao diện đơn giản, không thư viện ngoài.</span>
+      <span class="pb-line"><span class="pb-tag">Format:</span> Trả về 3 phần — (1) cách chơi, (2) toàn bộ code 1 file HTML, (3) checklist kiểm thử 8 bước. Sau code, giải thích ngắn gọn các biến quan trọng.</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 33 — GAME MẪU 2 & 3 ============ -->
+<section class="slide" data-slide="33" data-title="Game mẫu 2 & 3">
+  <div class="slide-body">
+    <span class="eyebrow">2 ĐỀ BÀI KHÁC ĐỂ BẠN CHỌN</span>
+    <h2 class="slide-title">Game mẫu 2 &amp; 3 — đặc tả nhanh</h2>
+    <div class="b3-two">
+      <div class="cmp-col" style="background:var(--box-orange);border:1px solid var(--box-orange-border);border-radius:var(--radius-md);padding:1rem;text-align:left;">
+        <h4 style="color:var(--box-orange-dark);margin:0 0 0.5rem;">🦖 Khủng long vượt chướng ngại vật</h4>
+        <ul style="margin:0;padding-left:1.1rem;font-size:0.85rem;color:var(--text-dim);line-height:1.5;">
+          <li>Khủng long chạy tự động trái → phải.</li>
+          <li>Bấm Space / mũi tên lên để nhảy.</li>
+          <li>Chướng ngại vật chạy từ phải sang; va chạm → Game Over.</li>
+          <li>Điểm tăng theo thời gian; mỗi 10 điểm tốc độ tăng.</li>
+          <li>Có Start &amp; Restart, giao diện sáng đơn giản.</li>
+        </ul>
+      </div>
+      <div class="cmp-col" style="background:var(--box-purple);border:1px solid var(--box-purple-border);border-radius:var(--radius-md);padding:1rem;text-align:left;">
+        <h4 style="color:var(--box-purple-dark);margin:0 0 0.5rem;">🍄 Nhà thám hiểm ăn nấm tránh quái</h4>
+        <ul style="margin:0;padding-left:1.1rem;font-size:0.85rem;color:var(--text-dim);line-height:1.5;">
+          <li>Điều khiển nhân vật bằng mũi tên/WASD.</li>
+          <li>Ăn 1 nấm xuất hiện ngẫu nhiên → điểm +1.</li>
+          <li>2 quái di chuyển qua lại; chạm quái → Game Over.</li>
+          <li>Mỗi 5 điểm, số quái hoặc tốc độ tăng nhẹ.</li>
+          <li>Hình khối đơn giản, không cần ảnh ngoài.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="b3-callout warn"><span class="ci">©️</span><p><strong>Bản quyền:</strong> đừng dùng nhân vật có bản quyền. Gọi nhân vật là "nhà thám hiểm", "robot nhỏ" hoặc "bé nấm". Mục tiêu là học cách tạo luật chơi.</p></div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 34 — THÊM TÍNH NĂNG & KỸ THUẬT ============ -->
+<section class="slide" data-slide="34" data-title="Thêm tính năng & kỹ thuật AI-first">
+  <div class="slide-body">
+    <span class="eyebrow">SAU KHI GAME CHẠY ĐƯỢC</span>
+    <h2 class="slide-title">Thêm tính năng &amp; 6 kỹ thuật vàng</h2>
+    <div class="b3-two">
+      <div class="b3-callout tip" style="margin:0;flex-direction:column;align-items:stretch;">
+        <p style="font-weight:800;color:var(--text);margin-bottom:0.4rem;">Khi thêm tính năng:</p>
+        <p>• Chỉ thêm 1–2 tính năng mỗi lần để dễ kiểm tra.<br>• Luôn yêu cầu AI <strong>giữ nguyên phần đã chạy tốt</strong>.<br>• Nêu rõ tiêu chí đạt sau khi thêm.<br>• Không thêm quá nhiều hiệu ứng khi game chưa ổn định.</p>
+      </div>
+      <div class="kw-grid" style="grid-template-columns:1fr 1fr;gap:0.6rem;">
+        <div class="kw-card" style="padding:0.7rem 0.8rem;"><div class="kw-term" style="font-size:0.9rem;">Plan first</div><div class="kw-def" style="font-size:0.8rem;">Bảo AI lập kế hoạch trước khi code.</div></div>
+        <div class="kw-card k-cyan" style="padding:0.7rem 0.8rem;"><div class="kw-term" style="font-size:0.9rem;">Small tasks</div><div class="kw-def" style="font-size:0.8rem;">Chia việc lớn thành việc nhỏ.</div></div>
+        <div class="kw-card k-purple" style="padding:0.7rem 0.8rem;"><div class="kw-term" style="font-size:0.9rem;">One source of truth</div><div class="kw-def" style="font-size:0.8rem;">Giữ một bản đặc tả làm chuẩn.</div></div>
+        <div class="kw-card k-orange" style="padding:0.7rem 0.8rem;"><div class="kw-term" style="font-size:0.9rem;">Run &amp; test</div><div class="kw-def" style="font-size:0.8rem;">Luôn chạy thử sau mỗi lần sửa.</div></div>
+        <div class="kw-card k-green" style="padding:0.7rem 0.8rem;"><div class="kw-term" style="font-size:0.9rem;">Describe bugs</div><div class="kw-def" style="font-size:0.8rem;">Mô tả lỗi bằng hiện tượng + bước tái hiện.</div></div>
+        <div class="kw-card" style="padding:0.7rem 0.8rem;"><div class="kw-term" style="font-size:0.9rem;">Safety boundary</div><div class="kw-def" style="font-size:0.8rem;">Chỉ tạo game học tập chạy cục bộ.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 35 — SỔ TAY #4 (DEBUG) ============ -->
+<section class="slide" data-slide="35" data-title="Sổ Tay #4">
+  <div class="slide-body">
+    <span class="eyebrow">HỘP MÀU TÍM — VIẾT SỔ TAY</span>
+    <h2 class="slide-title">Mô tả lỗi để AI sửa</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #4 — Vòng lặp sửa lỗi</div>
+      <div class="qbox-content">Sau khi chạy thử game, bạn gặp <strong>lỗi gì</strong>? Bạn đã mô tả lỗi và yêu cầu AI sửa như thế nào?</div>
+      <div class="nb-input-wrap">
+        <label>Ghi chú của bạn:</label>
+        <textarea class="nb-input" data-nb-id="4" placeholder="VD: Sau khi bấm Restart, điểm vẫn giữ 8 thay vì về 0..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mẫu debug:</span>Lỗi: [...] · Các bước gặp lỗi: [...] · Kết quả hiện tại: [...] · Kết quả mong muốn: [...].</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PHẦN 6 DIVIDER ============ -->
+<section class="slide slide-cover b3-part" data-slide="36" data-title="Phần 6 — Tổng hợp">
+  <div class="cover-content slide-body">
+    <div class="part-num">06</div>
+    <div class="part-kicker">Phần 6 · Thực hành tổng hợp</div>
+    <h2 class="hero-title" style="font-size:clamp(1.8rem,4vw,2.6rem);">Từ tài liệu học<br/>đến <span class="grad-text">game AI</span></h2>
+    <p class="slide-subtitle">Gộp tất cả: prompt bám nguồn · giải thích RAG/LLM · 1 game chạy được · bảng kiểm thử.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 37 — SẢN PHẨM CẦN NỘP ============ -->
+<section class="slide" data-slide="37" data-title="Sản phẩm cần nộp">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI — NỘP 6 THỨ</span>
+    <h2 class="slide-title">Phiếu sản phẩm cần nộp</h2>
+    <div class="sum-grid stagger">
+      <div class="sum-item"><div class="sum-n">1</div><p>1 prompt bám nguồn cho NotebookLM/Gemini/Gem.</p></div>
+      <div class="sum-item"><div class="sum-n">2</div><p>1 đoạn giải thích RAG bằng lời của bạn (3–5 câu).</p></div>
+      <div class="sum-item"><div class="sum-n">3</div><p>1 đoạn giải thích vì sao LLM có thể sai nếu không có nguồn (3–5 câu).</p></div>
+      <div class="sum-item"><div class="sum-n">4</div><p>1 game nhỏ chạy được (code HTML từ z.ai/công cụ AI-first).</p></div>
+      <div class="sum-item"><div class="sum-n">5</div><p>1 checklist kiểm thử game, ít nhất 5 tiêu chí.</p></div>
+      <div class="sum-item"><div class="sum-n">6</div><p>1 ghi chú: bạn đã yêu cầu AI sửa gì sau lần chạy thử đầu.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 38 — BẢNG KIỂM THỬ GAME ============ -->
+<section class="slide" data-slide="38" data-title="Bảng kiểm thử game">
+  <div class="slide-body">
+    <span class="eyebrow">MẪU BẢNG KIỂM THỬ — DÙNG CHO MỌI GAME</span>
+    <h2 class="slide-title">7 tiêu chí kiểm thử</h2>
+    <table class="test-table">
+      <tr><th style="width:30%">Tiêu chí</th><th>Cách kiểm tra</th><th style="width:26%">Kết quả mong muốn</th><th style="width:8%">Đạt?</th></tr>
+      <tr><td>Game mở được</td><td>Mở file HTML / Preview</td><td>Hiện màn hình game, không lỗi</td><td class="tick">☐</td></tr>
+      <tr><td>Nút Start hoạt động</td><td>Bấm Start</td><td>Game bắt đầu chạy</td><td class="tick">☐</td></tr>
+      <tr><td>Điều khiển đúng</td><td>Bấm phím điều khiển</td><td>Nhân vật/rắn đổi hướng/nhảy đúng</td><td class="tick">☐</td></tr>
+      <tr><td>Tính điểm đúng</td><td>Ăn vật phẩm / sống sót</td><td>Điểm tăng đúng luật</td><td class="tick">☐</td></tr>
+      <tr><td>Điều kiện thua đúng</td><td>Cố tình va chạm</td><td>Hiện Game Over</td><td class="tick">☐</td></tr>
+      <tr><td>Restart hoạt động</td><td>Bấm Restart sau khi thua</td><td>Game về trạng thái ban đầu</td><td class="tick">☐</td></tr>
+      <tr><td>Không lỗi rõ ràng</td><td>Chơi thử 2–3 lượt</td><td>Không treo, không mất điều khiển</td><td class="tick">☐</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============ PHẦN 7 DIVIDER ============ -->
+<section class="slide slide-cover b3-part" data-slide="39" data-title="Phần 7 — Tổng kết">
+  <div class="cover-content slide-body">
+    <div class="part-num">07</div>
+    <div class="part-kicker">Phần 7 · 110–120 phút</div>
+    <h2 class="hero-title" style="font-size:clamp(1.8rem,4vw,2.6rem);">Tổng kết &amp;<br/><span class="grad-text">tự đánh giá</span></h2>
+    <p class="slide-subtitle">8 ý chính · flashcard ôn tập · quiz tổng hợp · bài tập về nhà.</p>
+  </div>
+</section>
+
+<!-- ============ SLIDE 40 — 8 Ý CHÍNH ============ -->
+<section class="slide" data-slide="40" data-title="8 ý chính">
+  <div class="slide-body">
+    <span class="eyebrow">BẠN CẦN NHỚ</span>
+    <h2 class="slide-title">8 ý chính của buổi 3</h2>
+    <div class="sum-grid stagger">
+      <div class="sum-item"><div class="sum-n">1</div><p>AI giúp học nhanh hơn nhưng <strong>không thay bạn học</strong>.</p></div>
+      <div class="sum-item"><div class="sum-n">2</div><p>Gemini hợp để giải thích, luyện tập, tạo câu hỏi.</p></div>
+      <div class="sum-item"><div class="sum-n">3</div><p>NotebookLM mạnh ở học từ <strong>nguồn</strong> + kiểm tra bằng trích dẫn.</p></div>
+      <div class="sum-item"><div class="sum-n">4</div><p>Gem = trợ lý học tập có hướng dẫn cố định.</p></div>
+      <div class="sum-item"><div class="sum-n">5</div><p>R-C-T-F-E giúp AI hiểu đúng vai trò, bối cảnh, nhiệm vụ, định dạng, ví dụ.</p></div>
+      <div class="sum-item"><div class="sum-n">6</div><p>RAG = trả lời dựa trên tài liệu được truy xuất, không chỉ trí nhớ mô hình.</p></div>
+      <div class="sum-item"><div class="sum-n">7</div><p>LLM trả lời rất hay nhưng vẫn có thể sai → cần nguồn &amp; kiểm chứng.</p></div>
+      <div class="sum-item"><div class="sum-n">8</div><p>Vibe coding = mô tả rõ → tạo bản đầu → chạy thử → sửa → kiểm tra lại.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 41 — FLASHCARD ============ -->
+<section class="slide" data-slide="41" data-title="Flashcard ôn tập">
+  <div class="slide-body">
+    <span class="eyebrow">BẤM ĐỂ LẬT THẺ</span>
+    <h2 class="slide-title">Flashcard ôn tập nhanh</h2>
+    <div class="fc-grid stagger">
+      <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner">
+        <div class="fc-front"><small>Thuật ngữ</small>RAG là gì?</div>
+        <div class="fc-back">Retrieval-Augmented Generation: AI tìm tài liệu liên quan, đưa vào ngữ cảnh rồi mới sinh câu trả lời có căn cứ.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner">
+        <div class="fc-front"><small>Thuật ngữ</small>Token là gì?</div>
+        <div class="fc-back">Đơn vị nhỏ của văn bản (một từ, phần của từ, hoặc dấu câu) mà LLM xử lý.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner">
+        <div class="fc-front"><small>Thuật ngữ</small>Hallucination?</div>
+        <div class="fc-back">AI tạo câu nghe đúng nhưng thực tế sai/không có nguồn — bịa tên, số liệu, năm tháng.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner">
+        <div class="fc-front"><small>Khái niệm</small>Vibe coding?</div>
+        <div class="fc-back">Mô tả ý tưởng bằng ngôn ngữ tự nhiên để AI hỗ trợ viết code, rồi lặp: tạo–chạy thử–sửa.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner">
+        <div class="fc-front"><small>Khung prompt</small>R-C-T-F-E?</div>
+        <div class="fc-back">Role · Context · Task · Format · Example — khung viết prompt rõ ràng.</div></div></div>
+      <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner">
+        <div class="fc-front"><small>Nguyên tắc</small>Grounding?</div>
+        <div class="fc-back">Bám nguồn: yêu cầu AI chỉ trả lời theo tài liệu; nếu không có thì nói "không có trong tài liệu".</div></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 42 — QUIZ TỔNG HỢP ============ -->
+<section class="slide" data-slide="42" data-title="Quiz tổng hợp">
+  <div class="slide-body">
+    <span class="eyebrow">QUIZ TỔNG HỢP</span>
+    <h2 class="slide-title">Vì sao vẫn phải kiểm thử game AI tạo?</h2>
+    <div class="quiz" data-correct="0" data-explanation="AI có thể nói 'đã sửa' nhưng code vẫn lỗi (hoặc sửa lệch luật chơi). Luôn chạy lại &amp; kiểm tra bằng checklist — không tin code chỉ vì AI nói đã xong.">
+      <p class="quiz-q">Sau khi AI báo "đã sửa lỗi", bạn nên làm gì <strong>trước tiên</strong>?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Chạy lại game &amp; kiểm tra bằng checklist</button>
+        <button class="quiz-opt" data-index="1">Nộp bài ngay vì AI đã xác nhận</button>
+        <button class="quiz-opt" data-index="2">Xoá toàn bộ code và làm lại từ đầu</button>
+        <button class="quiz-opt" data-index="3">Thêm thật nhiều hiệu ứng cho đẹp</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 43 — BÀI TẬP VỀ NHÀ ============ -->
+<section class="slide" data-slide="43" data-title="Bài tập về nhà">
+  <div class="slide-body">
+    <span class="eyebrow">VỀ NHÀ LUYỆN TẬP</span>
+    <h2 class="slide-title">Bài tập về nhà</h2>
+    <div class="pstep stagger">
+      <div class="pstep-item"><div class="pstep-n">1</div><div><h4>Prompt bám nguồn cho 1 bài thật</h4><p>Chọn một bài học ở trường, tạo prompt bám nguồn hỏi NotebookLM/Gemini/Gem.</p></div></div>
+      <div class="pstep-item"><div class="pstep-n">2</div><div><h4>Cải tiến game bằng 1 tính năng mới</h4><p>Điểm cao nhất · âm thanh · chọn độ khó · đổi giao diện · màn hình hướng dẫn.</p></div></div>
+      <div class="pstep-item"><div class="pstep-n">3</div><div><h4>Viết đoạn 8–10 câu tự thuật</h4><p>"Tôi đã dùng AI thế nào để học/tạo sản phẩm, và đã kiểm tra kết quả ra sao?"</p></div></div>
+      <div class="pstep-item"><div class="pstep-n">4</div><div><h4>Nộp kèm bằng chứng</h4><p>Prompt ban đầu · lỗi đã gặp · prompt sửa lỗi · ảnh/mô tả kết quả sau khi sửa.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ SLIDE 44 — SỔ TAY #5 / KẾT THÚC ============ -->
+<section class="slide slide-cover b3-part" data-slide="44" data-title="Sổ Tay #5 — Cuối buổi">
+  <div class="cover-content slide-body">
+    <span class="eyebrow" style="margin-bottom:0.8rem;">HOÀN THÀNH BUỔI 3 🎉</span>
+    <h2 class="hero-title" style="font-size:clamp(1.7rem,3.6vw,2.4rem);">Bạn đã đi qua<br/>RAG · LLM · <span class="grad-text">vibe coding</span></h2>
+    <div class="qbox qbox-purple" style="max-width:640px;margin-top:1.2rem;text-align:left;">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #5 — Cuối buổi</div>
+      <div class="qbox-content">Điều bạn <strong>tự hào nhất</strong> hôm nay là gì, và 1 điều bạn vẫn muốn hỏi thêm?</div>
+      <div class="nb-input-wrap">
+        <label>Cảm nghĩ cuối buổi:</label>
+        <textarea class="nb-input" data-nb-id="5" placeholder="Viết ngắn gọn..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+/* ===== BUỔI 3 — Lesson-specific JS ===== */
+/* Game Rắn săn mồi nhúng trong slide. Tự quản keydown ở capture phase để
+   KHÔNG làm chuyển slide khi đang chơi (chrome slide-engine dùng ArrowLeft/Right). */
+(function () {
+  const canvas = document.getElementById('snkCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const GRID = 21;                       // 21x21 ô
+  const CELL = canvas.width / GRID;      // 20px
+  const COLORS = { bg: '#0F172A', grid: '#1E293B', snake: '#22D3EE', head: '#2563EB', apple: '#F87171' };
+
+  let snake, dir, nextDir, apple, score, speed, timer, running = false, over = false;
+
+  function reset() {
+    snake = [{ x: 10, y: 10 }, { x: 9, y: 10 }, { x: 8, y: 10 }];
+    dir = { x: 1, y: 0 }; nextDir = { x: 1, y: 0 };
+    score = 0; speed = 1; over = false;
+    placeApple();
+    updateHud();
+    draw();
+  }
+  function placeApple() {
+    do { apple = { x: (Math.random() * GRID) | 0, y: (Math.random() * GRID) | 0 }; }
+    while (snake.some(s => s.x === apple.x && s.y === apple.y));
+  }
+  function updateHud() {
+    const s = document.getElementById('snkScore'); if (s) s.textContent = score;
+    const sp = document.getElementById('snkSpeed'); if (sp) sp.textContent = speed;
+  }
+  function tickInterval() { return Math.max(70, 150 - (speed - 1) * 16); }
+
+  function step() {
+    dir = nextDir;
+    const head = { x: snake[0].x + dir.x, y: snake[0].y + dir.y };
+    // tường hoặc thân -> Game Over
+    if (head.x < 0 || head.y < 0 || head.x >= GRID || head.y >= GRID ||
+        snake.some(s => s.x === head.x && s.y === head.y)) {
+      return gameOver();
+    }
+    snake.unshift(head);
+    if (head.x === apple.x && head.y === apple.y) {
+      score++;
+      if (score % 5 === 0) speed++;
+      placeApple();
+      updateHud();
+    } else {
+      snake.pop();
+    }
+    draw();
+  }
+
+  function draw() {
+    ctx.fillStyle = COLORS.bg; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    ctx.strokeStyle = COLORS.grid; ctx.lineWidth = 1;
+    for (let i = 1; i < GRID; i++) {
+      ctx.beginPath(); ctx.moveTo(i * CELL, 0); ctx.lineTo(i * CELL, canvas.height); ctx.stroke();
+      ctx.beginPath(); ctx.moveTo(0, i * CELL); ctx.lineTo(canvas.width, i * CELL); ctx.stroke();
+    }
+    // apple
+    ctx.fillStyle = COLORS.apple;
+    ctx.beginPath();
+    ctx.arc(apple.x * CELL + CELL / 2, apple.y * CELL + CELL / 2, CELL / 2 - 2, 0, Math.PI * 2);
+    ctx.fill();
+    // snake
+    snake.forEach((s, i) => {
+      ctx.fillStyle = i === 0 ? COLORS.head : COLORS.snake;
+      const pad = i === 0 ? 1 : 2;
+      roundRect(s.x * CELL + pad, s.y * CELL + pad, CELL - pad * 2, CELL - pad * 2, 4);
+    });
+  }
+  function roundRect(x, y, w, h, r) {
+    ctx.beginPath();
+    ctx.moveTo(x + r, y);
+    ctx.arcTo(x + w, y, x + w, y + h, r);
+    ctx.arcTo(x + w, y + h, x, y + h, r);
+    ctx.arcTo(x, y + h, x, y, r);
+    ctx.arcTo(x, y, x + w, y, r);
+    ctx.fill();
+  }
+
+  function loop() {
+    if (!running) return;
+    step();
+    if (!over) timer = setTimeout(loop, tickInterval());
+  }
+  function start() {
+    if (over) reset();
+    if (running) return;
+    running = true;
+    hideOverlay();
+    timer = setTimeout(loop, tickInterval());
+  }
+  function pause() { running = false; clearTimeout(timer); }
+  function fullReset() { pause(); reset(); hideOverlay(); }
+  function gameOver() {
+    over = true; running = false; clearTimeout(timer);
+    showOverlay('💥 Game Over', 'Điểm của bạn: ' + score + ' · Bấm "Chơi lại" hoặc Bắt đầu');
+  }
+  function showOverlay(h, p) {
+    const ov = document.getElementById('snkOverlay');
+    if (!ov) return;
+    ov.classList.remove('hide');
+    ov.innerHTML = '<h4>' + h + '</h4><p>' + p + '</p>';
+  }
+  function hideOverlay() {
+    const ov = document.getElementById('snkOverlay');
+    if (ov) ov.classList.add('hide');
+  }
+
+  function setDir(x, y) {
+    // cấm quay đầu 180 độ
+    if (x === -dir.x && y === -dir.y) return;
+    nextDir = { x, y };
+  }
+
+  // Keydown ở CAPTURE phase: chặn chrome chuyển slide khi đang chơi
+  document.addEventListener('keydown', function (e) {
+    const k = e.key.toLowerCase();
+    const isGameKey = ['arrowup', 'arrowdown', 'arrowleft', 'arrowright', 'w', 'a', 's', 'd', ' '].includes(k);
+    if (!running && !(k === ' ')) return;          // chỉ can thiệp khi đang chơi
+    if (!isGameKey) return;
+    // chỉ xử lý nếu slide chứa game đang hiển thị
+    const slide = canvas.closest('.slide');
+    if (!slide || !slide.classList.contains('active')) return;
+    e.preventDefault();
+    e.stopPropagation();      // chặn slide-engine của chrome
+    if (k === 'arrowup' || k === 'w') setDir(0, -1);
+    else if (k === 'arrowdown' || k === 's') setDir(0, 1);
+    else if (k === 'arrowleft' || k === 'a') setDir(-1, 0);
+    else if (k === 'arrowright' || k === 'd') setDir(1, 0);
+    else if (k === ' ') { running ? pause() : start(); }
+  }, true);
+
+  // Touch swipe trên canvas
+  let tsx = 0, tsy = 0;
+  canvas.addEventListener('touchstart', function (e) {
+    const t = e.touches[0]; tsx = t.clientX; tsy = t.clientY;
+  }, { passive: true });
+  canvas.addEventListener('touchend', function (e) {
+    const t = e.changedTouches[0];
+    const dx = t.clientX - tsx, dy = t.clientY - tsy;
+    if (Math.abs(dx) < 18 && Math.abs(dy) < 18) return;
+    if (Math.abs(dx) > Math.abs(dy)) setDir(dx > 0 ? 1 : -1, 0);
+    else setDir(0, dy > 0 ? 1 : -1);
+    if (!running && !over) start();
+  }, { passive: true });
+
+  document.getElementById('snkStartBtn').addEventListener('click', start);
+  document.getElementById('snkPauseBtn').addEventListener('click', pause);
+  document.getElementById('snkResetBtn').addEventListener('click', fullReset);
+
+  reset();
+})();
+</script>
