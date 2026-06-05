@@ -4,6 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Buổi {{ current.id }} — {{ current.title }}</title>
+{# Notebook submit endpoint — Apps Script Web App URL. Để trống = chỉ lưu localStorage. #}
+<meta name="notebook-endpoint" content="">
 <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
 /* ============================================================
@@ -412,6 +414,15 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
 .nb-submit-status.show { display: block; }
 .nb-submit-status.success { background: #ECFDF5; color: #065F46; border-left: 4px solid var(--success); }
 .nb-submit-status.error { background: #FEF2F2; color: #B91C1C; border-left: 4px solid var(--danger); }
+.nb-submit-status.pending { background: #FFFBEB; color: #78350F; border-left: 4px solid var(--warning); }
+
+/* Notebook — student info form */
+.nb-student-info { background: var(--box-purple); border-radius: 12px; padding: 0.9rem 1rem; margin-bottom: 1rem; display: grid; grid-template-columns: 2fr 1fr; gap: 0.6rem; }
+.nb-student-info input { width: 100%; padding: 0.55rem 0.8rem; border: 1px solid #C7D2FE; border-radius: 8px; font-family: inherit; font-size: 0.9rem; background: white; color: var(--text); }
+.nb-student-info input:focus { border-color: var(--box-purple-border); box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15); }
+.nb-student-info input.invalid { border-color: var(--danger); background: #FEF2F2; }
+@media (max-width: 540px) { .nb-student-info { grid-template-columns: 1fr; } }
+.nb-endpoint-warn { background: #FEF3C7; color: #78350F; border-left: 4px solid var(--warning); border-radius: 8px; padding: 0.6rem 0.8rem; font-size: 0.82rem; margin-bottom: 0.8rem; }
 
 /* SCHOOL CARDS */
 .school-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; width: 100%; margin-top: 1rem; align-items: stretch; }
@@ -587,6 +598,13 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
       <div class="nb-title">Sổ Tay Cá Nhân — Buổi {{ current.id }}</div>
       <button class="nb-close" onclick="closeNotebook()" aria-label="Đóng Sổ Tay">×</button>
     </div>
+    <div class="nb-endpoint-warn" id="nbEndpointWarn" style="display:none;">
+      Chưa cấu hình server — phản hồi chỉ lưu trong trình duyệt. Liên hệ giáo viên.
+    </div>
+    <div class="nb-student-info">
+      <input type="text" id="nbStudentName" placeholder="Họ và tên (bắt buộc)" autocomplete="name" maxlength="80">
+      <input type="text" id="nbStudentClass" placeholder="Lớp (vd 9A1)" autocomplete="off" maxlength="20">
+    </div>
     <div id="nbContent"></div>
     <div class="nb-actions">
       <button class="btn-purple" id="nbSubmitBtn" onclick="submitNotebook()">Lưu &amp; Xác nhận</button>
@@ -606,13 +624,30 @@ body { font-family: var(--font); background: var(--surface-alt); color: var(--te
    ============================================================ */
 
 const LESSON_ID = {{ current.id }};
+const LESSON_SLUG = '{{ current.slug }}';
 const STORAGE_KEY = 'BAI_GIANG_B' + LESSON_ID + '_NOTEBOOK';
 const CL_KEY = 'BAI_GIANG_B' + LESSON_ID + '_CHECKLIST';
+const PENDING_KEY = 'BAI_GIANG_B' + LESSON_ID + '_PENDING';
+const STUDENT_KEY = 'BAI_GIANG_STUDENT_INFO';
+const CLIENT_ID_KEY = 'BAI_GIANG_CLIENT_ID';
+const NOTEBOOK_ENDPOINT = (document.querySelector('meta[name="notebook-endpoint"]') || {}).content || '';
 
 function loadNotebook() { try { return JSON.parse(localStorage.getItem(STORAGE_KEY) || '{}'); } catch(e) { return {}; } }
 function saveNotebook(data) { localStorage.setItem(STORAGE_KEY, JSON.stringify(data)); }
 function loadChecklist() { try { return JSON.parse(localStorage.getItem(CL_KEY) || '[]'); } catch(e) { return []; } }
 function saveChecklist(arr) { localStorage.setItem(CL_KEY, JSON.stringify(arr)); }
+function loadStudent() { try { return JSON.parse(localStorage.getItem(STUDENT_KEY) || '{}'); } catch(e) { return {}; } }
+function saveStudent(info) { localStorage.setItem(STUDENT_KEY, JSON.stringify(info)); }
+
+function getOrCreateClientId() {
+  let cid = localStorage.getItem(CLIENT_ID_KEY);
+  if (!cid) {
+    cid = (crypto && crypto.randomUUID) ? crypto.randomUUID()
+      : 'cid-' + Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 10);
+    localStorage.setItem(CLIENT_ID_KEY, cid);
+  }
+  return cid;
+}
 
 class SlideEngine {
   constructor() {
@@ -707,14 +742,41 @@ function initNotebookInputs() {
   });
 }
 
+function showSubmitStatus(kind, msg) {
+  const status = document.getElementById('nbSubmitStatus');
+  status.textContent = msg;
+  status.className = 'nb-submit-status ' + kind + ' show';
+}
+
 function openNotebook() {
   const data = loadNotebook();
   const content = document.getElementById('nbContent');
   content.innerHTML = '';
+  // Restore student info & wire auto-save
+  const student = loadStudent();
+  const nameEl = document.getElementById('nbStudentName');
+  const classEl = document.getElementById('nbStudentClass');
+  if (nameEl) {
+    nameEl.value = student.name || '';
+    nameEl.classList.remove('invalid');
+    nameEl.oninput = () => { const s = loadStudent(); s.name = nameEl.value; saveStudent(s); nameEl.classList.remove('invalid'); };
+  }
+  if (classEl) {
+    classEl.value = student.className || '';
+    classEl.oninput = () => { const s = loadStudent(); s.className = classEl.value; saveStudent(s); };
+  }
+  // Warn nếu chưa cấu hình endpoint
+  const warn = document.getElementById('nbEndpointWarn');
+  if (warn) warn.style.display = NOTEBOOK_ENDPOINT ? 'none' : 'block';
+  // Reset status mỗi lần mở
+  const status = document.getElementById('nbSubmitStatus');
+  if (status) status.className = 'nb-submit-status';
+
   const keys = Object.keys(NB_QUESTIONS);
   if (!keys.length) {
     content.innerHTML = '<p style="color:var(--text-muted);font-style:italic;">Buổi này chưa cấu hình câu hỏi Sổ Tay.</p>';
-    return document.getElementById('nbOverlay').classList.add('show');
+    document.getElementById('nbOverlay').classList.add('show');
+    return;
   }
   keys.forEach(i => {
     const info = NB_QUESTIONS[i];
@@ -722,27 +784,114 @@ function openNotebook() {
     content.innerHTML += '<div class="nb-entry"><h4>' + info.title + '</h4><div class="nb-q">' + info.q + '</div><div class="nb-answer">' + answer.replace(/</g,'&lt;').replace(/>/g,'&gt;') + '</div></div>';
   });
   document.getElementById('nbOverlay').classList.add('show');
+
+  // Có submission đang chờ retry?
+  tryFlushPending();
 }
 
 function closeNotebook() { document.getElementById('nbOverlay').classList.remove('show'); }
 
-function submitNotebook() {
+function buildPayload() {
+  const student = loadStudent();
+  return {
+    lesson_id: LESSON_ID,
+    lesson_slug: LESSON_SLUG,
+    student_name: (student.name || '').trim(),
+    student_class: (student.className || '').trim(),
+    client_id: getOrCreateClientId(),
+    answers: loadNotebook(),
+    questions: NB_QUESTIONS,
+    submitted_at: new Date().toISOString(),
+    user_agent: navigator.userAgent
+  };
+}
+
+async function postSubmission(payload) {
+  if (!NOTEBOOK_ENDPOINT) throw new Error('NO_ENDPOINT');
+  // text/plain để né preflight OPTIONS (Apps Script không trả CORS headers cho preflight).
+  // Apps Script vẫn đọc e.postData.contents bình thường.
+  const res = await fetch(NOTEBOOK_ENDPOINT, {
+    method: 'POST',
+    mode: 'cors',
+    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+    body: JSON.stringify(payload),
+    redirect: 'follow'
+  });
+  if (!res.ok) throw new Error('HTTP_' + res.status);
+  // Apps Script trả JSON; nếu parse fail vẫn coi là OK miễn không throw.
+  try {
+    const data = await res.json();
+    if (data && data.ok === false) throw new Error(data.error || 'SERVER_REJECT');
+  } catch (e) { /* không phải JSON cũng OK */ }
+  return true;
+}
+
+async function tryFlushPending() {
+  if (!NOTEBOOK_ENDPOINT) return;
+  const raw = localStorage.getItem(PENDING_KEY);
+  if (!raw) return;
+  try {
+    const payload = JSON.parse(raw);
+    await postSubmission(payload);
+    localStorage.removeItem(PENDING_KEY);
+    showSubmitStatus('success', '✓ Phản hồi đang chờ đã được gửi thành công.');
+  } catch (e) { /* để lần sau retry */ }
+}
+
+async function submitNotebook() {
+  const btn = document.getElementById('nbSubmitBtn');
   const data = loadNotebook();
-  const status = document.getElementById('nbSubmitStatus');
+
+  // Validate có nội dung
   let hasContent = false;
   Object.keys(NB_QUESTIONS).forEach(i => { if ((data[i] || '').trim()) hasContent = true; });
   if (!hasContent) {
-    status.textContent = 'Em chưa viết gì cả — hãy điền ít nhất 1 ô trước khi lưu.';
-    status.className = 'nb-submit-status error show';
+    showSubmitStatus('error', 'Em chưa viết gì cả — hãy điền ít nhất 1 ô trước khi gửi.');
     return;
   }
-  status.textContent = '✓ Đã lưu Sổ Tay vào trình duyệt của em. Mở lại buổi học, nội dung vẫn còn.';
-  status.className = 'nb-submit-status success show';
+
+  // Validate tên
+  const nameEl = document.getElementById('nbStudentName');
+  const name = (nameEl.value || '').trim();
+  if (!name) {
+    nameEl.classList.add('invalid');
+    nameEl.focus();
+    showSubmitStatus('error', 'Em hãy nhập Họ và Tên trước khi gửi.');
+    return;
+  }
+  // Lưu lại student info
+  const student = loadStudent();
+  student.name = name;
+  student.className = (document.getElementById('nbStudentClass').value || '').trim();
+  saveStudent(student);
+
+  const payload = buildPayload();
+
+  // Nếu chưa có endpoint — chỉ lưu local
+  if (!NOTEBOOK_ENDPOINT) {
+    showSubmitStatus('success', '✓ Đã lưu Sổ Tay vào trình duyệt. (Server chưa cấu hình — giáo viên chưa nhận được.)');
+    return;
+  }
+
+  btn.disabled = true;
+  showSubmitStatus('pending', '⏳ Đang gửi phản hồi tới giáo viên...');
+  try {
+    await postSubmission(payload);
+    localStorage.removeItem(PENDING_KEY);
+    showSubmitStatus('success', '✓ Đã gửi Sổ Tay tới giáo viên. Em có thể đóng cửa sổ này.');
+  } catch (err) {
+    // Lưu pending để lần mở Sổ Tay sau tự retry
+    localStorage.setItem(PENDING_KEY, JSON.stringify(payload));
+    showSubmitStatus('error', '✗ Gửi không thành công (' + err.message + '). Đã lưu tạm — sẽ tự gửi lại lần sau khi em mở Sổ Tay.');
+  } finally {
+    btn.disabled = false;
+  }
 }
 
 function clearNotebook() {
   if (confirm('Em có chắc muốn xoá toàn bộ Sổ Tay không?')) {
     localStorage.removeItem(STORAGE_KEY);
+    localStorage.removeItem(PENDING_KEY);
     document.querySelectorAll('.nb-input').forEach(i => i.value = '');
     openNotebook();
   }
