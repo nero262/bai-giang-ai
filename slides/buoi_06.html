@@ -1,1235 +1,439 @@
 <!--
-  Slide fragment cho Buổi 6.
-  Chrome (sidebar/top-bar/slide-engine/notebook/quiz) đến từ
-  frontend/templates/lesson.html. File này chỉ chứa nội dung slide,
-  CSS riêng (nếu có), và cấu hình Sổ Tay.
+  Slide fragment cho Buổi 6 — AI Trợ lý Học tập: Tóm tắt khoa học & Tư duy phản biện.
+  Format fragment: chỉ gồm cấu hình Sổ Tay + các <section class="slide">.
+  Chrome (sidebar, top-bar, SlideEngine, notebook, quiz/checklist/drag-drop, toàn bộ CSS)
+  do frontend/templates/lesson.html cung cấp.
 -->
-
-<style>
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  /* Modern Tech palette — Blue + Slate (clean, professional) — giữ từ buoi_01.html gốc */
-  --bg: #0F172A;
-  --bg-light: #1E293B;
-  --surface: #FFFFFF;
-  --surface-alt: #F1F5F9;
-  --surface-2: #E2E8F0;
-  --border: #E2E8F0;
-  --text: #0F172A;
-  --text-light: #FFFFFF;
-  --text-muted: #94A3B8;
-  --text-dim: #475569;
-
-  --primary: #2563EB;        /* Royal Blue */
-  --primary-light: #3B82F6;
-  --primary-dark: #1D4ED8;
-  --accent: #06B6D4;         /* Cyan accent */
-  --success: #059669;
-  --warning: #D97706;
-  --danger: #DC2626;
-
-  /* 4 loại câu hỏi — dịu mắt, đồng bộ */
-  --box-blue: #EFF6FF; --box-blue-border: #2563EB; --box-blue-dark: #1E3A8A;
-  --box-yellow: #FFFBEB; --box-yellow-border: #D97706; --box-yellow-dark: #78350F;
-  --box-purple: #EEF2FF; --box-purple-border: #6366F1; --box-purple-dark: #3730A3;
-  --box-orange: #FFF7ED; --box-orange-border: #EA580C; --box-orange-dark: #7C2D12;
-
-  /* Gradient hệ Blue-Cyan */
-  --grad-primary: linear-gradient(135deg, #2563EB 0%, #0EA5E9 100%);
-  --grad-blue: linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%);
-  --grad-yellow: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
-  --grad-purple: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
-  --grad-orange: linear-gradient(135deg, #EA580C 0%, #F97316 100%);
-  --grad-success: linear-gradient(135deg, #059669 0%, #06B6D4 100%);
-  --grad-cover: linear-gradient(135deg, #0F172A 0%, #1E40AF 60%, #0EA5E9 100%);
-
-  --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-  --shadow-md: 0 2px 8px rgba(15, 23, 42, 0.08);
-  --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.12);
-
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-
-  --font: 'Be Vietnam Pro', -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
-}
-
-*:focus { outline: none; }
-:focus-visible { outline: 3px solid var(--primary); outline-offset: 2px; border-radius: 6px; }
-
-html, body { height: 100%; overflow: hidden; }
-body { font-family: var(--font); background: var(--surface-alt); color: var(--text); line-height: 1.6; }
-
-.app { display: flex; height: 100vh; position: relative; }
-
-/* SIDEBAR */
-.sidebar {
-  width: 280px; background: var(--bg); color: white;
-  padding: 1.5rem 1rem; overflow-y: auto;
-  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-  flex-shrink: 0; z-index: 50;
-  scrollbar-width: thin; scrollbar-color: #475569 #1E293B;
-}
-.app.sidebar-collapsed .sidebar { transform: translateX(-280px); position: absolute; height: 100vh; }
-.sidebar::-webkit-scrollbar { width: 6px; }
-.sidebar::-webkit-scrollbar-track { background: #1E293B; }
-.sidebar::-webkit-scrollbar-thumb { background: #475569; border-radius: 3px; }
-
-.sidebar-brand {
-  display: flex; align-items: center; gap: 0.6rem;
-  padding-bottom: 1rem; border-bottom: 1px solid #1E293B; margin-bottom: 1rem;
-}
-.brand-logo {
-  width: 36px; height: 36px; background: var(--grad-primary);
-  border-radius: 8px; display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-size: 1rem; color: white;
-}
-.brand-text { font-size: 0.95rem; font-weight: 700; }
-.brand-sub { font-size: 0.72rem; color: var(--text-muted); }
-
-.module-section { margin-bottom: 1rem; }
-.module-title {
-  font-size: 0.7rem; font-weight: 700; color: var(--primary-light);
-  letter-spacing: 0.12em; text-transform: uppercase;
-  padding: 0.5rem 0.5rem; display: flex; align-items: center; gap: 0.4rem;
-}
-.module-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--primary-light); }
-
-.lesson-item {
-  display: flex; align-items: center; gap: 0.5rem;
-  padding: 0.55rem 0.7rem; border-radius: 8px;
-  font-size: 0.82rem; color: var(--text-muted);
-  cursor: pointer; transition: all 0.2s;
-  margin-bottom: 2px; text-decoration: none; position: relative;
-}
-.lesson-item:hover:not(.disabled) { background: rgba(99, 102, 241, 0.1); color: white; }
-.lesson-item.active { background: var(--grad-primary); color: white; box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3); }
-.lesson-item.disabled { color: #475569; cursor: not-allowed; opacity: 0.55; }
-.lesson-item.disabled::after { content: 'Sắp ra mắt'; margin-left: auto; font-size: 0.62rem; background: #1E293B; padding: 1px 6px; border-radius: 100px; color: #64748B; }
-.lesson-item.active::after { content: 'Đang học'; margin-left: auto; font-size: 0.62rem; background: rgba(255,255,255,0.25); padding: 1px 6px; border-radius: 100px; color: white; }
-.lesson-num {
-  width: 22px; height: 22px; border-radius: 50%; background: #1E293B;
-  display: inline-flex; align-items: center; justify-content: center;
-  font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
-}
-.lesson-item.active .lesson-num { background: rgba(255,255,255,0.2); }
-
-/* MAIN */
-.main { flex: 1; position: relative; overflow: hidden; display: flex; flex-direction: column; }
-
-.top-bar {
-  padding: 0.75rem 1.5rem; background: white;
-  border-bottom: 1px solid #E2E8F0; display: flex;
-  align-items: center; justify-content: space-between;
-  flex-shrink: 0; position: relative; z-index: 10;
-}
-.top-collapse-btn {
-  background: var(--surface-alt); border: 1px solid #E2E8F0;
-  width: 36px; height: 36px; border-radius: 8px;
-  cursor: pointer; display: flex; align-items: center; justify-content: center;
-  font-size: 1.1rem; color: var(--text);
-}
-.top-collapse-btn:hover { background: #E2E8F0; }
-.top-title { display: flex; align-items: center; gap: 0.7rem; }
-.lesson-badge { background: var(--grad-primary); color: white; padding: 0.3rem 0.8rem; border-radius: 100px; font-size: 0.78rem; font-weight: 700; }
-.top-title-text { font-weight: 700; font-size: 1rem; }
-.top-actions { display: flex; gap: 0.5rem; align-items: center; }
-.btn-action {
-  background: var(--surface-alt); border: 1px solid #E2E8F0;
-  padding: 0.4rem 0.9rem; border-radius: 8px; cursor: pointer;
-  font-family: inherit; font-size: 0.82rem; color: var(--text);
-  display: flex; align-items: center; gap: 0.3rem; font-weight: 500;
-}
-.btn-action:hover { background: #E2E8F0; }
-.btn-action.notebook { background: var(--grad-purple); color: white; border: none; }
-.btn-action.notebook:hover { transform: translateY(-1px); }
-
-.progress-track { height: 3px; background: #E2E8F0; position: relative; }
-.progress-fill { height: 100%; background: var(--grad-primary); width: 0; transition: width 0.4s ease; }
-
-.slides-container { flex: 1; position: relative; overflow: hidden; }
-.slide {
-  position: absolute; inset: 0; padding: 2rem 4%;
-  display: flex; flex-direction: column;
-  justify-content: center; align-items: center;
-  opacity: 0; visibility: hidden; transform: translateX(50px);
-  transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-  overflow-y: auto;
-}
-.slide.active { opacity: 1; visibility: visible; transform: translateX(0); }
-.slide-body { width: 100%; max-width: 1100px; padding: 1rem 0; }
-
-.eyebrow {
-  display: inline-block; font-size: 0.75rem; font-weight: 700;
-  letter-spacing: 0.15em; text-transform: uppercase; color: var(--primary);
-  padding: 0.35rem 0.9rem; background: rgba(99, 102, 241, 0.1);
-  border-radius: 100px; margin-bottom: 1.2rem;
-}
-.hero-title {
-  font-size: clamp(2rem, 5vw, 4rem); font-weight: 900;
-  line-height: 1.08; letter-spacing: -0.025em;
-  margin-bottom: 1.2rem; text-align: center;
-}
-.hero-title .grad-text {
-  background: var(--grad-primary); -webkit-background-clip: text;
-  background-clip: text; -webkit-text-fill-color: transparent;
-}
-.slide-title {
-  font-size: clamp(1.6rem, 3vw, 2.4rem); font-weight: 800;
-  letter-spacing: -0.02em; margin-bottom: 1.2rem; text-align: center;
-}
-.slide-subtitle {
-  font-size: clamp(0.95rem, 1.4vw, 1.15rem); color: var(--text-dim);
-  text-align: center; margin-bottom: 1.5rem;
-  max-width: 700px; margin-left: auto; margin-right: auto;
-}
-
-/* COVER SLIDE */
-.slide-cover { background: var(--bg); color: white; overflow: hidden; }
-.slide-cover .hero-title { color: white; }
-.slide-cover .eyebrow { color: white; background: rgba(255,255,255,0.15); backdrop-filter: blur(10px); }
-.slide-cover .slide-subtitle { color: rgba(255,255,255,0.9); }
-.cover-orb {
-  position: absolute; border-radius: 50%;
-  filter: blur(80px); opacity: 0.6; pointer-events: none;
-}
-.cover-orb.orb-1 { width: 400px; height: 400px; background: #6366F1; top: -100px; left: -100px; }
-.cover-orb.orb-2 { width: 350px; height: 350px; background: #EC4899; bottom: -100px; right: -100px; }
-.cover-orb.orb-3 { width: 300px; height: 300px; background: #8B5CF6; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.3; }
-.cover-content { position: relative; z-index: 2; text-align: center; }
-.cover-chips { display: flex; gap: 0.6rem; justify-content: center; flex-wrap: wrap; margin-top: 1.5rem; }
-.cover-chip {
-  background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);
-  border: 1px solid rgba(255,255,255,0.15); color: white;
-  padding: 0.5rem 1.1rem; border-radius: 100px;
-  font-size: 0.85rem; font-weight: 500;
-}
-
-/* QUESTION BOXES */
-.qbox {
-  border-radius: 16px; padding: 1.3rem 1.5rem;
-  margin: 1rem 0; width: 100%; max-width: 800px;
-  position: relative; border-left: 5px solid;
-}
-.qbox-header {
-  display: flex; align-items: center; gap: 0.5rem;
-  font-weight: 700; font-size: 0.78rem; letter-spacing: 0.08em;
-  text-transform: uppercase; margin-bottom: 0.7rem;
-}
-.qbox-icon {
-  width: 28px; height: 28px; border-radius: 8px;
-  display: flex; align-items: center; justify-content: center;
-  font-size: 1rem; font-weight: 900; color: white;
-}
-.qbox-content { font-size: 0.98rem; line-height: 1.55; font-weight: 500; }
-.qbox-tip {
-  margin-top: 0.7rem; padding-top: 0.7rem;
-  border-top: 1px dashed currentColor;
-  font-size: 0.85rem; opacity: 0.85;
-}
-.qbox-tip-label { font-weight: 700; margin-right: 0.3rem; }
-.qbox-blue { background: var(--box-blue); border-left-color: var(--box-blue-border); color: var(--box-blue-dark); }
-.qbox-blue .qbox-icon { background: var(--box-blue-border); }
-.qbox-yellow { background: var(--box-yellow); border-left-color: var(--box-yellow-border); color: var(--box-yellow-dark); }
-.qbox-yellow .qbox-icon { background: var(--box-yellow-border); }
-.qbox-purple { background: var(--box-purple); border-left-color: var(--box-purple-border); color: var(--box-purple-dark); }
-.qbox-purple .qbox-icon { background: var(--box-purple-border); }
-.qbox-orange { background: var(--box-orange); border-left-color: var(--box-orange-border); color: var(--box-orange-dark); }
-.qbox-orange .qbox-icon { background: var(--box-orange-border); }
-
-/* NOTEBOOK INPUT */
-.nb-input-wrap {
-  margin-top: 1rem; background: white;
-  border-radius: 12px; padding: 1rem;
-  border: 2px dashed var(--box-purple-border);
-}
-.nb-input-wrap label {
-  display: block; font-size: 0.78rem; font-weight: 700;
-  color: var(--box-purple-dark); letter-spacing: 0.05em;
-  margin-bottom: 0.5rem; text-transform: uppercase;
-}
-.nb-input {
-  width: 100%; border: none; outline: none;
-  font-family: inherit; font-size: 0.95rem;
-  padding: 0.5rem 0; background: transparent;
-  color: var(--text); resize: vertical; min-height: 50px;
-}
-.nb-save-status {
-  font-size: 0.75rem; color: var(--success);
-  font-weight: 500; margin-top: 0.4rem; display: none;
-}
-.nb-save-status.show { display: block; }
-
-/* CARDS */
-.card-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 1rem; width: 100%; margin-top: 1rem;
-}
-.card {
-  background: white; border-radius: 14px; padding: 1.2rem;
-  box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06); transition: all 0.3s;
-}
-.card:hover { transform: translateY(-3px); box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1); }
-.card-icon {
-  width: 44px; height: 44px; border-radius: 12px;
-  background: var(--grad-primary); color: white;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 900; font-size: 1rem; margin-bottom: 0.7rem;
-}
-.card h3 { font-size: 1rem; font-weight: 700; margin-bottom: 0.3rem; letter-spacing: -0.01em; }
-.card p { font-size: 0.86rem; color: var(--text-dim); line-height: 1.5; }
-
-/* COMPARE TABLE */
-.cmp-table {
-  width: 100%; border-collapse: separate; border-spacing: 0;
-  background: white; border-radius: 14px; overflow: hidden;
-  margin-top: 1rem; box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
-}
-.cmp-table th, .cmp-table td {
-  padding: 0.85rem 1rem; text-align: left;
-  border-bottom: 1px solid #F1F5F9; font-size: 0.92rem;
-}
-.cmp-table th { font-weight: 700; font-size: 0.78rem; letter-spacing: 0.08em; text-transform: uppercase; }
-.cmp-table th:first-child { background: var(--surface-alt); color: var(--text-dim); }
-.cmp-table th:nth-child(2) { background: #FFF3E0; color: #C2410C; }
-.cmp-table th:nth-child(3) { background: #DCFCE7; color: #15803D; }
-.cmp-table td:first-child { font-weight: 600; background: var(--surface-alt); color: var(--text-dim); font-size: 0.85rem; }
-.cmp-table tr:last-child td { border-bottom: none; }
-
-/* DRAG-DROP GAME */
-.game-area { width: 100%; margin-top: 1rem; }
-.game-items {
-  display: flex; flex-wrap: wrap; gap: 0.6rem;
-  justify-content: center; padding: 1rem;
-  background: var(--surface-alt); border-radius: 14px;
-  min-height: 80px; margin-bottom: 1rem;
-}
-.draggable {
-  background: white; padding: 0.6rem 1.1rem; border-radius: 100px;
-  cursor: grab; font-size: 0.88rem; font-weight: 500;
-  border: 2px solid #E2E8F0; transition: all 0.2s;
-  user-select: none; touch-action: none; position: relative;
-}
-.draggable:active { cursor: grabbing; transform: scale(1.05); }
-.draggable.dragging { opacity: 0.5; }
-.draggable.dropped { display: none; }
-.tap-picker {
-  position: absolute; top: calc(100% + 4px); left: 50%;
-  transform: translateX(-50%); display: flex; gap: 4px;
-  background: var(--bg); padding: 4px; border-radius: 100px;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.2); z-index: 10;
-}
-.tap-pick { border: none; padding: 6px 12px; border-radius: 100px; font-size: 0.78rem; font-weight: 600; cursor: pointer; font-family: inherit; }
-.tap-pick.predictive { background: #FB923C; color: white; }
-.tap-pick.generative { background: #34D399; color: white; }
-.game-buckets { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-.bucket {
-  background: white; border-radius: 14px; padding: 1.2rem;
-  min-height: 160px; border: 2px dashed #E2E8F0; transition: all 0.2s;
-}
-.bucket.predictive { border-color: #FB923C; background: #FFF7ED; }
-.bucket.generative { border-color: #34D399; background: #ECFDF5; }
-.bucket.drag-over { border-style: solid; transform: scale(1.02); }
-.bucket-title { font-weight: 700; margin-bottom: 0.5rem; font-size: 0.95rem; }
-.bucket.predictive .bucket-title { color: #C2410C; }
-.bucket.generative .bucket-title { color: #15803D; }
-.bucket-zone { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-.dropped-item {
-  background: white; padding: 0.4rem 0.9rem; border-radius: 100px;
-  font-size: 0.82rem; font-weight: 500; border: 1px solid currentColor;
-}
-.dropped-item.correct { background: #DCFCE7; color: #15803D; border-color: #15803D; }
-.dropped-item.wrong { background: #FEE2E2; color: #B91C1C; border-color: #B91C1C; }
-.game-score { margin-top: 1rem; text-align: center; font-weight: 600; font-size: 0.95rem; color: var(--primary); }
-.btn-restart { margin-top: 0.5rem; background: var(--primary); color: white; border: none; padding: 0.5rem 1rem; border-radius: 8px; cursor: pointer; font-family: inherit; font-size: 0.85rem; font-weight: 600; }
-
-/* QUIZ */
-.quiz {
-  background: white; border-radius: 16px; padding: 1.5rem;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
-  width: 100%; max-width: 750px; margin-top: 0.5rem;
-}
-.quiz-q { font-size: 1.05rem; font-weight: 700; margin-bottom: 1rem; line-height: 1.4; }
-.quiz-opts { counter-reset: opts; display: flex; flex-direction: column; gap: 0.5rem; }
-.quiz-opt {
-  padding: 0.85rem 1.1rem; border: 2px solid #E2E8F0;
-  border-radius: 10px; background: white; cursor: pointer;
-  text-align: left; font-size: 0.95rem; font-family: inherit;
-  transition: all 0.2s; display: flex; align-items: center; gap: 0.7rem;
-}
-.quiz-opt::before {
-  counter-increment: opts; content: counter(opts, upper-alpha);
-  width: 24px; height: 24px; border-radius: 50%; background: #F1F5F9;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; font-size: 0.78rem; color: var(--text-dim); flex-shrink: 0;
-}
-.quiz-opt:hover { border-color: var(--primary); background: #F5F7FF; }
-.quiz-opt:hover::before { background: var(--primary); color: white; }
-.quiz-opt.correct { border-color: var(--success); background: #ECFDF5; }
-.quiz-opt.correct::before { background: var(--success); color: white; }
-.quiz-opt.wrong { border-color: var(--danger); background: #FEF2F2; }
-.quiz-opt.wrong::before { background: var(--danger); color: white; }
-.quiz-opt.disabled { pointer-events: none; opacity: 0.6; }
-.quiz-fb { margin-top: 1rem; padding: 0.9rem; border-radius: 10px; font-weight: 500; font-size: 0.9rem; display: none; }
-.quiz-fb.show { display: block; }
-.quiz-fb.correct { background: #ECFDF5; color: #065F46; border-left: 4px solid var(--success); }
-.quiz-fb.wrong { background: #FEF2F2; color: #B91C1C; border-left: 4px solid var(--danger); }
-
-/* FLASHCARD */
-.fc-grid {
-  display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 0.8rem; margin-top: 1rem; width: 100%;
-}
-.fc { perspective: 1000px; height: 150px; cursor: pointer; }
-.fc-inner {
-  position: relative; width: 100%; height: 100%;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-}
-.fc.flipped .fc-inner { transform: rotateY(180deg); }
-.fc-front, .fc-back {
-  position: absolute; inset: 0; backface-visibility: hidden;
-  border-radius: 14px; padding: 1rem;
-  display: flex; flex-direction: column;
-  align-items: center; justify-content: center; text-align: center;
-}
-.fc-front { background: white; border: 2px solid #E2E8F0; }
-.fc-front .fc-term { font-weight: 800; font-size: 1.05rem; color: var(--primary); letter-spacing: 0.02em; }
-.fc-front .fc-vi { font-size: 0.82rem; color: var(--text-dim); margin-top: 0.3rem; }
-.fc-back { background: var(--grad-primary); color: white; transform: rotateY(180deg); font-size: 0.85rem; line-height: 1.4; }
-
-/* STEPS */
-.steps { list-style: none; counter-reset: step; width: 100%; max-width: 800px; margin-top: 1rem; }
-.steps li {
-  counter-increment: step;
-  padding: 0.85rem 1.2rem 0.85rem 3.8rem;
-  position: relative; background: white;
-  border-radius: 12px; margin-bottom: 0.5rem;
-  box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
-  font-size: 0.94rem; line-height: 1.5;
-}
-.steps li::before {
-  content: counter(step); position: absolute;
-  left: 0.85rem; top: 50%; transform: translateY(-50%);
-  width: 36px; height: 36px; background: var(--grad-primary);
-  color: white; border-radius: 50%;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 800; font-size: 1rem;
-}
-.steps li code { background: #F1F5F9; padding: 0.1rem 0.4rem; border-radius: 4px; font-family: var(--font-mono); font-size: 0.85em; color: var(--primary); }
-
-/* HIGHLIGHT BOX */
-.hl-box {
-  background: linear-gradient(135deg, #FEF3C7 0%, #FED7AA 100%);
-  border-radius: 14px; padding: 1.1rem 1.3rem;
-  margin: 1rem 0; width: 100%; max-width: 800px;
-  border-left: 4px solid var(--warning);
-}
-.hl-box.danger { background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%); border-left-color: var(--danger); }
-.hl-box.success { background: linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%); border-left-color: var(--success); }
-.hl-box.info { background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%); border-left-color: #3B82F6; }
-.hl-label { display: inline-block; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.12em; margin-bottom: 0.4rem; text-transform: uppercase; }
-.hl-box p { font-size: 0.95rem; }
-
-/* TIMELINE */
-.timeline { position: relative; padding-left: 2rem; margin-top: 1rem; width: 100%; max-width: 850px; }
-.timeline::before {
-  content: ''; position: absolute; left: 9px; top: 0; bottom: 0;
-  width: 3px; background: linear-gradient(to bottom, var(--primary-light), var(--accent));
-  border-radius: 100px;
-}
-.tl-item { position: relative; padding-bottom: 1rem; }
-.tl-dot {
-  position: absolute; left: -1.85rem; top: 0.4rem;
-  width: 16px; height: 16px; background: white;
-  border: 3px solid var(--primary); border-radius: 50%;
-}
-.tl-content { background: white; padding: 0.85rem 1.1rem; border-radius: 12px; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05); }
-.tl-year { font-size: 0.78rem; font-weight: 800; color: var(--primary); letter-spacing: 0.05em; }
-.tl-title { font-weight: 700; font-size: 0.95rem; margin: 0.2rem 0; }
-.tl-desc { font-size: 0.86rem; color: var(--text-dim); line-height: 1.5; }
-
-/* MODULE ROADMAP */
-.modmap { display: grid; grid-template-columns: repeat(6, 1fr); gap: 0.5rem; width: 100%; margin-top: 1rem; max-width: 1000px; }
-@media (max-width: 768px) { .modmap { grid-template-columns: repeat(3, 1fr); } }
-.modmap-item { background: white; border-radius: 14px; padding: 0.9rem 0.6rem; text-align: center; box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04); position: relative; border-top: 3px solid; }
-.modmap-item:nth-child(1) { border-top-color: #10B981; }
-.modmap-item:nth-child(2) { border-top-color: #3B82F6; }
-.modmap-item:nth-child(3) { border-top-color: #F59E0B; }
-.modmap-item:nth-child(4) { border-top-color: #F97316; }
-.modmap-item:nth-child(5) { border-top-color: #A855F7; }
-.modmap-item:nth-child(6) { border-top-color: #10B981; }
-.modmap-mod { font-size: 0.7rem; font-weight: 800; color: var(--primary); letter-spacing: 0.08em; }
-.modmap-name { font-size: 0.88rem; font-weight: 700; margin: 0.2rem 0; }
-.modmap-buoi { font-size: 0.75rem; color: var(--text-dim); margin-bottom: 0.4rem; }
-.modmap-out { font-size: 0.72rem; color: var(--text); line-height: 1.3; }
-
-/* CHECKLIST */
-.cl-container { width: 100%; max-width: 700px; margin-top: 1rem; }
-.cl-progress {
-  background: white; border-radius: 12px;
-  padding: 0.7rem 1rem; margin-bottom: 0.8rem;
-  display: flex; align-items: center; gap: 1rem;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-}
-.cl-bar { flex: 1; height: 8px; background: #E2E8F0; border-radius: 100px; overflow: hidden; }
-.cl-bar-fill { height: 100%; background: var(--grad-success); width: 0; transition: width 0.4s ease; border-radius: 100px; }
-.cl-stat { font-weight: 700; font-size: 0.9rem; color: var(--success); }
-.cl-list { list-style: none; }
-.cl-item {
-  background: white; padding: 0.7rem 1rem; border-radius: 10px;
-  margin-bottom: 0.4rem; display: flex; align-items: center; gap: 0.7rem;
-  cursor: pointer; font-size: 0.9rem; transition: all 0.2s;
-}
-.cl-item:hover { background: var(--surface-alt); }
-.cl-check { width: 22px; height: 22px; border: 2px solid #CBD5E1; border-radius: 6px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 0.85rem; color: white; transition: all 0.2s; }
-.cl-item.done .cl-check { background: var(--success); border-color: var(--success); }
-.cl-item.done .cl-check::after { content: '✓'; }
-.cl-item.done span { text-decoration: line-through; color: var(--text-muted); }
-
-/* PROMPT BOX */
-.prompt-box {
-  background: var(--bg); color: #CDD6F4;
-  border-radius: 14px; padding: 1.1rem 1.4rem;
-  font-family: var(--font-mono); font-size: 0.88rem;
-  line-height: 1.7; margin: 0.8rem 0; width: 100%; max-width: 800px;
-  border-left: 4px solid var(--warning); text-align: left;
-  white-space: pre-wrap; position: relative;
-}
-.prompt-box .prompt-label { display: block; font-size: 0.65rem; color: var(--warning); font-weight: 700; letter-spacing: 0.15em; margin-bottom: 0.4rem; font-family: var(--font); }
-
-/* NAV */
-.nav-bar {
-  position: fixed; bottom: 1rem; right: 1rem;
-  display: flex; align-items: center; gap: 0.4rem;
-  background: white; padding: 0.4rem;
-  border-radius: 100px; box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
-  z-index: 40;
-}
-.nav-btn {
-  width: 38px; height: 38px; border-radius: 50%;
-  border: none; background: var(--surface-alt); color: var(--text);
-  font-size: 1rem; cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  font-weight: 700; transition: all 0.2s;
-}
-.nav-btn:hover { background: var(--primary); color: white; }
-.nav-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-.nav-counter { padding: 0 0.7rem; font-size: 0.82rem; font-weight: 700; color: var(--text-dim); min-width: 64px; text-align: center; }
-
-/* NOTEBOOK */
-.nb-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.75); backdrop-filter: blur(10px); z-index: 100; display: none; align-items: center; justify-content: center; padding: 1.5rem; }
-.nb-overlay.show { display: flex; }
-.nb-panel { background: white; border-radius: 20px; padding: 1.5rem 1.8rem; max-width: 700px; width: 100%; max-height: 85vh; overflow-y: auto; }
-.nb-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
-.nb-title { font-size: 1.4rem; font-weight: 800; color: var(--box-purple-dark); }
-.nb-close { background: var(--surface-alt); border: none; width: 32px; height: 32px; border-radius: 50%; cursor: pointer; font-size: 1.2rem; }
-.nb-entry { background: var(--surface-alt); border-radius: 12px; padding: 1rem; margin-bottom: 0.7rem; }
-.nb-entry h4 { font-size: 0.82rem; font-weight: 700; color: var(--box-purple-dark); letter-spacing: 0.05em; text-transform: uppercase; margin-bottom: 0.3rem; }
-.nb-entry .nb-q { font-size: 0.88rem; color: var(--text-dim); margin-bottom: 0.5rem; font-style: italic; }
-.nb-entry .nb-answer { background: white; padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.92rem; border-left: 3px solid var(--box-purple-border); min-height: 40px; color: var(--text); }
-.nb-entry .nb-answer:empty::before { content: '(chưa viết)'; color: var(--text-muted); font-style: italic; }
-.nb-actions { display: flex; gap: 0.5rem; margin-top: 1rem; }
-.btn-purple, .btn-secondary { flex: 1; padding: 0.6rem 1rem; border-radius: 10px; border: none; cursor: pointer; font-family: inherit; font-weight: 600; font-size: 0.85rem; }
-.btn-purple { background: var(--grad-purple); color: white; }
-.btn-secondary { background: var(--surface-alt); color: var(--text); }
-.btn-purple:disabled { opacity: 0.6; cursor: default; }
-.nb-submit-status { display: none; margin-top: 0.8rem; padding: 0.6rem 0.9rem; border-radius: 10px; font-size: 0.85rem; font-weight: 600; background: var(--surface-alt); color: var(--text-dim); }
-.nb-submit-status.show { display: block; }
-.nb-submit-status.success { background: #ECFDF5; color: #065F46; border-left: 4px solid var(--success); }
-.nb-submit-status.error { background: #FEF2F2; color: #B91C1C; border-left: 4px solid var(--danger); }
-
-/* SCHOOL CARDS (4 trường phái) */
-.school-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; width: 100%; margin-top: 1rem; }
-.school-card { background: white; border-radius: 14px; padding: 1.1rem 1.2rem; box-shadow: 0 4px 16px rgba(15,23,42,0.06); border-top: 4px solid var(--primary); }
-.school-num { display: inline-block; font-size: 0.7rem; font-weight: 800; background: var(--grad-primary); color: white; padding: 0.2rem 0.7rem; border-radius: 100px; margin-bottom: 0.5rem; }
-.school-title { font-size: 1rem; font-weight: 700; margin-bottom: 0.4rem; line-height: 1.3; }
-.school-en { font-size: 0.78rem; color: var(--primary); font-weight: 600; font-style: italic; margin-bottom: 0.5rem; }
-.school-desc { font-size: 0.85rem; color: var(--text-dim); line-height: 1.5; }
-
-/* METAPHOR CARDS (Model/LLM/Token) */
-.met-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; width: 100%; margin-top: 1rem; }
-.met-card { background: white; border-radius: 16px; padding: 1.4rem 1.3rem; box-shadow: 0 4px 18px rgba(15,23,42,0.07); position: relative; overflow: hidden; }
-.met-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 5px; }
-.met-card.model::before { background: linear-gradient(90deg, #F59E0B, #EF4444); }
-.met-card.llm::before { background: linear-gradient(90deg, #3B82F6, #6366F1); }
-.met-card.token::before { background: linear-gradient(90deg, #10B981, #06B6D4); }
-.met-emoji { font-size: 2.5rem; margin-bottom: 0.5rem; }
-.met-term { font-size: 1.2rem; font-weight: 900; letter-spacing: -0.01em; margin-bottom: 0.3rem; }
-.met-metaphor { font-size: 0.95rem; font-weight: 700; color: var(--primary); margin-bottom: 0.5rem; }
-.met-desc { font-size: 0.85rem; color: var(--text-dim); line-height: 1.55; }
-
-/* ANIM */
-.slide.active .stagger > * { opacity: 0; animation: slideUp 0.5s ease forwards; }
-.slide.active .stagger > *:nth-child(1) { animation-delay: 0.05s; }
-.slide.active .stagger > *:nth-child(2) { animation-delay: 0.12s; }
-.slide.active .stagger > *:nth-child(3) { animation-delay: 0.2s; }
-.slide.active .stagger > *:nth-child(4) { animation-delay: 0.28s; }
-.slide.active .stagger > *:nth-child(5) { animation-delay: 0.36s; }
-.slide.active .stagger > *:nth-child(6) { animation-delay: 0.44s; }
-.slide.active .stagger > *:nth-child(7) { animation-delay: 0.52s; }
-.slide.active .stagger > *:nth-child(8) { animation-delay: 0.6s; }
-@keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-
-/* VIDEO */
-.video-frame { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 14px; overflow: hidden; box-shadow: 0 8px 30px rgba(15, 23, 42, 0.15); margin: 1rem 0; width: 100%; max-width: 780px; }
-.video-frame iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: none; }
-
-@media (max-width: 1024px) { .sidebar { position: absolute; transform: translateX(-280px); height: 100vh; } .sidebar.open { transform: translateX(0); } }
-@media (max-width: 768px) { .slide { padding: 1.5rem 5%; } .card-grid { grid-template-columns: 1fr; } .top-title-text { display: none; } .game-buckets { grid-template-columns: 1fr; } }
-@media print { .sidebar, .nav-bar, .top-bar, .top-collapse-btn, .nb-overlay { display: none !important; } .slide { position: relative; opacity: 1; visibility: visible; transform: none; page-break-after: always; min-height: 100vh; } html, body, .main, .slides-container { overflow: visible; height: auto; } }
-
-
-/* ============ ALIGNMENT FIXES ============ */
-/* 1. Equal heights for all card grids via flex */
-.card-grid, .school-grid, .met-grid, .fc-grid, .app-grid-mini, .modmap {
-  align-items: stretch;
-}
-
-/* 2. .card - equal heights with consistent vertical rhythm */
-.card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  min-height: 0;
-}
-.card-icon {
-  flex-shrink: 0;
-  margin-bottom: 0.8rem;
-}
-.card h3 {
-  flex-shrink: 0;
-  margin-bottom: 0.4rem;
-  line-height: 1.35;
-  min-height: 2.7em;
-  display: flex;
-  align-items: flex-start;
-}
-.card p {
-  flex-grow: 1;
-  margin: 0;
-  line-height: 1.5;
-}
-
-/* 3. School cards (4 trường phái) - equal heights */
-.school-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-.school-num { align-self: flex-start; }
-.school-title {
-  min-height: 2.6em;
-  display: flex;
-  align-items: flex-start;
-}
-.school-en {
-  min-height: 1.4em;
-}
-.school-desc {
-  flex-grow: 1;
-  margin: 0;
-}
-
-/* 4. Metaphor cards (Model/LLM/Token) */
-.met-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-.met-emoji {
-  flex-shrink: 0;
-  line-height: 1;
-}
-.met-term { flex-shrink: 0; }
-.met-metaphor {
-  min-height: 1.4em;
-  flex-shrink: 0;
-}
-.met-desc {
-  flex-grow: 1;
-  margin: 0;
-}
-
-/* 5. App mini cards (Buổi 1 không dùng nhưng đảm bảo nhất quán) */
-.app-mini-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-/* 6. Module roadmap cards - equal heights */
-.modmap-item {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-.modmap-mod, .modmap-name, .modmap-buoi {
-  flex-shrink: 0;
-}
-.modmap-out {
-  flex-grow: 1;
-  margin: 0;
-}
-
-/* 7. Flashcards - all same size */
-.fc {
-  height: 160px;
-}
-
-/* 8. Feature/qbox cards in card-grid (slide 2 - 4 loại câu hỏi) */
-.card-grid .qbox {
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-.card-grid .qbox-content {
-  flex-grow: 1;
-}
-
-/* 9. Slide body — center content vertically when there's room */
-.slide-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-/* 10. Eyebrow/title always centered */
-.eyebrow, .slide-title, .slide-subtitle {
-  align-self: center;
-}
-
-/* 11. Grid containers - center horizontally */
-.card-grid, .school-grid, .met-grid, .fc-grid, .app-grid-mini, .modmap, .compare, .game-buckets {
-  align-self: stretch;
-}
-
-/* 12. Timeline content cards equal padding */
-.tl-content {
-  display: flex;
-  flex-direction: column;
-}
-
-/* 13. Steps list - consistent padding regardless of content */
-.steps li {
-  display: flex;
-  align-items: center;
-}
-.steps li::before {
-  position: relative;
-  left: 0;
-  top: 0;
-  transform: none;
-  margin-right: 1rem;
-  flex-shrink: 0;
-}
-
-/* 14. Quiz options - icon and text aligned */
-.quiz-opt {
-  align-items: center;
-}
-
-/* 15. Cmp-table - row heights equal */
-.cmp-table tr td {
-  vertical-align: top;
-}
-
-/* 16. HL-box consistent width */
-.hl-box {
-  align-self: stretch;
-  max-width: 100%;
-}
-
-/* 17. Game-items center & wrap properly */
-.game-items {
-  align-items: center;
-}
-
-/* 18. Cover content centering */
-.slide-cover .slide-body, .slide-cover .cover-content {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
-
-/* 19. Cards in 3-card layouts should look identical */
-.card-grid > .card {
-  text-align: left;
-}
-
-/* 20. Make all icon containers same size and aligned top-left */
-.card-icon, .school-card .card-icon, .met-card .card-icon {
-  align-self: flex-start;
-}
-
-
-/* ============ BRAND CARDS (Slide 9) ============ */
-.brand-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 1rem;
-  width: 100%;
-  margin-top: 1rem;
-  align-items: stretch;
-}
-.brand-card {
-  background: white;
-  border-radius: 16px;
-  overflow: hidden;
-  box-shadow: 0 4px 16px rgba(15,23,42,0.08);
-  display: flex;
-  flex-direction: column;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-.brand-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 14px 32px rgba(15,23,42,0.14);
-}
-.brand-head {
-  height: 130px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 1rem;
-}
-.brand-head svg {
-  width: 56px;
-  height: 56px;
-  filter: drop-shadow(0 3px 6px rgba(0,0,0,0.2));
-}
-.brand-body {
-  padding: 1.1rem 1.1rem 1.3rem;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  text-align: center;
-}
-.brand-body h3 {
-  font-size: 1.15rem;
-  font-weight: 800;
-  margin-bottom: 0.4rem;
-  letter-spacing: -0.01em;
-  color: var(--text);
-}
-.brand-body p {
-  font-size: 0.88rem;
-  color: var(--text-dim);
-  line-height: 1.5;
-  margin: 0;
-  flex-grow: 1;
-}
-.brand-footer {
-  margin-top: 1.2rem;
-  font-size: 0.9rem;
-  color: var(--text-dim);
-  text-align: center;
-  max-width: 700px;
-  align-self: center;
-}
-.brand-footer strong { color: var(--primary); font-weight: 700; }
-
-/* ============ DOCFIG (illustration images) ============ */
-.docfig {
-  margin: 1.2rem 0;
-  width: 100%;
-  max-width: 950px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  align-self: center;
-  background: white;
-  padding: 1rem;
-  border-radius: 16px;
-  box-shadow: 0 8px 28px rgba(15,23,42,0.1);
-}
-.docfig img {
-  width: 100%;
-  max-width: 900px;
-  height: auto;
-  border-radius: 10px;
-  display: block;
-}
-.docfig figcaption {
-  margin-top: 0.8rem;
-  font-size: 0.88rem;
-  color: var(--text);
-  font-style: italic;
-  text-align: center;
-  font-weight: 500;
-}
-
-/* ============ SUBTLE ANIMATIONS ============ */
-.slide.active .docfig img {
-  animation: fadeInScale 0.7s ease forwards;
-}
-.slide.active .brand-card {
-  animation: fadeInUp 0.5s ease forwards;
-  opacity: 0;
-}
-.slide.active .brand-card:nth-child(1) { animation-delay: 0.05s; }
-.slide.active .brand-card:nth-child(2) { animation-delay: 0.15s; }
-.slide.active .brand-card:nth-child(3) { animation-delay: 0.25s; }
-.slide.active .brand-card:nth-child(4) { animation-delay: 0.35s; }
-.slide.active .brand-card:nth-child(5) { animation-delay: 0.45s; }
-
-@keyframes fadeInScale {
-  from { opacity: 0; transform: scale(0.96); }
-  to { opacity: 1; transform: scale(1); }
-}
-@keyframes fadeInUp {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Pulse animation removed for cleaner look */
-
-/* ============ SCHOOL FLIP CARDS (Slide 6 — thẻ lật) ============ */
-.school-flip {
-  perspective: 1200px;
-  height: 300px;
-  cursor: pointer;
-}
-.school-flip-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-  transform-style: preserve-3d;
-}
-.school-flip.flipped .school-flip-inner { transform: rotateY(180deg); }
-.school-flip-front, .school-flip-back {
-  position: absolute;
-  inset: 0;
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  border-radius: 14px;
-  padding: 1.3rem 1.2rem;
-  box-shadow: 0 4px 16px rgba(15,23,42,0.06);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-.school-flip-front {
-  background: white;
-  border-top: 4px solid var(--sf-color, var(--primary));
-  align-items: flex-start;
-}
-.school-flip-front .school-num { align-self: flex-start; }
-.school-flip-front .school-title {
-  font-size: 1.05rem; font-weight: 800; margin: 0.7rem 0 0.45rem; line-height: 1.3;
-  text-align: left;
-}
-.school-flip-front .school-en {
-  font-size: 0.82rem; color: var(--primary); font-weight: 600; font-style: italic;
-  text-align: left;
-}
-.school-flip-hint {
-  margin-top: auto;
-  font-size: 0.74rem; color: var(--text-muted); font-weight: 600;
-  display: flex; align-items: center; gap: 0.35rem;
-}
-.school-flip-back {
-  background: var(--sf-grad, var(--grad-primary));
-  color: white;
-  transform: rotateY(180deg);
-  justify-content: center;
-}
-.school-flip-back .school-desc {
-  font-size: 0.88rem; line-height: 1.55; color: white; text-align: left;
-  flex: 0 0 auto;
-}
-.school-flip-back .school-desc strong { color: #FDE68A; }
-.school-flip-back .school-desc em { color: rgba(255,255,255,0.92); }
-
-/* SLIDE 7 — bố cục 2 cột: nội dung trái + video phải */
-.agent-split { display: flex; gap: 1.5rem; width: 100%; margin-top: 1rem; align-items: stretch; }
-.agent-left { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; }
-.agent-right { flex: 1 1 0; min-width: 0; display: flex; }
-.agent-flip-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.9rem; margin-top: 1rem; }
-.agent-flip { perspective: 1200px; height: 180px; cursor: pointer; }
-.agent-flip-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s cubic-bezier(0.4,0,0.2,1); transform-style: preserve-3d; }
-.agent-flip.flipped .agent-flip-inner { transform: rotateY(180deg); }
-.agent-flip-front, .agent-flip-back { position: absolute; inset: 0; backface-visibility: hidden; -webkit-backface-visibility: hidden; border-radius: 14px; padding: 1rem; box-shadow: 0 4px 16px rgba(15,23,42,0.06); display: flex; flex-direction: column; overflow: hidden; }
-.agent-flip-front { background: white; border-top: 4px solid var(--sf-color, var(--primary)); align-items: flex-start; }
-.agent-flip-front .card-icon { margin-bottom: 0.55rem; }
-.agent-flip-front h3 { font-size: 0.98rem; font-weight: 700; margin: 0 0 0.3rem; letter-spacing: -0.01em; text-align: left; }
-.agent-flip-front p { font-size: 0.82rem; color: var(--text-dim); line-height: 1.45; text-align: left; margin: 0; }
-.agent-flip-hint { margin-top: auto; font-size: 0.72rem; color: var(--text-muted); font-weight: 600; display: flex; align-items: center; gap: 0.35rem; }
-.agent-flip-back { background: var(--sf-grad, var(--grad-primary)); color: white; transform: rotateY(180deg); justify-content: center; }
-.agent-flip-back p { font-size: 0.8rem; line-height: 1.5; color: white; margin: 0; text-align: left; }
-.agent-flip-back strong { color: #FDE68A; }
-.video-frame { width: 100%; display: flex; flex-direction: column; background: white; border-radius: 16px; box-shadow: 0 4px 18px rgba(15,23,42,0.08); overflow: hidden; min-height: 420px; }
-.video-frame-header { padding: 0.75rem 1rem; background: var(--grad-primary); color: white; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
-.video-frame-header .vft { font-weight: 800; font-size: 1rem; }
-.video-frame-header .video-open { font-size: 0.78rem; font-weight: 700; color: white; text-decoration: none; background: rgba(255,255,255,0.2); padding: 0.3rem 0.65rem; border-radius: 100px; white-space: nowrap; }
-.video-frame-header .video-open:hover { background: rgba(255,255,255,0.32); }
-.video-embed { flex: 1; min-height: 0; background: #0f172a; }
-.video-embed iframe { width: 100%; height: 100%; border: 0; display: block; }
-@media (max-width: 900px) { .agent-split { flex-direction: column; } }
-@media (max-width: 768px) { .agent-flip-grid { grid-template-columns: 1fr; } }
-</style>
 
 <script type="application/json" id="nb-questions">
 {
-  "1": {
-    "title": "SỔ TAY #1 — Đầu buổi",
-    "q": "Trải nghiệm của em khi AI trả lời sai/bịa"
-  },
-  "2": {
-    "title": "SỔ TAY #2 — Bài để AI tóm tắt",
-    "q": "Bài học khó nhớ em sẽ cho AI tóm tắt"
-  },
-  "3": {
-    "title": "SỔ TAY #3 — Thuật ngữ",
-    "q": "Thuật ngữ Buổi 6 hữu ích nhất / chưa hiểu"
-  },
-  "4": {
-    "title": "SỔ TAY #4 — Cuối buổi",
-    "q": "Từ nay em sẽ dùng AI khác đi thế nào"
-  }
+  "1": {"title": "SỔ TAY #1 — Đầu buổi", "q": "Một lần bạn (hoặc người quen) tin một thông tin sai từ AI/Google/mạng xã hội"},
+  "2": {"title": "SỔ TAY #2 — Bài để tóm tắt", "q": "Bài học khó nhớ bạn sẽ nhờ AI tóm tắt"},
+  "3": {"title": "SỔ TAY #3 — Bộ lọc phản biện", "q": "1 câu trả lời của AI bạn sẽ đem đi kiểm chứng + cách kiểm chứng"},
+  "4": {"title": "SỔ TAY #4 — Cuối buổi", "q": "Từ nay bạn dùng AI như trợ lý thế nào để vẫn làm chủ kiến thức"}
 }
 </script>
 
 <section class="slide active slide-cover" data-slide="1" data-title="Chào mừng">
-
-<div class="cover-orb orb-1"></div><div class="cover-orb orb-2"></div><div class="cover-orb orb-3"></div>
-<div class="cover-content slide-body">
-  <span class="eyebrow">BUỔI 6 · MODULE 2 — SECOND BRAIN</span>
-  <h1 class="hero-title">Cho AI <span class="grad-text">đọc Vault của em</span></h1>
-  <p class="slide-subtitle">Em sẽ biến kho ghi chú thành một nguồn tri thức cho AI bằng NotebookLM và Gemini, rồi để AI tự tóm tắt bài và sinh đề ôn tập.</p>
-  <div class="cover-chips"><span class="cover-chip">120 phút</span><span class="cover-chip">NotebookLM + Gemini</span><span class="cover-chip">Output: Quiz/Đề & Lộ trình do AI tạo</span></div>
-</div>
-
-    </section>
+  <div class="cover-orb orb-1"></div>
+  <div class="cover-orb orb-2"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">BUỔI 6 · MODULE 2 — SECOND BRAIN</span>
+    <h1 class="hero-title">AI là trợ lý — <span class="grad-text">bạn là người làm chủ</span></h1>
+    <p class="slide-subtitle">Bạn sẽ học cách dùng prompt để tóm tắt &amp; lưu bài học một cách khoa học, và quan trọng
+      nhất: kiểm chứng thông tin AI đưa ra bằng tư duy phản biện.</p>
+    <div class="cover-chips"><span class="cover-chip">120 phút</span><span class="cover-chip">Tóm tắt khoa
+        học</span><span class="cover-chip">Tư duy phản biện</span></div>
+  </div>
+</section>
 
 <section class="slide" data-slide="2" data-title="Bạn sẽ làm được gì">
-
-<div class="slide-body">
-  <span class="eyebrow">CUỐI BUỔI 6 — EM PHẢI CÓ</span>
-  <h2 class="slide-title">3 thứ em mang về nhà</h2>
-  <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));">
-    <div class="card"><div class="card-icon">1</div><h3>Hiểu RAG</h3><p>Biết vì sao phải cho AI "đọc tài liệu của em" thì câu trả lời mới chính xác.</p></div>
-    <div class="card"><div class="card-icon">2</div><h3>AI tóm tắt & ra đề</h3><p>Dùng prompt mẫu để AI tóm tắt bài và sinh Quiz/Đề từ note của em.</p></div>
-    <div class="card"><div class="card-icon">3</div><h3>Lộ trình + Quiz</h3><p>Tạo file trong <code>05_learning_plan</code> (có "Ngày bắt đầu") và <code>06_quiz_exam</code>.</p></div>
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 6 — BẠN PHẢI CÓ</span>
+    <h2 class="slide-title">4 thứ bạn mang về nhà</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="card">
+        <div class="card-icon">1</div>
+        <h3>Tạo nội dung bằng AI</h3>
+        <p>Dùng Copilot + RAG để AI tóm tắt, sinh quiz ngay trong Obsidian.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">2</div>
+        <h3>Tóm tắt khoa học</h3>
+        <p>Prompt chuẩn để cô đọng bài học theo cấu trúc dễ nhớ, rồi lưu vào vault.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">3</div>
+        <h3>Kiểm chứng AI</h3>
+        <p>Biết đối chiếu nguồn, bắt AI dẫn chứng, phát hiện chỗ AI bịa.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">4</div>
+        <h3>Tư duy phản biện</h3>
+        <p>Dùng bộ lọc 5 câu hỏi phản biện trước khi tin bất cứ điều gì.</p>
+      </div>
+    </div>
+    <div class="hl-box success"><span class="hl-label">OUTPUT BẮT BUỘC CUỐI BUỔI</span>
+      <p>1 bản tóm tắt (tạo bằng AI ngay trong Obsidian, đã kiểm chứng) trong vault · 1 bộ quiz tự kiểm tra · ít nhất 1
+        lần kiểm chứng thông tin AI.</p>
+    </div>
   </div>
-
-  <div class="hl-box success"><span class="hl-label">OUTPUT BẮT BUỘC</span><p>1 note đã được AI tóm tắt · ít nhất 1 file Quiz trong <code>06_quiz_exam</code> · 1 file Plan có dòng <code>Ngày bắt đầu</code>.</p></div>
-</div>
-
-    </section>
+</section>
 
 <section class="slide" data-slide="3" data-title="Sổ Tay #1 — Đầu buổi">
-
-<div class="slide-body">
-  <span class="eyebrow">BẮT ĐẦU</span>
-  <h2 class="slide-title">Em đã thử nhờ AI học bài chưa?</h2>
-  <div class="qbox qbox-purple">
-    <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #1 — Đầu buổi</div>
-    <div class="qbox-content">Em đã từng hỏi ChatGPT/Gemini về bài học chưa? Nó có khi nào trả lời SAI hoặc "bịa" so với sách giáo khoa của em không?</div>
-    <div class="nb-input-wrap">
-      <label>Trải nghiệm của em với AI:</label>
-      <textarea class="nb-input" data-nb-id="1" placeholder="Ví dụ: AI từng nói sai công thức..."></textarea>
-      <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+  <div class="slide-body">
+    <span class="eyebrow">BẮT ĐẦU</span>
+    <h2 class="slide-title">Đã bao giờ bạn tin một thông tin sai?</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header">
+        <div class="qbox-icon">#</div>SỔ TAY #1 — Đầu buổi
+      </div>
+      <div class="qbox-content">Hãy nhớ lại 1 lần bạn (hoặc người quen) TIN một thông tin sai từ AI, Google hay mạng
+        xã hội. Lúc đó vì sao khó nhận ra là sai?</div>
+      <div class="nb-input-wrap">
+        <label>Lần đó là gì:</label>
+        <textarea class="nb-input" data-nb-id="1" placeholder="Ví dụ: AI nói sai một công thức / một ngày tháng..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Vì sao bạn viết?</span>Cuối buổi bạn sẽ thấy mình có cả một bộ
+        công cụ để không bị "lừa" như vậy nữa.</div>
     </div>
-    <div class="qbox-tip"><span class="qbox-tip-label">Vì sao em viết?</span>Cuối buổi em sẽ thấy: cho AI đọc đúng tài liệu thì nó ít bịa hơn hẳn.</div>
   </div>
-</div>
+</section>
 
-    </section>
-
-<section class="slide slide-cover" data-slide="4" data-title="AI quên hết — vấn đề">
-
-<div class="cover-orb orb-1" style="background:#DC2626;"></div><div class="cover-orb orb-2" style="background:#3B82F6;"></div><div class="cover-orb orb-3"></div>
-<div class="cover-content slide-body">
-  <span class="eyebrow">VẤN ĐỀ</span>
-  <h1 class="hero-title">AI <span class="grad-text">không biết</span> bài của em</h1>
-  <p class="slide-subtitle">AI được học từ internet, KHÔNG biết vở của em, đề của trường em. Hỏi suông, nó dễ trả lời chung chung hoặc bịa.</p>
-  <div class="cover-chips"><span class="cover-chip">Hallucination</span><span class="cover-chip">Thiếu ngữ cảnh</span><span class="cover-chip">Cần RAG</span></div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="5" data-title="RAG là gì">
-
-<div class="slide-body">
-  <span class="eyebrow">KHÁI NIỆM CỐT LÕI</span>
-  <h2 class="slide-title">RAG — cho AI mở sách trước khi trả lời</h2>
-  <div class="qbox qbox-blue">
-    <div class="qbox-header"><div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC</div>
-    <div class="qbox-content">RAG = <em>Retrieval-Augmented Generation</em>. Hiểu đơn giản: thay vì trả lời từ trí nhớ, AI ĐỌC tài liệu em đưa rồi mới trả lời — giống em mở sách ra trước khi làm bài.</div>
+<section class="slide slide-cover" data-slide="4" data-title="AI giỏi nhưng cũng sai">
+  <div class="cover-orb orb-1" style="background:#DC2626;"></div>
+  <div class="cover-orb orb-2" style="background:#3B82F6;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">SỰ THẬT VỀ AI</span>
+    <h1 class="hero-title">AI rất giỏi — <span class="grad-text">nhưng cũng hay sai</span></h1>
+    <p class="slide-subtitle">AI trả lời rất trôi chảy và tự tin. Nhưng trôi chảy KHÔNG có nghĩa là đúng.</p>
+    <div class="cover-chips"><span class="cover-chip">Hallucination</span><span class="cover-chip">Tự tin nhưng
+        sai</span><span class="cover-chip">Phải kiểm chứng</span></div>
   </div>
-  <div class="met-grid">
-    <div class="met-card model"><div class="met-emoji">🧠</div><div class="met-term">Không RAG</div><div class="met-metaphor">Trả lời từ trí nhớ</div><div class="met-desc">AI đoán dựa trên thứ đã học chung chung. Dễ sai chi tiết, dễ bịa.</div></div>
-    <div class="met-card token"><div class="met-emoji">📖</div><div class="met-term">Có RAG</div><div class="met-metaphor">Mở đúng trang rồi trả lời</div><div class="met-desc">AI đọc note/PDF của em, trích đúng nội dung. Chính xác và có nguồn.</div></div>
+</section>
+
+<section class="slide" data-slide="5" data-title="Hallucination — AI bịa">
+  <div class="slide-body">
+    <span class="eyebrow">TRƯỚC GIỜ HỌC — NGẪM 30 GIÂY</span>
+    <h2 class="slide-title">Hallucination — khi AI "bịa" rất tự tin</h2>
+    <div class="qbox qbox-blue">
+      <div class="qbox-header">
+        <div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC
+      </div>
+      <div class="qbox-content"><strong>Hallucination</strong> (ảo giác) là khi AI BỊA ra thông tin sai nhưng nói y
+        như thật — vì nó được thiết kế để luôn đưa ra câu trả lời, kể cả khi không chắc chắn.</div>
+    </div>
+    <div class="hl-box danger"><span class="hl-label">CHUYỆN CÓ THẬT</span>
+      <p>AI từng bịa tên sách, ngày tháng, công thức, thậm chí "trích dẫn" những nghiên cứu không hề tồn tại. Câu hỏi
+        càng hẹp / càng ít dữ liệu, AI càng dễ bịa.</p>
+    </div>
   </div>
-</div>
+</section>
 
-    </section>
-
-<section class="slide" data-slide="6" data-title="Vì sao Second Brain cần RAG">
-
-<div class="slide-body">
-  <span class="eyebrow">KẾT NỐI VỚI BUỔI 5</span>
-  <h2 class="slide-title">Vault của em chính là "nguồn" cho AI</h2>
-  <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));">
-    <div class="card"><div class="card-icon">✓</div><h3>Chính xác hơn</h3><p>AI bám vào note của em nên trả lời đúng chương trình lớp 8 em đang học.</p></div>
-    <div class="card"><div class="card-icon">✓</div><h3>Có dẫn nguồn</h3><p>NotebookLM chỉ rõ câu trả lời lấy từ đoạn nào — em kiểm chứng được.</p></div>
-    <div class="card"><div class="card-icon">✓</div><h3>Cá nhân hoá</h3><p>AI dùng đúng ví dụ, đúng đề của em chứ không nói chung chung.</p></div>
+<section class="slide" data-slide="6" data-title="Vì sao AI sai">
+  <div class="slide-body">
+    <span class="eyebrow">HIỂU GỐC RỄ</span>
+    <h2 class="slide-title">Vì sao AI lại sai?</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">🌐</div>
+        <h3>Học từ internet</h3>
+        <p>Internet có cả thông tin sai — AI học luôn cả cái sai đó.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">🎲</div>
+        <h3>Đoán chữ tiếp theo</h3>
+        <p>AI thực ra đang ĐOÁN từ kế tiếp cho mượt, chứ không "hiểu" như người.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">📕</div>
+        <h3>Không biết bài của bạn</h3>
+        <p>AI không có SGK, đề thi, vở của bạn → dễ nói chung chung hoặc sai ngữ cảnh.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">KẾT LUẬN</span>
+      <p>AI không phải "cái máy biết tuốt". Nó là một trợ lý thông minh nhưng có thể nhầm — nên bạn phải kiểm soát.</p>
+    </div>
   </div>
-</div>
+</section>
 
-    </section>
-
-<section class="slide" data-slide="7" data-title="NotebookLM là gì">
-
-<div class="slide-body">
-  <span class="eyebrow">CÔNG CỤ 1</span>
-  <h2 class="slide-title">NotebookLM — trợ lý đọc tài liệu của Google</h2>
-  <p class="slide-subtitle">Em tải tài liệu lên, NotebookLM chỉ trả lời DỰA TRÊN tài liệu đó. Miễn phí, vào bằng tài khoản Google.</p>
-  <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));">
-    <div class="card"><div class="card-icon">📤</div><h3>Upload nguồn</h3><p>Tải lên note, PDF, Google Docs, hoặc dán link. Tối đa nhiều nguồn cùng lúc.</p></div>
-    <div class="card"><div class="card-icon">💬</div><h3>Hỏi đáp có citation</h3><p>Mỗi câu trả lời kèm số trích dẫn để em bấm xem lấy từ đoạn nào.</p></div>
-    <div class="card"><div class="card-icon">🎧</div><h3>Audio Overview</h3><p>Biến tài liệu thành một podcast 2 người nói để em nghe khi đi đường.</p></div>
+<section class="slide" data-slide="7" data-title="AI là trợ lý — bạn làm chủ">
+  <div class="slide-body">
+    <span class="eyebrow">ĐỊNH VỊ ĐÚNG VAI TRÒ</span>
+    <h2 class="slide-title">AI là TRỢ LÝ — bạn là NGƯỜI LÀM CHỦ</h2>
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>Khía cạnh</th>
+          <th>AI (trợ lý)</th>
+          <th>Bạn (người làm chủ)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Vai trò</td>
+          <td>Gợi ý, viết nháp, tóm tắt</td>
+          <td>Quyết định, kiểm chứng, chịu trách nhiệm</td>
+        </tr>
+        <tr>
+          <td>Điểm mạnh</td>
+          <td>Nhanh, biết nhiều dữ liệu</td>
+          <td>Hiểu ngữ cảnh, biết đúng–sai, có đạo đức</td>
+        </tr>
+        <tr>
+          <td>Giới hạn</td>
+          <td>Có thể bịa, không chịu trách nhiệm</td>
+          <td>Cần học đủ giỏi để điều khiển AI</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="hl-box success"><span class="hl-label">NHỚ KỸ</span>
+      <p>AI làm việc <strong>CHO</strong> bạn, không làm việc <strong>THAY</strong> bộ não của bạn.</p>
+    </div>
   </div>
-</div>
+</section>
 
-    </section>
-
-<section class="slide" data-slide="8" data-title="Tạo Notebook &amp; nạp vault">
-
-<div class="slide-body">
-  <span class="eyebrow">THỰC HÀNH 1</span>
-  <h2 class="slide-title">Cho NotebookLM đọc note của em</h2>
-  <ol class="steps stagger">
-    <li>Vào <code>notebooklm.google.com</code>, đăng nhập tài khoản Google.</li>
-    <li>Bấm <strong>New notebook</strong> (Sổ tay mới).</li>
-    <li>Bấm <strong>Add source</strong> → tải lên vài note Resource từ vault (ví dụ Math_Equation_Basics).</li>
-    <li>Đợi NotebookLM xử lý xong, rồi đặt câu hỏi: "<em>Tóm tắt 7 hằng đẳng thức giúp mình</em>".</li>
-  </ol>
-  <div class="hl-box info"><span class="hl-label">QUAN SÁT</span><p>Câu trả lời có số <sup>[1]</sup> — bấm vào để thấy đúng đoạn trong note của em. Đó là RAG đang hoạt động.</p></div>
-</div>
-
-    </section>
+<section class="slide" data-slide="8" data-title="Muốn làm chủ AI cần kiến thức nền">
+  <div class="slide-body">
+    <span class="eyebrow">ĐIỀU QUAN TRỌNG NHẤT BUỔI NAY</span>
+    <h2 class="slide-title">Muốn làm chủ AI — phải có kiến thức nền</h2>
+    <div class="qbox qbox-blue">
+      <div class="qbox-header">
+        <div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC
+      </div>
+      <div class="qbox-content">Muốn biết AI trả lời ĐÚNG hay SAI, bạn phải có đủ kiến thức để đánh giá. Người không
+        biết gì sẽ tin mọi thứ AI nói — và đó là lúc nguy hiểm.</div>
+    </div>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">→</div>
+        <h3>Có nền → prompt tốt</h3>
+        <p>Biết mình cần gì thì mới hỏi AI đúng trọng tâm.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">→</div>
+        <h3>Có nền → bắt lỗi</h3>
+        <p>Đủ hiểu để phát hiện chỗ AI nói sai.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">→</div>
+        <h3>Có nền → dùng được</h3>
+        <p>Biết chọn lọc và áp dụng kết quả vào bài làm.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">ẨN DỤ</span>
+      <p>Kiến thức của bạn là <strong>tay lái</strong>; AI chỉ là <strong>động cơ</strong>. Động cơ mạnh mà không có tay
+        lái thì rất dễ lao xuống vực.</p>
+    </div>
+  </div>
+</section>
 
 <section class="slide" data-slide="9" data-title="Hỏi bạn cặp #1">
-
-<div class="slide-body">
-  <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
-  <h2 class="slide-title">Cùng bạn cặp — AI có hay bịa không?</h2>
-  <div class="qbox qbox-yellow">
-    <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận #1</div>
-    <div class="qbox-content">Hai bạn cùng hỏi một AI thường (không RAG) một câu về bài học, rồi hỏi NotebookLM (có RAG) cùng câu đó. "<em>Câu trả lời nào đáng tin hơn? Vì sao?</em>"</div>
-    <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Em sẽ thấy bản có dẫn nguồn dễ kiểm chứng hơn hẳn — đó là lý do ta dựng Second Brain.</div>
-  </div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="10" data-title="Gemini trong Obsidian">
-
-<div class="slide-body">
-  <span class="eyebrow">CÔNG CỤ 2</span>
-  <h2 class="slide-title">Gemini Copilot — AI ngay trong Vault</h2>
-  <p class="slide-subtitle">Vault mẫu cài sẵn 2 plugin AI để em không phải rời Obsidian.</p>
-  <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));">
-    <div class="card"><div class="card-icon">🤖</div><h3>Copilot (Gemini)</h3><p>Plugin <code>copilot</code> mở khung chat ngay trong Obsidian. Hỏi về note đang mở, AI tóm tắt liền.</p></div>
-    <div class="card"><div class="card-icon">🔗</div><h3>Smart Connections</h3><p>Plugin <code>smart-connections</code> tự gợi ý các note LIÊN QUAN với note đang đọc.</p></div>
-    <div class="card"><div class="card-icon">📥</div><h3>Obsidian Importer</h3><p>Plugin <code>obsidian-importer</code> nhập ghi chú cũ từ nơi khác vào vault.</p></div>
-  </div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="11" data-title="Smart Connections">
-
-<div class="slide-body">
-  <span class="eyebrow">KẾT NỐI THÔNG MINH</span>
-  <h2 class="slide-title">AI tự tìm note liên quan cho em</h2>
-  <div class="qbox qbox-blue">
-    <div class="qbox-header"><div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC</div>
-    <div class="qbox-content">Khác với <code>[[wikilink]]</code> em tự nối tay, <strong>Smart Connections</strong> dùng AI để ĐOÁN những note có nội dung gần nhau và gợi ý tự động ở thanh bên.</div>
-  </div>
-  <div class="hl-box "><span class="hl-label">KHI NÀO DÙNG</span><p>Đang viết note Lực (Lý), Smart Connections có thể gợi ý note Toán về vectơ mà em quên chưa nối — rất hợp để làm giàu mạng lưới ở Buổi 5.</p></div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="12" data-title="NotebookLM hay Gemini Copilot?">
-
-<div class="slide-body">
-  <span class="eyebrow">SO SÁNH</span>
-  <h2 class="slide-title">Hai công cụ — hai việc khác nhau</h2>
-  <table class="cmp-table"><thead><tr><th>Tiêu chí</th><th>NotebookLM</th><th>Gemini Copilot (trong Obsidian)</th></tr></thead><tbody><tr><td>Nơi dùng</td><td>Trang web riêng của Google</td><td>Ngay trong Obsidian</td></tr><tr><td>Thế mạnh</td><td>Đọc NHIỀU nguồn, có citation, Audio</td><td>Tóm tắt note đang mở, không rời màn hình</td></tr><tr><td>Hợp khi</td><td>Ôn tập từ nhiều tài liệu, làm podcast</td><td>Ghi chú hằng ngày, tóm tắt nhanh</td></tr><tr><td>Dẫn nguồn</td><td>Có, rất rõ</td><td>Có nhưng đơn giản hơn</td></tr></tbody></table>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="13" data-title="Game: NotebookLM hay Gemini?">
-
-<div class="slide-body">
-  <span class="eyebrow">QUICK SELF-TEST</span>
-  <h2 class="slide-title">Việc nào dùng công cụ nào?</h2>
-  <p class="slide-subtitle">Kéo (hoặc bấm) từng ô vào đúng công cụ.</p>
-  <div class="game-area">
-    <div class="game-items" id="gameItems">
-      <div class="draggable" draggable="true" data-type="notebooklm" data-label="Hỏi đáp dựa trên 10 file PDF đã tải lên">Hỏi đáp dựa trên 10 file PDF đã tải lên</div>
-      <div class="draggable" draggable="true" data-type="notebooklm" data-label="Tạo podcast Audio Overview từ tài liệu">Tạo podcast Audio Overview từ tài liệu</div>
-      <div class="draggable" draggable="true" data-type="gemini" data-label="Tóm tắt note đang mở trong Obsidian">Tóm tắt note đang mở trong Obsidian</div>
-      <div class="draggable" draggable="true" data-type="gemini" data-label="Chat mà không rời màn hình vault">Chat mà không rời màn hình vault</div>
-      <div class="draggable" draggable="true" data-type="notebooklm" data-label="Câu trả lời kèm citation rõ ràng">Câu trả lời kèm citation rõ ràng</div>
-      <div class="draggable" draggable="true" data-type="gemini" data-label="Hỏi nhanh về 1 ghi chú vừa viết">Hỏi nhanh về 1 ghi chú vừa viết</div>
-    </div>
-    <div class="game-buckets" style="grid-template-columns:1fr 1fr;">
-      <div class="bucket" data-bucket="notebooklm" data-color="#2563EB" style="border-color:#2563EB;background:#EFF6FF;"><div class="bucket-title" style="color:#2563EB;">NotebookLM</div><div class="bucket-zone"></div></div>
-      <div class="bucket" data-bucket="gemini" data-color="#0891B2" style="border-color:#06B6D4;background:#ECFEFF;"><div class="bucket-title" style="color:#0891B2;">Gemini Copilot</div><div class="bucket-zone"></div></div>
-    </div>
-    <div class="game-score" id="gameScore" style="display:none;">
-      <div id="gameScoreText"></div>
-      <button class="btn-restart" onclick="restartGame()">Chơi lại</button>
+  <div class="slide-body">
+    <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
+    <h2 class="slide-title">Cùng bạn cặp — vì sao tin sai?</h2>
+    <div class="qbox qbox-yellow">
+      <div class="qbox-header">
+        <div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận #1
+      </div>
+      <div class="qbox-content">Mỗi bạn kể 1 lần bạn / người quen TIN một thông tin sai từ AI hoặc mạng xã hội. "<em>Lúc
+        đó vì sao khó nhận ra là sai? Làm sao để lần sau không bị?</em>"</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Thông tin sai thường nghe rất "hợp lý". Nhận ra
+        điều này là bước đầu của tư duy phản biện.</div>
     </div>
   </div>
-</div>
+</section>
 
-    </section>
-
-<section class="slide slide-cover" data-slide="14" data-title="Prompt mẫu — tự động hóa">
-
-<div class="cover-orb orb-1"></div><div class="cover-orb orb-2"></div><div class="cover-orb orb-3"></div>
-<div class="cover-content slide-body">
-  <span class="eyebrow">TÁI SỬ DỤNG</span>
-  <h1 class="hero-title">Prompt mẫu — <span class="grad-text">viết 1 lần, dùng mãi</span></h1>
-  <p class="slide-subtitle">Vault mẫu có thư mục AI_Prompts chứa các "công thức hỏi AI". Em chỉ việc điền chỗ trống rồi gửi.</p>
-  <div class="cover-chips"><span class="cover-chip">Summarize</span><span class="cover-chip">Create Quiz</span><span class="cover-chip">Study Plan</span></div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="15" data-title="Kho AI_Prompts">
-
-<div class="slide-body">
-  <span class="eyebrow">THƯ MỤC AI_Prompts</span>
-  <h2 class="slide-title">Những prompt em sẽ dùng đi dùng lại</h2>
-  <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
-    <div class="card"><div class="card-icon">📝</div><h3>Summarize_Lesson</h3><p>Tóm tắt bài học thành TL;DR + ý chính + ELI5 + flashcard.</p></div>
-    <div class="card"><div class="card-icon">❓</div><h3>Create_Quiz</h3><p>Sinh bộ trắc nghiệm + đáp án giải thích + bẫy thường gặp.</p></div>
-    <div class="card"><div class="card-icon">📅</div><h3>Study_Plan</h3><p>Lập lộ trình ôn tập theo ngày cho một dự án.</p></div>
-    <div class="card"><div class="card-icon">🧩</div><h3>Make_Mindmap</h3><p>Vẽ sơ đồ tư duy cho một chủ đề.</p></div>
+<section class="slide slide-cover" data-slide="10" data-title="Dùng AI ngay trong Obsidian">
+  <div class="cover-orb orb-1" style="background:#2563EB;"></div>
+  <div class="cover-orb orb-2" style="background:#06B6D4;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">AI NGAY TRONG VAULT</span>
+    <h1 class="hero-title">Dùng AI để <span class="grad-text">tạo nội dung trong Obsidian</span></h1>
+    <p class="slide-subtitle">Không cần rời Obsidian: bật trợ lý AI (Copilot) ngay trong vault để tóm tắt, sinh quiz,
+      mở rộng ý — dựa trên chính ghi chú của bạn (RAG).</p>
+    <div class="cover-chips"><span class="cover-chip">RAG</span><span class="cover-chip">Copilot</span><span
+        class="cover-chip">Smart Connections</span></div>
   </div>
-</div>
+</section>
 
-    </section>
+<section class="slide" data-slide="11" data-title="RAG là gì">
+  <div class="slide-body">
+    <span class="eyebrow">GIẢI PHÁP CHỐNG BỊA</span>
+    <h2 class="slide-title">RAG — cho AI đọc ghi chú của bạn trước khi trả lời</h2>
+    <div class="qbox qbox-blue">
+      <div class="qbox-header">
+        <div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC
+      </div>
+      <div class="qbox-content"><strong>RAG</strong> (Retrieval-Augmented Generation): thay vì trả lời từ "trí nhớ" mơ
+        hồ, AI ĐỌC đúng ghi chú/tài liệu bạn đưa rồi mới trả lời — giống bạn mở vở ra trước khi làm bài.</div>
+    </div>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">🎯</div>
+        <h3>Bám sát bài của bạn</h3>
+        <p>Trả lời dựa trên SGK / ghi chú lớp 8 của chính bạn.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">🛡️</div>
+        <h3>Đỡ bịa hơn</h3>
+        <p>Có dữ liệu thật để dựa vào nên ít "ảo giác".</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">🔗</div>
+        <h3>Trích được từ note</h3>
+        <p>Chỉ ra câu trả lời lấy ý từ note nào của bạn.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">LƯU Ý</span>
+      <p>RAG giúp AI ít sai hơn nhiều, nhưng KHÔNG thay thế việc kiểm chứng — vẫn phải đối chiếu (xem phần sau).</p>
+    </div>
+  </div>
+</section>
 
-<section class="slide" data-slide="16" data-title="Prompt: Tóm tắt bài học">
+<section class="slide" data-slide="12" data-title="Copilot trong Obsidian">
+  <div class="slide-body">
+    <span class="eyebrow">CÔNG CỤ CHÍNH</span>
+    <h2 class="slide-title">Copilot — trợ lý AI ngay trong Obsidian</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#06B6D4;">💬</div>
+        <h3>Chat trong vault</h3>
+        <p>Hỏi đáp với AI mà không cần rời Obsidian.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#06B6D4;">📚</div>
+        <h3>Vault QA (RAG)</h3>
+        <p>Chế độ hỏi đáp dựa trên TOÀN BỘ note của bạn.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#06B6D4;">✍️</div>
+        <h3>Viết thẳng vào note</h3>
+        <p>AI chèn tóm tắt / quiz ngay vào ghi chú đang mở.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">CHUẨN BỊ</span>
+      <p>Vault mẫu của lớp đã cài sẵn plugin <strong>Copilot</strong> và kết nối model (Gemini) — bạn chỉ việc mở và
+        dùng. Khi tự cài, bạn cần nhập một API key (GV hướng dẫn).</p>
+    </div>
+  </div>
+</section>
 
-<div class="slide-body">
-  <span class="eyebrow">PROMPT MẪU 1</span>
-  <h2 class="slide-title">Dán prompt này vào Gemini, kèm nội dung bài</h2>
-  <div class="prompt-box"><span class="prompt-label">AI_Prompts / Prompt_Summarize_Lesson</span>Hãy đóng vai giáo viên dạy kèm lớp 8 và chuyên gia ghi nhớ.
-Tóm tắt bài học dưới đây theo cấu trúc:
+<section class="slide" data-slide="13" data-title="Smart Connections">
+  <div class="slide-body">
+    <span class="eyebrow">KẾT NỐI THÔNG MINH</span>
+    <h2 class="slide-title">Smart Connections — gợi ý note liên quan</h2>
+    <div class="qbox qbox-blue">
+      <div class="qbox-header">
+        <div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC
+      </div>
+      <div class="qbox-content">Khác với <code>[[wikilink]]</code> bạn tự nối tay, <strong>Smart Connections</strong>
+        dùng AI tìm các note có nội dung GẦN NHAU rồi gợi ý tự động ở thanh bên — cũng là một dạng RAG (truy hồi theo
+        ngữ nghĩa).</div>
+    </div>
+    <div class="hl-box"><span class="hl-label">KHI NÀO HỮU ÍCH</span>
+      <p>Đang viết note Lực (Lý), nó có thể gợi ý note Toán về vectơ mà bạn quên nối → làm giàu mạng lưới kiến thức đã
+        dựng ở Buổi 5.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="14" data-title="Workflow: tạo nội dung trong Obsidian">
+  <div class="slide-body">
+    <span class="eyebrow">QUY TRÌNH HIỆU QUẢ</span>
+    <h2 class="slide-title">5 bước dùng AI tạo nội dung ngay trong Obsidian</h2>
+    <ol class="steps stagger">
+      <li>Mở note bài học cần xử lý (hoặc dán nội dung thô vào một note).</li>
+      <li>Mở <strong>Copilot</strong>, chọn chế độ phù hợp (chat thường, hoặc <strong>Vault QA</strong> để dựa trên
+        vault).</li>
+      <li>Ra lệnh rõ ràng theo khung <strong>RCTFE</strong>: "tóm tắt theo TL;DR + ý chính + flashcard".</li>
+      <li>Cho AI chèn kết quả vào note — rồi bạn <strong>KIỂM CHỨNG</strong> &amp; viết lại bằng lời mình.</li>
+      <li>Gắn <code>#tag</code> + <code>[[link]]</code> để đưa vào Second Brain.</li>
+    </ol>
+    <div class="hl-box success"><span class="hl-label">MẸO HIỆU QUẢ</span>
+      <p>Làm từng bài nhỏ và kiểm chứng ngay — đừng để AI sinh hàng loạt rồi tin hết. Bạn dẫn dắt, AI hỗ trợ.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide slide-cover" data-slide="15" data-title="Tóm tắt bài học khoa học">
+  <div class="cover-orb orb-1" style="background:#2563EB;"></div>
+  <div class="cover-orb orb-2" style="background:#06B6D4;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">DÙNG PROMPT ĐÚNG CÁCH</span>
+    <h1 class="hero-title">Tóm tắt &amp; lưu bài học <span class="grad-text">một cách khoa học</span></h1>
+    <p class="slide-subtitle">Không chép cả trang. Dùng prompt để AI cô đọng bài theo cấu trúc giúp bạn nhớ lâu — rồi
+      lưu vào Second Brain.</p>
+    <div class="cover-chips"><span class="cover-chip">TL;DR</span><span class="cover-chip">ELI5</span><span
+        class="cover-chip">Flashcard</span></div>
+  </div>
+</section>
+
+<section class="slide" data-slide="16" data-title="Tóm tắt khoa học gồm gì">
+  <div class="slide-body">
+    <span class="eyebrow">CẤU TRÚC TÓM TẮT TỐT</span>
+    <h2 class="slide-title">Một bản tóm tắt khoa học gồm 5 phần</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(180px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">1</div>
+        <h3>TL;DR 3 dòng</h3>
+        <p>Cốt lõi đọc trong 10 giây là hiểu ngay.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">2</div>
+        <h3>Ý chính 3–5 gạch</h3>
+        <p>Bóc tách ý quan trọng, không lan man.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">3</div>
+        <h3>ELI5</h3>
+        <p>Giải thích khái niệm khó bằng ví dụ đời thường.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">4</div>
+        <h3>Cheat sheet</h3>
+        <p>Công thức cần thuộc + lỗi sai hay gặp.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">5</div>
+        <h3>3 Flashcard</h3>
+        <p>Câu hỏi để tự kiểm tra (Active Recall).</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">KẾT NỐI BUỔI 5</span>
+      <p>Đây chính là bước <strong>DISTILL</strong> (cô đọng) của C.O.D.E — giờ có AI hỗ trợ cho nhanh.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="17" data-title="Cấu trúc 1 prompt tốt">
+  <div class="slide-body">
+    <span class="eyebrow">NHẮC LẠI KHUNG RCTFE (BUỔI 2)</span>
+    <h2 class="slide-title">Prompt rõ → kết quả tốt</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(170px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">R</div>
+        <h3>Role — Vai trò</h3>
+        <p>"Đóng vai giáo viên dạy kèm lớp 8."</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">C</div>
+        <h3>Context — Bối cảnh</h3>
+        <p>"Đây là bài [tên], môn [...]."</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">T</div>
+        <h3>Task — Nhiệm vụ</h3>
+        <p>"Tóm tắt để mình nhớ lâu."</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">F</div>
+        <h3>Format — Định dạng</h3>
+        <p>"TL;DR + ý chính + ELI5 + flashcard."</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">E</div>
+        <h3>Example — Ví dụ</h3>
+        <p>Cho 1 ví dụ mẫu nếu cần cho rõ.</p>
+      </div>
+    </div>
+    <div class="hl-box"><span class="hl-label">QUY TẮC</span>
+      <p>Prompt mơ hồ → AI đoán mò. Prompt rõ ràng → AI làm đúng ý bạn.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="18" data-title="Prompt mẫu: Tóm tắt bài học">
+  <div class="slide-body">
+    <span class="eyebrow">PROMPT MẪU 1</span>
+    <h2 class="slide-title">Dán prompt này vào AI, kèm nội dung bài</h2>
+    <div class="prompt-box"><span class="prompt-label">PROMPT — [[Prompt_Summarize_Lesson]] (kho AI_Prompts)</span>Hãy đóng vai giáo viên dạy kèm lớp 8 và chuyên gia ghi nhớ.
+Tóm tắt bài học dưới đây theo đúng cấu trúc:
 1. TL;DR (3 dòng).
 2. Ý chính cốt lõi (3–5 gạch đầu dòng).
 3. ELI5 — giải thích khái niệm khó nhất bằng ví dụ gần gũi.
@@ -1237,358 +441,641 @@ Tóm tắt bài học dưới đây theo cấu trúc:
 5. 3 câu hỏi Flashcard để tự kiểm tra.
 
 [Dán nội dung bài học vào đây]</div>
-  <div class="hl-box success"><span class="hl-label">CÁCH DÙNG</span><p>AI trả về bản tóm tắt đẹp → em copy dán vào đúng note Resource trong Obsidian để ôn trước kỳ thi.</p></div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="17" data-title="Prompt: Tạo Quiz">
-
-<div class="slide-body">
-  <span class="eyebrow">PROMPT MẪU 2</span>
-  <h2 class="slide-title">Để AI ra đề từ chính note của em</h2>
-  <div class="prompt-box"><span class="prompt-label">AI_Prompts / Prompt_Create_Quiz</span>Hãy đóng vai Chuyên gia Thiết kế Đề thi Lớp 8.
-Chủ đề: [Ví dụ: Hằng đẳng thức & Phương trình tích]
-Tài nguyên: [[Math_Equation_Basics]]
-Dạng: 4 câu trắc nghiệm (A–D) + 3 câu tự luận.
-Yêu cầu: kèm đáp án giải thích + phân tích bẫy thường gặp.</div>
-  <div class="hl-box info"><span class="hl-label">GHI NHỚ</span><p>Đề AI tạo ra sẽ được em lưu vào <code>06_quiz_exam</code> theo đúng định dạng ở slide tiếp theo.</p></div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="18" data-title="Sổ Tay #2 — Chọn bài để AI tóm tắt">
-
-<div class="slide-body">
-  <span class="eyebrow">ÁP DỤNG</span>
-  <h2 class="slide-title">Em sẽ cho AI tóm tắt bài nào?</h2>
-  <div class="qbox qbox-purple">
-    <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #2</div>
-    <div class="qbox-content">Chọn 1 bài học gần đây em thấy KHÓ NHỚ NHẤT. Em sẽ dùng Prompt Summarize để AI tóm tắt nó. Viết tên bài + môn vào đây.</div>
-    <div class="nb-input-wrap">
-      <label>Bài học em chọn:</label>
-      <textarea class="nb-input" data-nb-id="2" placeholder="Ví dụ: Định lý Thales — môn Toán"></textarea>
-      <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+    <div class="hl-box success"><span class="hl-label">CÁCH DÙNG</span>
+      <p>AI trả về bản tóm tắt đẹp → bạn ĐỌC LẠI, kiểm chứng, rồi mới lưu vào note Resource để ôn trước kỳ thi.</p>
     </div>
-    <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Ngay sau buổi học, em mở Gemini, dán prompt + nội dung bài này để có bản tóm tắt đầu tiên.</div>
   </div>
-</div>
+</section>
 
-    </section>
+<section class="slide" data-slide="19" data-title="Lưu bản tóm tắt vào vault">
+  <div class="slide-body">
+    <span class="eyebrow">THỰC HÀNH 1</span>
+    <h2 class="slide-title">Đưa bản tóm tắt vào Second Brain</h2>
+    <ol class="steps stagger">
+      <li>Dùng <strong>Copilot</strong> trong Obsidian: AI viết thẳng vào note. (Nếu dùng AI web: copy bản tóm tắt sau
+        khi đã đọc &amp; kiểm tra.)</li>
+      <li>Đặt trong note Resource của bài đó ở <code>03_Resources</code>.</li>
+      <li><strong>In đậm</strong> ý chính, viết lại bằng lời mình — đây là bước Distill.</li>
+      <li>Gắn <code>#tag</code> và <code>[[link]]</code> tới note Area của môn.</li>
+    </ol>
+    <div class="hl-box info"><span class="hl-label">QUAN TRỌNG</span>
+      <p>Đừng dán nguyên si rồi tin ngay. Bản tóm tắt chỉ "vào kho" sau khi bạn đã kiểm chứng ở phần sau của buổi.</p>
+    </div>
+  </div>
+</section>
 
-<section class="slide" data-slide="19" data-title="Tạo file Quiz trong 06_quiz_exam">
+<section class="slide" data-slide="20" data-title="Sổ Tay #2 — Chọn bài để tóm tắt">
+  <div class="slide-body">
+    <span class="eyebrow">ÁP DỤNG</span>
+    <h2 class="slide-title">Bạn sẽ cho AI tóm tắt bài nào?</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header">
+        <div class="qbox-icon">#</div>SỔ TAY #2
+      </div>
+      <div class="qbox-content">Chọn 1 bài học gần đây bạn thấy KHÓ NHỚ NHẤT. Bạn sẽ dùng prompt tóm tắt cho bài này.
+        Viết tên bài + môn.</div>
+      <div class="nb-input-wrap">
+        <label>Bài học bạn chọn:</label>
+        <textarea class="nb-input" data-nb-id="2" placeholder="Ví dụ: Định lý Thales — môn Toán"></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Ngay sau buổi, bạn mở AI và dán prompt + nội
+        dung bài này để có bản tóm tắt đầu tiên.</div>
+    </div>
+  </div>
+</section>
 
-<div class="slide-body">
-  <span class="eyebrow">THỰC HÀNH 2</span>
-  <h2 class="slide-title">Lưu đề AI tạo vào đúng nơi</h2>
-  <ol class="steps stagger">
-    <li>Trong Obsidian, bấm chuột phải <code>06_quiz_exam</code> → <strong>New note</strong>.</li>
-    <li>Đặt tên rõ ràng, ví dụ <code>Math_HangDangThuc</code>.</li>
-    <li>Dán đề AI vừa tạo, đánh dấu đáp án đúng bằng dấu <code>✅</code> ở cuối dòng.</li>
-    <li>Lưu lại — Buổi 7 app sẽ TỰ ĐỌC file này để hiện Quiz tương tác.</li>
-  </ol>
-  <div class="hl-box "><span class="hl-label">VÌ SAO QUAN TRỌNG</span><p>Định dạng đúng = app đọc được. Sai định dạng = app bỏ qua. Slide sau cho em mẫu chuẩn.</p></div>
-</div>
+<section class="slide" data-slide="21" data-title="Active Recall — vì sao tự kiểm tra">
+  <div class="slide-body">
+    <span class="eyebrow">NGUYÊN LÝ GHI NHỚ</span>
+    <h2 class="slide-title">Tự kiểm tra giúp nhớ lâu hơn đọc lại</h2>
+    <div class="qbox qbox-blue">
+      <div class="qbox-header">
+        <div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC
+      </div>
+      <div class="qbox-content"><strong>Active Recall</strong> = tự lôi kiến thức ra khỏi đầu (làm quiz) thay vì đọc lại
+        thụ động. Nhờ "cố nhớ", trí nhớ được củng cố mạnh hơn nhiều.</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Nguồn:</span>Hiệu ứng kiểm tra (Testing Effect) — Roediger &amp;
+        Karpicke (2006), nghiên cứu kinh điển về trí nhớ học tập.</div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">SẮP TỚI</span>
+      <p>Kết hợp Active Recall với <strong>ôn ngắt quãng</strong> (Spaced Repetition) ở Buổi 7 để nhớ siêu lâu.</p>
+    </div>
+  </div>
+</section>
 
-    </section>
+<section class="slide" data-slide="22" data-title="Prompt mẫu: Tạo Quiz & Đề">
+  <div class="slide-body">
+    <span class="eyebrow">PROMPT MẪU 2 — SAU MỖI BÀI HỌC</span>
+    <h2 class="slide-title">Tạo Quiz + Đề để tự kiểm tra</h2>
+    <div class="prompt-box"><span class="prompt-label">PROMPT — [[Prompt_Create_Quiz]] + [[Prompt_Exam_Preparation]]</span>Hãy đóng vai chuyên gia khảo thí lớp 8.
+Dựa trên bài học: [dán nội dung bài / tên note]
+Hãy tạo cho mình:
+A. QUIZ — 4 câu trắc nghiệm (mỗi câu 4 lựa chọn), ĐÁNH DẤU đáp án đúng.
+B. ĐỀ — 3 câu tự luận, kèm đáp án chi tiết.
+Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">📝</div>
+        <h3>Quiz — trắc nghiệm</h3>
+        <p>Nhanh, tự chấm ngay. Hợp để Active Recall mỗi ngày.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">🎯</div>
+        <h3>Đề — tự luận</h3>
+        <p>Sâu hơn, luyện trình bày, sát với bài kiểm tra thật.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">THÓI QUEN</span>
+      <p>Làm điều này <strong>sau mỗi bài học</strong> → bạn vừa ôn ngay, vừa tích lũy dần một kho đề của riêng mình.</p>
+    </div>
+  </div>
+</section>
 
-<section class="slide" data-slide="20" data-title="Định dạng Quiz chuẩn">
-
-<div class="slide-body">
-  <span class="eyebrow">MẪU CHUẨN</span>
-  <h2 class="slide-title">Đáp án đúng đánh dấu ✅</h2>
-  <div class="prompt-box"><span class="prompt-label">06_quiz_exam / Math_HangDangThuc.md</span>## 📝 Quiz
+<section class="slide" data-slide="23" data-title="Lưu vào kho đề (06_quiz_exam)">
+  <div class="slide-body">
+    <span class="eyebrow">KHO ĐỀ TRONG MY SECOND BRAIN</span>
+    <h2 class="slide-title">Lưu Quiz &amp; Đề vào 06_quiz_exam</h2>
+    <div class="prompt-box"><span class="prompt-label">06_quiz_exam / Math_HangDangThuc.md</span>## 📝 Quiz
 ### Khai triển (x + 4)² bằng?
 - x² + 16x + 8
 - x² + 8x + 16 ✅
 - x² + 4x + 16
-- x² + 8x + 8
 
-### Phân tích x² − 49 thành nhân tử?
-- (x−7)(x+7) ✅
-- (x−49)(x+1)
-- (x−7)²</div>
-  <div class="hl-box success"><span class="hl-label">QUY TẮC</span><p>Mỗi câu là một <code>###</code> tiêu đề, các đáp án là gạch đầu dòng <code>-</code>, đáp án đúng có <code>✅</code> ở cuối.</p></div>
-</div>
+## 🎯 Đề
+**Câu 1:** Khai triển: (2x + 3)²
+**Câu 2:** Phân tích thành nhân tử: x³ − 8
+### Đáp án
+1. 4x² + 12x + 9
+2. (x−2)(x²+2x+4)
 
-    </section>
-
-<section class="slide" data-slide="21" data-title="Quiz: hiểu RAG &amp; prompt">
-
-<div class="slide-body">
-  <span class="eyebrow">KIỂM TRA NHANH</span>
-  <h2 class="slide-title">RAG giúp gì cho AI?</h2>
-  <div class="quiz" data-correct="1" data-explanation="Đúng! RAG cho AI đọc đúng tài liệu của em rồi mới trả lời nên chính xác và có nguồn.">
-    <p class="quiz-q">Lợi ích chính của RAG (như NotebookLM) là gì?</p>
-    <div class="quiz-opts">
-      <button class="quiz-opt" data-index="0">Làm AI trả lời nhanh hơn</button>
-      <button class="quiz-opt" data-index="1">AI dựa trên tài liệu của em nên ít bịa và có dẫn nguồn</button>
-      <button class="quiz-opt" data-index="2">Giúp AI vẽ được hình</button>
-      <button class="quiz-opt" data-index="3">Không cần internet</button>
+#quiz-exam</div>
+    <ol class="steps stagger">
+      <li>Tạo note trong <code>06_quiz_exam</code>, đặt tên theo bài (vd <code>Math_HangDangThuc</code>).</li>
+      <li>Dán phần <strong>Quiz</strong>, đánh dấu đáp án đúng bằng <code>✅</code>.</li>
+      <li>Dán phần <strong>Đề</strong> kèm mục <strong>Đáp án</strong> ở cuối.</li>
+      <li>Làm vậy sau MỖI bài → kho đề của bạn lớn dần theo thời gian.</li>
+    </ol>
+    <div class="hl-box success"><span class="hl-label">DÙNG LẠI Ở BUỔI 7</span>
+      <p>App đọc thẳng kho đề này để hiện Quiz/Đề tương tác và chấm điểm tại chỗ — nên đúng định dạng là rất quan
+        trọng.</p>
     </div>
-    <div class="quiz-fb"></div>
   </div>
-</div>
+</section>
 
-    </section>
-
-<section class="slide slide-cover" data-slide="22" data-title="Lộ trình học — 05_learning_plan">
-
-<div class="cover-orb orb-1" style="background:#10B981;"></div><div class="cover-orb orb-2" style="background:#3B82F6;"></div><div class="cover-orb orb-3"></div>
-<div class="cover-content slide-body">
-  <span class="eyebrow">LẬP KẾ HOẠCH</span>
-  <h1 class="hero-title">Lộ trình — <span class="grad-text">05_learning_plan</span></h1>
-  <p class="slide-subtitle">Em viết kế hoạch ôn tập theo ngày. Buổi 7 app sẽ tự rải các mốc này lên Lịch trình.</p>
-  <div class="cover-chips"><span class="cover-chip">Ngày bắt đầu</span><span class="cover-chip">Mốc Ngày/Tuần/Thứ</span><span class="cover-chip">Gắn Quiz 📝[[ ]]</span></div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="23" data-title="File Plan là gì">
-
-<div class="slide-body">
-  <span class="eyebrow">LỘ TRÌNH</span>
-  <h2 class="slide-title">Một file Plan gồm những gì</h2>
-  <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));">
-    <div class="card"><div class="card-icon">🔗</div><h3>Liên kết Dự án</h3><p>Dòng <code>Dựa trên dự án [[Project_Math_Midterm]]</code> để gắn lộ trình vào đúng Project.</p></div>
-    <div class="card"><div class="card-icon">📌</div><h3>Ngày bắt đầu</h3><p>Dòng mốc neo <code>**Ngày bắt đầu:** 2026-06-01</code> để app tính ngày.</p></div>
-    <div class="card"><div class="card-icon">📅</div><h3>Các buổi học</h3><p>Mỗi buổi là 1 gạch đầu dòng có mốc: <code>- **Ngày 3:** Nội dung</code>.</p></div>
-  </div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="24" data-title="&quot;Ngày bắt đầu&quot; — mốc neo">
-
-<div class="slide-body">
-  <span class="eyebrow">BẮT BUỘC</span>
-  <h2 class="slide-title">Khai báo Ngày bắt đầu</h2>
-  <div class="hl-box info"><span class="hl-label">VÌ SAO QUAN TRỌNG</span><p>Mọi mốc "Ngày/Tuần/Thứ" được tính TƯƠNG ĐỐI từ ngày này. Thiếu nó, app xếp lịch theo ngày hiện tại — kém chính xác.</p></div>
-  <div class="prompt-box"><span class="prompt-label">Đặt gần đầu file 05_learning_plan</span># Lộ trình ôn thi giữa kỳ Toán
-
-Dựa trên dự án [[Project_Math_Midterm]]
-**Ngày bắt đầu:** 2026-06-01</div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="25" data-title="4 cách ghi mốc thời gian">
-
-<div class="slide-body">
-  <span class="eyebrow">CÚ PHÁP MỐC</span>
-  <h2 class="slide-title">Chọn kiểu nào tiện nhất cho em</h2>
-  <table class="cmp-table"><thead><tr><th>Kiểu</th><th>Ví dụ cú pháp</th><th>App hiểu là</th></tr></thead><tbody><tr><td>Theo Ngày</td><td>- **Ngày 3:** Nội dung</td><td>Ngày thứ 3 kể từ Ngày bắt đầu</td></tr><tr><td>Theo Tuần</td><td>- **Tuần 2:** Nội dung</td><td>Đầu tuần thứ 2 (cách 7 ngày)</td></tr><tr><td>Theo Thứ</td><td>- **Thứ 2:** Nội dung</td><td>Thứ Hai trong tuần</td></tr><tr><td>Ngày cụ thể</td><td>- **20/06/2026:** Nội dung</td><td>Đúng ngày 20/06/2026</td></tr></tbody></table>
-  <div class="hl-box "><span class="hl-label">LƯU Ý</span><p>Mốc phải nằm Ở ĐẦU mục <code>- **Mốc:** …</code>. Mốc giữa câu (như phân số 1/2) sẽ KHÔNG được nhận.</p></div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="26" data-title="Gắn Quiz vào buổi học">
-
-<div class="slide-body">
-  <span class="eyebrow">LIÊN KẾT</span>
-  <h2 class="slide-title">Dùng 📝[[ ]] để app tự nạp Quiz</h2>
-  <div class="qbox qbox-blue">
-    <div class="qbox-header"><div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC</div>
-    <div class="qbox-content">Thêm <code>[[wikilink]]</code> ngay trên dòng buổi học. Link tới file trong <code>06_quiz_exam</code> sẽ được app nạp vào tab Quiz; các link khác hiện ở phần Tài nguyên.</div>
-  </div>
-  <div class="prompt-box"><span class="prompt-label">Trong 05_learning_plan</span>- **Ngày 1-2:** Ôn 7 hằng đẳng thức (Sử dụng [[Math_Equation_Basics]]) 📝 [[Math_HangDangThuc]]</div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="27" data-title="Hỏi bạn cặp #2">
-
-<div class="slide-body">
-  <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
-  <h2 class="slide-title">Cùng bạn cặp — chấm prompt</h2>
-  <div class="qbox qbox-yellow">
-    <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận #2</div>
-    <div class="qbox-content">Em và bạn mỗi người viết 1 prompt nhờ AI tạo quiz cho 1 môn. Đổi cho nhau và nhận xét: "<em>Prompt nào rõ hơn? Thiếu thông tin gì để AI ra đề sát hơn?</em>"</div>
-    <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Prompt càng nêu rõ chủ đề + tài nguyên + dạng câu hỏi thì đề AI tạo càng đúng ý em.</div>
-  </div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="28" data-title="Từ điển Buổi 6 — click để lật">
-
-<div class="slide-body">
-  <span class="eyebrow">8 THUẬT NGỮ — CLICK ĐỂ LẬT</span>
-  <h2 class="slide-title">Học qua ẩn dụ dễ nhớ</h2>
-  <div class="fc-grid">
-    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">RAG</div><div class="fc-vi">Tăng cường truy hồi</div></div><div class="fc-back">Cho AI mở đúng tài liệu rồi mới trả lời — bớt bịa, có nguồn.</div></div></div>
-    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">NotebookLM</div><div class="fc-vi">Trợ lý đọc tài liệu</div></div><div class="fc-back">Web của Google: tải nguồn lên, hỏi đáp có citation, làm podcast.</div></div></div>
-    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Gemini Copilot</div><div class="fc-vi">AI trong Obsidian</div></div><div class="fc-back">Plugin chat ngay trong vault, tóm tắt note đang mở.</div></div></div>
-    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Smart Connections</div><div class="fc-vi">Kết nối thông minh</div></div><div class="fc-back">AI tự gợi ý các note có nội dung liên quan.</div></div></div>
-    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Citation</div><div class="fc-vi">Trích dẫn nguồn</div></div><div class="fc-back">Số [1] chỉ rõ câu trả lời lấy từ đoạn nào trong tài liệu.</div></div></div>
-    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Audio Overview</div><div class="fc-vi">Podcast tự động</div></div><div class="fc-back">NotebookLM biến tài liệu thành cuộc trò chuyện để nghe.</div></div></div>
-    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Prompt mẫu</div><div class="fc-vi">Công thức hỏi AI</div></div><div class="fc-back">Đoạn lời nhắc viết sẵn, chỉ điền chỗ trống rồi gửi.</div></div></div>
-    <div class="fc" onclick="this.classList.toggle('flipped')"><div class="fc-inner"><div class="fc-front"><div class="fc-term">Ngày bắt đầu</div><div class="fc-vi">Mốc neo lịch</div></div><div class="fc-back">Dòng để app tính mọi mốc Ngày/Tuần/Thứ trong Plan.</div></div></div>
-  </div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="29" data-title="Sổ Tay #3 — Thuật ngữ">
-
-<div class="slide-body">
-  <span class="eyebrow">REFLECTION</span>
-  <h2 class="slide-title">Thuật ngữ nào em nhớ nhất?</h2>
-  <div class="qbox qbox-purple">
-    <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #3</div>
-    <div class="qbox-content">Trong các thuật ngữ Buổi 6 — cái nào em thấy HỮU ÍCH NHẤT cho việc ôn thi của em? Cái nào còn MƠ HỒ?</div>
-    <div class="nb-input-wrap">
-      <label>Hữu ích nhất / chưa hiểu:</label>
-      <textarea class="nb-input" data-nb-id="3" placeholder="Hữu ích: ... | Chưa hiểu: ..."></textarea>
-      <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+<section class="slide" data-slide="24" data-title="Quiz: Prompt tóm tắt tốt">
+  <div class="slide-body">
+    <span class="eyebrow">KIỂM TRA NHANH</span>
+    <h2 class="slide-title">Một prompt tóm tắt TỐT nên có gì?</h2>
+    <div class="quiz" data-correct="1"
+      data-explanation="Prompt tốt nêu rõ vai trò, bài cụ thể và cấu trúc đầu ra — AI mới làm đúng ý bạn.">
+      <p class="quiz-q">Đâu là prompt tóm tắt hiệu quả nhất?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">"Tóm tắt giúp tôi."</button>
+        <button class="quiz-opt" data-index="1">"Đóng vai GV lớp 8, tóm tắt bài [X] theo TL;DR + ý chính + ELI5 + flashcard."</button>
+        <button class="quiz-opt" data-index="2">"Viết càng dài càng tốt."</button>
+        <button class="quiz-opt" data-index="3">"TÓM TẮT NGAY!!!"</button>
+      </div>
+      <div class="quiz-fb"></div>
     </div>
-    <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Câu "chưa hiểu" em đem tới đầu Buổi 7 hỏi GV.</div>
   </div>
-</div>
+</section>
 
-    </section>
+<section class="slide slide-cover" data-slide="25" data-title="Kiểm chứng — đừng tin AI ngay">
+  <div class="cover-orb orb-1" style="background:#D97706;"></div>
+  <div class="cover-orb orb-2" style="background:#DC2626;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">KỸ NĂNG SỐNG CÒN</span>
+    <h1 class="hero-title">Kiểm chứng — <span class="grad-text">đừng tin AI ngay</span></h1>
+    <p class="slide-subtitle">Trước khi dùng bất cứ thông tin nào từ AI, bạn phải kiểm tra nó đúng hay sai.</p>
+    <div class="cover-chips"><span class="cover-chip">Đối chiếu nguồn</span><span class="cover-chip">Bắt AI dẫn
+        chứng</span><span class="cover-chip">Tư duy phản biện</span></div>
+  </div>
+</section>
 
-<section class="slide" data-slide="30" data-title="Tự kiểm tra #1">
-
-<div class="slide-body">
-  <span class="eyebrow">TỰ KIỂM TRA — KHÔNG NỘP</span>
-  <h2 class="slide-title">Dòng nào app đọc làm mốc neo?</h2>
-  <div class="quiz" data-correct="2" data-explanation="Đúng! Dòng **Ngày bắt đầu:** là mốc neo để app tính toàn bộ lịch.">
-    <p class="quiz-q">Dòng nào giúp app biết ngày khởi đầu của lộ trình?</p>
-    <div class="quiz-opts">
-      <button class="quiz-opt" data-index="0">- **Ngày 1:** Học bài</button>
-      <button class="quiz-opt" data-index="1">Dựa trên dự án [[Project_Math_Midterm]]</button>
-      <button class="quiz-opt" data-index="2">**Ngày bắt đầu:** 2026-06-01</button>
-      <button class="quiz-opt" data-index="3">#learning-plan</button>
+<section class="slide" data-slide="26" data-title="Vì sao phải kiểm chứng">
+  <div class="slide-body">
+    <span class="eyebrow">TRÁCH NHIỆM LÀ CỦA BẠN</span>
+    <h2 class="slide-title">Vì sao phải kiểm chứng?</h2>
+    <div class="qbox qbox-blue">
+      <div class="qbox-header">
+        <div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC
+      </div>
+      <div class="qbox-content">AI nói rất tự tin nhưng có thể sai. Nếu bạn dùng luôn thông tin sai để làm bài hay đi
+        thi → hậu quả là của <strong>BẠN</strong>, không phải của AI.</div>
     </div>
-    <div class="quiz-fb"></div>
-  </div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="31" data-title="Tự kiểm tra #2">
-
-<div class="slide-body">
-  <span class="eyebrow">TỰ KIỂM TRA — #2</span>
-  <h2 class="slide-title">Đáp án đúng đánh dấu bằng gì?</h2>
-  <div class="quiz" data-correct="2" data-explanation="Đúng! Trong file Quiz, đáp án đúng được đánh dấu ✅ ở cuối dòng để app chấm.">
-    <p class="quiz-q">Trong file <code>06_quiz_exam</code>, đáp án đúng được đánh dấu thế nào?</p>
-    <div class="quiz-opts">
-      <button class="quiz-opt" data-index="0">In đậm **đáp án**</button>
-      <button class="quiz-opt" data-index="1">Viết HOA</button>
-      <button class="quiz-opt" data-index="2">Dấu ✅ ở cuối dòng</button>
-      <button class="quiz-opt" data-index="3">Gạch chân</button>
+    <div class="hl-box danger"><span class="hl-label">QUY TẮC VÀNG</span>
+      <p>"AI nói gì cũng phải kiểm chứng" — đặc biệt với số liệu, ngày tháng, công thức và trích dẫn.</p>
     </div>
-    <div class="quiz-fb"></div>
   </div>
-</div>
+</section>
 
-    </section>
-
-<section class="slide" data-slide="32" data-title="Checklist cuối buổi">
-
-<div class="slide-body">
-  <span class="eyebrow">CUỐI BUỔI 6 — KIỂM TRA EM ĐÃ LÀM GÌ</span>
-  <h2 class="slide-title">Checklist — bấm để tick</h2>
-  <div class="cl-container">
-    <div class="cl-progress">
-      <div style="font-weight:700;font-size:0.85rem;">Tiến độ:</div>
-      <div class="cl-bar"><div class="cl-bar-fill" id="clBarFill"></div></div>
-      <div class="cl-stat" id="clStat">0 / 10</div>
+<section class="slide" data-slide="27" data-title="Quy trình kiểm chứng">
+  <div class="slide-body">
+    <span class="eyebrow">LÀM THEO 4 BƯỚC</span>
+    <h2 class="slide-title">Quy trình kiểm chứng thông tin AI</h2>
+    <ol class="steps stagger">
+      <li><strong>Đối chiếu:</strong> so với SGK / tài liệu chính thống.</li>
+      <li><strong>Hỏi nguồn:</strong> yêu cầu AI cho biết lấy từ đâu, rồi kiểm tra nguồn đó có thật.</li>
+      <li><strong>Kiểm tra logic:</strong> con số, lập luận có hợp lý không?</li>
+      <li><strong>Hỏi chéo:</strong> hỏi một AI khác, hoặc thầy cô / bạn bè.</li>
+    </ol>
+    <div class="hl-box info"><span class="hl-label">MẸO</span>
+      <p>Khi 2 nguồn độc lập cùng xác nhận → thông tin đáng tin hơn nhiều.</p>
     </div>
-    <ul class="cl-list" id="clList">
-      <li class="cl-item"><div class="cl-check"></div><span>Hiểu RAG là gì</span></li>
-      <li class="cl-item"><div class="cl-check"></div><span>Tạo Notebook trên NotebookLM</span></li>
-      <li class="cl-item"><div class="cl-check"></div><span>Tải ít nhất 1 note lên làm nguồn</span></li>
-      <li class="cl-item"><div class="cl-check"></div><span>Hỏi và thấy câu trả lời có citation</span></li>
-      <li class="cl-item"><div class="cl-check"></div><span>Dùng prompt Summarize để AI tóm tắt 1 bài</span></li>
-      <li class="cl-item"><div class="cl-check"></div><span>Dùng prompt Create Quiz để AI ra đề</span></li>
-      <li class="cl-item"><div class="cl-check"></div><span>Tạo 1 file Quiz trong 06_quiz_exam đúng định dạng ✅</span></li>
-      <li class="cl-item"><div class="cl-check"></div><span>Tạo 1 file Plan có dòng Ngày bắt đầu</span></li>
-      <li class="cl-item"><div class="cl-check"></div><span>Gắn 1 Quiz vào buổi học bằng 📝[[ ]]</span></li>
-      <li class="cl-item"><div class="cl-check"></div><span>Viết Sổ Tay #1, #2, #3</span></li>
-    </ul>
   </div>
-  <div class="hl-box success"><span class="hl-label">NẾU CHƯA TICK HẾT</span><p>Nhắn riêng GV trong Zalo lớp — GV hỗ trợ trước Buổi 7. <strong>KHÔNG AI BỊ BỎ LẠI.</strong></p></div>
-</div>
+</section>
 
-    </section>
-
-<section class="slide" data-slide="33" data-title="Thử AI tại nhà">
-
-<div class="slide-body">
-  <span class="eyebrow">BÀI TẬP VỀ NHÀ — TRƯỚC BUỔI 7</span>
-  <h2 class="slide-title">Chuẩn bị dữ liệu cho app</h2>
-  <div class="qbox qbox-orange">
-    <div class="qbox-header"><div class="qbox-icon">+</div>THỬ AI TẠI NHÀ</div>
-    <div class="qbox-content">Hoàn thiện 1 file Plan đầy đủ cho 1 môn (có Ngày bắt đầu + ít nhất 5 buổi học, mỗi buổi gắn 1 Quiz 📝[[ ]]). Tạo đủ các file Quiz tương ứng trong <code>06_quiz_exam</code>.</div>
-    <div class="qbox-tip"><span class="qbox-tip-label">Gợi ý:</span>Buổi 7 em mở app, app sẽ tự rải đúng lộ trình này lên Lịch trình. Chuẩn bị càng kỹ, app càng đẹp.</div>
-  </div>
-</div>
-
-    </section>
-
-<section class="slide" data-slide="34" data-title="Sổ Tay #4 — Cuối buổi">
-
-<div class="slide-body">
-  <span class="eyebrow">BOOKEND REFLECTION</span>
-  <h2 class="slide-title">Quay lại Sổ Tay #1</h2>
-  <div class="qbox qbox-purple">
-    <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #4 — Cuối buổi</div>
-    <div class="qbox-content">Đầu buổi em kể về việc AI từng trả lời sai. Sau khi học RAG, em sẽ làm KHÁC đi thế nào để AI trả lời đáng tin hơn?</div>
-    <div class="nb-input-wrap">
-      <label>Em sẽ dùng AI khác đi thế nào:</label>
-      <textarea class="nb-input" data-nb-id="4" placeholder="Trước: ... | Từ nay: ..."></textarea>
-      <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+<section class="slide" data-slide="28" data-title="Bắt AI tự dẫn chứng">
+  <div class="slide-body">
+    <span class="eyebrow">PROMPT KIỂM CHỨNG</span>
+    <h2 class="slide-title">4 câu khiến AI tự "lòi" chỗ chưa chắc</h2>
+    <div class="prompt-box"><span class="prompt-label">HỎI LẠI AI</span>- "Bạn có chắc không? Hãy kiểm tra lại."
+- "Trích nguồn cụ thể cho từng ý."
+- "Giải thích từng bước suy luận của bạn."
+- "Có thông tin nào ở đây bạn KHÔNG chắc chắn không?"</div>
+    <div class="hl-box info"><span class="hl-label">VÌ SAO HIỆU QUẢ</span>
+      <p>Bắt AI "giải thích từng bước" giúp bạn nhìn ra chỗ nó suy luận sai — thay vì chỉ thấy kết quả cuối.</p>
     </div>
-    <div class="qbox-tip"><span class="qbox-tip-label">Kỹ thuật:</span>Nếu em rút ra "phải cho AI đọc đúng tài liệu rồi mới tin" — em đã nắm được điều quan trọng nhất buổi nay.</div>
   </div>
-</div>
+</section>
 
-    </section>
+<section class="slide" data-slide="29" data-title="Bộ lọc tư duy phản biện">
+  <div class="slide-body">
+    <span class="eyebrow">CRITICAL THINKING · [[Prompt_Critical_Thinking]]</span>
+    <h2 class="slide-title">5 câu hỏi phản biện vạn năng</h2>
+    <p class="slide-subtitle">Nguyên tắc gốc: đừng tin ngay câu trả lời đầu tiên — bắt AI tự bảo vệ luận điểm trước
+      khi bạn chấp nhận.</p>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#059669;">1</div>
+        <h3>Dựa trên đâu?</h3>
+        <p>Nguồn / căn cứ là gì? Không có thì phải nói rõ là đang suy đoán.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#059669;">2</div>
+        <h3>Sai ở chỗ nào?</h3>
+        <p>Giả định nào nếu sai thì cả kết luận sụp đổ?</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#059669;">3</div>
+        <h3>Cách hiểu khác?</h3>
+        <p>Cho một góc nhìn ngược / một phương án phản bác.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#059669;">4</div>
+        <h3>Bằng chứng bác bỏ?</h3>
+        <p>Muốn bác bỏ kết luận này thì cần tìm bằng chứng gì?</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#059669;">5</div>
+        <h3>Chắc chắn mấy %?</h3>
+        <p>Phần nào chắc, phần nào chỉ là phỏng đoán?</p>
+      </div>
+    </div>
+    <div class="prompt-box"><span class="prompt-label">DÁN 5 CÂU NÀY VÀO CUỐI MỌI PROMPT</span>- "Nguồn/căn cứ của thông tin này là gì? Nếu không có, nói rõ là bạn đang suy đoán."
+- "Giả định nào nếu sai thì cả kết luận sụp đổ?"
+- "Cho tôi một góc nhìn ngược / một phương án phản bác."
+- "Muốn bác bỏ kết luận này, cần tìm bằng chứng gì?"
+- "Bạn chắc chắn bao nhiêu % cho từng ý?"</div>
+    <div class="hl-box info"><span class="hl-label">LƯU SẴN ĐỂ DÙNG LẠI</span>
+      <p>Cả bộ này nằm trong kho <code>AI_Prompts</code> với tên <strong>[[Prompt_Critical_Thinking]]</strong>. Vội thì
+        chỉ cần dán 5 câu trên để buộc AI tự kiểm tra mình.</p>
+    </div>
+  </div>
+</section>
 
-<section class="slide slide-cover" data-slide="35" data-title="Hẹn Buổi 7">
+<section class="slide" data-slide="30" data-title="Đòn phản biện theo tình huống">
+  <div class="slide-body">
+    <span class="eyebrow">MỖI VIỆC MỘT "ĐÒN" PHẢN BIỆN</span>
+    <h2 class="slide-title">Chọn đúng cách phản biện cho từng việc</h2>
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>Kỹ thuật</th>
+          <th>Câu hỏi mẫu</th>
+          <th>Dùng khi</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Hỏi nguồn</td>
+          <td>"Căn cứ vào đâu? Có nguồn không?"</td>
+          <td>Mọi con số, dữ kiện</td>
+        </tr>
+        <tr>
+          <td>Premortem</td>
+          <td>"Giả sử việc này đã thất bại, vì sao?"</td>
+          <td>Lập kế hoạch</td>
+        </tr>
+        <tr>
+          <td>Giải cách 2</td>
+          <td>"Làm lại theo cách khác xem có khớp?"</td>
+          <td>Bài tập, tính toán</td>
+        </tr>
+        <tr>
+          <td>Steelman</td>
+          <td>"Lập luận ngược mạnh nhất là gì?"</td>
+          <td>Ra quyết định, tranh luận</td>
+        </tr>
+        <tr>
+          <td>Đối chiếu chéo</td>
+          <td>Hỏi lại cách khác, so 2 câu trả lời</td>
+          <td>Fact-check</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="hl-box info"><span class="hl-label">XEM ĐẦY ĐỦ</span>
+      <p>Note <strong>[[Prompt_Critical_Thinking]]</strong> có prompt riêng cho từng việc: brainstorm, lập kế hoạch,
+        giải bài tập, fact-check, viết bài/slide, ra quyết định.</p>
+    </div>
+  </div>
+</section>
 
-<div class="cover-orb orb-1"></div><div class="cover-orb orb-2"></div><div class="cover-orb orb-3"></div>
-<div class="cover-content slide-body">
-  <span class="eyebrow">HẾT BUỔI 6</span>
-  <h1 class="hero-title">Hẹn em ở Buổi 7<br/><span class="grad-text">Hoàn thành APP-3.2</span></h1>
-  <p class="slide-subtitle">Em đã có Vault, có Quiz và Lộ trình. Buổi 7 em ráp tất cả vào một ứng dụng Lịch ôn tập tự động — giống Advanced Learning App.</p>
-  <div class="cover-chips"><span class="cover-chip">Mang theo Vault đầy đủ</span><span class="cover-chip">Đem Sổ Tay</span><span class="cover-chip">Hoàn thiện Plan + Quiz</span></div>
-  <p style="margin-top:2rem;color:rgba(255,255,255,0.85);font-size:1rem;">Cảm ơn em đã hoàn thành Buổi 6!</p>
-</div>
+<section class="slide" data-slide="31" data-title="Game: Dùng ngay hay kiểm chứng?">
+  <div class="slide-body">
+    <span class="eyebrow">QUICK SELF-TEST</span>
+    <h2 class="slide-title">Câu trả lời nào của AI cần kiểm chứng?</h2>
+    <p class="slide-subtitle">Kéo (hoặc bấm) từng thẻ vào đúng nhóm.</p>
+    <div class="game-area">
+      <div class="game-items" id="gameItems">
+        <div class="draggable" draggable="true" data-type="dung" data-label="AI sửa lại câu văn cho mượt hơn">AI sửa lại câu văn cho mượt hơn</div>
+        <div class="draggable" draggable="true" data-type="kiem" data-label="AI trích 'theo nghiên cứu năm 2021...'">AI trích "theo nghiên cứu năm 2021..."</div>
+        <div class="draggable" draggable="true" data-type="kiem" data-label="AI đưa ngày sinh một nhân vật lịch sử">AI đưa ngày sinh một nhân vật lịch sử</div>
+        <div class="draggable" draggable="true" data-type="dung" data-label="AI gợi ý dàn ý cho bài viết của bạn">AI gợi ý dàn ý cho bài viết của bạn</div>
+        <div class="draggable" draggable="true" data-type="kiem" data-label="AI khẳng định một công thức bạn chưa từng học">AI khẳng định một công thức bạn chưa từng học</div>
+        <div class="draggable" draggable="true" data-type="kiem" data-label="AI đưa một con số thống kê %">AI đưa một con số thống kê %</div>
+      </div>
+      <div class="game-buckets" style="grid-template-columns:1fr 1fr;">
+        <div class="bucket" data-bucket="dung" data-color="#059669" style="border-color:#10B981;background:#ECFDF5;">
+          <div class="bucket-title" style="color:#059669;">Dùng được ngay</div>
+          <div class="bucket-zone"></div>
+        </div>
+        <div class="bucket" data-bucket="kiem" data-color="#DC2626" style="border-color:#DC2626;background:#FEF2F2;">
+          <div class="bucket-title" style="color:#DC2626;">PHẢI kiểm chứng</div>
+          <div class="bucket-zone"></div>
+        </div>
+      </div>
+      <div class="game-score" id="gameScore" style="display:none;">
+        <div id="gameScoreText"></div>
+        <button class="btn-restart" onclick="restartGame()">Chơi lại</button>
+      </div>
+    </div>
+  </div>
+</section>
 
-    </section>
+<section class="slide" data-slide="32" data-title="Sổ Tay #3 — Bộ lọc phản biện">
+  <div class="slide-body">
+    <span class="eyebrow">ÁP DỤNG</span>
+    <h2 class="slide-title">Bạn sẽ kiểm chứng câu trả lời nào?</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header">
+        <div class="qbox-icon">#</div>SỔ TAY #3
+      </div>
+      <div class="qbox-content">Nghĩ về 1 câu trả lời của AI bạn từng nhận (hoặc sẽ hỏi). Viết: câu đó là gì + bạn sẽ
+        kiểm chứng bằng cách nào (SGK? hỏi GV? tìm nguồn?).</div>
+      <div class="nb-input-wrap">
+        <label>Câu trả lời + cách kiểm chứng:</label>
+        <textarea class="nb-input" data-nb-id="3" placeholder="Câu AI nói: ... | Mình kiểm chứng bằng: ..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Tập thói quen: nhận thông tin → nghĩ ngay "kiểm
+        chứng bằng gì".</div>
+    </div>
+  </div>
+</section>
 
-<script>
-document.querySelectorAll('.quiz').forEach(quiz => {
-  const correctIndex = parseInt(quiz.dataset.correct);
-  const explanation = quiz.dataset.explanation || '';
-  const options = quiz.querySelectorAll('.quiz-opt');
-  const feedback = quiz.querySelector('.quiz-fb');
-  options.forEach(opt => {
-    opt.addEventListener('click', () => {
-      if (opt.classList.contains('disabled')) return;
-      options.forEach(o => o.classList.add('disabled'));
-      const chosen = parseInt(opt.dataset.index);
-      if (chosen === correctIndex) {
-        opt.classList.add('correct');
-        feedback.textContent = 'Chính xác! ' + explanation;
-        feedback.className = 'quiz-fb show correct';
-      } else {
-        opt.classList.add('wrong');
-        options[correctIndex].classList.add('correct');
-        feedback.textContent = 'Chưa đúng. ' + explanation;
-        feedback.className = 'quiz-fb show wrong';
-      }
-    });
-  });
-});
+<section class="slide" data-slide="33" data-title="Cờ đỏ — khi AI dễ sai">
+  <div class="slide-body">
+    <span class="eyebrow">CẢNH BÁO SỚM</span>
+    <h2 class="slide-title">4 "cờ đỏ" — thấy là bật chế độ kiểm chứng</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">%</div>
+        <h3>Số liệu, thống kê</h3>
+        <p>Con số, phần trăm cụ thể rất dễ bị bịa.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">📅</div>
+        <h3>Ngày tháng, tên riêng</h3>
+        <p>AI hay nhầm năm, nhầm tên nhân vật.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">"</div>
+        <h3>Trích dẫn, tên sách</h3>
+        <p>AI có thể bịa câu nói, bịa tên tài liệu.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">∑</div>
+        <h3>Toán &amp; tính toán</h3>
+        <p>AI có thể tính sai — hãy tự bấm lại.</p>
+      </div>
+    </div>
+    <div class="hl-box danger"><span class="hl-label">CÁCH TRẢ LỜI ĐÁNG NGỜ</span>
+      <p>Cảnh giác cả khi AI: tự tin tuyệt đối (không một chữ "nếu/có thể/tùy") · số liệu rất cụ thể mà không nguồn ·
+        trả lời dài hoa mỹ nhưng né câu hỏi · mỗi lần hỏi lại cho đáp án khác nhau.</p>
+    </div>
+  </div>
+</section>
 
-if (window.innerWidth < 1024) {
-  document.getElementById('sidebar').classList.add('collapsed');
-  document.getElementById('app').classList.add('sidebar-collapsed');
-}
-</script>
+<section class="slide" data-slide="34" data-title="Hỏi bạn cặp #2">
+  <div class="slide-body">
+    <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
+    <h2 class="slide-title">Cùng bạn cặp — thử kiểm chứng</h2>
+    <div class="qbox qbox-yellow">
+      <div class="qbox-header">
+        <div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận #2
+      </div>
+      <div class="qbox-content">Hai bạn cùng hỏi AI một câu có số liệu hoặc ngày tháng, rồi cùng kiểm chứng bằng SGK
+        hoặc tìm kiếm. "<em>AI có đúng không? Sai ở chỗ nào?</em>"</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Trải nghiệm thật một lần bắt lỗi AI sẽ khiến bạn
+        nhớ mãi thói quen kiểm chứng.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="35" data-title="Từ điển Buổi 6 — click để lật">
+  <div class="slide-body">
+    <span class="eyebrow">10 THUẬT NGỮ — CLICK ĐỂ LẬT</span>
+    <h2 class="slide-title">Học qua ẩn dụ dễ nhớ</h2>
+    <div class="fc-grid">
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">RAG</div>
+            <div class="fc-vi">Đọc rồi mới trả lời</div>
+          </div>
+          <div class="fc-back">Cho AI đọc đúng ghi chú/tài liệu của bạn trước khi trả lời — đỡ bịa, bám sát bài.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">Copilot</div>
+            <div class="fc-vi">Trợ lý trong Obsidian</div>
+          </div>
+          <div class="fc-back">Plugin chat với AI ngay trong vault; có Vault QA (RAG) và viết thẳng vào note.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">Hallucination</div>
+            <div class="fc-vi">Ảo giác AI</div>
+          </div>
+          <div class="fc-back">AI bịa thông tin sai nhưng nói y như thật, rất tự tin.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">Prompt</div>
+            <div class="fc-vi">Lời nhắc</div>
+          </div>
+          <div class="fc-back">Câu lệnh bạn đưa cho AI. Rõ ràng thì kết quả tốt.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">TL;DR</div>
+            <div class="fc-vi">Tóm tắt cực ngắn</div>
+          </div>
+          <div class="fc-back">Vài dòng cốt lõi, đọc trong 10 giây là hiểu.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">ELI5</div>
+            <div class="fc-vi">Giải thích siêu dễ</div>
+          </div>
+          <div class="fc-back">"Giảng như cho trẻ 5 tuổi" bằng ví dụ đời thường.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">Active Recall</div>
+            <div class="fc-vi">Chủ động nhớ lại</div>
+          </div>
+          <div class="fc-back">Tự kiểm tra (quiz) thay vì đọc lại — nhớ lâu hơn nhiều.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">Fact-check</div>
+            <div class="fc-vi">Kiểm chứng</div>
+          </div>
+          <div class="fc-back">Đối chiếu thông tin với nguồn đáng tin trước khi dùng.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">Critical thinking</div>
+            <div class="fc-vi">Tư duy phản biện</div>
+          </div>
+          <div class="fc-back">Đặt câu hỏi trước khi tin: ai nói, bằng chứng đâu, có hợp lý?</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">Nguồn gốc</div>
+            <div class="fc-vi">Primary source</div>
+          </div>
+          <div class="fc-back">Tài liệu gốc (SGK, nghiên cứu) đáng tin hơn lời kể lại.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="36" data-title="Tự kiểm tra #1">
+  <div class="slide-body">
+    <span class="eyebrow">TỰ KIỂM TRA — KHÔNG NỘP</span>
+    <h2 class="slide-title">AI đưa số liệu cụ thể — bạn làm gì?</h2>
+    <div class="quiz" data-correct="1"
+      data-explanation="Số liệu là 'cờ đỏ'. Luôn kiểm chứng bằng nguồn đáng tin trước khi dùng.">
+      <p class="quiz-q">AI đưa một con số thống kê rất cụ thể cho bài của bạn. Nên làm gì?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Tin ngay vì AI thông minh.</button>
+        <button class="quiz-opt" data-index="1">Kiểm chứng bằng nguồn đáng tin trước khi dùng.</button>
+        <button class="quiz-opt" data-index="2">Bỏ qua hoàn toàn.</button>
+        <button class="quiz-opt" data-index="3">Chép thẳng vào bài.</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="37" data-title="Tự kiểm tra #2">
+  <div class="slide-body">
+    <span class="eyebrow">TỰ KIỂM TRA — #2</span>
+    <h2 class="slide-title">Vai trò đúng của AI trong học tập?</h2>
+    <div class="quiz" data-correct="1"
+      data-explanation="AI là trợ lý hỗ trợ. Bạn vẫn là người có kiến thức, kiểm chứng và quyết định.">
+      <p class="quiz-q">Cách hiểu đúng về AI khi học là gì?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Người làm bài thay bạn.</button>
+        <button class="quiz-opt" data-index="1">Trợ lý hỗ trợ — bạn vẫn kiểm chứng và quyết định.</button>
+        <button class="quiz-opt" data-index="2">Nguồn chân lý tuyệt đối.</button>
+        <button class="quiz-opt" data-index="3">Thứ thay thế thầy cô và SGK.</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="38" data-title="Checklist cuối buổi">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 6 — KIỂM TRA BẠN ĐÃ LÀM GÌ</span>
+    <h2 class="slide-title">Checklist — bấm để tick</h2>
+    <div class="cl-container">
+      <div class="cl-progress">
+        <div style="font-weight:700;font-size:0.85rem;">Tiến độ:</div>
+        <div class="cl-bar">
+          <div class="cl-bar-fill" id="clBarFill"></div>
+        </div>
+        <div class="cl-stat" id="clStat">0 / 12</div>
+      </div>
+      <ul class="cl-list" id="clList">
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Hiểu hallucination là gì</span>
+        </li>
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Hiểu RAG: cho AI đọc ghi chú của mình trước khi trả lời</span>
+        </li>
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Dùng Copilot tạo/tóm tắt nội dung ngay trong Obsidian</span>
+        </li>
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Hiểu AI là trợ lý, mình là người làm chủ</span>
+        </li>
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Viết được 1 prompt tóm tắt có cấu trúc (R+C+T+F)</span>
+        </li>
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Nhờ AI tóm tắt 1 bài và lưu vào note Resource</span>
+        </li>
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Tạo Quiz + Đề cho 1 bài và lưu vào kho đề 06_quiz_exam</span>
+        </li>
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Kiểm chứng ít nhất 1 thông tin AI bằng SGK/nguồn khác</span>
+        </li>
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Nhớ 5 câu hỏi phản biện vạn năng (Prompt_Critical_Thinking)</span>
+        </li>
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Nhận ra 4 "cờ đỏ" AI dễ sai</span>
+        </li>
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Đã thảo luận với bạn cặp ít nhất 2 lần</span>
+        </li>
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Viết Sổ Tay #1, #2, #3</span>
+        </li>
+      </ul>
+    </div>
+    <div class="hl-box success"><span class="hl-label">NẾU CHƯA TICK HẾT</span>
+      <p>Đừng lo! Nhắn riêng GV trong Zalo lớp — GV hỗ trợ trước Buổi 7. <strong>KHÔNG AI BỊ BỎ LẠI.</strong></p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="39" data-title="Thử AI tại nhà">
+  <div class="slide-body">
+    <span class="eyebrow">BÀI TẬP VỀ NHÀ — TRƯỚC BUỔI 7</span>
+    <h2 class="slide-title">Tóm tắt + Kiểm chứng một bài học</h2>
+    <div class="qbox qbox-orange">
+      <div class="qbox-header">
+        <div class="qbox-icon">+</div>THỬ AI TẠI NHÀ
+      </div>
+      <div class="qbox-content">Chọn 1 bài học khó. <strong>(1)</strong> Dùng prompt tóm tắt khoa học để AI cô đọng.
+        <strong>(2)</strong> KIỂM CHỨNG mọi số liệu/công thức bằng SGK. <strong>(3)</strong> Ghi lại 1 chỗ AI nói sai
+        hoặc thiếu (nếu có). Lưu bản đã kiểm chứng vào vault và khoe nhóm Zalo lớp.</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Gợi ý:</span>Bản tóm tắt + quiz này chính là dữ liệu bạn sẽ đưa
+        lên app ở Buổi 7.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="40" data-title="Sổ Tay #4 — Cuối buổi">
+  <div class="slide-body">
+    <span class="eyebrow">BOOKEND REFLECTION</span>
+    <h2 class="slide-title">Từ nay bạn dùng AI thế nào?</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header">
+        <div class="qbox-icon">#</div>SỔ TAY #4 — Cuối buổi
+      </div>
+      <div class="qbox-content">Đầu buổi bạn kể một lần tin thông tin sai. Giờ, bạn sẽ dùng AI như một trợ lý thế nào
+        để VẪN làm chủ kiến thức (không để AI dắt mũi)?</div>
+      <div class="nb-input-wrap">
+        <label>Cách bạn sẽ dùng AI từ nay:</label>
+        <textarea class="nb-input" data-nb-id="4" placeholder="Trước: ... | Từ nay: ..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Kỹ thuật:</span>Nếu bạn rút ra "luôn kiểm chứng trước khi tin" —
+        bạn đã nắm được điều quan trọng nhất buổi nay.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide slide-cover" data-slide="41" data-title="Hẹn Buổi 7">
+  <div class="cover-orb orb-1"></div>
+  <div class="cover-orb orb-2"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">HẾT BUỔI 6</span>
+    <h1 class="hero-title">Hẹn bạn ở Buổi 7<br /><span class="grad-text">Hoàn thành APP-3.2</span></h1>
+    <p class="slide-subtitle">Bạn đã biết dùng AI để tóm tắt &amp; kiểm chứng. Buổi 7 bạn đưa các bản tóm tắt + quiz
+      (đã kiểm chứng) vào app Lịch ôn tập.</p>
+    <div class="cover-chips"><span class="cover-chip">Mang theo bản tóm tắt</span><span class="cover-chip">Đem Sổ
+        Tay</span><span class="cover-chip">Hoàn thiện Quiz</span></div>
+    <p style="margin-top:2rem;color:rgba(255,255,255,0.85);font-size:1rem;">Cảm ơn bạn đã hoàn thành Buổi 6!</p>
+  </div>
+</section>
