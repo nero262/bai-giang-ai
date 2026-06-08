@@ -2421,13 +2421,7 @@
   </style>
 
   {# Lesson-specific style block (optional, đến từ fragment) #}
-  {% if lesson_style %}<style>
-    {
-        {
-        lesson_style | safe
-      }
-    }
-  </style>{% endif %}
+  {% if lesson_style %}<style>{{ lesson_style | safe }}</style>{% endif %}
 </head>
 
 <body>
@@ -2950,7 +2944,7 @@
 
   {# Lesson-specific JS (optional, đến từ fragment) #}
   {% if lesson_script %}
-  <script>{ { lesson_script | safe } }</script>{% endif %}
+  <script>{{ lesson_script | safe }}</script>{% endif %}
 
 </body>
 
