@@ -14,7 +14,7 @@ Site host trên GitHub Pages chỉ chạy được code phía client. Apps Scrip
 2. Đổi tên sheet đầu (tab dưới cùng) thành **`responses`** (đúng chính tả, không khoảng trắng).
 3. Copy **Sheet ID** từ URL:
    ```
-   https://docs.google.com/spreadsheets/d/[SHEET_ID_Ở_ĐÂY]/edit
+   https://docs.google.com/spreadsheets/d/1f_TO_N7BZHqADFyEoYF8s9ThRH1VfMcDsVQ7340k5Fw/edit
    ```
 
 ### 2. Tạo Apps Script Web App
