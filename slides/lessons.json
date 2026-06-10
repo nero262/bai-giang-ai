@@ -57,16 +57,22 @@
   {
     "id": 4,
     "slug": "buoi_04",
-    "title": "Hoàn thành APP-3.1 — Tóm tắt tài liệu",
+    "title": "Đóng gói sản phẩm, Skill & tạo game + slide HTML",
     "module": "M1",
     "module_name": "Nền tảng AI",
     "duration_min": 120,
     "file": "buoi_04.html",
-    "available": false,
-    "description": "Build app đầu tiên: tóm tắt tài liệu.",
+    "available": true,
+    "description": "Ôn RAG/LLM/Token/Vibe Coding; hiểu \"đóng gói sản phẩm phần mềm\", IDE và quy trình phát triển 6 bước; phân biệt prompt–skill–agent và file Markdown; thực hành dùng skill trên z.ai để tạo game Rắn săn mồi rồi tạo slide HTML dạng video giới thiệu sản phẩm.",
     "tags": [
-      "app",
-      "summarization"
+      "dong-goi-san-pham",
+      "skill",
+      "agent",
+      "ide",
+      "vibe-coding",
+      "z-ai",
+      "game",
+      "slide-html"
     ]
   },
   {
