@@ -20,11 +20,16 @@
 
 <style>
   /* CSS riêng Buổi 5 — căn lại bố cục cho cân bằng.
-     Template chung đặt .hl-box { align-self:stretch; max-width:800px } nên hộp callout
-     bị neo lề trái trong .slide-body (vốn căn giữa) — đưa về cùng trục giữa với
-     card-grid / steps / qbox / prompt-box. */
-  .slide-body .hl-box {
-    align-self: center;
+     Template chung giới hạn qbox/steps/prompt-box/hl-box/cl-container ở 700–800px
+     trong khi card-grid / bảng trải hết chiều rộng .slide-body (1100px), khiến các khối
+     dưới tiêu đề so le mép trái/phải. Cho tất cả cùng một chiều rộng để mép thẳng hàng. */
+  .slide-body .qbox,
+  .slide-body .steps,
+  .slide-body .prompt-box,
+  .slide-body .hl-box,
+  .slide-body .cl-container {
+    width: 100%;
+    max-width: none;
   }
 
   /* Căn giữa dọc an toàn: slide ngắn nằm giữa màn hình; slide dài (note mẫu, checklist)
