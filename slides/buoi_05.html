@@ -18,6 +18,27 @@
 }
 </script>
 
+<style>
+  /* CSS riêng Buổi 5 — căn lại bố cục cho cân bằng.
+     Template chung đặt .hl-box { align-self:stretch; max-width:800px } nên hộp callout
+     bị neo lề trái trong .slide-body (vốn căn giữa) — đưa về cùng trục giữa với
+     card-grid / steps / qbox / prompt-box. */
+  .slide-body .hl-box {
+    align-self: center;
+  }
+
+  /* Căn giữa dọc an toàn: slide ngắn nằm giữa màn hình; slide dài (note mẫu, checklist)
+     cuộn từ đầu thay vì bị justify-content:center cắt mất phần tiêu đề phía trên. */
+  .slide {
+    justify-content: flex-start;
+  }
+
+  .slide-body {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+</style>
+
 <section class="slide active slide-cover" data-slide="1" data-title="Chào mừng">
   <div class="cover-orb orb-1"></div>
   <div class="cover-orb orb-2"></div>
