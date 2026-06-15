@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+<title>Vượt 4 cổng C.O.D.E — Trò chơi ôn tập Buổi 6</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<style>
+  :root{
+    --bg:#FAFAFA; --surface:#FFFFFF; --text:#1A1A2E; --muted:#64748B;
+    --accent:#6366F1; --accent2:#2563EB; --good:#10B981; --bad:#DC2626; --warn:#F59E0B; --purple:#7C3AED;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+  html,body{height:100%;}
+  body{
+    font-family:'Inter',system-ui,sans-serif;color:var(--text);
+    background:radial-gradient(1200px 600px at 50% -10%, #EEF2FF, #FAFAFA 60%);
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    min-height:100vh;overflow:hidden;padding:12px;
+  }
+  .wrap{width:min(960px,100%);}
+  .hud{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    margin-bottom:8px;font-weight:600;flex-wrap:wrap;
+  }
+  .hud .pill{
+    background:var(--surface);border:1px solid #E2E8F0;border-radius:999px;
+    padding:6px 14px;font-size:14px;box-shadow:0 1px 3px rgba(0,0,0,.06);display:flex;gap:8px;align-items:center;
+  }
+  .hud .stage{color:var(--accent);}
+  .hearts{letter-spacing:2px;font-size:16px;}
+  .stage-track{display:flex;gap:6px;}
+  .stage-dot{width:26px;height:26px;border-radius:8px;display:flex;align-items:center;justify-content:center;
+    font-size:13px;font-weight:800;color:#fff;background:#CBD5E1;}
+  .stage-dot.cur{outline:3px solid #C7D2FE;}
+  .stage-dot.done{background:var(--good);}
+  .canvas-shell{position:relative;width:100%;border-radius:16px;overflow:hidden;
+    box-shadow:0 10px 40px rgba(0,0,0,.14);border:1px solid #E2E8F0;background:#cfe8ff;}
+  canvas{display:block;width:100%;height:auto;touch-action:none;}
+
+  /* Overlays */
+  .overlay{position:absolute;inset:0;display:none;align-items:center;justify-content:center;
+    padding:20px;text-align:center;background:rgba(15,23,42,.55);backdrop-filter:blur(3px);z-index:5;}
+  .overlay.show{display:flex;}
+  .panel{background:var(--surface);border-radius:18px;padding:26px 24px;max-width:560px;width:100%;
+    box-shadow:0 20px 60px rgba(0,0,0,.3);animation:pop .25s ease;}
+  @keyframes pop{from{transform:scale(.92);opacity:0}to{transform:scale(1);opacity:1}}
+  .panel .eyebrow{display:inline-block;background:#EEF2FF;color:var(--accent);font-weight:700;font-size:12px;
+    letter-spacing:1.5px;text-transform:uppercase;padding:5px 12px;border-radius:999px;margin-bottom:12px;}
+  .panel h1{font-size:26px;line-height:1.2;margin-bottom:10px;}
+  .panel h2{font-size:22px;line-height:1.25;margin-bottom:8px;}
+  .panel p{color:var(--muted);font-size:15px;line-height:1.55;margin-bottom:8px;}
+  .panel .big{font-size:46px;font-weight:800;color:var(--accent);margin:6px 0;}
+  .btn{appearance:none;border:none;cursor:pointer;font-family:inherit;font-weight:700;font-size:16px;
+    color:#fff;background:linear-gradient(135deg,var(--accent),#4338CA);padding:13px 26px;border-radius:12px;
+    margin-top:10px;box-shadow:0 6px 18px rgba(99,102,241,.4);transition:transform .12s;}
+  .btn:active{transform:translateY(2px);}
+  .btn.alt{background:linear-gradient(135deg,#64748B,#475569);box-shadow:0 6px 18px rgba(100,116,139,.35);}
+  .controls-help{display:flex;gap:14px;justify-content:center;flex-wrap:wrap;margin:14px 0 4px;}
+  .key{background:#F1F5F9;border:1px solid #E2E8F0;border-bottom-width:3px;border-radius:8px;padding:6px 12px;
+    font-weight:700;font-size:13px;color:#334155;}
+  /* Question */
+  .qopts{display:grid;gap:10px;margin-top:14px;text-align:left;}
+  .qopt{background:#F8FAFC;border:2px solid #E2E8F0;border-radius:12px;padding:13px 16px;cursor:pointer;
+    font-size:15px;font-weight:600;transition:all .15s;}
+  .qopt:hover{border-color:var(--accent);background:#EEF2FF;}
+  .qopt.correct{border-color:var(--good);background:#ECFDF5;color:#047857;}
+  .qopt.wrong{border-color:var(--bad);background:#FEF2F2;color:#B91C1C;}
+  .qfb{margin-top:12px;font-size:14px;font-weight:600;min-height:20px;}
+  .qfb.ok{color:var(--good);}
+  .qfb.no{color:var(--bad);}
+
+  /* Touch controls */
+  .touch{display:none;justify-content:space-between;margin-top:10px;gap:10px;user-select:none;}
+  .touch .left-pad{display:flex;gap:10px;}
+  .tbtn{width:74px;height:74px;border-radius:50%;background:var(--surface);border:1px solid #E2E8F0;
+    box-shadow:0 4px 12px rgba(0,0,0,.12);font-size:28px;font-weight:800;color:var(--accent);
+    display:flex;align-items:center;justify-content:center;}
+  .tbtn:active{background:#EEF2FF;}
+  .tbtn.jump{background:linear-gradient(135deg,var(--accent),#4338CA);color:#fff;}
+  .foot{color:var(--muted);font-size:12px;text-align:center;margin-top:10px;}
+  @media (hover:none) and (pointer:coarse){ .touch{display:flex;} .controls-help{display:none;} }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="hud">
+    <div class="pill"><span class="stage">Cổng:</span> <span id="stageName">Capture</span></div>
+    <div class="stage-track" id="stageTrack"></div>
+    <div class="pill">Điểm: <span id="score">0</span></div>
+    <div class="pill hearts" id="hearts">❤️❤️❤️</div>
+  </div>
+
+  <div class="canvas-shell">
+    <canvas id="game" width="960" height="540"></canvas>
+
+    <!-- Intro -->
+    <div class="overlay show" id="introOverlay">
+      <div class="panel">
+        <span class="eyebrow">Trò chơi ôn tập · Buổi 6</span>
+        <h1>Vượt 4 cổng <span style="color:var(--accent)">C.O.D.E</span></h1>
+        <p>Chạy qua 4 màn <b>Capture → Organize → Distill → Express</b>. Né <b style="color:var(--bad)">chướng ngại</b>
+          (tin giả, hallucination…), nhặt <b style="color:var(--good)">mảnh kiến thức đúng</b>, rồi trả lời câu hỏi ở
+          mỗi <b style="color:var(--accent)">cổng</b> để đi tiếp.</p>
+        <div class="controls-help">
+          <span class="key">← →  Di chuyển</span>
+          <span class="key">Space / ↑  Nhảy</span>
+        </div>
+        <p style="font-size:13px">Trên điện thoại: dùng các nút tròn bên dưới.</p>
+        <button class="btn" id="startBtn">▶ Bắt đầu</button>
+      </div>
+    </div>
+
+    <!-- Question -->
+    <div class="overlay" id="qOverlay">
+      <div class="panel">
+        <span class="eyebrow" id="qStage">Cổng Capture</span>
+        <h2 id="qText">...</h2>
+        <div class="qopts" id="qOpts"></div>
+        <div class="qfb" id="qFb"></div>
+      </div>
+    </div>
+
+    <!-- Life lost / retry -->
+    <div class="overlay" id="overOverlay">
+      <div class="panel">
+        <span class="eyebrow" style="background:#FEF2F2;color:var(--bad)">Hết máu</span>
+        <h2>Đừng nản — thử lại nào!</h2>
+        <p id="overText">Bạn đã va phải quá nhiều thông tin sai. Làm chủ AI cần luyện tập.</p>
+        <button class="btn" id="retryBtn">↻ Chơi lại màn này</button>
+        <button class="btn alt" id="restartAllBtn">⟲ Về màn đầu</button>
+      </div>
+    </div>
+
+    <!-- Win -->
+    <div class="overlay" id="winOverlay">
+      <div class="panel">
+        <span class="eyebrow" style="background:#ECFDF5;color:var(--good)">Hoàn thành</span>
+        <h1>🎉 Second Brain hoàn chỉnh!</h1>
+        <p>Bạn đã đi trọn C.O.D.E và làm chủ được AI: thu thập → sắp xếp → cô đọng → tạo ra, luôn kiểm chứng.</p>
+        <div class="big" id="finalScore">0</div>
+        <p style="margin-top:-4px">điểm · <span id="finalBest"></span></p>
+        <button class="btn" id="playAgainBtn">⟲ Chơi lại</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Touch controls -->
+  <div class="touch" id="touchCtl">
+    <div class="left-pad">
+      <div class="tbtn" id="btnLeft">◀</div>
+      <div class="tbtn" id="btnRight">▶</div>
+    </div>
+    <div class="tbtn jump" id="btnJump">⤒</div>
+  </div>
+
+  <div class="foot">Buổi 6 · Khóa AI 24 buổi — ôn lại Second Brain (C.O.D.E + PARA) &amp; AI Trợ lý. Mẹo: nhặt kiến thức để được điểm cao.</div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+  const cv = document.getElementById('game');
+  const ctx = cv.getContext('2d');
+  const W = cv.width, H = cv.height;
+  const GROUND_Y = H - 70;
+
+  // ---------- Level data ----------
+  const LEVELS = [
+    {
+      letter:'C', name:'Capture', color:'#94A3B8', sky:'#dbeafe',
+      tokens:['ý chính','hình ảnh','file bài học','ghi chú'],
+      obstacles:['tin giả','tin đồn','nguồn ẩu'],
+      question:{
+        q:'Bước CAPTURE trong C.O.D.E là làm gì?',
+        opts:['Thu thập thông tin / bài học vào Second Brain','Xoá hết ghi chú cũ','Đăng bài lên mạng xã hội'],
+        correct:0,
+        fb:'Capture = thu thập, gom mọi thứ đáng nhớ vào kho trước đã.'
+      }
+    },
+    {
+      letter:'O', name:'Organize', color:'#2563EB', sky:'#cfe8ff',
+      tokens:['Projects','Areas','Resources','#tag','[[link]]'],
+      obstacles:['vứt lộn xộn','quên nơi lưu','trùng lặp'],
+      question:{
+        q:'PARA dùng để làm gì trong Obsidian?',
+        opts:['Tăng tốc máy tính','Sắp xếp note: Projects / Areas / Resources / Archives','Tạo ảnh bằng AI'],
+        correct:1,
+        fb:'PARA = 4 thư mục để Organize: Projects, Areas, Resources, Archives.'
+      }
+    },
+    {
+      letter:'D', name:'Distill', color:'#06B6D4', sky:'#d8f3fb',
+      tokens:['TL;DR','ELI5','flashcard','cheat sheet','RAG'],
+      obstacles:['chép nguyên si','hallucination','tin AI ngay'],
+      question:{
+        q:'RAG giúp AI điều gì khi bạn Distill?',
+        opts:['Trả lời nhanh hơn 10 lần','Cho AI ĐỌC ghi chú của bạn trước khi trả lời → đỡ bịa','Tự động thi hộ bạn'],
+        correct:1,
+        fb:'RAG = đọc đúng tài liệu của bạn rồi mới trả lời, bám sát bài & ít ảo giác.'
+      }
+    },
+    {
+      letter:'E', name:'Express', color:'#7C3AED', sky:'#ede9fe',
+      tokens:['Quiz','Đề','action plan','app','kiểm chứng'],
+      obstacles:['số liệu chưa kiểm chứng','trích dẫn bịa','tin tuyệt đối'],
+      question:{
+        q:'Agent khác Chatbox AI ở điểm cốt lõi nào?',
+        opts:['Agent không bao giờ sai','Agent tự lập kế hoạch & thực thi nhiều bước (Express→Plan→Action)','Agent chỉ chạy trên điện thoại'],
+        correct:1,
+        fb:'Agent: Express → Plan → Action — tự làm nhiều bước, khác chat chỉ trả lời.'
+      }
+    }
+  ];
+
+  // ---------- Game state ----------
+  const player = {x:60,y:0,w:34,h:46,vx:0,vy:0,onGround:false,face:1,inv:0};
+  let state='intro';        // intro | play | question | over | win
+  const START_LIVES=5;
+  let levelIdx=0, score=0, lives=START_LIVES, camX=0;
+  let world=null;           // current level geometry
+  let pickFloat=[];         // floating "+kiến thức" labels
+  let confetti=[];
+
+  const keys={left:false,right:false,jump:false};
+
+  // ---------- Build a level layout ----------
+  function buildLevel(idx){
+    const L=LEVELS[idx];
+    const len = 2600;                  // world length
+    const platforms=[];                 // {x,y,w,h}
+    const spikes=[];                    // {x,y,w,h,label}
+    const tokens=[];                    // {x,y,r,label,got}
+    const pits=[];                      // {x,w}  (gaps in ground)
+
+    // ground segments with a couple of (narrow, clearly jumpable) pits
+    pits.push({x:780,w:90});
+    pits.push({x:1520,w:100});
+    // floating platforms
+    const pf=[ [520,GROUND_Y-120,120], [900,GROUND_Y-150,140], [1280,GROUND_Y-110,120],
+               [1640,GROUND_Y-160,150], [2050,GROUND_Y-120,130] ];
+    pf.forEach(p=>platforms.push({x:p[0],y:p[1],w:p[2],h:18}));
+
+    // obstacles (spikes) on flat ground, away from pits so they're clearly avoidable
+    const ob = L.obstacles;
+    const spX=[440,1180,1960,2300];
+    spX.forEach((x,i)=>{
+      spikes.push({x:x,y:GROUND_Y-28,w:38,h:28,label:ob[i%ob.length]});
+    });
+
+    // tokens: place above platforms & along path
+    const tk=L.tokens;
+    const tkPos=[ [300,GROUND_Y-60],[560,GROUND_Y-150],[940,GROUND_Y-185],[1140,GROUND_Y-60],
+                  [1320,GROUND_Y-150],[1680,GROUND_Y-195],[1900,GROUND_Y-60],[2090,GROUND_Y-160] ];
+    tkPos.forEach((p,i)=>tokens.push({x:p[0],y:p[1],r:15,label:tk[i%tk.length],got:false}));
+
+    const portal={x:len-150,y:GROUND_Y-150,w:70,h:150};
+    return {L,len,platforms,spikes,tokens,pits,portal};
+  }
+
+  function startLevel(idx){
+    levelIdx=idx;
+    world=buildLevel(idx);
+    player.x=60; player.y=GROUND_Y-player.h; player.vx=0; player.vy=0; player.inv=60; player.face=1;
+    camX=0; pickFloat=[];
+    document.getElementById('stageName').textContent=world.L.name;
+    renderStageTrack();
+    state='play';
+  }
+
+  function renderStageTrack(){
+    const t=document.getElementById('stageTrack'); t.innerHTML='';
+    LEVELS.forEach((L,i)=>{
+      const d=document.createElement('div');
+      d.className='stage-dot'+(i<levelIdx?' done':'')+(i===levelIdx?' cur':'');
+      d.style.background = i<levelIdx ? '' : (i===levelIdx ? L.color : '#CBD5E1');
+      d.textContent=L.letter;
+      t.appendChild(d);
+    });
+  }
+  function updateHUD(){
+    document.getElementById('score').textContent=score;
+    document.getElementById('hearts').textContent = lives>0 ? '❤️'.repeat(lives) : '💔';
+  }
+
+  // ---------- Physics & update ----------
+  const GRAV=0.7, MOVE=4.6, JUMP=14.2;
+  function onSolidGround(px){
+    // ground exists unless within a pit
+    for(const p of world.pits){ if(px+player.w>p.x && px<p.x+p.w) return false; }
+    return true;
+  }
+  function update(){
+    if(state!=='play') return;
+    // horizontal
+    player.vx = (keys.left?-MOVE:0) + (keys.right?MOVE:0);
+    if(keys.left) player.face=-1; if(keys.right) player.face=1;
+    player.x += player.vx;
+    if(player.x<0) player.x=0;
+    if(player.x>world.len-player.w) player.x=world.len-player.w;
+
+    // gravity
+    player.vy += GRAV;
+    player.y += player.vy;
+
+    // platform collisions (land on top)
+    player.onGround=false;
+    for(const pf of world.platforms){
+      if(player.x+player.w>pf.x+4 && player.x<pf.x+pf.w-4){
+        if(player.vy>=0 && player.y+player.h>pf.y && player.y+player.h<pf.y+pf.h+player.vy+2){
+          player.y=pf.y-player.h; player.vy=0; player.onGround=true;
+        }
+      }
+    }
+    // ground collision
+    if(player.y+player.h>=GROUND_Y){
+      if(onSolidGround(player.x)){
+        player.y=GROUND_Y-player.h; player.vy=0; player.onGround=true;
+      } else {
+        // over a pit — fall through; if below screen, lose life
+        if(player.y>H+40){ loseLife('rơi xuống hố'); return; }
+      }
+    }
+
+    // jump
+    if(keys.jump && player.onGround){ player.vy=-JUMP; player.onGround=false; }
+
+    if(player.inv>0) player.inv--;
+
+    // spikes
+    if(player.inv<=0){
+      for(const s of world.spikes){
+        if(rectHit(player.x,player.y,player.w,player.h, s.x,s.y,s.w,s.h)){ loseLife(s.label); return; }
+      }
+    }
+    // tokens
+    for(const t of world.tokens){
+      if(t.got) continue;
+      if(rectHit(player.x,player.y,player.w,player.h, t.x-t.r,t.y-t.r,t.r*2,t.r*2)){
+        t.got=true; score+=10; updateHUD();
+        pickFloat.push({x:t.x,y:t.y,txt:'+'+t.label,life:60});
+      }
+    }
+    // portal reach
+    const pt=world.portal;
+    if(player.x+player.w>pt.x+8){ askQuestion(); }
+
+    // camera
+    camX = Math.max(0, Math.min(player.x-280, world.len-W));
+    // floats
+    pickFloat.forEach(f=>{f.y-=0.6;f.life--;});
+    pickFloat=pickFloat.filter(f=>f.life>0);
+  }
+
+  function rectHit(ax,ay,aw,ah,bx,by,bw,bh){
+    return ax<bx+bw && ax+aw>bx && ay<by+bh && ay+ah>by;
+  }
+
+  function loseLife(reason){
+    lives--; updateHUD();
+    player.inv=90;
+    // knockback
+    player.x=Math.max(20,player.x-70); player.y=GROUND_Y-player.h; player.vy=0;
+    if(lives<=0){ gameOver(reason); }
+  }
+
+  // ---------- Question overlay ----------
+  function askQuestion(){
+    state='question';
+    const L=world.L, Q=L.question;
+    document.getElementById('qStage').textContent='Cổng '+L.name;
+    document.getElementById('qText').textContent=Q.q;
+    const box=document.getElementById('qOpts'); box.innerHTML='';
+    const fb=document.getElementById('qFb'); fb.textContent=''; fb.className='qfb';
+    Q.opts.forEach((opt,i)=>{
+      const b=document.createElement('div'); b.className='qopt'; b.textContent=opt;
+      b.onclick=()=>answer(i,b);
+      box.appendChild(b);
+    });
+    show('qOverlay');
+  }
+  let answered=false;
+  function answer(i,el){
+    if(answered) return;
+    const Q=world.L.question; const fb=document.getElementById('qFb');
+    if(i===Q.correct){
+      answered=true; el.classList.add('correct');
+      score+=25; updateHUD();
+      fb.textContent='✔ '+Q.fb; fb.className='qfb ok';
+      setTimeout(()=>{
+        hide('qOverlay'); answered=false;
+        if(levelIdx+1<LEVELS.length){ startLevel(levelIdx+1); }
+        else { winGame(); }
+      },1100);
+    } else {
+      el.classList.add('wrong');
+      fb.textContent='✗ Chưa đúng — thử lại nhé (gợi ý: nhớ lại bài).'; fb.className='qfb no';
+    }
+  }
+
+  // ---------- End states ----------
+  function gameOver(reason){
+    state='over';
+    document.getElementById('overText').textContent='Va phải: "'+reason+'". Làm chủ AI cần luyện tập — thử lại nào!';
+    show('overOverlay');
+  }
+  function winGame(){
+    state='win'; score+=50; updateHUD();
+    levelIdx=LEVELS.length; renderStageTrack();
+    document.getElementById('finalScore').textContent=score;
+    let best=0; try{ best=parseInt(localStorage.getItem('code_game_best')||'0',10)||0; }catch(e){}
+    if(score>best){ best=score; try{localStorage.setItem('code_game_best',String(best));}catch(e){} }
+    document.getElementById('finalBest').textContent='Kỷ lục: '+best;
+    spawnConfetti();
+    show('winOverlay');
+  }
+  function spawnConfetti(){
+    confetti=[];
+    const cols=['#6366F1','#10B981','#F59E0B','#EC4899','#06B6D4','#7C3AED'];
+    for(let i=0;i<140;i++){
+      confetti.push({x:Math.random()*W,y:-Math.random()*H,vy:2+Math.random()*3,
+        s:4+Math.random()*6,c:cols[i%cols.length],rot:Math.random()*6});
+    }
+  }
+
+  // ---------- Rendering ----------
+  function draw(){
+    const sky = world ? world.L.sky : '#cfe8ff';
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+    if(state==='win'){ drawWinBg(); drawConfetti(); return; }
+    if(!world){ return; }
+
+    ctx.save();
+    ctx.translate(-camX,0);
+
+    // distant decoration
+    drawClouds();
+
+    // ground
+    const gcol=world.L.color;
+    for(let x=0;x<world.len;x+=10){
+      if(!segIsPit(x)){
+        ctx.fillStyle='#7c5a3a'; ctx.fillRect(x,GROUND_Y,10,H-GROUND_Y);
+        ctx.fillStyle='#5fbf6a'; ctx.fillRect(x,GROUND_Y,10,8); // grass
+      }
+    }
+    // pit warning stripes
+    world.pits.forEach(p=>{
+      ctx.fillStyle='rgba(220,38,38,.12)';
+      ctx.fillRect(p.x,GROUND_Y,p.w,H-GROUND_Y);
+    });
+
+    // platforms
+    world.platforms.forEach(pf=>{
+      roundRect(pf.x,pf.y,pf.w,pf.h,8); ctx.fillStyle=gcol; ctx.fill();
+      ctx.fillStyle='rgba(255,255,255,.35)'; ctx.fillRect(pf.x,pf.y,pf.w,4);
+    });
+
+    // tokens
+    world.tokens.forEach(t=>{ if(!t.got) drawToken(t); });
+
+    // spikes / obstacles
+    world.spikes.forEach(s=>drawSpike(s));
+
+    // portal
+    drawPortal(world.portal);
+
+    // player
+    drawPlayer();
+
+    // floating pickups text
+    pickFloat.forEach(f=>{
+      ctx.globalAlpha=Math.max(0,f.life/60);
+      ctx.fillStyle='#047857'; ctx.font='700 15px Inter'; ctx.textAlign='center';
+      ctx.fillText(f.txt,f.x,f.y);
+      ctx.globalAlpha=1;
+    });
+
+    ctx.restore();
+    ctx.textAlign='left';
+  }
+
+  function segIsPit(x){
+    for(const p of world.pits){ if(x>=p.x && x<p.x+p.w) return true; } return false;
+  }
+  function roundRect(x,y,w,h,r){
+    ctx.beginPath();
+    ctx.moveTo(x+r,y);ctx.arcTo(x+w,y,x+w,y+h,r);ctx.arcTo(x+w,y+h,x,y+h,r);
+    ctx.arcTo(x,y+h,x,y,r);ctx.arcTo(x,y,x+w,y,r);ctx.closePath();
+  }
+  function drawClouds(){
+    ctx.fillStyle='rgba(255,255,255,.7)';
+    const cl=[[200,90],[600,60],[1100,110],[1700,70],[2200,100]];
+    cl.forEach(c=>{
+      ctx.beginPath();ctx.arc(c[0],c[1],26,0,7);ctx.arc(c[0]+30,c[1]+6,30,0,7);
+      ctx.arc(c[0]+62,c[1],24,0,7);ctx.fill();
+    });
+  }
+  function drawToken(t){
+    ctx.save();
+    ctx.shadowColor='rgba(16,185,129,.5)';ctx.shadowBlur=12;
+    ctx.fillStyle='#10B981';ctx.beginPath();ctx.arc(t.x,t.y,t.r,0,7);ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.fillStyle='#fff';ctx.font='800 14px Inter';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText('+',t.x,t.y+1);
+    ctx.fillStyle='#065F46';ctx.font='600 11px Inter';
+    ctx.fillText(t.label,t.x,t.y-t.r-8);
+    ctx.textBaseline='alphabetic';ctx.restore();
+  }
+  function drawSpike(s){
+    ctx.fillStyle='#DC2626';
+    ctx.beginPath();
+    const n=Math.max(2,Math.floor(s.w/14));
+    const step=s.w/n;
+    for(let i=0;i<n;i++){
+      ctx.moveTo(s.x+i*step,s.y+s.h);
+      ctx.lineTo(s.x+i*step+step/2,s.y);
+      ctx.lineTo(s.x+i*step+step,s.y+s.h);
+    }
+    ctx.closePath();ctx.fill();
+    // label bubble
+    ctx.fillStyle='rgba(220,38,38,.92)';
+    ctx.font='600 11px Inter';ctx.textAlign='center';
+    const tw=ctx.measureText(s.label).width+12;
+    roundRect(s.x+s.w/2-tw/2,s.y-26,tw,18,9);ctx.fill();
+    ctx.fillStyle='#fff';ctx.fillText(s.label,s.x+s.w/2,s.y-13);
+    ctx.textAlign='left';
+  }
+  function drawPortal(p){
+    const cx=p.x+p.w/2;
+    const grd=ctx.createLinearGradient(p.x,p.y,p.x+p.w,p.y+p.h);
+    grd.addColorStop(0,'#6366F1');grd.addColorStop(1,'#06B6D4');
+    ctx.save();
+    ctx.shadowColor='rgba(99,102,241,.7)';ctx.shadowBlur=24;
+    ctx.fillStyle=grd;
+    ctx.beginPath();ctx.ellipse(cx,p.y+p.h/2,p.w/2,p.h/2,0,0,7);ctx.fill();
+    ctx.shadowBlur=0;
+    ctx.fillStyle='rgba(255,255,255,.85)';
+    ctx.beginPath();ctx.ellipse(cx,p.y+p.h/2,p.w/2-12,p.h/2-16,0,0,7);ctx.fill();
+    ctx.fillStyle='#4338CA';ctx.font='800 22px Inter';ctx.textAlign='center';ctx.textBaseline='middle';
+    ctx.fillText(world.L.letter,cx,p.y+p.h/2);
+    ctx.font='700 12px Inter';ctx.fillStyle='#1A1A2E';
+    ctx.fillText('CỔNG',cx,p.y-8);
+    ctx.textBaseline='alphabetic';ctx.textAlign='left';ctx.restore();
+  }
+  function drawPlayer(){
+    const p=player;
+    if(p.inv>0 && Math.floor(p.inv/6)%2===0) ctx.globalAlpha=0.4;
+    // body
+    ctx.fillStyle='#4338CA';
+    roundRect(p.x,p.y,p.w,p.h,8);ctx.fill();
+    // face screen
+    ctx.fillStyle='#E0E7FF';
+    roundRect(p.x+5,p.y+8,p.w-10,16,5);ctx.fill();
+    // eyes
+    ctx.fillStyle='#4338CA';
+    ctx.beginPath();ctx.arc(p.x+p.w/2-6+p.face*2,p.y+16,2.4,0,7);
+    ctx.arc(p.x+p.w/2+6+p.face*2,p.y+16,2.4,0,7);ctx.fill();
+    // brain emoji-ish badge
+    ctx.font='14px Inter';ctx.textAlign='center';
+    ctx.fillText('🧠',p.x+p.w/2,p.y+p.h-8);
+    ctx.textAlign='left';
+    ctx.globalAlpha=1;
+  }
+  function drawWinBg(){
+    const g=ctx.createLinearGradient(0,0,0,H);
+    g.addColorStop(0,'#EEF2FF');g.addColorStop(1,'#ECFDF5');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+  }
+  function drawConfetti(){
+    confetti.forEach(c=>{
+      c.y+=c.vy;c.rot+=0.1; if(c.y>H+10){c.y=-10;c.x=Math.random()*W;}
+      ctx.save();ctx.translate(c.x,c.y);ctx.rotate(c.rot);
+      ctx.fillStyle=c.c;ctx.fillRect(-c.s/2,-c.s/2,c.s,c.s);ctx.restore();
+    });
+  }
+
+  // ---------- Loop ----------
+  // Single continuous rAF driver. update() only advances physics while playing;
+  // draw() always renders the current state (frozen world behind overlays, confetti on win).
+  function frame(){ update(); draw(); requestAnimationFrame(frame); }
+  function startLoop(){ /* loop already running; kept for call-site compatibility */ }
+
+  // ---------- Overlays helpers ----------
+  function show(id){ document.getElementById(id).classList.add('show'); }
+  function hide(id){ document.getElementById(id).classList.remove('show'); }
+  function hideAll(){ ['introOverlay','qOverlay','overOverlay','winOverlay'].forEach(hide); }
+
+  // ---------- Input ----------
+  document.addEventListener('keydown',e=>{
+    if(e.code==='ArrowLeft'){keys.left=true;}
+    if(e.code==='ArrowRight'){keys.right=true;}
+    if(e.code==='Space'||e.code==='ArrowUp'){keys.jump=true; if(state==='play') e.preventDefault();}
+  });
+  document.addEventListener('keyup',e=>{
+    if(e.code==='ArrowLeft'){keys.left=false;}
+    if(e.code==='ArrowRight'){keys.right=false;}
+    if(e.code==='Space'||e.code==='ArrowUp'){keys.jump=false;}
+  });
+  function bindHold(id,on,off){
+    const el=document.getElementById(id);
+    const start=e=>{e.preventDefault();on();};
+    const end=e=>{e.preventDefault();off();};
+    el.addEventListener('touchstart',start,{passive:false});
+    el.addEventListener('touchend',end,{passive:false});
+    el.addEventListener('touchcancel',end,{passive:false});
+    el.addEventListener('mousedown',start);
+    el.addEventListener('mouseup',end);
+    el.addEventListener('mouseleave',end);
+  }
+  bindHold('btnLeft',()=>keys.left=true,()=>keys.left=false);
+  bindHold('btnRight',()=>keys.right=true,()=>keys.right=false);
+  bindHold('btnJump',()=>keys.jump=true,()=>keys.jump=false);
+
+  // ---------- Buttons ----------
+  function newGame(){ score=0; lives=START_LIVES; updateHUD(); hideAll(); startLevel(0); startLoop(); }
+  document.getElementById('startBtn').onclick=newGame;
+  document.getElementById('playAgainBtn').onclick=newGame;
+  document.getElementById('restartAllBtn').onclick=newGame;
+  document.getElementById('retryBtn').onclick=()=>{ lives=START_LIVES; updateHUD(); hideAll(); startLevel(levelIdx); startLoop(); };
+
+  // initial paint
+  updateHUD();
+  renderStageTrack();
+  // draw a static intro backdrop, then start the continuous render loop
+  world=buildLevel(0);
+  requestAnimationFrame(frame);
+})();
+</script>
+</body>
+</html>

@@ -1,5 +1,5 @@
 <!--
-  Slide fragment cho Buổi 6 — AI Trợ lý Học tập: Tóm tắt khoa học & Tư duy phản biện.
+  Slide fragment cho Buổi 6 — AI Trợ lý Học tập: theo flow C.O.D.E + Tư duy phản biện.
   Format fragment: chỉ gồm cấu hình Sổ Tay + các <section class="slide">.
   Chrome (sidebar, top-bar, SlideEngine, notebook, quiz/checklist/drag-drop, toàn bộ CSS)
   do frontend/templates/lesson.html cung cấp.
@@ -8,12 +8,13 @@
 <script type="application/json" id="nb-questions">
 {
   "1": {"title": "SỔ TAY #1 — Đầu buổi", "q": "Một lần bạn (hoặc người quen) tin một thông tin sai từ AI/Google/mạng xã hội"},
-  "2": {"title": "SỔ TAY #2 — Bài để tóm tắt", "q": "Bài học khó nhớ bạn sẽ nhờ AI tóm tắt"},
+  "2": {"title": "SỔ TAY #2 — Bài để tóm tắt", "q": "Bài học khó nhớ bạn sẽ nhờ AI tóm tắt (Distill)"},
   "3": {"title": "SỔ TAY #3 — Bộ lọc phản biện", "q": "1 câu trả lời của AI bạn sẽ đem đi kiểm chứng + cách kiểm chứng"},
   "4": {"title": "SỔ TAY #4 — Cuối buổi", "q": "Từ nay bạn dùng AI như trợ lý thế nào để vẫn làm chủ kiến thức"}
 }
 </script>
 
+<!-- ============ MỞ ĐẦU ============ -->
 <section class="slide active slide-cover" data-slide="1" data-title="Chào mừng">
   <div class="cover-orb orb-1"></div>
   <div class="cover-orb orb-2"></div>
@@ -21,10 +22,12 @@
   <div class="cover-content slide-body">
     <span class="eyebrow">BUỔI 6 · MODULE 2 — SECOND BRAIN</span>
     <h1 class="hero-title">AI là trợ lý — <span class="grad-text">bạn là người làm chủ</span></h1>
-    <p class="slide-subtitle">Bạn sẽ học cách dùng prompt để tóm tắt &amp; lưu bài học một cách khoa học, và quan trọng
-      nhất: kiểm chứng thông tin AI đưa ra bằng tư duy phản biện.</p>
-    <div class="cover-chips"><span class="cover-chip">120 phút</span><span class="cover-chip">Tóm tắt khoa
-        học</span><span class="cover-chip">Tư duy phản biện</span></div>
+    <p class="slide-subtitle">Hôm nay bạn biến AI thành trợ lý chạy dọc theo Second Brain (C.O.D.E): chọn đúng công cụ,
+      cài đặt được, dùng AI để <strong>cô đọng (Distill)</strong> &amp; <strong>tạo ra (Express)</strong> — và quan
+      trọng
+      nhất: kiểm chứng bằng tư duy phản biện.</p>
+    <div class="cover-chips"><span class="cover-chip">120 phút</span><span class="cover-chip">Công cụ AI</span><span
+        class="cover-chip">C.O.D.E + AI</span><span class="cover-chip">Tư duy phản biện</span></div>
   </div>
 </section>
 
@@ -35,28 +38,28 @@
     <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
       <div class="card">
         <div class="card-icon">1</div>
-        <h3>Tạo nội dung bằng AI</h3>
-        <p>Dùng Copilot + RAG để AI tóm tắt, sinh quiz ngay trong Obsidian.</p>
+        <h3>Chọn &amp; cài công cụ AI</h3>
+        <p>Phân biệt Chatbox AI · Copilot tích hợp · Agent (IDE); tự cài Copilot + API.</p>
       </div>
       <div class="card">
         <div class="card-icon">2</div>
-        <h3>Tóm tắt khoa học</h3>
-        <p>Prompt chuẩn để cô đọng bài học theo cấu trúc dễ nhớ, rồi lưu vào vault.</p>
+        <h3>Distill bằng AI</h3>
+        <p>Prompt chuẩn để AI cô đọng bài học theo cấu trúc dễ nhớ, lưu vào vault.</p>
       </div>
       <div class="card">
         <div class="card-icon">3</div>
-        <h3>Kiểm chứng AI</h3>
-        <p>Biết đối chiếu nguồn, bắt AI dẫn chứng, phát hiện chỗ AI bịa.</p>
+        <h3>Express bằng AI</h3>
+        <p>Sinh Quiz/Đề, action plan, trực quan hoá kiến thức để dùng được thật.</p>
       </div>
       <div class="card">
         <div class="card-icon">4</div>
         <h3>Tư duy phản biện</h3>
-        <p>Dùng bộ lọc 5 câu hỏi phản biện trước khi tin bất cứ điều gì.</p>
+        <p>Kiểm chứng, bắt AI dẫn chứng, dùng bộ lọc 5 câu hỏi trước khi tin.</p>
       </div>
     </div>
     <div class="hl-box success"><span class="hl-label">OUTPUT BẮT BUỘC CUỐI BUỔI</span>
-      <p>1 bản tóm tắt (tạo bằng AI ngay trong Obsidian, đã kiểm chứng) trong vault · 1 bộ quiz tự kiểm tra · ít nhất 1
-        lần kiểm chứng thông tin AI.</p>
+      <p>1 bản tóm tắt (tạo bằng AI, đã kiểm chứng) trong vault · 1 bộ Quiz/Đề tự kiểm tra · ít nhất 1 lần kiểm chứng
+        thông tin AI · vượt được game 4 cổng C.O.D.E.</p>
     </div>
   </div>
 </section>
@@ -73,7 +76,8 @@
         xã hội. Lúc đó vì sao khó nhận ra là sai?</div>
       <div class="nb-input-wrap">
         <label>Lần đó là gì:</label>
-        <textarea class="nb-input" data-nb-id="1" placeholder="Ví dụ: AI nói sai một công thức / một ngày tháng..."></textarea>
+        <textarea class="nb-input" data-nb-id="1"
+          placeholder="Ví dụ: AI nói sai một công thức / một ngày tháng..."></textarea>
         <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
       </div>
       <div class="qbox-tip"><span class="qbox-tip-label">Vì sao bạn viết?</span>Cuối buổi bạn sẽ thấy mình có cả một bộ
@@ -82,6 +86,7 @@
   </div>
 </section>
 
+<!-- ============ AI LÀ TRỢ LÝ — VÀ HAY SAI ============ -->
 <section class="slide slide-cover" data-slide="4" data-title="AI giỏi nhưng cũng sai">
   <div class="cover-orb orb-1" style="background:#DC2626;"></div>
   <div class="cover-orb orb-2" style="background:#3B82F6;"></div>
@@ -171,47 +176,14 @@
       </tbody>
     </table>
     <div class="hl-box success"><span class="hl-label">NHỚ KỸ</span>
-      <p>AI làm việc <strong>CHO</strong> bạn, không làm việc <strong>THAY</strong> bộ não của bạn.</p>
+      <p>AI làm việc <strong>CHO</strong> bạn, không làm việc <strong>THAY</strong> bộ não của bạn. Muốn biết AI đúng
+        hay
+        sai, bạn phải có <strong>kiến thức nền</strong> — kiến thức là tay lái, AI chỉ là động cơ.</p>
     </div>
   </div>
 </section>
 
-<section class="slide" data-slide="8" data-title="Muốn làm chủ AI cần kiến thức nền">
-  <div class="slide-body">
-    <span class="eyebrow">ĐIỀU QUAN TRỌNG NHẤT BUỔI NAY</span>
-    <h2 class="slide-title">Muốn làm chủ AI — phải có kiến thức nền</h2>
-    <div class="qbox qbox-blue">
-      <div class="qbox-header">
-        <div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC
-      </div>
-      <div class="qbox-content">Muốn biết AI trả lời ĐÚNG hay SAI, bạn phải có đủ kiến thức để đánh giá. Người không
-        biết gì sẽ tin mọi thứ AI nói — và đó là lúc nguy hiểm.</div>
-    </div>
-    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));">
-      <div class="card">
-        <div class="card-icon" style="background:#2563EB;">→</div>
-        <h3>Có nền → prompt tốt</h3>
-        <p>Biết mình cần gì thì mới hỏi AI đúng trọng tâm.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon" style="background:#2563EB;">→</div>
-        <h3>Có nền → bắt lỗi</h3>
-        <p>Đủ hiểu để phát hiện chỗ AI nói sai.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon" style="background:#2563EB;">→</div>
-        <h3>Có nền → dùng được</h3>
-        <p>Biết chọn lọc và áp dụng kết quả vào bài làm.</p>
-      </div>
-    </div>
-    <div class="hl-box info"><span class="hl-label">ẨN DỤ</span>
-      <p>Kiến thức của bạn là <strong>tay lái</strong>; AI chỉ là <strong>động cơ</strong>. Động cơ mạnh mà không có tay
-        lái thì rất dễ lao xuống vực.</p>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-slide="9" data-title="Hỏi bạn cặp #1">
+<section class="slide" data-slide="8" data-title="Hỏi bạn cặp #1">
   <div class="slide-body">
     <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
     <h2 class="slide-title">Cùng bạn cặp — vì sao tin sai?</h2>
@@ -220,30 +192,196 @@
         <div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận #1
       </div>
       <div class="qbox-content">Mỗi bạn kể 1 lần bạn / người quen TIN một thông tin sai từ AI hoặc mạng xã hội. "<em>Lúc
-        đó vì sao khó nhận ra là sai? Làm sao để lần sau không bị?</em>"</div>
+          đó vì sao khó nhận ra là sai? Làm sao để lần sau không bị?</em>"</div>
       <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Thông tin sai thường nghe rất "hợp lý". Nhận ra
         điều này là bước đầu của tư duy phản biện.</div>
     </div>
   </div>
 </section>
 
-<section class="slide slide-cover" data-slide="10" data-title="Dùng AI ngay trong Obsidian">
+<!-- ============ CÔNG CỤ AI ============ -->
+<section class="slide slide-cover" data-slide="9" data-title="Công cụ AI — 3 cách dùng">
   <div class="cover-orb orb-1" style="background:#2563EB;"></div>
   <div class="cover-orb orb-2" style="background:#06B6D4;"></div>
   <div class="cover-orb orb-3"></div>
   <div class="cover-content slide-body">
-    <span class="eyebrow">AI NGAY TRONG VAULT</span>
-    <h1 class="hero-title">Dùng AI để <span class="grad-text">tạo nội dung trong Obsidian</span></h1>
-    <p class="slide-subtitle">Không cần rời Obsidian: bật trợ lý AI (Copilot) ngay trong vault để tóm tắt, sinh quiz,
-      mở rộng ý — dựa trên chính ghi chú của bạn (RAG).</p>
-    <div class="cover-chips"><span class="cover-chip">RAG</span><span class="cover-chip">Copilot</span><span
-        class="cover-chip">Smart Connections</span></div>
+    <span class="eyebrow">CHỌN ĐÚNG CÔNG CỤ</span>
+    <h1 class="hero-title">3 cách bạn <span class="grad-text">dùng AI để học</span></h1>
+    <p class="slide-subtitle">Cùng là "AI", nhưng có 3 kiểu công cụ rất khác nhau. Hiểu rõ để chọn đúng việc.</p>
+    <div class="cover-chips"><span class="cover-chip">Chatbox AI</span><span class="cover-chip">Copilot tích
+        hợp</span><span class="cover-chip">Agent / IDE</span></div>
   </div>
 </section>
 
-<section class="slide" data-slide="11" data-title="RAG là gì">
+<section class="slide" data-slide="10" data-title="Tổng quan 3 loại công cụ AI">
   <div class="slide-body">
-    <span class="eyebrow">GIẢI PHÁP CHỐNG BỊA</span>
+    <span class="eyebrow">BẢN ĐỒ CÔNG CỤ</span>
+    <h2 class="slide-title">Chatbox · Copilot tích hợp · Agent</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#10B981;">💬</div>
+        <h3>Chatbox AI</h3>
+        <p>Web chat (ChatGPT, Gemini…). Mở là dùng, không cài. Hỏi–đáp chung.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">🧩</div>
+        <h3>Copilot tích hợp</h3>
+        <p>AI nằm NGAY trong app bạn dùng (Obsidian). Đọc note của bạn (RAG).</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">🤖</div>
+        <h3>Agent / IDE</h3>
+        <p>AI tự lập kế hoạch &amp; THỰC THI nhiều bước, không chỉ trả lời.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">CÁCH ĐI HÔM NAY</span>
+      <p>Càng xuống dưới, AI càng "chủ động" và càng cần cài đặt. Ta sẽ đi lần lượt: Chatbox → Copilot (có cài) → Agent
+        (có cài).</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="11" data-title="Chatbox AI là gì">
+  <div class="slide-body">
+    <span class="eyebrow">LOẠI 1 — DỄ NHẤT</span>
+    <h2 class="slide-title">Chatbox AI — mở trình duyệt là dùng</h2>
+    <div class="qbox qbox-blue">
+      <div class="qbox-header">
+        <div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC
+      </div>
+      <div class="qbox-content"><strong>Chatbox AI</strong> là các trang web/app để bạn trò chuyện với AI: gõ câu hỏi,
+        AI trả lời. Không cần cài đặt, chỉ cần đăng nhập. Bạn đã đăng ký 3 tài khoản từ Buổi 1.</div>
+    </div>
+    <div class="hl-box"><span class="hl-label">DÙNG KHI NÀO</span>
+      <p>Hỏi nhanh, brainstorm, giải thích khái niệm, viết nháp. Hạn chế: AI KHÔNG tự đọc vault của bạn — phải copy–dán
+        nội dung vào.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="12" data-title="So sánh các Chatbox AI">
+  <div class="slide-body">
+    <span class="eyebrow">CHỌN ĐÚNG "TRỢ LÝ"</span>
+    <h2 class="slide-title">ChatGPT · Gemini · Claude · Grok</h2>
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>Công cụ</th>
+          <th>Điểm mạnh</th>
+          <th>Lưu ý</th>
+          <th>Hợp việc</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>ChatGPT</td>
+          <td>Phổ biến, đa năng, nhiều tính năng</td>
+          <td>Bản free giới hạn model mạnh</td>
+          <td>Hỏi đáp chung, viết</td>
+        </tr>
+        <tr>
+          <td>Gemini</td>
+          <td>Của Google, free API rộng, hợp NotebookLM</td>
+          <td>Đôi lúc trả lời an toàn quá</td>
+          <td>Học tập, dùng với Copilot</td>
+        </tr>
+        <tr>
+          <td>Claude</td>
+          <td>Viết &amp; lập luận dài mạch lạc, an toàn</td>
+          <td>Ít tính năng đa phương tiện</td>
+          <td>Tóm tắt, viết, phản biện</td>
+        </tr>
+        <tr>
+          <td>Grok</td>
+          <td>Cập nhật nhanh theo mạng xã hội (X)</td>
+          <td>Văn phong "đời", cần kiểm chứng kỹ</td>
+          <td>Tin mới, hỏi nhanh</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="hl-box info"><span class="hl-label">MẸO</span>
+      <p>Không có cái "tốt nhất tuyệt đối". Hỏi <strong>cùng một câu</strong> cho 2 AI rồi so sánh — vừa chọn được công
+        cụ hợp, vừa là một cách kiểm chứng chéo.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="13" data-title="Copilot tích hợp là gì">
+  <div class="slide-body">
+    <span class="eyebrow">LOẠI 2 — AI NGAY TRONG VAULT</span>
+    <h2 class="slide-title">Copilot — trợ lý AI tích hợp trong Obsidian</h2>
+    <div class="qbox qbox-blue">
+      <div class="qbox-header">
+        <div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC
+      </div>
+      <div class="qbox-content"><strong>Copilot tích hợp</strong> là AI nằm NGAY trong ứng dụng bạn đang dùng — ở đây là
+        Obsidian. Khác chatbox web, nó có thể ĐỌC chính ghi chú của bạn rồi trả lời (RAG), nên bám sát bài hơn.</div>
+    </div>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">💬</div>
+        <h3>Chat trong vault</h3>
+        <p>Hỏi đáp không cần rời Obsidian.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">📚</div>
+        <h3>Vault QA (RAG)</h3>
+        <p>Hỏi đáp dựa trên TOÀN BỘ note của bạn.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">✍️</div>
+        <h3>Viết thẳng vào note</h3>
+        <p>Chèn tóm tắt / quiz ngay vào ghi chú đang mở.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">CẦN GÌ ĐỂ CHẠY</span>
+      <p>Copilot là một <strong>plugin</strong> (cài thêm) + một <strong>API key</strong> (chìa khoá kết nối tới model
+        AI).
+        Hai slide tới sẽ hướng dẫn từng bước.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="14" data-title="Cài đặt Copilot (plugin)">
+  <div class="slide-body">
+    <span class="eyebrow">HƯỚNG DẪN CÀI ĐẶT — BƯỚC 1/2</span>
+    <h2 class="slide-title">Cài plugin Copilot trong Obsidian</h2>
+    <ol class="steps stagger">
+      <li>Mở Obsidian → góc trái dưới bấm <strong>Settings</strong> (bánh răng).</li>
+      <li>Chọn <strong>Community plugins</strong> → bấm <strong>Turn on community plugins</strong> (nếu lần đầu).</li>
+      <li>Bấm <strong>Browse</strong>, gõ tìm <code>Copilot</code> (tác giả <em>logancyang</em>).</li>
+      <li>Bấm <strong>Install</strong> → rồi <strong>Enable</strong> để bật plugin.</li>
+      <li>Mở <strong>Settings → Copilot</strong> để vào phần cấu hình model (slide sau).</li>
+    </ol>
+    <div class="hl-box info"><span class="hl-label">CHƯA THẤY ICON?</span>
+      <p>Sau khi Enable, biểu tượng Copilot xuất hiện ở thanh bên trái. Nếu chưa thấy, đóng/mở lại Obsidian.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="15" data-title="Lấy API key Google AI Studio">
+  <div class="slide-body">
+    <span class="eyebrow">HƯỚNG DẪN CÀI ĐẶT — BƯỚC 2/2</span>
+    <h2 class="slide-title">Lấy API key miễn phí từ Google AI Studio</h2>
+    <ol class="steps stagger">
+      <li>Vào <code>aistudio.google.com</code> → đăng nhập tài khoản Google.</li>
+      <li>Bấm <strong>Get API key</strong> → <strong>Create API key</strong>.</li>
+      <li><strong>Copy</strong> chuỗi key (dạng <code>AIza...</code>).</li>
+      <li>Về Obsidian: <strong>Settings → Copilot</strong> → chọn nhà cung cấp <strong>Google / Gemini</strong> → dán
+        key
+        vào ô <em>API key</em>.</li>
+      <li>Chọn model (vd <code>gemini-3.5-flash</code>) → bấm test/save. Xong!</li>
+    </ol>
+    <div class="hl-box danger"><span class="hl-label">GIỮ BÍ MẬT API KEY</span>
+      <p>API key là "chìa khoá" tài khoản của bạn — KHÔNG chia sẻ, KHÔNG dán lên nhóm chat hay nộp bài. Lộ key thì người
+        khác xài tài khoản của bạn.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="16" data-title="RAG là gì">
+  <div class="slide-body">
+    <span class="eyebrow">VÌ SAO COPILOT ĐỠ BỊA</span>
     <h2 class="slide-title">RAG — cho AI đọc ghi chú của bạn trước khi trả lời</h2>
     <div class="qbox qbox-blue">
       <div class="qbox-header">
@@ -275,35 +413,7 @@
   </div>
 </section>
 
-<section class="slide" data-slide="12" data-title="Copilot trong Obsidian">
-  <div class="slide-body">
-    <span class="eyebrow">CÔNG CỤ CHÍNH</span>
-    <h2 class="slide-title">Copilot — trợ lý AI ngay trong Obsidian</h2>
-    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));">
-      <div class="card">
-        <div class="card-icon" style="background:#06B6D4;">💬</div>
-        <h3>Chat trong vault</h3>
-        <p>Hỏi đáp với AI mà không cần rời Obsidian.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon" style="background:#06B6D4;">📚</div>
-        <h3>Vault QA (RAG)</h3>
-        <p>Chế độ hỏi đáp dựa trên TOÀN BỘ note của bạn.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon" style="background:#06B6D4;">✍️</div>
-        <h3>Viết thẳng vào note</h3>
-        <p>AI chèn tóm tắt / quiz ngay vào ghi chú đang mở.</p>
-      </div>
-    </div>
-    <div class="hl-box info"><span class="hl-label">CHUẨN BỊ</span>
-      <p>Vault mẫu của lớp đã cài sẵn plugin <strong>Copilot</strong> và kết nối model (Gemini) — bạn chỉ việc mở và
-        dùng. Khi tự cài, bạn cần nhập một API key (GV hướng dẫn).</p>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-slide="13" data-title="Smart Connections">
+<section class="slide" data-slide="17" data-title="Smart Connections">
   <div class="slide-body">
     <span class="eyebrow">KẾT NỐI THÔNG MINH</span>
     <h2 class="slide-title">Smart Connections — gợi ý note liên quan</h2>
@@ -322,7 +432,167 @@
   </div>
 </section>
 
-<section class="slide" data-slide="14" data-title="Workflow: tạo nội dung trong Obsidian">
+<section class="slide" data-slide="18" data-title="Agent / IDE là gì">
+  <div class="slide-body">
+    <span class="eyebrow">LOẠI 3 — AI CHỦ ĐỘNG NHẤT</span>
+    <h2 class="slide-title">Agent — AI tự lập kế hoạch &amp; thực thi</h2>
+    <div class="qbox qbox-blue">
+      <div class="qbox-header">
+        <div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC
+      </div>
+      <div class="qbox-content"><strong>Agent</strong> không chỉ trả lời như chat. Bạn nêu mục tiêu (Express), agent tự
+        <strong>lập kế hoạch (Plan)</strong> rồi <strong>thực thi từng bước (Action)</strong> — tạo file, chạy lệnh, sửa
+        lỗi — thường sống trong một <strong>IDE</strong> (môi trường lập trình).
+      </div>
+    </div>
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>Khía cạnh</th>
+          <th>Chatbox (chat)</th>
+          <th>Agent (IDE)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cách làm</td>
+          <td>Bạn hỏi → nó trả lời 1 lượt</td>
+          <td>Express → Plan → Action (nhiều bước)</td>
+        </tr>
+        <tr>
+          <td>Tự làm việc</td>
+          <td>Không — bạn tự thao tác tiếp</td>
+          <td>Có — tự tạo/sửa file, chạy thử</td>
+        </tr>
+        <tr>
+          <td>Hợp việc</td>
+          <td>Hỏi đáp, viết nháp</td>
+          <td>Làm cả một sản phẩm (vd app, game)</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="hl-box info"><span class="hl-label">NHỚ</span>
+      <p>Express → Plan → Action — đó là tinh thần của Agent, <strong>khác hẳn</strong> chat chỉ trả lời một câu.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="19" data-title="Cài Google Antigravity">
+  <div class="slide-body">
+    <span class="eyebrow">HƯỚNG DẪN CÀI ĐẶT — AGENT TRONG IDE</span>
+    <h2 class="slide-title">Làm quen Google Antigravity (IDE agentic)</h2>
+    <ol class="steps stagger">
+      <li>Vào <code>antigravity.google</code> → bấm <strong>Download</strong>, chọn bản cho máy bạn
+        (Windows/macOS/Linux).</li>
+      <li>Cài đặt như phần mềm thường → mở lên, <strong>đăng nhập tài khoản Google</strong>.</li>
+      <li>Mở (hoặc tạo) một thư mục dự án → mở khung <strong>Agent</strong>.</li>
+      <li>Nêu mục tiêu bằng tiếng Việt; agent sẽ hiện <strong>Plan</strong> các bước → bạn duyệt → nó
+        <strong>Action</strong>.
+      </li>
+      <li>Luôn ĐỌC plan trước khi cho chạy — bạn vẫn là người làm chủ.</li>
+    </ol>
+    <div class="hl-box"><span class="hl-label">MỨC ĐỘ Ở LỚP</span>
+      <p>Đây là công cụ nâng cao — hôm nay chỉ cần <strong>làm quen</strong> để hiểu Agent khác chat thế nào. Ta sẽ dùng
+        sâu Agent/IDE ở các module sau (Cursor, MCP…).</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="20" data-title="Prompting → Chat → Skill">
+  <div class="slide-body">
+    <span class="eyebrow">CÁCH RA LỆNH CHO AI</span>
+    <h2 class="slide-title">Từ Prompting đến Chat đến Skill</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#64748B;">1</div>
+        <h3>Prompting</h3>
+        <p>Gõ 1 câu lệnh mỗi lần. Linh hoạt nhưng phải viết lại mỗi lần, dễ quên cấu trúc.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">2</div>
+        <h3>Chat</h3>
+        <p>Hội thoại nhiều lượt, AI nhớ ngữ cảnh trong cuộc trò chuyện để làm tiếp.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">3</div>
+        <h3>Skill</h3>
+        <p>Đóng gói sẵn 1 quy trình (prompt + cách làm) thành "kỹ năng" gọi lại bất cứ lúc nào.</p>
+      </div>
+    </div>
+    <div class="hl-box success"><span class="hl-label">ƯU ĐIỂM CỦA SKILL SO VỚI PROMPTING</span>
+      <p><strong>Tái dùng</strong> (gọi 1 cái là chạy) · <strong>nhất quán</strong> (lần nào cũng đúng cấu trúc) ·
+        <strong>đỡ sai sót</strong> (không phải nhớ viết lại). Bạn đã gặp khái niệm Skill ở Buổi 4 — bộ prompt trong kho
+        <code>AI_Prompts</code> chính là "skill" mini của bạn.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="21" data-title="Quiz: chọn đúng công cụ">
+  <div class="slide-body">
+    <span class="eyebrow">KIỂM TRA NHANH</span>
+    <h2 class="slide-title">Muốn AI tóm tắt dựa trên CHÍNH ghi chú của bạn?</h2>
+    <div class="quiz" data-correct="2"
+      data-explanation="Copilot tích hợp trong Obsidian dùng RAG để đọc đúng vault của bạn — bám sát bài và đỡ bịa hơn chatbox web.">
+      <p class="quiz-q">Công cụ nào hợp nhất để tóm tắt dựa trên vault của bạn?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Chatbox web, tự gõ câu hỏi chung chung.</button>
+        <button class="quiz-opt" data-index="1">Grok để lấy tin mới nhất.</button>
+        <button class="quiz-opt" data-index="2">Copilot tích hợp (Vault QA / RAG) trong Obsidian.</button>
+        <button class="quiz-opt" data-index="3">Agent để tự tạo cả một app.</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ DISTILL & EXPRESS VỚI AI ============ -->
+<section class="slide" data-slide="22" data-title="Xương sống hôm nay: C.O.D.E">
+  <div class="slide-body">
+    <span class="eyebrow">NHẮC NHANH (BUỔI 5)</span>
+    <h2 class="slide-title">Giờ AI vào việc — chạy dọc theo C.O.D.E</h2>
+    <p class="slide-subtitle">Buổi 5 bạn đã dựng Second Brain bằng Obsidian + PARA. Đã chọn xong công cụ AI — giờ dùng
+      nó để đi nhanh hơn ở <strong>2 bước cuối</strong>.</p>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#94A3B8;">C</div>
+        <h3>Capture — Thu thập</h3>
+        <p>Gom hình ảnh, bài học, file vào vault. <em>(đã làm Buổi 5)</em></p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#94A3B8;">O</div>
+        <h3>Organize — Sắp xếp</h3>
+        <p>PARA trong Obsidian. <em>(đã làm Buổi 5)</em></p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">D</div>
+        <h3>Distill — Cô đọng</h3>
+        <p><strong>Hôm nay:</strong> AI tóm tắt bài học khoa học.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">E</div>
+        <h3>Express — Tạo ra</h3>
+        <p><strong>Hôm nay:</strong> AI sinh Quiz/Đề, action plan, app.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide slide-cover" data-slide="23" data-title="Distill — Cô đọng bằng AI">
+  <div class="cover-orb orb-1" style="background:#2563EB;"></div>
+  <div class="cover-orb orb-2" style="background:#06B6D4;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">C.O.D.E · BƯỚC D — DISTILL</span>
+    <h1 class="hero-title">Tóm tắt &amp; lưu bài học <span class="grad-text">một cách khoa học</span></h1>
+    <p class="slide-subtitle">Dùng prompt để AI cô đọng bài theo cấu trúc giúp bạn nhớ lâu — rồi
+      lưu vào Second Brain.</p>
+    <div class="cover-chips"><span class="cover-chip">TL;DR</span><span class="cover-chip">ELI5</span><span
+        class="cover-chip">Flashcard</span></div>
+  </div>
+</section>
+
+<section class="slide" data-slide="24" data-title="Workflow tạo nội dung trong Obsidian">
   <div class="slide-body">
     <span class="eyebrow">QUY TRÌNH HIỆU QUẢ</span>
     <h2 class="slide-title">5 bước dùng AI tạo nội dung ngay trong Obsidian</h2>
@@ -340,21 +610,7 @@
   </div>
 </section>
 
-<section class="slide slide-cover" data-slide="15" data-title="Tóm tắt bài học khoa học">
-  <div class="cover-orb orb-1" style="background:#2563EB;"></div>
-  <div class="cover-orb orb-2" style="background:#06B6D4;"></div>
-  <div class="cover-orb orb-3"></div>
-  <div class="cover-content slide-body">
-    <span class="eyebrow">DÙNG PROMPT ĐÚNG CÁCH</span>
-    <h1 class="hero-title">Tóm tắt &amp; lưu bài học <span class="grad-text">một cách khoa học</span></h1>
-    <p class="slide-subtitle">Không chép cả trang. Dùng prompt để AI cô đọng bài theo cấu trúc giúp bạn nhớ lâu — rồi
-      lưu vào Second Brain.</p>
-    <div class="cover-chips"><span class="cover-chip">TL;DR</span><span class="cover-chip">ELI5</span><span
-        class="cover-chip">Flashcard</span></div>
-  </div>
-</section>
-
-<section class="slide" data-slide="16" data-title="Tóm tắt khoa học gồm gì">
+<section class="slide" data-slide="25" data-title="Tóm tắt khoa học gồm gì">
   <div class="slide-body">
     <span class="eyebrow">CẤU TRÚC TÓM TẮT TỐT</span>
     <h2 class="slide-title">Một bản tóm tắt khoa học gồm 5 phần</h2>
@@ -385,13 +641,15 @@
         <p>Câu hỏi để tự kiểm tra (Active Recall).</p>
       </div>
     </div>
-    <div class="hl-box info"><span class="hl-label">KẾT NỐI BUỔI 5</span>
-      <p>Đây chính là bước <strong>DISTILL</strong> (cô đọng) của C.O.D.E — giờ có AI hỗ trợ cho nhanh.</p>
+    <div class="hl-box info"><span class="hl-label">ĐÂY CHÍNH LÀ DISTILL</span>
+      <p>Bước <strong>D — Distill</strong> của C.O.D.E (Buổi 5) — giờ có AI hỗ trợ cho nhanh, bạn chỉ việc kiểm chứng
+        &amp;
+        chốt.</p>
     </div>
   </div>
 </section>
 
-<section class="slide" data-slide="17" data-title="Cấu trúc 1 prompt tốt">
+<section class="slide" data-slide="26" data-title="Cấu trúc 1 prompt tốt">
   <div class="slide-body">
     <span class="eyebrow">NHẮC LẠI KHUNG RCTFE (BUỔI 2)</span>
     <h2 class="slide-title">Prompt rõ → kết quả tốt</h2>
@@ -428,28 +686,29 @@
   </div>
 </section>
 
-<section class="slide" data-slide="18" data-title="Prompt mẫu: Tóm tắt bài học">
+<section class="slide" data-slide="27" data-title="Prompt mẫu: Tóm tắt bài học">
   <div class="slide-body">
     <span class="eyebrow">PROMPT MẪU 1</span>
     <h2 class="slide-title">Dán prompt này vào AI, kèm nội dung bài</h2>
-    <div class="prompt-box"><span class="prompt-label">PROMPT — [[Prompt_Summarize_Lesson]] (kho AI_Prompts)</span>Hãy đóng vai giáo viên dạy kèm lớp 8 và chuyên gia ghi nhớ.
-Tóm tắt bài học dưới đây theo đúng cấu trúc:
-1. TL;DR (3 dòng).
-2. Ý chính cốt lõi (3–5 gạch đầu dòng).
-3. ELI5 — giải thích khái niệm khó nhất bằng ví dụ gần gũi.
-4. Cheat Sheet — công thức cần thuộc + lỗi sai hay gặp.
-5. 3 câu hỏi Flashcard để tự kiểm tra.
+    <div class="prompt-box"><span class="prompt-label">PROMPT — [[Prompt_Summarize_Lesson]] (kho AI_Prompts)</span>Hãy
+      đóng vai giáo viên dạy kèm lớp 8 và chuyên gia ghi nhớ.
+      Tóm tắt bài học dưới đây theo đúng cấu trúc:
+      1. TL;DR (3 dòng).
+      2. Ý chính cốt lõi (3–5 gạch đầu dòng).
+      3. ELI5 — giải thích khái niệm khó nhất bằng ví dụ gần gũi.
+      4. Cheat Sheet — công thức cần thuộc + lỗi sai hay gặp.
+      5. 3 câu hỏi Flashcard để tự kiểm tra.
 
-[Dán nội dung bài học vào đây]</div>
+      [Dán nội dung bài học vào đây]</div>
     <div class="hl-box success"><span class="hl-label">CÁCH DÙNG</span>
       <p>AI trả về bản tóm tắt đẹp → bạn ĐỌC LẠI, kiểm chứng, rồi mới lưu vào note Resource để ôn trước kỳ thi.</p>
     </div>
   </div>
 </section>
 
-<section class="slide" data-slide="19" data-title="Lưu bản tóm tắt vào vault">
+<section class="slide" data-slide="28" data-title="Lưu bản tóm tắt vào vault">
   <div class="slide-body">
-    <span class="eyebrow">THỰC HÀNH 1</span>
+    <span class="eyebrow">THỰC HÀNH — DISTILL</span>
     <h2 class="slide-title">Đưa bản tóm tắt vào Second Brain</h2>
     <ol class="steps stagger">
       <li>Dùng <strong>Copilot</strong> trong Obsidian: AI viết thẳng vào note. (Nếu dùng AI web: copy bản tóm tắt sau
@@ -464,7 +723,7 @@ Tóm tắt bài học dưới đây theo đúng cấu trúc:
   </div>
 </section>
 
-<section class="slide" data-slide="20" data-title="Sổ Tay #2 — Chọn bài để tóm tắt">
+<section class="slide" data-slide="29" data-title="Sổ Tay #2 — Chọn bài để tóm tắt">
   <div class="slide-body">
     <span class="eyebrow">ÁP DỤNG</span>
     <h2 class="slide-title">Bạn sẽ cho AI tóm tắt bài nào?</h2>
@@ -485,7 +744,133 @@ Tóm tắt bài học dưới đây theo đúng cấu trúc:
   </div>
 </section>
 
-<section class="slide" data-slide="21" data-title="Active Recall — vì sao tự kiểm tra">
+<!-- ============ EXPRESS VỚI AI ============ -->
+<section class="slide slide-cover" data-slide="30" data-title="Express — Tạo ra bằng AI">
+  <div class="cover-orb orb-1" style="background:#7C3AED;"></div>
+  <div class="cover-orb orb-2" style="background:#06B6D4;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">C.O.D.E · BƯỚC E — EXPRESS</span>
+    <h1 class="hero-title">Biến kiến thức thành <span class="grad-text">sản phẩm dùng được</span></h1>
+    <p class="slide-subtitle">Distill xong, đến lúc TẠO RA: Q&amp;A, action plan, Quiz/Đề, app trực quan — để kiến thức
+      thực sự ở lại trong đầu bạn.</p>
+    <div class="cover-chips"><span class="cover-chip">Q&amp;A</span><span class="cover-chip">Quiz / Đề</span><span
+        class="cover-chip">Action plan</span><span class="cover-chip">App</span></div>
+  </div>
+</section>
+
+<section class="slide" data-slide="31" data-title="Express gồm gì">
+  <div class="slide-body">
+    <span class="eyebrow">4 KIỂU "TẠO RA" VỚI AI</span>
+    <h2 class="slide-title">AI giúp bạn Express thế nào?</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(200px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">❓</div>
+        <h3>Q&amp;A</h3>
+        <p>Hỏi đáp sâu để hiểu chắc, đào tới khi không còn chỗ mơ hồ.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">📝</div>
+        <h3>Quiz / Đề</h3>
+        <p>Tự kiểm tra (Active Recall), sát với bài kiểm tra thật.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">✅</div>
+        <h3>Action plan</h3>
+        <p>Kế hoạch ôn tập theo ngày — biết hôm nay ôn gì.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">📊</div>
+        <h3>App trực quan</h3>
+        <p>Trực quan hoá kiến thức thành app/biểu đồ (làm ở Buổi 7).</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">KẾT NỐI BUỔI 7</span>
+      <p>Quiz/Đề và bản tóm tắt bạn tạo hôm nay chính là dữ liệu để app Lịch ôn tập (Buổi 7) hiển thị &amp; chấm điểm.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="32" data-title="Lên plan với AI — 2 tầng">
+  <div class="slide-body">
+    <span class="eyebrow">EXPRESS · LÊN KẾ HOẠCH DỰ ÁN</span>
+    <h2 class="slide-title">Lên plan với AI theo 2 tầng</h2>
+    <p class="slide-subtitle">Mỗi note <strong>Project</strong> (Buổi 5) có một mục tiêu <strong>SMART</strong>. Mục
+      tiêu
+      lớn dễ làm bạn "đứng hình" — AI dựng giúp <strong>2 tầng kế hoạch</strong>: từ tổng thể đến từng ngày.</p>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">🗺️</div>
+        <h3>Plan tổng thể</h3>
+        <p>Chia mục tiêu thành các <strong>mốc lớn theo tuần</strong> (milestone). Cái nhìn toàn cảnh "đi từ đâu đến
+          đâu". → Lưu trong note <strong>Project</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">📆</div>
+        <h3>Plan chi tiết</h3>
+        <p>Bẻ mỗi mốc thành <strong>việc theo NGÀY</strong>, có ngày cụ thể &amp; ước lượng thời gian. → Đưa thẳng vào
+          <strong>Calendar / Lịch ôn</strong>.
+        </p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">VÌ SAO 2 TẦNG</span>
+      <p>Tổng thể giúp bạn không lạc hướng; chi tiết giúp bạn biết <strong>hôm nay làm gì</strong>. Có ngày cụ thể thì
+        lịch mới tự rải lên được. Và AI chỉ gợi ý — bạn xem lại rồi mới chốt.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="33" data-title="Prompt — Plan tổng thể">
+  <div class="slide-body">
+    <span class="eyebrow">PROMPT MẪU 3A — PLAN TỔNG THỂ</span>
+    <h2 class="slide-title">Biến mục tiêu SMART thành các mốc </h2>
+    <div class="prompt-box"><span class="prompt-label">PROMPT — [[Prompt_Project_Plan]] (kho AI_Prompts)</span>Hãy đóng
+      vai cố vấn quản lý dự án cho học sinh lớp 8.
+      Mục tiêu SMART của mình: [dán mục tiêu từ note Project, vd "Đạt 8.0 môn Toán trong 8 tuần"].
+      Quỹ thời gian: [vd 5 buổi/tuần, mỗi buổi 45 phút].
+      Hãy lập PLAN TỔNG THỂ:
+      1. Chia thành các MỐC (milestone) theo tuần — mỗi tuần đạt được gì.
+      2. Mỗi mốc nêu 2–3 kết quả cần có để coi là xong.
+      3. PREMORTEM: 3 lý do kế hoạch có thể thất bại + cách phòng.
+      Trình bày dạng danh sách Markdown gọn để mình dán vào note Project.</div>
+    <ol class="steps stagger">
+      <li>Dán Plan tổng thể vào mục <strong>Plan</strong> của note Project ở <code>01_Projects</code>.</li>
+      <li>Đọc lại, cắt mốc thừa, chỉnh cho hợp sức mình — đây là bước bạn làm chủ.</li>
+      <li>Có khung tổng thể rồi → mới bung thành <strong>Plan chi tiết theo ngày</strong> (slide sau).</li>
+    </ol>
+    <div class="hl-box info"><span class="hl-label">TẦNG 1 — NHÌN TOÀN CẢNH</span>
+      <p>Tổng thể trả lời "đi từ đâu đến đâu". Chưa cần ngày giờ cụ thể — đó là việc của tầng chi tiết.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="34" data-title="Prompt — Plan chi tiết (→ Calendar)">
+  <div class="slide-body">
+    <span class="eyebrow">PROMPT MẪU 3B — PLAN CHI TIẾT THEO NGÀY</span>
+    <h2 class="slide-title">Bung mốc thành việc theo ngày để đưa vào Calendar</h2>
+    <div class="prompt-box"><span class="prompt-label">PROMPT — [[Prompt_Project_Plan]] · phần chi tiết</span>Dựa trên
+      Plan tổng thể dưới đây: [dán các mốc theo tuần].
+      Ngày bắt đầu: [vd 01/06/2026]. Lịch rảnh: [vd Thứ 2,4,6 — 19h–20h].
+      Hãy bung thành PLAN CHI TIẾT THEO NGÀY:
+      - Mỗi buổi học gắn một NGÀY CỤ THỂ (vd 03/06/2026).
+      - Mỗi ngày 1–2 việc rõ ràng + ước lượng thời gian.
+      - Đánh dấu việc dạng checklist để mình tick khi xong.
+      Trình bày Markdown, mỗi dòng bắt đầu bằng ngày để dễ đưa lên lịch.</div>
+    <ol class="steps stagger">
+      <li>Xem lại các ngày AI xếp — chỉnh cho khớp lịch thật (thi cử, bận việc…).</li>
+      <li>Lưu Plan chi tiết vào kho lịch ôn <code>05_learning_plan</code>.</li>
+      <li>Mỗi ngày mở ra, làm việc của ngày đó rồi tick ✅.</li>
+    </ol>
+    <div class="hl-box success"><span class="hl-label">NỐI BUỔI 7 — CALENDAR</span>
+      <p>Vì mỗi việc đã gắn <strong>ngày cụ thể</strong>, app Lịch ôn tập (Buổi 7) đọc Plan chi tiết này là tự
+        <strong>rải lên Calendar</strong> đúng ngày — bạn chỉ việc làm theo.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="35" data-title="Active Recall — vì sao tự kiểm tra">
   <div class="slide-body">
     <span class="eyebrow">NGUYÊN LÝ GHI NHỚ</span>
     <h2 class="slide-title">Tự kiểm tra giúp nhớ lâu hơn đọc lại</h2>
@@ -495,7 +880,8 @@ Tóm tắt bài học dưới đây theo đúng cấu trúc:
       </div>
       <div class="qbox-content"><strong>Active Recall</strong> = tự lôi kiến thức ra khỏi đầu (làm quiz) thay vì đọc lại
         thụ động. Nhờ "cố nhớ", trí nhớ được củng cố mạnh hơn nhiều.</div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Nguồn:</span>Hiệu ứng kiểm tra (Testing Effect) — Roediger &amp;
+      <div class="qbox-tip"><span class="qbox-tip-label">Nguồn:</span>Hiệu ứng kiểm tra (Testing Effect) — Roediger
+        &amp;
         Karpicke (2006), nghiên cứu kinh điển về trí nhớ học tập.</div>
     </div>
     <div class="hl-box info"><span class="hl-label">SẮP TỚI</span>
@@ -504,16 +890,17 @@ Tóm tắt bài học dưới đây theo đúng cấu trúc:
   </div>
 </section>
 
-<section class="slide" data-slide="22" data-title="Prompt mẫu: Tạo Quiz & Đề">
+<section class="slide" data-slide="36" data-title="Prompt mẫu: Tạo Quiz & Đề">
   <div class="slide-body">
     <span class="eyebrow">PROMPT MẪU 2 — SAU MỖI BÀI HỌC</span>
     <h2 class="slide-title">Tạo Quiz + Đề để tự kiểm tra</h2>
-    <div class="prompt-box"><span class="prompt-label">PROMPT — [[Prompt_Create_Quiz]] + [[Prompt_Exam_Preparation]]</span>Hãy đóng vai chuyên gia khảo thí lớp 8.
-Dựa trên bài học: [dán nội dung bài / tên note]
-Hãy tạo cho mình:
-A. QUIZ — 4 câu trắc nghiệm (mỗi câu 4 lựa chọn), ĐÁNH DẤU đáp án đúng.
-B. ĐỀ — 3 câu tự luận, kèm đáp án chi tiết.
-Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
+    <div class="prompt-box"><span class="prompt-label">PROMPT — [[Prompt_Create_Quiz]] +
+        [[Prompt_Exam_Preparation]]</span>Hãy đóng vai chuyên gia khảo thí lớp 8.
+      Dựa trên bài học: [dán nội dung bài / tên note]
+      Hãy tạo cho mình:
+      A. QUIZ — 4 câu trắc nghiệm (mỗi câu 4 lựa chọn), ĐÁNH DẤU đáp án đúng.
+      B. ĐỀ — 3 câu tự luận, kèm đáp án chi tiết.
+      Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
     <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));">
       <div class="card">
         <div class="card-icon" style="background:#2563EB;">📝</div>
@@ -527,29 +914,30 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
       </div>
     </div>
     <div class="hl-box info"><span class="hl-label">THÓI QUEN</span>
-      <p>Làm điều này <strong>sau mỗi bài học</strong> → bạn vừa ôn ngay, vừa tích lũy dần một kho đề của riêng mình.</p>
+      <p>Làm điều này <strong>sau mỗi bài học</strong> → bạn vừa ôn ngay, vừa tích lũy dần một kho đề của riêng mình.
+      </p>
     </div>
   </div>
 </section>
 
-<section class="slide" data-slide="23" data-title="Lưu vào kho đề (06_quiz_exam)">
+<section class="slide" data-slide="37" data-title="Lưu vào kho đề (06_quiz_exam)">
   <div class="slide-body">
     <span class="eyebrow">KHO ĐỀ TRONG MY SECOND BRAIN</span>
     <h2 class="slide-title">Lưu Quiz &amp; Đề vào 06_quiz_exam</h2>
     <div class="prompt-box"><span class="prompt-label">06_quiz_exam / Math_HangDangThuc.md</span>## 📝 Quiz
-### Khai triển (x + 4)² bằng?
-- x² + 16x + 8
-- x² + 8x + 16 ✅
-- x² + 4x + 16
+      ### Khai triển (x + 4)² bằng?
+      - x² + 16x + 8
+      - x² + 8x + 16 ✅
+      - x² + 4x + 16
 
-## 🎯 Đề
-**Câu 1:** Khai triển: (2x + 3)²
-**Câu 2:** Phân tích thành nhân tử: x³ − 8
-### Đáp án
-1. 4x² + 12x + 9
-2. (x−2)(x²+2x+4)
+      ## 🎯 Đề
+      **Câu 1:** Khai triển: (2x + 3)²
+      **Câu 2:** Phân tích thành nhân tử: x³ − 8
+      ### Đáp án
+      1. 4x² + 12x + 9
+      2. (x−2)(x²+2x+4)
 
-#quiz-exam</div>
+      #quiz-exam</div>
     <ol class="steps stagger">
       <li>Tạo note trong <code>06_quiz_exam</code>, đặt tên theo bài (vd <code>Math_HangDangThuc</code>).</li>
       <li>Dán phần <strong>Quiz</strong>, đánh dấu đáp án đúng bằng <code>✅</code>.</li>
@@ -563,7 +951,7 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
   </div>
 </section>
 
-<section class="slide" data-slide="24" data-title="Quiz: Prompt tóm tắt tốt">
+<section class="slide" data-slide="38" data-title="Quiz: Prompt tóm tắt tốt">
   <div class="slide-body">
     <span class="eyebrow">KIỂM TRA NHANH</span>
     <h2 class="slide-title">Một prompt tóm tắt TỐT nên có gì?</h2>
@@ -572,7 +960,8 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
       <p class="quiz-q">Đâu là prompt tóm tắt hiệu quả nhất?</p>
       <div class="quiz-opts">
         <button class="quiz-opt" data-index="0">"Tóm tắt giúp tôi."</button>
-        <button class="quiz-opt" data-index="1">"Đóng vai GV lớp 8, tóm tắt bài [X] theo TL;DR + ý chính + ELI5 + flashcard."</button>
+        <button class="quiz-opt" data-index="1">"Đóng vai GV lớp 8, tóm tắt bài [X] theo TL;DR + ý chính + ELI5 +
+          flashcard."</button>
         <button class="quiz-opt" data-index="2">"Viết càng dài càng tốt."</button>
         <button class="quiz-opt" data-index="3">"TÓM TẮT NGAY!!!"</button>
       </div>
@@ -581,12 +970,13 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
   </div>
 </section>
 
-<section class="slide slide-cover" data-slide="25" data-title="Kiểm chứng — đừng tin AI ngay">
+<!-- ============ PHẦN 2 — TƯ DUY PHẢN BIỆN ============ -->
+<section class="slide slide-cover" data-slide="39" data-title="Kiểm chứng — đừng tin AI ngay">
   <div class="cover-orb orb-1" style="background:#D97706;"></div>
   <div class="cover-orb orb-2" style="background:#DC2626;"></div>
   <div class="cover-orb orb-3"></div>
   <div class="cover-content slide-body">
-    <span class="eyebrow">KỸ NĂNG SỐNG CÒN</span>
+    <span class="eyebrow">PHẦN 2 · KỸ NĂNG SỐNG CÒN</span>
     <h1 class="hero-title">Kiểm chứng — <span class="grad-text">đừng tin AI ngay</span></h1>
     <p class="slide-subtitle">Trước khi dùng bất cứ thông tin nào từ AI, bạn phải kiểm tra nó đúng hay sai.</p>
     <div class="cover-chips"><span class="cover-chip">Đối chiếu nguồn</span><span class="cover-chip">Bắt AI dẫn
@@ -594,7 +984,7 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
   </div>
 </section>
 
-<section class="slide" data-slide="26" data-title="Vì sao phải kiểm chứng">
+<section class="slide" data-slide="40" data-title="Vì sao phải kiểm chứng">
   <div class="slide-body">
     <span class="eyebrow">TRÁCH NHIỆM LÀ CỦA BẠN</span>
     <h2 class="slide-title">Vì sao phải kiểm chứng?</h2>
@@ -611,7 +1001,7 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
   </div>
 </section>
 
-<section class="slide" data-slide="27" data-title="Quy trình kiểm chứng">
+<section class="slide" data-slide="41" data-title="Quy trình kiểm chứng">
   <div class="slide-body">
     <span class="eyebrow">LÀM THEO 4 BƯỚC</span>
     <h2 class="slide-title">Quy trình kiểm chứng thông tin AI</h2>
@@ -627,21 +1017,7 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
   </div>
 </section>
 
-<section class="slide" data-slide="28" data-title="Bắt AI tự dẫn chứng">
-  <div class="slide-body">
-    <span class="eyebrow">PROMPT KIỂM CHỨNG</span>
-    <h2 class="slide-title">4 câu khiến AI tự "lòi" chỗ chưa chắc</h2>
-    <div class="prompt-box"><span class="prompt-label">HỎI LẠI AI</span>- "Bạn có chắc không? Hãy kiểm tra lại."
-- "Trích nguồn cụ thể cho từng ý."
-- "Giải thích từng bước suy luận của bạn."
-- "Có thông tin nào ở đây bạn KHÔNG chắc chắn không?"</div>
-    <div class="hl-box info"><span class="hl-label">VÌ SAO HIỆU QUẢ</span>
-      <p>Bắt AI "giải thích từng bước" giúp bạn nhìn ra chỗ nó suy luận sai — thay vì chỉ thấy kết quả cuối.</p>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-slide="29" data-title="Bộ lọc tư duy phản biện">
+<section class="slide" data-slide="42" data-title="Bộ lọc tư duy phản biện">
   <div class="slide-body">
     <span class="eyebrow">CRITICAL THINKING · [[Prompt_Critical_Thinking]]</span>
     <h2 class="slide-title">5 câu hỏi phản biện vạn năng</h2>
@@ -674,11 +1050,12 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
         <p>Phần nào chắc, phần nào chỉ là phỏng đoán?</p>
       </div>
     </div>
-    <div class="prompt-box"><span class="prompt-label">DÁN 5 CÂU NÀY VÀO CUỐI MỌI PROMPT</span>- "Nguồn/căn cứ của thông tin này là gì? Nếu không có, nói rõ là bạn đang suy đoán."
-- "Giả định nào nếu sai thì cả kết luận sụp đổ?"
-- "Cho tôi một góc nhìn ngược / một phương án phản bác."
-- "Muốn bác bỏ kết luận này, cần tìm bằng chứng gì?"
-- "Bạn chắc chắn bao nhiêu % cho từng ý?"</div>
+    <div class="prompt-box"><span class="prompt-label">DÁN 5 CÂU NÀY VÀO CUỐI MỌI PROMPT</span>- "Nguồn/căn cứ của thông
+      tin này là gì? Nếu không có, nói rõ là bạn đang suy đoán."
+      - "Giả định nào nếu sai thì cả kết luận sụp đổ?"
+      - "Cho tôi một góc nhìn ngược / một phương án phản bác."
+      - "Muốn bác bỏ kết luận này, cần tìm bằng chứng gì?"
+      - "Bạn chắc chắn bao nhiêu % cho từng ý?"</div>
     <div class="hl-box info"><span class="hl-label">LƯU SẴN ĐỂ DÙNG LẠI</span>
       <p>Cả bộ này nằm trong kho <code>AI_Prompts</code> với tên <strong>[[Prompt_Critical_Thinking]]</strong>. Vội thì
         chỉ cần dán 5 câu trên để buộc AI tự kiểm tra mình.</p>
@@ -686,7 +1063,7 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
   </div>
 </section>
 
-<section class="slide" data-slide="30" data-title="Đòn phản biện theo tình huống">
+<section class="slide" data-slide="43" data-title="Đòn phản biện theo tình huống">
   <div class="slide-body">
     <span class="eyebrow">MỖI VIỆC MỘT "ĐÒN" PHẢN BIỆN</span>
     <h2 class="slide-title">Chọn đúng cách phản biện cho từng việc</h2>
@@ -733,19 +1110,25 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
   </div>
 </section>
 
-<section class="slide" data-slide="31" data-title="Game: Dùng ngay hay kiểm chứng?">
+<section class="slide" data-slide="44" data-title="Game: Dùng ngay hay kiểm chứng?">
   <div class="slide-body">
     <span class="eyebrow">QUICK SELF-TEST</span>
     <h2 class="slide-title">Câu trả lời nào của AI cần kiểm chứng?</h2>
     <p class="slide-subtitle">Kéo (hoặc bấm) từng thẻ vào đúng nhóm.</p>
     <div class="game-area">
       <div class="game-items" id="gameItems">
-        <div class="draggable" draggable="true" data-type="dung" data-label="AI sửa lại câu văn cho mượt hơn">AI sửa lại câu văn cho mượt hơn</div>
-        <div class="draggable" draggable="true" data-type="kiem" data-label="AI trích 'theo nghiên cứu năm 2021...'">AI trích "theo nghiên cứu năm 2021..."</div>
-        <div class="draggable" draggable="true" data-type="kiem" data-label="AI đưa ngày sinh một nhân vật lịch sử">AI đưa ngày sinh một nhân vật lịch sử</div>
-        <div class="draggable" draggable="true" data-type="dung" data-label="AI gợi ý dàn ý cho bài viết của bạn">AI gợi ý dàn ý cho bài viết của bạn</div>
-        <div class="draggable" draggable="true" data-type="kiem" data-label="AI khẳng định một công thức bạn chưa từng học">AI khẳng định một công thức bạn chưa từng học</div>
-        <div class="draggable" draggable="true" data-type="kiem" data-label="AI đưa một con số thống kê %">AI đưa một con số thống kê %</div>
+        <div class="draggable" draggable="true" data-type="dung" data-label="AI sửa lại câu văn cho mượt hơn">AI sửa lại
+          câu văn cho mượt hơn</div>
+        <div class="draggable" draggable="true" data-type="kiem" data-label="AI trích 'theo nghiên cứu năm 2021...'">AI
+          trích "theo nghiên cứu năm 2021..."</div>
+        <div class="draggable" draggable="true" data-type="kiem" data-label="AI đưa ngày sinh một nhân vật lịch sử">AI
+          đưa ngày sinh một nhân vật lịch sử</div>
+        <div class="draggable" draggable="true" data-type="dung" data-label="AI gợi ý dàn ý cho bài viết của bạn">AI gợi
+          ý dàn ý cho bài viết của bạn</div>
+        <div class="draggable" draggable="true" data-type="kiem"
+          data-label="AI khẳng định một công thức bạn chưa từng học">AI khẳng định một công thức bạn chưa từng học</div>
+        <div class="draggable" draggable="true" data-type="kiem" data-label="AI đưa một con số thống kê %">AI đưa một
+          con số thống kê %</div>
       </div>
       <div class="game-buckets" style="grid-template-columns:1fr 1fr;">
         <div class="bucket" data-bucket="dung" data-color="#059669" style="border-color:#10B981;background:#ECFDF5;">
@@ -765,28 +1148,7 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
   </div>
 </section>
 
-<section class="slide" data-slide="32" data-title="Sổ Tay #3 — Bộ lọc phản biện">
-  <div class="slide-body">
-    <span class="eyebrow">ÁP DỤNG</span>
-    <h2 class="slide-title">Bạn sẽ kiểm chứng câu trả lời nào?</h2>
-    <div class="qbox qbox-purple">
-      <div class="qbox-header">
-        <div class="qbox-icon">#</div>SỔ TAY #3
-      </div>
-      <div class="qbox-content">Nghĩ về 1 câu trả lời của AI bạn từng nhận (hoặc sẽ hỏi). Viết: câu đó là gì + bạn sẽ
-        kiểm chứng bằng cách nào (SGK? hỏi GV? tìm nguồn?).</div>
-      <div class="nb-input-wrap">
-        <label>Câu trả lời + cách kiểm chứng:</label>
-        <textarea class="nb-input" data-nb-id="3" placeholder="Câu AI nói: ... | Mình kiểm chứng bằng: ..."></textarea>
-        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
-      </div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Tập thói quen: nhận thông tin → nghĩ ngay "kiểm
-        chứng bằng gì".</div>
-    </div>
-  </div>
-</section>
-
-<section class="slide" data-slide="33" data-title="Cờ đỏ — khi AI dễ sai">
+<section class="slide" data-slide="45" data-title="Cờ đỏ — khi AI dễ sai">
   <div class="slide-body">
     <span class="eyebrow">CẢNH BÁO SỚM</span>
     <h2 class="slide-title">4 "cờ đỏ" — thấy là bật chế độ kiểm chứng</h2>
@@ -819,7 +1181,7 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
   </div>
 </section>
 
-<section class="slide" data-slide="34" data-title="Hỏi bạn cặp #2">
+<section class="slide" data-slide="46" data-title="Hỏi bạn cặp #2">
   <div class="slide-body">
     <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
     <h2 class="slide-title">Cùng bạn cặp — thử kiểm chứng</h2>
@@ -829,24 +1191,47 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
       </div>
       <div class="qbox-content">Hai bạn cùng hỏi AI một câu có số liệu hoặc ngày tháng, rồi cùng kiểm chứng bằng SGK
         hoặc tìm kiếm. "<em>AI có đúng không? Sai ở chỗ nào?</em>"</div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Trải nghiệm thật một lần bắt lỗi AI sẽ khiến bạn
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Trải nghiệm thật một lần bắt lỗi AI sẽ khiến
+        bạn
         nhớ mãi thói quen kiểm chứng.</div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-slide="35" data-title="Từ điển Buổi 6 — click để lật">
+<section class="slide" data-slide="47" data-title="Sổ Tay #3 — Bộ lọc phản biện">
   <div class="slide-body">
-    <span class="eyebrow">10 THUẬT NGỮ — CLICK ĐỂ LẬT</span>
+    <span class="eyebrow">ÁP DỤNG</span>
+    <h2 class="slide-title">Bạn sẽ kiểm chứng câu trả lời nào?</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header">
+        <div class="qbox-icon">#</div>SỔ TAY #3
+      </div>
+      <div class="qbox-content">Nghĩ về 1 câu trả lời của AI bạn từng nhận (hoặc sẽ hỏi). Viết: câu đó là gì + bạn sẽ
+        kiểm chứng bằng cách nào (SGK? hỏi GV? tìm nguồn?).</div>
+      <div class="nb-input-wrap">
+        <label>Câu trả lời + cách kiểm chứng:</label>
+        <textarea class="nb-input" data-nb-id="3" placeholder="Câu AI nói: ... | Mình kiểm chứng bằng: ..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Tập thói quen: nhận thông tin → nghĩ ngay "kiểm
+        chứng bằng gì".</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ ÔN TẬP & KẾT ============ -->
+<section class="slide" data-slide="48" data-title="Từ điển Buổi 6 — click để lật">
+  <div class="slide-body">
+    <span class="eyebrow">12 THUẬT NGỮ — CLICK ĐỂ LẬT</span>
     <h2 class="slide-title">Học qua ẩn dụ dễ nhớ</h2>
     <div class="fc-grid">
       <div class="fc">
         <div class="fc-inner">
           <div class="fc-front">
-            <div class="fc-term">RAG</div>
-            <div class="fc-vi">Đọc rồi mới trả lời</div>
+            <div class="fc-term">Chatbox AI</div>
+            <div class="fc-vi">Trò chuyện trên web</div>
           </div>
-          <div class="fc-back">Cho AI đọc đúng ghi chú/tài liệu của bạn trước khi trả lời — đỡ bịa, bám sát bài.</div>
+          <div class="fc-back">ChatGPT/Gemini/Claude/Grok — mở là dùng, không cài, không tự đọc vault.</div>
         </div>
       </div>
       <div class="fc">
@@ -855,7 +1240,52 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
             <div class="fc-term">Copilot</div>
             <div class="fc-vi">Trợ lý trong Obsidian</div>
           </div>
-          <div class="fc-back">Plugin chat với AI ngay trong vault; có Vault QA (RAG) và viết thẳng vào note.</div>
+          <div class="fc-back">Plugin AI tích hợp; có Vault QA (RAG) và viết thẳng vào note. Cần API key.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">API key</div>
+            <div class="fc-vi">Chìa khoá kết nối</div>
+          </div>
+          <div class="fc-back">Chuỗi bí mật để app gọi model AI (lấy ở Google AI Studio). KHÔNG chia sẻ.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">Agent</div>
+            <div class="fc-vi">AI tự thực thi</div>
+          </div>
+          <div class="fc-back">Express → Plan → Action: tự lập kế hoạch &amp; làm nhiều bước, khác chat.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">Antigravity</div>
+            <div class="fc-vi">IDE agentic của Google</div>
+          </div>
+          <div class="fc-back">Môi trường để Agent chạy theo plan, tạo cả sản phẩm. Công cụ nâng cao.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">Skill</div>
+            <div class="fc-vi">Kỹ năng đóng gói</div>
+          </div>
+          <div class="fc-back">Gói sẵn 1 quy trình để gọi lại — tái dùng, nhất quán hơn prompting tay.</div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <div class="fc-term">RAG</div>
+            <div class="fc-vi">Đọc rồi mới trả lời</div>
+          </div>
+          <div class="fc-back">Cho AI đọc đúng ghi chú/tài liệu của bạn trước khi trả lời — đỡ bịa.</div>
         </div>
       </div>
       <div class="fc">
@@ -870,28 +1300,10 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
       <div class="fc">
         <div class="fc-inner">
           <div class="fc-front">
-            <div class="fc-term">Prompt</div>
-            <div class="fc-vi">Lời nhắc</div>
+            <div class="fc-term">TL;DR / ELI5</div>
+            <div class="fc-vi">Tóm gọn / giải siêu dễ</div>
           </div>
-          <div class="fc-back">Câu lệnh bạn đưa cho AI. Rõ ràng thì kết quả tốt.</div>
-        </div>
-      </div>
-      <div class="fc">
-        <div class="fc-inner">
-          <div class="fc-front">
-            <div class="fc-term">TL;DR</div>
-            <div class="fc-vi">Tóm tắt cực ngắn</div>
-          </div>
-          <div class="fc-back">Vài dòng cốt lõi, đọc trong 10 giây là hiểu.</div>
-        </div>
-      </div>
-      <div class="fc">
-        <div class="fc-inner">
-          <div class="fc-front">
-            <div class="fc-term">ELI5</div>
-            <div class="fc-vi">Giải thích siêu dễ</div>
-          </div>
-          <div class="fc-back">"Giảng như cho trẻ 5 tuổi" bằng ví dụ đời thường.</div>
+          <div class="fc-back">TL;DR = vài dòng cốt lõi. ELI5 = giảng như cho trẻ 5 tuổi bằng ví dụ.</div>
         </div>
       </div>
       <div class="fc">
@@ -921,20 +1333,11 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
           <div class="fc-back">Đặt câu hỏi trước khi tin: ai nói, bằng chứng đâu, có hợp lý?</div>
         </div>
       </div>
-      <div class="fc">
-        <div class="fc-inner">
-          <div class="fc-front">
-            <div class="fc-term">Nguồn gốc</div>
-            <div class="fc-vi">Primary source</div>
-          </div>
-          <div class="fc-back">Tài liệu gốc (SGK, nghiên cứu) đáng tin hơn lời kể lại.</div>
-        </div>
-      </div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-slide="36" data-title="Tự kiểm tra #1">
+<section class="slide" data-slide="49" data-title="Tự kiểm tra #1">
   <div class="slide-body">
     <span class="eyebrow">TỰ KIỂM TRA — KHÔNG NỘP</span>
     <h2 class="slide-title">AI đưa số liệu cụ thể — bạn làm gì?</h2>
@@ -952,25 +1355,45 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
   </div>
 </section>
 
-<section class="slide" data-slide="37" data-title="Tự kiểm tra #2">
+<section class="slide" data-slide="50" data-title="Tự kiểm tra #2">
   <div class="slide-body">
     <span class="eyebrow">TỰ KIỂM TRA — #2</span>
-    <h2 class="slide-title">Vai trò đúng của AI trong học tập?</h2>
-    <div class="quiz" data-correct="1"
-      data-explanation="AI là trợ lý hỗ trợ. Bạn vẫn là người có kiến thức, kiểm chứng và quyết định.">
-      <p class="quiz-q">Cách hiểu đúng về AI khi học là gì?</p>
+    <h2 class="slide-title">Agent khác Chatbox ở điểm nào?</h2>
+    <div class="quiz" data-correct="2"
+      data-explanation="Agent tự lập kế hoạch và thực thi nhiều bước (Express → Plan → Action); chatbox chỉ trả lời một lượt.">
+      <p class="quiz-q">Điểm khác biệt cốt lõi của Agent so với Chatbox AI?</p>
       <div class="quiz-opts">
-        <button class="quiz-opt" data-index="0">Người làm bài thay bạn.</button>
-        <button class="quiz-opt" data-index="1">Trợ lý hỗ trợ — bạn vẫn kiểm chứng và quyết định.</button>
-        <button class="quiz-opt" data-index="2">Nguồn chân lý tuyệt đối.</button>
-        <button class="quiz-opt" data-index="3">Thứ thay thế thầy cô và SGK.</button>
+        <button class="quiz-opt" data-index="0">Agent trả lời nhanh hơn.</button>
+        <button class="quiz-opt" data-index="1">Agent chạy được trên điện thoại.</button>
+        <button class="quiz-opt" data-index="2">Agent tự lập kế hoạch &amp; thực thi nhiều bước, không chỉ trả
+          lời.</button>
+        <button class="quiz-opt" data-index="3">Agent không bao giờ sai.</button>
       </div>
       <div class="quiz-fb"></div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-slide="38" data-title="Checklist cuối buổi">
+<section class="slide slide-cover" data-slide="51" data-title="Game: Vượt 4 cổng C.O.D.E">
+  <div class="cover-orb orb-1" style="background:#6366F1;"></div>
+  <div class="cover-orb orb-2" style="background:#06B6D4;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">TRÒ CHƠI ÔN TẬP</span>
+    <h1 class="hero-title">Vượt 4 cổng <span class="grad-text">C.O.D.E</span></h1>
+    <p class="slide-subtitle">Điều khiển nhân vật chạy qua 4 màn Capture → Organize → Distill → Express, né "tin giả"
+      &amp; "hallucination", thu mảnh kiến thức, trả lời đúng câu hỏi để mở mỗi cổng.</p>
+    <div style="margin-top:1.5rem;">
+      <a class="cover-chip" href="buoi_06_game.html" target="_blank" rel="noopener"
+        style="text-decoration:none;font-size:1.1rem;padding:0.8rem 1.6rem;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.5);">▶
+        Mở game (buoi_06_game.html)</a>
+    </div>
+    <p style="margin-top:1.2rem;color:rgba(255,255,255,0.8);font-size:0.95rem;">Nếu không mở được link, GV mở trực tiếp
+      file <code>slides/buoi_06_game.html</code> trong trình duyệt.</p>
+  </div>
+</section>
+
+<section class="slide" data-slide="52" data-title="Checklist cuối buổi">
   <div class="slide-body">
     <span class="eyebrow">CUỐI BUỔI 6 — KIỂM TRA BẠN ĐÃ LÀM GÌ</span>
     <h2 class="slide-title">Checklist — bấm để tick</h2>
@@ -984,37 +1407,37 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
       </div>
       <ul class="cl-list" id="clList">
         <li class="cl-item">
-          <div class="cl-check"></div><span>Hiểu hallucination là gì</span>
+          <div class="cl-check"></div><span>Phân biệt được 3 loại công cụ AI: Chatbox · Copilot · Agent</span>
+        </li>
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Cài plugin Copilot trong Obsidian</span>
+        </li>
+        <li class="cl-item">
+          <div class="cl-check"></div><span>Lấy API key Google AI Studio và dán vào Copilot</span>
         </li>
         <li class="cl-item">
           <div class="cl-check"></div><span>Hiểu RAG: cho AI đọc ghi chú của mình trước khi trả lời</span>
         </li>
         <li class="cl-item">
-          <div class="cl-check"></div><span>Dùng Copilot tạo/tóm tắt nội dung ngay trong Obsidian</span>
+          <div class="cl-check"></div><span>Hiểu Agent: Express → Plan → Action (vd Google Antigravity)</span>
         </li>
         <li class="cl-item">
-          <div class="cl-check"></div><span>Hiểu AI là trợ lý, mình là người làm chủ</span>
+          <div class="cl-check"></div><span>Hiểu hallucination &amp; vì sao AI sai</span>
         </li>
         <li class="cl-item">
-          <div class="cl-check"></div><span>Viết được 1 prompt tóm tắt có cấu trúc (R+C+T+F)</span>
+          <div class="cl-check"></div><span>Viết được 1 prompt tóm tắt có cấu trúc (Distill)</span>
         </li>
         <li class="cl-item">
           <div class="cl-check"></div><span>Nhờ AI tóm tắt 1 bài và lưu vào note Resource</span>
         </li>
         <li class="cl-item">
-          <div class="cl-check"></div><span>Tạo Quiz + Đề cho 1 bài và lưu vào kho đề 06_quiz_exam</span>
+          <div class="cl-check"></div><span>Tạo Quiz + Đề (Express) và lưu vào kho 06_quiz_exam</span>
         </li>
         <li class="cl-item">
-          <div class="cl-check"></div><span>Kiểm chứng ít nhất 1 thông tin AI bằng SGK/nguồn khác</span>
+          <div class="cl-check"></div><span>Kiểm chứng ít nhất 1 thông tin AI + nhớ 5 câu phản biện</span>
         </li>
         <li class="cl-item">
-          <div class="cl-check"></div><span>Nhớ 5 câu hỏi phản biện vạn năng (Prompt_Critical_Thinking)</span>
-        </li>
-        <li class="cl-item">
-          <div class="cl-check"></div><span>Nhận ra 4 "cờ đỏ" AI dễ sai</span>
-        </li>
-        <li class="cl-item">
-          <div class="cl-check"></div><span>Đã thảo luận với bạn cặp ít nhất 2 lần</span>
+          <div class="cl-check"></div><span>Vượt được game 4 cổng C.O.D.E</span>
         </li>
         <li class="cl-item">
           <div class="cl-check"></div><span>Viết Sổ Tay #1, #2, #3</span>
@@ -1027,24 +1450,25 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
   </div>
 </section>
 
-<section class="slide" data-slide="39" data-title="Thử AI tại nhà">
+<section class="slide" data-slide="53" data-title="Thử AI tại nhà">
   <div class="slide-body">
     <span class="eyebrow">BÀI TẬP VỀ NHÀ — TRƯỚC BUỔI 7</span>
-    <h2 class="slide-title">Tóm tắt + Kiểm chứng một bài học</h2>
+    <h2 class="slide-title">Distill + Express + Kiểm chứng một bài học</h2>
     <div class="qbox qbox-orange">
       <div class="qbox-header">
         <div class="qbox-icon">+</div>THỬ AI TẠI NHÀ
       </div>
-      <div class="qbox-content">Chọn 1 bài học khó. <strong>(1)</strong> Dùng prompt tóm tắt khoa học để AI cô đọng.
-        <strong>(2)</strong> KIỂM CHỨNG mọi số liệu/công thức bằng SGK. <strong>(3)</strong> Ghi lại 1 chỗ AI nói sai
-        hoặc thiếu (nếu có). Lưu bản đã kiểm chứng vào vault và khoe nhóm Zalo lớp.</div>
+      <div class="qbox-content">Chọn 1 bài học khó. <strong>(1)</strong> Dùng prompt tóm tắt khoa học để AI cô đọng
+        (Distill). <strong>(2)</strong> Tạo Quiz + Đề (Express), lưu vào <code>06_quiz_exam</code>. <strong>(3)</strong>
+        KIỂM CHỨNG mọi số liệu/công thức bằng SGK, ghi lại 1 chỗ AI sai (nếu có). Lưu vào vault và khoe nhóm Zalo lớp.
+      </div>
       <div class="qbox-tip"><span class="qbox-tip-label">Gợi ý:</span>Bản tóm tắt + quiz này chính là dữ liệu bạn sẽ đưa
         lên app ở Buổi 7.</div>
     </div>
   </div>
 </section>
 
-<section class="slide" data-slide="40" data-title="Sổ Tay #4 — Cuối buổi">
+<section class="slide" data-slide="54" data-title="Sổ Tay #4 — Cuối buổi">
   <div class="slide-body">
     <span class="eyebrow">BOOKEND REFLECTION</span>
     <h2 class="slide-title">Từ nay bạn dùng AI thế nào?</h2>
@@ -1059,21 +1483,22 @@ Yêu cầu: giải thích vì sao đúng + chỉ ra "bẫy" hay gặp.</div>
         <textarea class="nb-input" data-nb-id="4" placeholder="Trước: ... | Từ nay: ..."></textarea>
         <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
       </div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Kỹ thuật:</span>Nếu bạn rút ra "luôn kiểm chứng trước khi tin" —
+      <div class="qbox-tip"><span class="qbox-tip-label">Kỹ thuật:</span>Nếu bạn rút ra "luôn kiểm chứng trước khi tin"
+        —
         bạn đã nắm được điều quan trọng nhất buổi nay.</div>
     </div>
   </div>
 </section>
 
-<section class="slide slide-cover" data-slide="41" data-title="Hẹn Buổi 7">
+<section class="slide slide-cover" data-slide="55" data-title="Hẹn Buổi 7">
   <div class="cover-orb orb-1"></div>
   <div class="cover-orb orb-2"></div>
   <div class="cover-orb orb-3"></div>
   <div class="cover-content slide-body">
     <span class="eyebrow">HẾT BUỔI 6</span>
     <h1 class="hero-title">Hẹn bạn ở Buổi 7<br /><span class="grad-text">Hoàn thành APP-3.2</span></h1>
-    <p class="slide-subtitle">Bạn đã biết dùng AI để tóm tắt &amp; kiểm chứng. Buổi 7 bạn đưa các bản tóm tắt + quiz
-      (đã kiểm chứng) vào app Lịch ôn tập.</p>
+    <p class="slide-subtitle">Bạn đã biết chọn công cụ AI, dùng AI để Distill &amp; Express, và kiểm chứng bằng tư duy
+      phản biện. Buổi 7 bạn đưa bản tóm tắt + quiz (đã kiểm chứng) vào app Lịch ôn tập.</p>
     <div class="cover-chips"><span class="cover-chip">Mang theo bản tóm tắt</span><span class="cover-chip">Đem Sổ
         Tay</span><span class="cover-chip">Hoàn thiện Quiz</span></div>
     <p style="margin-top:2rem;color:rgba(255,255,255,0.85);font-size:1rem;">Cảm ơn bạn đã hoàn thành Buổi 6!</p>

@@ -96,19 +96,22 @@
   {
     "id": 6,
     "slug": "buoi_06",
-    "title": "AI Trợ lý — Tóm tắt & Tư duy phản biện",
+    "title": "AI Trợ lý — Công cụ AI & Tư duy phản biện",
     "module": "M2",
     "module_name": "Second Brain",
     "duration_min": 120,
     "file": "buoi_06.html",
     "available": true,
-    "description": "Dùng prompt để tóm tắt & lưu bài học một cách khoa học, kiểm chứng thông tin AI đưa ra, rèn tư duy phản biện. AI chỉ là trợ lý — cần kiến thức nền để làm chủ AI.",
+    "description": "Đi dọc flow C.O.D.E với AI: phân biệt & cài đặt công cụ AI (Chatbox, Copilot+API Google AI Studio, Agent/Google Antigravity), dùng AI để Distill (tóm tắt khoa học) & Express (Quiz/Đề), rèn tư duy phản biện & kiểm chứng. Kèm game 'Vượt 4 cổng C.O.D.E'.",
     "tags": [
-      "prompt",
-      "summary",
+      "cong-cu-ai",
+      "copilot",
+      "antigravity",
+      "agent",
+      "code",
       "fact-check",
       "critical-thinking",
-      "active-recall"
+      "game"
     ]
   },
   {
