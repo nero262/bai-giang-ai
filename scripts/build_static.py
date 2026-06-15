@@ -73,6 +73,13 @@ def build(out_dir: Path) -> None:
             n_img = sum(1 for _ in img_dir.iterdir())
             print(f"  + lesson/{img_dir.name}/ ({n_img} ảnh)")
 
+    # Copy file game/standalone đi kèm slide (vd: slides/buoi_06_game.html) → dist/lesson/<tên>.html
+    # Slide tham chiếu bằng đường dẫn TƯƠNG ĐỐI (vd "buoi_06_game.html"), nên file phải
+    # nằm cạnh lesson/<slug>.html mới mở được trên GitHub Pages.
+    for game_file in sorted(SLIDES_DIR.glob("buoi_*_game.html")):
+        shutil.copy2(game_file, out_dir / "lesson" / game_file.name)
+        print(f"  + lesson/{game_file.name}")
+
     # ---- Trang chủ (ở gốc dist) ----
     index_html = index_tpl.render(
         app_name=APP_NAME,
