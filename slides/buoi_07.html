@@ -1,3085 +1,200 @@
 <!--
-  Slide fragment cho Buổi 7.
-  Chrome (sidebar/top-bar/slide-engine/notebook/quiz) đến từ
-  frontend/templates/lesson.html. File này chỉ chứa nội dung slide,
-  CSS riêng (nếu có), và cấu hình Sổ Tay.
+  Slide fragment cho Buổi 7 — Tự xây ứng dụng bằng Agent (Game học tập / App mục tiêu) + An toàn AI.
+  Format fragment: chỉ gồm cấu hình Sổ Tay + các <section class="slide">.
+  Chrome (sidebar, top-bar, SlideEngine, notebook, quiz/checklist/drag-drop, toàn bộ CSS)
+  do frontend/templates/lesson.html cung cấp.
 -->
-
-<style>
-  *,
-  *::before,
-  *::after {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-
-  :root {
-    /* Modern Tech palette — Blue + Slate (clean, professional) — giữ từ buoi_01.html gốc */
-    --bg: #0F172A;
-    --bg-light: #1E293B;
-    --surface: #FFFFFF;
-    --surface-alt: #F1F5F9;
-    --surface-2: #E2E8F0;
-    --border: #E2E8F0;
-    --text: #0F172A;
-    --text-light: #FFFFFF;
-    --text-muted: #94A3B8;
-    --text-dim: #475569;
-
-    --primary: #2563EB;
-    /* Royal Blue */
-    --primary-light: #3B82F6;
-    --primary-dark: #1D4ED8;
-    --accent: #06B6D4;
-    /* Cyan accent */
-    --success: #059669;
-    --warning: #D97706;
-    --danger: #DC2626;
-
-    /* 4 loại câu hỏi — dịu mắt, đồng bộ */
-    --box-blue: #EFF6FF;
-    --box-blue-border: #2563EB;
-    --box-blue-dark: #1E3A8A;
-    --box-yellow: #FFFBEB;
-    --box-yellow-border: #D97706;
-    --box-yellow-dark: #78350F;
-    --box-purple: #EEF2FF;
-    --box-purple-border: #6366F1;
-    --box-purple-dark: #3730A3;
-    --box-orange: #FFF7ED;
-    --box-orange-border: #EA580C;
-    --box-orange-dark: #7C2D12;
-
-    /* Gradient hệ Blue-Cyan */
-    --grad-primary: linear-gradient(135deg, #2563EB 0%, #0EA5E9 100%);
-    --grad-blue: linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%);
-    --grad-yellow: linear-gradient(135deg, #D97706 0%, #F59E0B 100%);
-    --grad-purple: linear-gradient(135deg, #4F46E5 0%, #6366F1 100%);
-    --grad-orange: linear-gradient(135deg, #EA580C 0%, #F97316 100%);
-    --grad-success: linear-gradient(135deg, #059669 0%, #06B6D4 100%);
-    --grad-cover: linear-gradient(135deg, #0F172A 0%, #1E40AF 60%, #0EA5E9 100%);
-
-    --shadow-sm: 0 1px 2px rgba(15, 23, 42, 0.05);
-    --shadow-md: 0 2px 8px rgba(15, 23, 42, 0.08);
-    --shadow-lg: 0 8px 24px rgba(15, 23, 42, 0.12);
-
-    --radius-sm: 8px;
-    --radius-md: 12px;
-    --radius-lg: 16px;
-
-    --font: 'Be Vietnam Pro', -apple-system, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
-  }
-
-  *:focus {
-    outline: none;
-  }
-
-  :focus-visible {
-    outline: 3px solid var(--primary);
-    outline-offset: 2px;
-    border-radius: 6px;
-  }
-
-  html,
-  body {
-    height: 100%;
-    overflow: hidden;
-  }
-
-  body {
-    font-family: var(--font);
-    background: var(--surface-alt);
-    color: var(--text);
-    line-height: 1.6;
-  }
-
-  .app {
-    display: flex;
-    height: 100vh;
-    position: relative;
-  }
-
-  /* SIDEBAR */
-  .sidebar {
-    width: 280px;
-    background: var(--bg);
-    color: white;
-    padding: 1.5rem 1rem;
-    overflow-y: auto;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-    flex-shrink: 0;
-    z-index: 50;
-    scrollbar-width: thin;
-    scrollbar-color: #475569 #1E293B;
-  }
-
-  .app.sidebar-collapsed .sidebar {
-    transform: translateX(-280px);
-    position: absolute;
-    height: 100vh;
-  }
-
-  .sidebar::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  .sidebar::-webkit-scrollbar-track {
-    background: #1E293B;
-  }
-
-  .sidebar::-webkit-scrollbar-thumb {
-    background: #475569;
-    border-radius: 3px;
-  }
-
-  .sidebar-brand {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid #1E293B;
-    margin-bottom: 1rem;
-  }
-
-  .brand-logo {
-    width: 36px;
-    height: 36px;
-    background: var(--grad-primary);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 1rem;
-    color: white;
-  }
-
-  .brand-text {
-    font-size: 0.95rem;
-    font-weight: 700;
-  }
-
-  .brand-sub {
-    font-size: 0.72rem;
-    color: var(--text-muted);
-  }
-
-  .module-section {
-    margin-bottom: 1rem;
-  }
-
-  .module-title {
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: var(--primary-light);
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    padding: 0.5rem 0.5rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-  }
-
-  .module-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--primary-light);
-  }
-
-  .lesson-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    padding: 0.55rem 0.7rem;
-    border-radius: 8px;
-    font-size: 0.82rem;
-    color: var(--text-muted);
-    cursor: pointer;
-    transition: all 0.2s;
-    margin-bottom: 2px;
-    text-decoration: none;
-    position: relative;
-  }
-
-  .lesson-item:hover:not(.disabled) {
-    background: rgba(99, 102, 241, 0.1);
-    color: white;
-  }
-
-  .lesson-item.active {
-    background: var(--grad-primary);
-    color: white;
-    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
-  }
-
-  .lesson-item.disabled {
-    color: #475569;
-    cursor: not-allowed;
-    opacity: 0.55;
-  }
-
-  .lesson-item.disabled::after {
-    content: 'Sắp ra mắt';
-    margin-left: auto;
-    font-size: 0.62rem;
-    background: #1E293B;
-    padding: 1px 6px;
-    border-radius: 100px;
-    color: #64748B;
-  }
-
-  .lesson-item.active::after {
-    content: 'Đang học';
-    margin-left: auto;
-    font-size: 0.62rem;
-    background: rgba(255, 255, 255, 0.25);
-    padding: 1px 6px;
-    border-radius: 100px;
-    color: white;
-  }
-
-  .lesson-num {
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: #1E293B;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 0.7rem;
-    font-weight: 700;
-    flex-shrink: 0;
-  }
-
-  .lesson-item.active .lesson-num {
-    background: rgba(255, 255, 255, 0.2);
-  }
-
-  /* MAIN */
-  .main {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .top-bar {
-    padding: 0.75rem 1.5rem;
-    background: white;
-    border-bottom: 1px solid #E2E8F0;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex-shrink: 0;
-    position: relative;
-    z-index: 10;
-  }
-
-  .top-collapse-btn {
-    background: var(--surface-alt);
-    border: 1px solid #E2E8F0;
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.1rem;
-    color: var(--text);
-  }
-
-  .top-collapse-btn:hover {
-    background: #E2E8F0;
-  }
-
-  .top-title {
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-  }
-
-  .lesson-badge {
-    background: var(--grad-primary);
-    color: white;
-    padding: 0.3rem 0.8rem;
-    border-radius: 100px;
-    font-size: 0.78rem;
-    font-weight: 700;
-  }
-
-  .top-title-text {
-    font-weight: 700;
-    font-size: 1rem;
-  }
-
-  .top-actions {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-  }
-
-  .btn-action {
-    background: var(--surface-alt);
-    border: 1px solid #E2E8F0;
-    padding: 0.4rem 0.9rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.82rem;
-    color: var(--text);
-    display: flex;
-    align-items: center;
-    gap: 0.3rem;
-    font-weight: 500;
-  }
-
-  .btn-action:hover {
-    background: #E2E8F0;
-  }
-
-  .btn-action.notebook {
-    background: var(--grad-purple);
-    color: white;
-    border: none;
-  }
-
-  .btn-action.notebook:hover {
-    transform: translateY(-1px);
-  }
-
-  .progress-track {
-    height: 3px;
-    background: #E2E8F0;
-    position: relative;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: var(--grad-primary);
-    width: 0;
-    transition: width 0.4s ease;
-  }
-
-  .slides-container {
-    flex: 1;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .slide {
-    position: absolute;
-    inset: 0;
-    padding: 2rem 4%;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transform: translateX(50px);
-    transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow-y: auto;
-  }
-
-  .slide.active {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(0);
-  }
-
-  .slide-body {
-    width: 100%;
-    max-width: 1100px;
-    padding: 1rem 0;
-  }
-
-  .eyebrow {
-    display: inline-block;
-    font-size: 0.75rem;
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    text-transform: uppercase;
-    color: var(--primary);
-    padding: 0.35rem 0.9rem;
-    background: rgba(99, 102, 241, 0.1);
-    border-radius: 100px;
-    margin-bottom: 1.2rem;
-  }
-
-  .hero-title {
-    font-size: clamp(2rem, 5vw, 4rem);
-    font-weight: 900;
-    line-height: 1.08;
-    letter-spacing: -0.025em;
-    margin-bottom: 1.2rem;
-    text-align: center;
-  }
-
-  .hero-title .grad-text {
-    background: var(--grad-primary);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
-  }
-
-  .slide-title {
-    font-size: clamp(1.6rem, 3vw, 2.4rem);
-    font-weight: 800;
-    letter-spacing: -0.02em;
-    margin-bottom: 1.2rem;
-    text-align: center;
-  }
-
-  .slide-subtitle {
-    font-size: clamp(0.95rem, 1.4vw, 1.15rem);
-    color: var(--text-dim);
-    text-align: center;
-    margin-bottom: 1.5rem;
-    max-width: 700px;
-    margin-left: auto;
-    margin-right: auto;
-  }
-
-  /* COVER SLIDE */
-  .slide-cover {
-    background: var(--bg);
-    color: white;
-    overflow: hidden;
-  }
-
-  .slide-cover .hero-title {
-    color: white;
-  }
-
-  .slide-cover .eyebrow {
-    color: white;
-    background: rgba(255, 255, 255, 0.15);
-    backdrop-filter: blur(10px);
-  }
-
-  .slide-cover .slide-subtitle {
-    color: rgba(255, 255, 255, 0.9);
-  }
-
-  .cover-orb {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(80px);
-    opacity: 0.6;
-    pointer-events: none;
-  }
-
-  .cover-orb.orb-1 {
-    width: 400px;
-    height: 400px;
-    background: #6366F1;
-    top: -100px;
-    left: -100px;
-  }
-
-  .cover-orb.orb-2 {
-    width: 350px;
-    height: 350px;
-    background: #EC4899;
-    bottom: -100px;
-    right: -100px;
-  }
-
-  .cover-orb.orb-3 {
-    width: 300px;
-    height: 300px;
-    background: #8B5CF6;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    opacity: 0.3;
-  }
-
-  .cover-content {
-    position: relative;
-    z-index: 2;
-    text-align: center;
-  }
-
-  .cover-chips {
-    display: flex;
-    gap: 0.6rem;
-    justify-content: center;
-    flex-wrap: wrap;
-    margin-top: 1.5rem;
-  }
-
-  .cover-chip {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: white;
-    padding: 0.5rem 1.1rem;
-    border-radius: 100px;
-    font-size: 0.85rem;
-    font-weight: 500;
-  }
-
-  /* QUESTION BOXES */
-  .qbox {
-    border-radius: 16px;
-    padding: 1.3rem 1.5rem;
-    margin: 1rem 0;
-    width: 100%;
-    max-width: 800px;
-    position: relative;
-    border-left: 5px solid;
-  }
-
-  .qbox-header {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-weight: 700;
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 0.7rem;
-  }
-
-  .qbox-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1rem;
-    font-weight: 900;
-    color: white;
-  }
-
-  .qbox-content {
-    font-size: 0.98rem;
-    line-height: 1.55;
-    font-weight: 500;
-  }
-
-  .qbox-tip {
-    margin-top: 0.7rem;
-    padding-top: 0.7rem;
-    border-top: 1px dashed currentColor;
-    font-size: 0.85rem;
-    opacity: 0.85;
-  }
-
-  .qbox-tip-label {
-    font-weight: 700;
-    margin-right: 0.3rem;
-  }
-
-  .qbox-blue {
-    background: var(--box-blue);
-    border-left-color: var(--box-blue-border);
-    color: var(--box-blue-dark);
-  }
-
-  .qbox-blue .qbox-icon {
-    background: var(--box-blue-border);
-  }
-
-  .qbox-yellow {
-    background: var(--box-yellow);
-    border-left-color: var(--box-yellow-border);
-    color: var(--box-yellow-dark);
-  }
-
-  .qbox-yellow .qbox-icon {
-    background: var(--box-yellow-border);
-  }
-
-  .qbox-purple {
-    background: var(--box-purple);
-    border-left-color: var(--box-purple-border);
-    color: var(--box-purple-dark);
-  }
-
-  .qbox-purple .qbox-icon {
-    background: var(--box-purple-border);
-  }
-
-  .qbox-orange {
-    background: var(--box-orange);
-    border-left-color: var(--box-orange-border);
-    color: var(--box-orange-dark);
-  }
-
-  .qbox-orange .qbox-icon {
-    background: var(--box-orange-border);
-  }
-
-  /* NOTEBOOK INPUT */
-  .nb-input-wrap {
-    margin-top: 1rem;
-    background: white;
-    border-radius: 12px;
-    padding: 1rem;
-    border: 2px dashed var(--box-purple-border);
-  }
-
-  .nb-input-wrap label {
-    display: block;
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--box-purple-dark);
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
-  }
-
-  .nb-input {
-    width: 100%;
-    border: none;
-    outline: none;
-    font-family: inherit;
-    font-size: 0.95rem;
-    padding: 0.5rem 0;
-    background: transparent;
-    color: var(--text);
-    resize: vertical;
-    min-height: 50px;
-  }
-
-  .nb-save-status {
-    font-size: 0.75rem;
-    color: var(--success);
-    font-weight: 500;
-    margin-top: 0.4rem;
-    display: none;
-  }
-
-  .nb-save-status.show {
-    display: block;
-  }
-
-  /* CARDS */
-  .card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1rem;
-    width: 100%;
-    margin-top: 1rem;
-  }
-
-  .card {
-    background: white;
-    border-radius: 14px;
-    padding: 1.2rem;
-    box-shadow: 0 2px 10px rgba(15, 23, 42, 0.06);
-    transition: all 0.3s;
-  }
-
-  .card:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.1);
-  }
-
-  .card-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 12px;
-    background: var(--grad-primary);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 1rem;
-    margin-bottom: 0.7rem;
-  }
-
-  .card h3 {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 0.3rem;
-    letter-spacing: -0.01em;
-  }
-
-  .card p {
-    font-size: 0.86rem;
-    color: var(--text-dim);
-    line-height: 1.5;
-  }
-
-  /* COMPARE TABLE */
-  .cmp-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0;
-    background: white;
-    border-radius: 14px;
-    overflow: hidden;
-    margin-top: 1rem;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
-  }
-
-  .cmp-table th,
-  .cmp-table td {
-    padding: 0.85rem 1rem;
-    text-align: left;
-    border-bottom: 1px solid #F1F5F9;
-    font-size: 0.92rem;
-  }
-
-  .cmp-table th {
-    font-weight: 700;
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-  }
-
-  .cmp-table th:first-child {
-    background: var(--surface-alt);
-    color: var(--text-dim);
-  }
-
-  .cmp-table th:nth-child(2) {
-    background: #FFF3E0;
-    color: #C2410C;
-  }
-
-  .cmp-table th:nth-child(3) {
-    background: #DCFCE7;
-    color: #15803D;
-  }
-
-  .cmp-table td:first-child {
-    font-weight: 600;
-    background: var(--surface-alt);
-    color: var(--text-dim);
-    font-size: 0.85rem;
-  }
-
-  .cmp-table tr:last-child td {
-    border-bottom: none;
-  }
-
-  /* DRAG-DROP GAME */
-  .game-area {
-    width: 100%;
-    margin-top: 1rem;
-  }
-
-  .game-items {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-    justify-content: center;
-    padding: 1rem;
-    background: var(--surface-alt);
-    border-radius: 14px;
-    min-height: 80px;
-    margin-bottom: 1rem;
-  }
-
-  .draggable {
-    background: white;
-    padding: 0.6rem 1.1rem;
-    border-radius: 100px;
-    cursor: grab;
-    font-size: 0.88rem;
-    font-weight: 500;
-    border: 2px solid #E2E8F0;
-    transition: all 0.2s;
-    user-select: none;
-    touch-action: none;
-    position: relative;
-  }
-
-  .draggable:active {
-    cursor: grabbing;
-    transform: scale(1.05);
-  }
-
-  .draggable.dragging {
-    opacity: 0.5;
-  }
-
-  .draggable.dropped {
-    display: none;
-  }
-
-  .tap-picker {
-    position: absolute;
-    top: calc(100% + 4px);
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 4px;
-    background: var(--bg);
-    padding: 4px;
-    border-radius: 100px;
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
-    z-index: 10;
-  }
-
-  .tap-pick {
-    border: none;
-    padding: 6px 12px;
-    border-radius: 100px;
-    font-size: 0.78rem;
-    font-weight: 600;
-    cursor: pointer;
-    font-family: inherit;
-  }
-
-  .tap-pick.predictive {
-    background: #FB923C;
-    color: white;
-  }
-
-  .tap-pick.generative {
-    background: #34D399;
-    color: white;
-  }
-
-  .game-buckets {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-  }
-
-  .bucket {
-    background: white;
-    border-radius: 14px;
-    padding: 1.2rem;
-    min-height: 160px;
-    border: 2px dashed #E2E8F0;
-    transition: all 0.2s;
-  }
-
-  .bucket.predictive {
-    border-color: #FB923C;
-    background: #FFF7ED;
-  }
-
-  .bucket.generative {
-    border-color: #34D399;
-    background: #ECFDF5;
-  }
-
-  .bucket.drag-over {
-    border-style: solid;
-    transform: scale(1.02);
-  }
-
-  .bucket-title {
-    font-weight: 700;
-    margin-bottom: 0.5rem;
-    font-size: 0.95rem;
-  }
-
-  .bucket.predictive .bucket-title {
-    color: #C2410C;
-  }
-
-  .bucket.generative .bucket-title {
-    color: #15803D;
-  }
-
-  .bucket-zone {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-  }
-
-  .dropped-item {
-    background: white;
-    padding: 0.4rem 0.9rem;
-    border-radius: 100px;
-    font-size: 0.82rem;
-    font-weight: 500;
-    border: 1px solid currentColor;
-  }
-
-  .dropped-item.correct {
-    background: #DCFCE7;
-    color: #15803D;
-    border-color: #15803D;
-  }
-
-  .dropped-item.wrong {
-    background: #FEE2E2;
-    color: #B91C1C;
-    border-color: #B91C1C;
-  }
-
-  .game-score {
-    margin-top: 1rem;
-    text-align: center;
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--primary);
-  }
-
-  .btn-restart {
-    margin-top: 0.5rem;
-    background: var(--primary);
-    color: white;
-    border: none;
-    padding: 0.5rem 1rem;
-    border-radius: 8px;
-    cursor: pointer;
-    font-family: inherit;
-    font-size: 0.85rem;
-    font-weight: 600;
-  }
-
-  /* QUIZ */
-  .quiz {
-    background: white;
-    border-radius: 16px;
-    padding: 1.5rem;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
-    width: 100%;
-    max-width: 750px;
-    margin-top: 0.5rem;
-  }
-
-  .quiz-q {
-    font-size: 1.05rem;
-    font-weight: 700;
-    margin-bottom: 1rem;
-    line-height: 1.4;
-  }
-
-  .quiz-opts {
-    counter-reset: opts;
-    display: flex;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-
-  .quiz-opt {
-    padding: 0.85rem 1.1rem;
-    border: 2px solid #E2E8F0;
-    border-radius: 10px;
-    background: white;
-    cursor: pointer;
-    text-align: left;
-    font-size: 0.95rem;
-    font-family: inherit;
-    transition: all 0.2s;
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-  }
-
-  .quiz-opt::before {
-    counter-increment: opts;
-    content: counter(opts, upper-alpha);
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    background: #F1F5F9;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 0.78rem;
-    color: var(--text-dim);
-    flex-shrink: 0;
-  }
-
-  .quiz-opt:hover {
-    border-color: var(--primary);
-    background: #F5F7FF;
-  }
-
-  .quiz-opt:hover::before {
-    background: var(--primary);
-    color: white;
-  }
-
-  .quiz-opt.correct {
-    border-color: var(--success);
-    background: #ECFDF5;
-  }
-
-  .quiz-opt.correct::before {
-    background: var(--success);
-    color: white;
-  }
-
-  .quiz-opt.wrong {
-    border-color: var(--danger);
-    background: #FEF2F2;
-  }
-
-  .quiz-opt.wrong::before {
-    background: var(--danger);
-    color: white;
-  }
-
-  .quiz-opt.disabled {
-    pointer-events: none;
-    opacity: 0.6;
-  }
-
-  .quiz-fb {
-    margin-top: 1rem;
-    padding: 0.9rem;
-    border-radius: 10px;
-    font-weight: 500;
-    font-size: 0.9rem;
-    display: none;
-  }
-
-  .quiz-fb.show {
-    display: block;
-  }
-
-  .quiz-fb.correct {
-    background: #ECFDF5;
-    color: #065F46;
-    border-left: 4px solid var(--success);
-  }
-
-  .quiz-fb.wrong {
-    background: #FEF2F2;
-    color: #B91C1C;
-    border-left: 4px solid var(--danger);
-  }
-
-  /* FLASHCARD */
-  .fc-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    gap: 0.8rem;
-    margin-top: 1rem;
-    width: 100%;
-  }
-
-  .fc {
-    perspective: 1000px;
-    height: 150px;
-    cursor: pointer;
-  }
-
-  .fc-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-style: preserve-3d;
-  }
-
-  .fc.flipped .fc-inner {
-    transform: rotateY(180deg);
-  }
-
-  .fc-front,
-  .fc-back {
-    position: absolute;
-    inset: 0;
-    backface-visibility: hidden;
-    border-radius: 14px;
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-  }
-
-  .fc-front {
-    background: white;
-    border: 2px solid #E2E8F0;
-  }
-
-  .fc-front .fc-term {
-    font-weight: 800;
-    font-size: 1.05rem;
-    color: var(--primary);
-    letter-spacing: 0.02em;
-  }
-
-  .fc-front .fc-vi {
-    font-size: 0.82rem;
-    color: var(--text-dim);
-    margin-top: 0.3rem;
-  }
-
-  .fc-back {
-    background: var(--grad-primary);
-    color: white;
-    transform: rotateY(180deg);
-    font-size: 0.85rem;
-    line-height: 1.4;
-  }
-
-  /* STEPS */
-  .steps {
-    list-style: none;
-    counter-reset: step;
-    width: 100%;
-    max-width: 800px;
-    margin-top: 1rem;
-  }
-
-  .steps li {
-    counter-increment: step;
-    padding: 0.85rem 1.2rem 0.85rem 3.8rem;
-    position: relative;
-    background: white;
-    border-radius: 12px;
-    margin-bottom: 0.5rem;
-    box-shadow: 0 1px 4px rgba(15, 23, 42, 0.04);
-    font-size: 0.94rem;
-    line-height: 1.5;
-  }
-
-  .steps li::before {
-    content: counter(step);
-    position: absolute;
-    left: 0.85rem;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 36px;
-    height: 36px;
-    background: var(--grad-primary);
-    color: white;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 800;
-    font-size: 1rem;
-  }
-
-  .steps li code {
-    background: #F1F5F9;
-    padding: 0.1rem 0.4rem;
-    border-radius: 4px;
-    font-family: var(--font-mono);
-    font-size: 0.85em;
-    color: var(--primary);
-  }
-
-  /* HIGHLIGHT BOX */
-  .hl-box {
-    background: linear-gradient(135deg, #FEF3C7 0%, #FED7AA 100%);
-    border-radius: 14px;
-    padding: 1.1rem 1.3rem;
-    margin: 1rem 0;
-    width: 100%;
-    max-width: 800px;
-    border-left: 4px solid var(--warning);
-  }
-
-  .hl-box.danger {
-    background: linear-gradient(135deg, #FEE2E2 0%, #FECACA 100%);
-    border-left-color: var(--danger);
-  }
-
-  .hl-box.success {
-    background: linear-gradient(135deg, #DCFCE7 0%, #BBF7D0 100%);
-    border-left-color: var(--success);
-  }
-
-  .hl-box.info {
-    background: linear-gradient(135deg, #DBEAFE 0%, #BFDBFE 100%);
-    border-left-color: #3B82F6;
-  }
-
-  .hl-label {
-    display: inline-block;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    margin-bottom: 0.4rem;
-    text-transform: uppercase;
-  }
-
-  .hl-box p {
-    font-size: 0.95rem;
-  }
-
-  /* TIMELINE */
-  .timeline {
-    position: relative;
-    padding-left: 2rem;
-    margin-top: 1rem;
-    width: 100%;
-    max-width: 850px;
-  }
-
-  .timeline::before {
-    content: '';
-    position: absolute;
-    left: 9px;
-    top: 0;
-    bottom: 0;
-    width: 3px;
-    background: linear-gradient(to bottom, var(--primary-light), var(--accent));
-    border-radius: 100px;
-  }
-
-  .tl-item {
-    position: relative;
-    padding-bottom: 1rem;
-  }
-
-  .tl-dot {
-    position: absolute;
-    left: -1.85rem;
-    top: 0.4rem;
-    width: 16px;
-    height: 16px;
-    background: white;
-    border: 3px solid var(--primary);
-    border-radius: 50%;
-  }
-
-  .tl-content {
-    background: white;
-    padding: 0.85rem 1.1rem;
-    border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
-  }
-
-  .tl-year {
-    font-size: 0.78rem;
-    font-weight: 800;
-    color: var(--primary);
-    letter-spacing: 0.05em;
-  }
-
-  .tl-title {
-    font-weight: 700;
-    font-size: 0.95rem;
-    margin: 0.2rem 0;
-  }
-
-  .tl-desc {
-    font-size: 0.86rem;
-    color: var(--text-dim);
-    line-height: 1.5;
-  }
-
-  /* MODULE ROADMAP */
-  .modmap {
-    display: grid;
-    grid-template-columns: repeat(6, 1fr);
-    gap: 0.5rem;
-    width: 100%;
-    margin-top: 1rem;
-    max-width: 1000px;
-  }
-
-  @media (max-width: 768px) {
-    .modmap {
-      grid-template-columns: repeat(3, 1fr);
-    }
-  }
-
-  .modmap-item {
-    background: white;
-    border-radius: 14px;
-    padding: 0.9rem 0.6rem;
-    text-align: center;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-    position: relative;
-    border-top: 3px solid;
-  }
-
-  .modmap-item:nth-child(1) {
-    border-top-color: #10B981;
-  }
-
-  .modmap-item:nth-child(2) {
-    border-top-color: #3B82F6;
-  }
-
-  .modmap-item:nth-child(3) {
-    border-top-color: #F59E0B;
-  }
-
-  .modmap-item:nth-child(4) {
-    border-top-color: #F97316;
-  }
-
-  .modmap-item:nth-child(5) {
-    border-top-color: #A855F7;
-  }
-
-  .modmap-item:nth-child(6) {
-    border-top-color: #10B981;
-  }
-
-  .modmap-mod {
-    font-size: 0.7rem;
-    font-weight: 800;
-    color: var(--primary);
-    letter-spacing: 0.08em;
-  }
-
-  .modmap-name {
-    font-size: 0.88rem;
-    font-weight: 700;
-    margin: 0.2rem 0;
-  }
-
-  .modmap-buoi {
-    font-size: 0.75rem;
-    color: var(--text-dim);
-    margin-bottom: 0.4rem;
-  }
-
-  .modmap-out {
-    font-size: 0.72rem;
-    color: var(--text);
-    line-height: 1.3;
-  }
-
-  /* CHECKLIST */
-  .cl-container {
-    width: 100%;
-    max-width: 700px;
-    margin-top: 1rem;
-  }
-
-  .cl-progress {
-    background: white;
-    border-radius: 12px;
-    padding: 0.7rem 1rem;
-    margin-bottom: 0.8rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.04);
-  }
-
-  .cl-bar {
-    flex: 1;
-    height: 8px;
-    background: #E2E8F0;
-    border-radius: 100px;
-    overflow: hidden;
-  }
-
-  .cl-bar-fill {
-    height: 100%;
-    background: var(--grad-success);
-    width: 0;
-    transition: width 0.4s ease;
-    border-radius: 100px;
-  }
-
-  .cl-stat {
-    font-weight: 700;
-    font-size: 0.9rem;
-    color: var(--success);
-  }
-
-  .cl-list {
-    list-style: none;
-  }
-
-  .cl-item {
-    background: white;
-    padding: 0.7rem 1rem;
-    border-radius: 10px;
-    margin-bottom: 0.4rem;
-    display: flex;
-    align-items: center;
-    gap: 0.7rem;
-    cursor: pointer;
-    font-size: 0.9rem;
-    transition: all 0.2s;
-  }
-
-  .cl-item:hover {
-    background: var(--surface-alt);
-  }
-
-  .cl-check {
-    width: 22px;
-    height: 22px;
-    border: 2px solid #CBD5E1;
-    border-radius: 6px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 900;
-    font-size: 0.85rem;
-    color: white;
-    transition: all 0.2s;
-  }
-
-  .cl-item.done .cl-check {
-    background: var(--success);
-    border-color: var(--success);
-  }
-
-  .cl-item.done .cl-check::after {
-    content: '✓';
-  }
-
-  .cl-item.done span {
-    text-decoration: line-through;
-    color: var(--text-muted);
-  }
-
-  /* PROMPT BOX */
-  .prompt-box {
-    background: var(--bg);
-    color: #CDD6F4;
-    border-radius: 14px;
-    padding: 1.1rem 1.4rem;
-    font-family: var(--font-mono);
-    font-size: 0.88rem;
-    line-height: 1.7;
-    margin: 0.8rem 0;
-    width: 100%;
-    max-width: 800px;
-    border-left: 4px solid var(--warning);
-    text-align: left;
-    white-space: pre-wrap;
-    position: relative;
-  }
-
-  .prompt-box .prompt-label {
-    display: block;
-    font-size: 0.65rem;
-    color: var(--warning);
-    font-weight: 700;
-    letter-spacing: 0.15em;
-    margin-bottom: 0.4rem;
-    font-family: var(--font);
-  }
-
-  /* NAV */
-  .nav-bar {
-    position: fixed;
-    bottom: 1rem;
-    right: 1rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    background: white;
-    padding: 0.4rem;
-    border-radius: 100px;
-    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12);
-    z-index: 40;
-  }
-
-  .nav-btn {
-    width: 38px;
-    height: 38px;
-    border-radius: 50%;
-    border: none;
-    background: var(--surface-alt);
-    color: var(--text);
-    font-size: 1rem;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    transition: all 0.2s;
-  }
-
-  .nav-btn:hover {
-    background: var(--primary);
-    color: white;
-  }
-
-  .nav-btn:disabled {
-    opacity: 0.3;
-    cursor: not-allowed;
-  }
-
-  .nav-counter {
-    padding: 0 0.7rem;
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: var(--text-dim);
-    min-width: 64px;
-    text-align: center;
-  }
-
-  /* NOTEBOOK */
-  .nb-overlay {
-    position: fixed;
-    inset: 0;
-    background: rgba(15, 23, 42, 0.75);
-    backdrop-filter: blur(10px);
-    z-index: 100;
-    display: none;
-    align-items: center;
-    justify-content: center;
-    padding: 1.5rem;
-  }
-
-  .nb-overlay.show {
-    display: flex;
-  }
-
-  .nb-panel {
-    background: white;
-    border-radius: 20px;
-    padding: 1.5rem 1.8rem;
-    max-width: 700px;
-    width: 100%;
-    max-height: 85vh;
-    overflow-y: auto;
-  }
-
-  .nb-header {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 1rem;
-  }
-
-  .nb-title {
-    font-size: 1.4rem;
-    font-weight: 800;
-    color: var(--box-purple-dark);
-  }
-
-  .nb-close {
-    background: var(--surface-alt);
-    border: none;
-    width: 32px;
-    height: 32px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 1.2rem;
-  }
-
-  .nb-entry {
-    background: var(--surface-alt);
-    border-radius: 12px;
-    padding: 1rem;
-    margin-bottom: 0.7rem;
-  }
-
-  .nb-entry h4 {
-    font-size: 0.82rem;
-    font-weight: 700;
-    color: var(--box-purple-dark);
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    margin-bottom: 0.3rem;
-  }
-
-  .nb-entry .nb-q {
-    font-size: 0.88rem;
-    color: var(--text-dim);
-    margin-bottom: 0.5rem;
-    font-style: italic;
-  }
-
-  .nb-entry .nb-answer {
-    background: white;
-    padding: 0.6rem 0.8rem;
-    border-radius: 8px;
-    font-size: 0.92rem;
-    border-left: 3px solid var(--box-purple-border);
-    min-height: 40px;
-    color: var(--text);
-  }
-
-  .nb-entry .nb-answer:empty::before {
-    content: '(chưa viết)';
-    color: var(--text-muted);
-    font-style: italic;
-  }
-
-  .nb-actions {
-    display: flex;
-    gap: 0.5rem;
-    margin-top: 1rem;
-  }
-
-  .btn-purple,
-  .btn-secondary {
-    flex: 1;
-    padding: 0.6rem 1rem;
-    border-radius: 10px;
-    border: none;
-    cursor: pointer;
-    font-family: inherit;
-    font-weight: 600;
-    font-size: 0.85rem;
-  }
-
-  .btn-purple {
-    background: var(--grad-purple);
-    color: white;
-  }
-
-  .btn-secondary {
-    background: var(--surface-alt);
-    color: var(--text);
-  }
-
-  .btn-purple:disabled {
-    opacity: 0.6;
-    cursor: default;
-  }
-
-  .nb-submit-status {
-    display: none;
-    margin-top: 0.8rem;
-    padding: 0.6rem 0.9rem;
-    border-radius: 10px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    background: var(--surface-alt);
-    color: var(--text-dim);
-  }
-
-  .nb-submit-status.show {
-    display: block;
-  }
-
-  .nb-submit-status.success {
-    background: #ECFDF5;
-    color: #065F46;
-    border-left: 4px solid var(--success);
-  }
-
-  .nb-submit-status.error {
-    background: #FEF2F2;
-    color: #B91C1C;
-    border-left: 4px solid var(--danger);
-  }
-
-  /* SCHOOL CARDS (4 trường phái) */
-  .school-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    gap: 1rem;
-    width: 100%;
-    margin-top: 1rem;
-  }
-
-  .school-card {
-    background: white;
-    border-radius: 14px;
-    padding: 1.1rem 1.2rem;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
-    border-top: 4px solid var(--primary);
-  }
-
-  .school-num {
-    display: inline-block;
-    font-size: 0.7rem;
-    font-weight: 800;
-    background: var(--grad-primary);
-    color: white;
-    padding: 0.2rem 0.7rem;
-    border-radius: 100px;
-    margin-bottom: 0.5rem;
-  }
-
-  .school-title {
-    font-size: 1rem;
-    font-weight: 700;
-    margin-bottom: 0.4rem;
-    line-height: 1.3;
-  }
-
-  .school-en {
-    font-size: 0.78rem;
-    color: var(--primary);
-    font-weight: 600;
-    font-style: italic;
-    margin-bottom: 0.5rem;
-  }
-
-  .school-desc {
-    font-size: 0.85rem;
-    color: var(--text-dim);
-    line-height: 1.5;
-  }
-
-  /* METAPHOR CARDS (Model/LLM/Token) */
-  .met-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-    gap: 1rem;
-    width: 100%;
-    margin-top: 1rem;
-  }
-
-  .met-card {
-    background: white;
-    border-radius: 16px;
-    padding: 1.4rem 1.3rem;
-    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.07);
-    position: relative;
-    overflow: hidden;
-  }
-
-  .met-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 5px;
-  }
-
-  .met-card.model::before {
-    background: linear-gradient(90deg, #F59E0B, #EF4444);
-  }
-
-  .met-card.llm::before {
-    background: linear-gradient(90deg, #3B82F6, #6366F1);
-  }
-
-  .met-card.token::before {
-    background: linear-gradient(90deg, #10B981, #06B6D4);
-  }
-
-  .met-emoji {
-    font-size: 2.5rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .met-term {
-    font-size: 1.2rem;
-    font-weight: 900;
-    letter-spacing: -0.01em;
-    margin-bottom: 0.3rem;
-  }
-
-  .met-metaphor {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--primary);
-    margin-bottom: 0.5rem;
-  }
-
-  .met-desc {
-    font-size: 0.85rem;
-    color: var(--text-dim);
-    line-height: 1.55;
-  }
-
-  /* ANIM */
-  .slide.active .stagger>* {
-    opacity: 0;
-    animation: slideUp 0.5s ease forwards;
-  }
-
-  .slide.active .stagger>*:nth-child(1) {
-    animation-delay: 0.05s;
-  }
-
-  .slide.active .stagger>*:nth-child(2) {
-    animation-delay: 0.12s;
-  }
-
-  .slide.active .stagger>*:nth-child(3) {
-    animation-delay: 0.2s;
-  }
-
-  .slide.active .stagger>*:nth-child(4) {
-    animation-delay: 0.28s;
-  }
-
-  .slide.active .stagger>*:nth-child(5) {
-    animation-delay: 0.36s;
-  }
-
-  .slide.active .stagger>*:nth-child(6) {
-    animation-delay: 0.44s;
-  }
-
-  .slide.active .stagger>*:nth-child(7) {
-    animation-delay: 0.52s;
-  }
-
-  .slide.active .stagger>*:nth-child(8) {
-    animation-delay: 0.6s;
-  }
-
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* VIDEO */
-  .video-frame {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    border-radius: 14px;
-    overflow: hidden;
-    box-shadow: 0 8px 30px rgba(15, 23, 42, 0.15);
-    margin: 1rem 0;
-    width: 100%;
-    max-width: 780px;
-  }
-
-  .video-frame iframe {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-  }
-
-  @media (max-width: 1024px) {
-    .sidebar {
-      position: absolute;
-      transform: translateX(-280px);
-      height: 100vh;
-    }
-
-    .sidebar.open {
-      transform: translateX(0);
-    }
-  }
-
-  @media (max-width: 768px) {
-    .slide {
-      padding: 1.5rem 5%;
-    }
-
-    .card-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .top-title-text {
-      display: none;
-    }
-
-    .game-buckets {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media print {
-
-    .sidebar,
-    .nav-bar,
-    .top-bar,
-    .top-collapse-btn,
-    .nb-overlay {
-      display: none !important;
-    }
-
-    .slide {
-      position: relative;
-      opacity: 1;
-      visibility: visible;
-      transform: none;
-      page-break-after: always;
-      min-height: 100vh;
-    }
-
-    html,
-    body,
-    .main,
-    .slides-container {
-      overflow: visible;
-      height: auto;
-    }
-  }
-
-
-  /* ============ ALIGNMENT FIXES ============ */
-  /* 1. Equal heights for all card grids via flex */
-  .card-grid,
-  .school-grid,
-  .met-grid,
-  .fc-grid,
-  .app-grid-mini,
-  .modmap {
-    align-items: stretch;
-  }
-
-  /* 2. .card - equal heights with consistent vertical rhythm */
-  .card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-    min-height: 0;
-  }
-
-  .card-icon {
-    flex-shrink: 0;
-    margin-bottom: 0.8rem;
-  }
-
-  .card h3 {
-    flex-shrink: 0;
-    margin-bottom: 0.4rem;
-    line-height: 1.35;
-    min-height: 2.7em;
-    display: flex;
-    align-items: flex-start;
-  }
-
-  .card p {
-    flex-grow: 1;
-    margin: 0;
-    line-height: 1.5;
-  }
-
-  /* 3. School cards (4 trường phái) - equal heights */
-  .school-card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .school-num {
-    align-self: flex-start;
-  }
-
-  .school-title {
-    min-height: 2.6em;
-    display: flex;
-    align-items: flex-start;
-  }
-
-  .school-en {
-    min-height: 1.4em;
-  }
-
-  .school-desc {
-    flex-grow: 1;
-    margin: 0;
-  }
-
-  /* 4. Metaphor cards (Model/LLM/Token) */
-  .met-card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .met-emoji {
-    flex-shrink: 0;
-    line-height: 1;
-  }
-
-  .met-term {
-    flex-shrink: 0;
-  }
-
-  .met-metaphor {
-    min-height: 1.4em;
-    flex-shrink: 0;
-  }
-
-  .met-desc {
-    flex-grow: 1;
-    margin: 0;
-  }
-
-  /* 5. App mini cards (Buổi 1 không dùng nhưng đảm bảo nhất quán) */
-  .app-mini-card {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  /* 6. Module roadmap cards - equal heights */
-  .modmap-item {
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .modmap-mod,
-  .modmap-name,
-  .modmap-buoi {
-    flex-shrink: 0;
-  }
-
-  .modmap-out {
-    flex-grow: 1;
-    margin: 0;
-  }
-
-  /* 7. Flashcards - all same size */
-  .fc {
-    height: 160px;
-  }
-
-  /* 8. Feature/qbox cards in card-grid (slide 2 - 4 loại câu hỏi) */
-  .card-grid .qbox {
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    height: 100%;
-  }
-
-  .card-grid .qbox-content {
-    flex-grow: 1;
-  }
-
-  /* 9. Slide body — center content vertically when there's room */
-  .slide-body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  /* 10. Eyebrow/title always centered */
-  .eyebrow,
-  .slide-title,
-  .slide-subtitle {
-    align-self: center;
-  }
-
-  /* 11. Grid containers - center horizontally */
-  .card-grid,
-  .school-grid,
-  .met-grid,
-  .fc-grid,
-  .app-grid-mini,
-  .modmap,
-  .compare,
-  .game-buckets {
-    align-self: stretch;
-  }
-
-  /* 12. Timeline content cards equal padding */
-  .tl-content {
-    display: flex;
-    flex-direction: column;
-  }
-
-  /* 13. Steps list - consistent padding regardless of content */
-  .steps li {
-    display: flex;
-    align-items: center;
-  }
-
-  .steps li::before {
-    position: relative;
-    left: 0;
-    top: 0;
-    transform: none;
-    margin-right: 1rem;
-    flex-shrink: 0;
-  }
-
-  /* 14. Quiz options - icon and text aligned */
-  .quiz-opt {
-    align-items: center;
-  }
-
-  /* 15. Cmp-table - row heights equal */
-  .cmp-table tr td {
-    vertical-align: top;
-  }
-
-  /* 16. HL-box consistent width */
-  .hl-box {
-    align-self: stretch;
-    max-width: 100%;
-  }
-
-  /* 17. Game-items center & wrap properly */
-  .game-items {
-    align-items: center;
-  }
-
-  /* 18. Cover content centering */
-  .slide-cover .slide-body,
-  .slide-cover .cover-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-  }
-
-  /* 19. Cards in 3-card layouts should look identical */
-  .card-grid>.card {
-    text-align: left;
-  }
-
-  /* 20. Make all icon containers same size and aligned top-left */
-  .card-icon,
-  .school-card .card-icon,
-  .met-card .card-icon {
-    align-self: flex-start;
-  }
-
-
-  /* ============ BRAND CARDS (Slide 9) ============ */
-  .brand-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 1rem;
-    width: 100%;
-    margin-top: 1rem;
-    align-items: stretch;
-  }
-
-  .brand-card {
-    background: white;
-    border-radius: 16px;
-    overflow: hidden;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
-    display: flex;
-    flex-direction: column;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-  }
-
-  .brand-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 14px 32px rgba(15, 23, 42, 0.14);
-  }
-
-  .brand-head {
-    height: 130px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 1rem;
-  }
-
-  .brand-head svg {
-    width: 56px;
-    height: 56px;
-    filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.2));
-  }
-
-  .brand-body {
-    padding: 1.1rem 1.1rem 1.3rem;
-    flex-grow: 1;
-    display: flex;
-    flex-direction: column;
-    text-align: center;
-  }
-
-  .brand-body h3 {
-    font-size: 1.15rem;
-    font-weight: 800;
-    margin-bottom: 0.4rem;
-    letter-spacing: -0.01em;
-    color: var(--text);
-  }
-
-  .brand-body p {
-    font-size: 0.88rem;
-    color: var(--text-dim);
-    line-height: 1.5;
-    margin: 0;
-    flex-grow: 1;
-  }
-
-  .brand-footer {
-    margin-top: 1.2rem;
-    font-size: 0.9rem;
-    color: var(--text-dim);
-    text-align: center;
-    max-width: 700px;
-    align-self: center;
-  }
-
-  .brand-footer strong {
-    color: var(--primary);
-    font-weight: 700;
-  }
-
-  /* ============ DOCFIG (illustration images) ============ */
-  .docfig {
-    margin: 1.2rem 0;
-    width: 100%;
-    max-width: 950px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    align-self: center;
-    background: white;
-    padding: 1rem;
-    border-radius: 16px;
-    box-shadow: 0 8px 28px rgba(15, 23, 42, 0.1);
-  }
-
-  .docfig img {
-    width: 100%;
-    max-width: 900px;
-    height: auto;
-    border-radius: 10px;
-    display: block;
-  }
-
-  .docfig figcaption {
-    margin-top: 0.8rem;
-    font-size: 0.88rem;
-    color: var(--text);
-    font-style: italic;
-    text-align: center;
-    font-weight: 500;
-  }
-
-  /* ============ SUBTLE ANIMATIONS ============ */
-  .slide.active .docfig img {
-    animation: fadeInScale 0.7s ease forwards;
-  }
-
-  .slide.active .brand-card {
-    animation: fadeInUp 0.5s ease forwards;
-    opacity: 0;
-  }
-
-  .slide.active .brand-card:nth-child(1) {
-    animation-delay: 0.05s;
-  }
-
-  .slide.active .brand-card:nth-child(2) {
-    animation-delay: 0.15s;
-  }
-
-  .slide.active .brand-card:nth-child(3) {
-    animation-delay: 0.25s;
-  }
-
-  .slide.active .brand-card:nth-child(4) {
-    animation-delay: 0.35s;
-  }
-
-  .slide.active .brand-card:nth-child(5) {
-    animation-delay: 0.45s;
-  }
-
-  @keyframes fadeInScale {
-    from {
-      opacity: 0;
-      transform: scale(0.96);
-    }
-
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
-
-  @keyframes fadeInUp {
-    from {
-      opacity: 0;
-      transform: translateY(20px);
-    }
-
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Pulse animation removed for cleaner look */
-
-  /* ============ SCHOOL FLIP CARDS (Slide 6 — thẻ lật) ============ */
-  .school-flip {
-    perspective: 1200px;
-    height: 300px;
-    cursor: pointer;
-  }
-
-  .school-flip-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-style: preserve-3d;
-  }
-
-  .school-flip.flipped .school-flip-inner {
-    transform: rotateY(180deg);
-  }
-
-  .school-flip-front,
-  .school-flip-back {
-    position: absolute;
-    inset: 0;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    border-radius: 14px;
-    padding: 1.3rem 1.2rem;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .school-flip-front {
-    background: white;
-    border-top: 4px solid var(--sf-color, var(--primary));
-    align-items: flex-start;
-  }
-
-  .school-flip-front .school-num {
-    align-self: flex-start;
-  }
-
-  .school-flip-front .school-title {
-    font-size: 1.05rem;
-    font-weight: 800;
-    margin: 0.7rem 0 0.45rem;
-    line-height: 1.3;
-    text-align: left;
-  }
-
-  .school-flip-front .school-en {
-    font-size: 0.82rem;
-    color: var(--primary);
-    font-weight: 600;
-    font-style: italic;
-    text-align: left;
-  }
-
-  .school-flip-hint {
-    margin-top: auto;
-    font-size: 0.74rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-  }
-
-  .school-flip-back {
-    background: var(--sf-grad, var(--grad-primary));
-    color: white;
-    transform: rotateY(180deg);
-    justify-content: center;
-  }
-
-  .school-flip-back .school-desc {
-    font-size: 0.88rem;
-    line-height: 1.55;
-    color: white;
-    text-align: left;
-    flex: 0 0 auto;
-  }
-
-  .school-flip-back .school-desc strong {
-    color: #FDE68A;
-  }
-
-  .school-flip-back .school-desc em {
-    color: rgba(255, 255, 255, 0.92);
-  }
-
-  /* SLIDE 7 — bố cục 2 cột: nội dung trái + video phải */
-  .agent-split {
-    display: flex;
-    gap: 1.5rem;
-    width: 100%;
-    margin-top: 1rem;
-    align-items: stretch;
-  }
-
-  .agent-left {
-    flex: 1 1 0;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .agent-right {
-    flex: 1 1 0;
-    min-width: 0;
-    display: flex;
-  }
-
-  .agent-flip-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 0.9rem;
-    margin-top: 1rem;
-  }
-
-  .agent-flip {
-    perspective: 1200px;
-    height: 180px;
-    cursor: pointer;
-  }
-
-  .agent-flip-inner {
-    position: relative;
-    width: 100%;
-    height: 100%;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-    transform-style: preserve-3d;
-  }
-
-  .agent-flip.flipped .agent-flip-inner {
-    transform: rotateY(180deg);
-  }
-
-  .agent-flip-front,
-  .agent-flip-back {
-    position: absolute;
-    inset: 0;
-    backface-visibility: hidden;
-    -webkit-backface-visibility: hidden;
-    border-radius: 14px;
-    padding: 1rem;
-    box-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
-  }
-
-  .agent-flip-front {
-    background: white;
-    border-top: 4px solid var(--sf-color, var(--primary));
-    align-items: flex-start;
-  }
-
-  .agent-flip-front .card-icon {
-    margin-bottom: 0.55rem;
-  }
-
-  .agent-flip-front h3 {
-    font-size: 0.98rem;
-    font-weight: 700;
-    margin: 0 0 0.3rem;
-    letter-spacing: -0.01em;
-    text-align: left;
-  }
-
-  .agent-flip-front p {
-    font-size: 0.82rem;
-    color: var(--text-dim);
-    line-height: 1.45;
-    text-align: left;
-    margin: 0;
-  }
-
-  .agent-flip-hint {
-    margin-top: auto;
-    font-size: 0.72rem;
-    color: var(--text-muted);
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-  }
-
-  .agent-flip-back {
-    background: var(--sf-grad, var(--grad-primary));
-    color: white;
-    transform: rotateY(180deg);
-    justify-content: center;
-  }
-
-  .agent-flip-back p {
-    font-size: 0.8rem;
-    line-height: 1.5;
-    color: white;
-    margin: 0;
-    text-align: left;
-  }
-
-  .agent-flip-back strong {
-    color: #FDE68A;
-  }
-
-  .video-frame {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    background: white;
-    border-radius: 16px;
-    box-shadow: 0 4px 18px rgba(15, 23, 42, 0.08);
-    overflow: hidden;
-    min-height: 420px;
-  }
-
-  .video-frame-header {
-    padding: 0.75rem 1rem;
-    background: var(--grad-primary);
-    color: white;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 0.5rem;
-  }
-
-  .video-frame-header .vft {
-    font-weight: 800;
-    font-size: 1rem;
-  }
-
-  .video-frame-header .video-open {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: white;
-    text-decoration: none;
-    background: rgba(255, 255, 255, 0.2);
-    padding: 0.3rem 0.65rem;
-    border-radius: 100px;
-    white-space: nowrap;
-  }
-
-  .video-frame-header .video-open:hover {
-    background: rgba(255, 255, 255, 0.32);
-  }
-
-  .video-embed {
-    flex: 1;
-    min-height: 0;
-    background: #0f172a;
-  }
-
-  .video-embed iframe {
-    width: 100%;
-    height: 100%;
-    border: 0;
-    display: block;
-  }
-
-  @media (max-width: 900px) {
-    .agent-split {
-      flex-direction: column;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .agent-flip-grid {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>
 
 <script type="application/json" id="nb-questions">
 {
-  "1": {
-    "title": "SỔ TAY #1 — Đầu buổi",
-    "q": "Vì sao app đôi khi lịch trống / quiz không hiện"
-  },
-  "2": {
-    "title": "SỔ TAY #2 — Dự án của em",
-    "q": "Dự án + 2 Resource em sẽ đưa lên app"
-  },
-  "3": {
-    "title": "SỔ TAY #3 — Quiz của em",
-    "q": "Câu Quiz đầu tiên em viết (có ✅)"
-  },
-  "4": {
-    "title": "SỔ TAY #4 — Cuối Module 2",
-    "q": "Điều em tự hào nhất & dự định dùng hệ thống"
-  }
+  "1": {"title": "SỔ TAY #1 — Đầu buổi", "q": "Bạn muốn tự làm Game học tập hay App theo dõi mục tiêu? Vì sao?"},
+  "2": {"title": "SỔ TAY #2 — Chọn hướng", "q": "Hướng bạn chọn + 1 ý tưởng/tính năng chính của sản phẩm"},
+  "3": {"title": "SỔ TAY #3 — Tính năng tiếp theo", "q": "1 tính năng bạn muốn Agent thêm + cách bạn sẽ mô tả cho Agent"},
+  "4": {"title": "SỔ TAY #4 — Cuối Module 2", "q": "Điều bạn tự hào nhất Module 2 + 1 quy tắc an toàn AI bạn sẽ luôn nhớ"}
 }
 </script>
 
+<!-- ============ MỞ ĐẦU ============ -->
 <section class="slide active slide-cover" data-slide="1" data-title="Chào mừng">
-
   <div class="cover-orb orb-1"></div>
   <div class="cover-orb orb-2"></div>
   <div class="cover-orb orb-3"></div>
   <div class="cover-content slide-body">
     <span class="eyebrow">BUỔI 7 · MODULE 2 — SECOND BRAIN</span>
-    <h1 class="hero-title">APP-3.2 — <span class="grad-text">Lịch ôn tập</span></h1>
-    <p class="slide-subtitle">App đã được dựng sẵn. Việc của em hôm nay là TẠO NỘI DUNG trong vault thật chuẩn
-      để app hiển thị đúng, không lỗi.</p>
-    <div class="cover-chips"><span class="cover-chip">120 phút</span><span class="cover-chip">Nội dung chuẩn =
-        App đúng</span><span class="cover-chip">Output: Vault lên app không lỗi</span></div>
+    <h1 class="hero-title">Tự xây ứng dụng <span class="grad-text">bằng Agent</span></h1>
+    <p class="slide-subtitle">Tự tay tạo 1 sản phẩm bằng Agent: <strong>Game học tập</strong> hoặc <strong>App theo dõi
+        mục tiêu</strong> — rồi học cách dùng AI <strong>an toàn</strong>.</p>
+    <div class="cover-chips"><span class="cover-chip">120 phút</span><span class="cover-chip">Tự xây 1 sản phẩm bằng
+        Agent</span><span class="cover-chip">An toàn &amp; bảo mật AI</span></div>
   </div>
-
 </section>
 
 <section class="slide" data-slide="2" data-title="Bạn sẽ làm được gì">
-
   <div class="slide-body">
-    <span class="eyebrow">CUỐI BUỔI 7 — EM PHẢI CÓ</span>
-    <h2 class="slide-title">3 thứ em mang về nhà</h2>
+    <span class="eyebrow">CUỐI BUỔI 7 — BẠN PHẢI CÓ</span>
+    <h2 class="slide-title">3 thứ bạn mang về nhà</h2>
     <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));">
       <div class="card">
         <div class="card-icon">1</div>
-        <h3>Mở app sẵn có</h3>
-        <p>Bấm đúp file <code>Advanced_Learning_App.html</code>, cấp quyền và trỏ vào vault — không phải tự viết
-          code.</p>
+        <h3>Ra lệnh cho Agent</h3>
+        <p>Nêu <strong>mục tiêu</strong> bằng tiếng Việt, đọc <strong>Plan</strong>, duyệt cho Agent
+          <strong>thực thi</strong> — và biết kiểm thử kết quả.
+        </p>
       </div>
       <div class="card">
         <div class="card-icon">2</div>
-        <h3>Tạo nội dung đúng chuẩn</h3>
-        <p>Viết các file trong <code>05_learning_plan</code> &amp; <code>06_quiz_exam</code> đúng định dạng để
-          app đọc được.</p>
+        <h3>Một sản phẩm chạy được</h3>
+        <p>Tự tay tạo <strong>1 Game học tập</strong> hoặc <strong>1 App mục tiêu/lịch trình</strong> — mở lên là
+          chạy.</p>
       </div>
       <div class="card">
         <div class="card-icon">3</div>
-        <h3>Sửa lỗi & Rescan</h3>
-        <p>Biết các lỗi định dạng hay gặp, tự sửa và bấm Làm mới để app hiện đúng.</p>
+        <h3>Dùng AI an toàn</h3>
+        <p>Biết các rủi ro, bảo vệ thông tin cá nhân và nhớ <strong>quy tắc vàng</strong> khi dùng AI/Agent.</p>
       </div>
     </div>
-
     <div class="hl-box success"><span class="hl-label">OUTPUT BẮT BUỘC</span>
-      <p>App mở đúng vault · Lịch trình hiện đúng các buổi từ Plan · Quiz nạp và chấm được — TẤT CẢ không báo
-        lỗi.</p>
+      <p>1 sản phẩm (Game HOẶC App mục tiêu) mở lên chạy được · Bạn giải thích được Goal → Plan → Action · Nêu được ít
+        nhất 3 quy tắc an toàn AI.</p>
     </div>
   </div>
-
 </section>
 
 <section class="slide" data-slide="3" data-title="Sổ Tay #1 — Đầu buổi">
-
   <div class="slide-body">
     <span class="eyebrow">BẮT ĐẦU</span>
-    <h2 class="slide-title">Em nghĩ vì sao app hay bị "trống"?</h2>
+    <h2 class="slide-title">Bạn muốn tự làm gì hôm nay?</h2>
     <div class="qbox qbox-purple">
       <div class="qbox-header">
         <div class="qbox-icon">#</div>SỔ TAY #1 — Đầu buổi
       </div>
-      <div class="qbox-content">Một app đọc ghi chú của em: theo em, vì sao đôi khi mở lên LỊCH TRỐNG hoặc QUIZ
-        KHÔNG HIỆN dù file vẫn nằm trong vault?</div>
+      <div class="qbox-content">Nếu được một "trợ lý lập trình" làm hộ, bạn muốn có một <strong>Game học tập</strong>
+        (đố vui, ghép thẻ…) hay một <strong>App theo dõi mục tiêu &amp; lịch trình</strong>? Vì sao?</div>
       <div class="nb-input-wrap">
-        <label>Em đoán nguyên nhân:</label>
-        <textarea class="nb-input" data-nb-id="1" placeholder="Ví dụ: viết sai mốc ngày..."></textarea>
+        <label>Lựa chọn &amp; lý do của bạn:</label>
+        <textarea class="nb-input" data-nb-id="1" placeholder="Bạn chọn ... vì ..."></textarea>
         <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
       </div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Vì sao em viết?</span>Cuối buổi em sẽ thấy: hầu hết lỗi
-        đến từ NỘI DUNG ghi sai định dạng, không phải do app.</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Vì sao bạn viết?</span>Cuối buổi bạn sẽ thực sự làm ra cái bạn
+        vừa chọn — nên giờ hãy nghĩ trước.</div>
     </div>
   </div>
-
 </section>
 
-<section class="slide slide-cover" data-slide="4" data-title="App đã có sẵn">
-
-  <div class="cover-orb orb-1"></div>
-  <div class="cover-orb orb-2"></div>
-  <div class="cover-orb orb-3"></div>
-  <div class="cover-content slide-body">
-    <span class="eyebrow">Ý TƯỞNG QUAN TRỌNG</span>
-    <h1 class="hero-title">App có sẵn — <span class="grad-text">việc của em là Nội Dung</span></h1>
-    <p class="slide-subtitle">Em không cần biết lập trình. App là cái máy đọc; vault của em là thức ăn. Cho ăn
-      đúng thì máy chạy mượt.</p>
-    <div class="cover-chips"><span class="cover-chip">Mở app</span><span class="cover-chip">Tạo nội
-        dung</span><span class="cover-chip">Đúng định dạng</span></div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="5" data-title="Giới thiệu qua về app">
-
-  <div class="slide-body">
-    <span class="eyebrow">GIỚI THIỆU NHANH</span>
-    <h2 class="slide-title">Advanced Learning App làm gì</h2>
-    <p class="slide-subtitle">Chỉ cần nắm 4 tính năng — không đi sâu vào bên trong app.</p>
-    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));">
-      <div class="card">
-        <div class="card-icon">📊</div>
-        <h3>Dashboard</h3>
-        <p>Đếm số Dự án, Tài nguyên, Lộ trình, Hoàn thành từ các folder.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">📅</div>
-        <h3>Lịch trình</h3>
-        <p>Rải các buổi học từ <code>05_learning_plan</code> lên đúng ngày.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🎯</div>
-        <h3>Study Hub</h3>
-        <p>Hiện Quiz/Đề từ <code>06_quiz_exam</code>, chấm điểm tại chỗ.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon">🔍</div>
-        <h3>Lọc theo Dự án</h3>
-        <p>Chọn 1 Dự án ở Sidebar, cả app đổi theo ngữ cảnh đó.</p>
-      </div>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="6" data-title="Mở app &amp; cấp quyền">
-
-  <div class="slide-body">
-    <span class="eyebrow">THỰC HÀNH 1 — NHANH</span>
-    <h2 class="slide-title">Kết nối app với vault (chỉ 1 lần)</h2>
-    <ol class="steps stagger">
-      <li>Bấm đúp <code>Advanced_Learning_App.html</code>, mở bằng Chrome hoặc Edge.</li>
-      <li>Bấm nút kết nối, trỏ tới thư mục vault <code>My_Second_Brain</code>.</li>
-      <li>Trình duyệt hỏi quyền → bấm <strong>Cho phép / Allow</strong>.</li>
-      <li>App hiện Dashboard. Xong phần app — giờ ta tập trung vào NỘI DUNG.</li>
-    </ol>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="7" data-title="Nguyên tắc vàng">
-
-  <div class="slide-body">
-    <span class="eyebrow">ĐIỀU CỐT LÕI CỦA CẢ BUỔI</span>
-    <h2 class="slide-title">Nội dung đúng → App đúng</h2>
-    <div class="hl-box info"><span class="hl-label">GARBAGE IN, GARBAGE OUT</span>
-      <p>App chỉ làm đúng nếu nội dung em viết đúng định dạng. Sai một dấu nhỏ → app hiểu sai hoặc bỏ qua. Cả
-        buổi nay học cách viết cho app HIỂU ĐÚNG.</p>
-    </div>
-    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));">
-      <div class="card">
-        <div class="card-icon" style="background:#10B981;">✓</div>
-        <h3>Viết đúng</h3>
-        <p>App rải lịch, nạp Quiz, đếm số liệu chuẩn xác.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon" style="background:#DC2626;">✗</div>
-        <h3>Viết sai</h3>
-        <p>Lịch trống, Quiz không hiện, số liệu lệch — không phải lỗi app.</p>
-      </div>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="8" data-title="Hỏi bạn cặp #1">
-
-  <div class="slide-body">
-    <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
-    <h2 class="slide-title">Cùng bạn cặp — máy đọc cần gì</h2>
-    <div class="qbox qbox-yellow">
-      <div class="qbox-header">
-        <div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận #1
-      </div>
-      <div class="qbox-content">Hai bạn bàn: "<em>Nếu em là cái máy chỉ biết đọc theo quy tắc, em cần con người
-          ghi thế nào để KHÔNG bao giờ hiểu nhầm?</em>"</div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Máy không "đoán ý" như người. Càng theo
-        đúng khuôn mẫu, máy càng chạy đúng.</div>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide slide-cover" data-slide="9" data-title="Tạo nội dung theo từng folder">
-
-  <div class="cover-orb orb-1" style="background:#3B82F6;"></div>
-  <div class="cover-orb orb-2" style="background:#06B6D4;"></div>
-  <div class="cover-orb orb-3"></div>
-  <div class="cover-content slide-body">
-    <span class="eyebrow">PHẦN CHÍNH</span>
-    <h1 class="hero-title">Tạo nội dung <span class="grad-text">đúng cho từng folder</span></h1>
-    <p class="slide-subtitle">Mỗi thư mục trong vault hiện ra một chỗ trên app. Ta đi qua từng folder và cách
-      viết cho đúng.</p>
-    <div class="cover-chips"><span class="cover-chip">01_Projects</span><span
-        class="cover-chip">03_Resources</span><span class="cover-chip">05_learning_plan</span><span
-        class="cover-chip">06_quiz_exam</span></div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="10" data-title="Folder nào hiện ở đâu">
-
-  <div class="slide-body">
-    <span class="eyebrow">BẢN ĐỒ DỮ LIỆU</span>
-    <h2 class="slide-title">Mỗi folder → một chỗ trên app</h2>
-    <table class="cmp-table">
-      <thead>
-        <tr>
-          <th>Thư mục vault</th>
-          <th>Hiện ở đâu trên app</th>
-          <th>Nếu viết sai định dạng</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>01_Projects</td>
-          <td>Dashboard (đếm Dự án) + Sidebar lọc</td>
-          <td>Không được đếm / lọc</td>
-        </tr>
-        <tr>
-          <td>03_Resources</td>
-          <td>Phần "Tài nguyên" của buổi học</td>
-          <td>Không hiện ra</td>
-        </tr>
-        <tr>
-          <td>05_learning_plan</td>
-          <td>Lịch trình (rải theo ngày)</td>
-          <td>Lịch trống hoặc sai ngày</td>
-        </tr>
-        <tr>
-          <td>06_quiz_exam</td>
-          <td>Study Hub (Quiz/Đề)</td>
-          <td>Quiz không nạp được</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="hl-box "><span class="hl-label">GHI NHỚ</span>
-      <p>Muốn sửa chỗ nào trên app → về đúng folder tương ứng để sửa nội dung.</p>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="11" data-title="01_Projects — viết note Dự án">
-
-  <div class="slide-body">
-    <span class="eyebrow">FOLDER 1</span>
-    <h2 class="slide-title">Note Dự án để Dashboard đếm đúng</h2>
-    <ol class="steps stagger">
-      <li>Tạo note trong <code>01_Projects</code>, tên rõ ràng: <code>Project_Math_Midterm</code>.</li>
-      <li>Mở đầu bằng tiêu đề <code># Dự án: …</code> và ghi mục tiêu.</li>
-      <li>Cuối note thêm thẻ: <code>#project #math</code> để app phân loại.</li>
-    </ol>
-    <div class="prompt-box"><span class="prompt-label">01_Projects / Project_Math_Midterm.md</span># Dự án: Ôn
-      thi Giữa kỳ II — Môn Toán
-
-      Mục tiêu: đạt 9.0+, hoàn thành trong 2 tuần.
-
-      #project #math #exam-prep</div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="12" data-title="03_Resources — viết Tài nguyên">
-
-  <div class="slide-body">
-    <span class="eyebrow">FOLDER 2</span>
-    <h2 class="slide-title">Note kiến thức để hiện trong buổi học</h2>
-    <ol class="steps stagger">
-      <li>Tạo note trong <code>03_Resources</code>, ví dụ <code>Math_Equation_Basics</code>.</li>
-      <li>Ghi kiến thức cốt lõi: công thức, bảng, gạch đầu dòng.</li>
-      <li>Để buổi học dùng được, ta sẽ <code>[[link]]</code> tới note này từ Plan (slide sau).</li>
-    </ol>
-    <div class="hl-box info"><span class="hl-label">MẸO</span>
-      <p>Note Resource càng gọn, rõ thì khi hiện trong buổi học trên app càng dễ ôn.</p>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="13" data-title="Sổ Tay #2 — Dự án của em">
-
-  <div class="slide-body">
-    <span class="eyebrow">ÁP DỤNG</span>
-    <h2 class="slide-title">Em sẽ làm lịch cho dự án nào?</h2>
-    <div class="qbox qbox-purple">
-      <div class="qbox-header">
-        <div class="qbox-icon">#</div>SỔ TAY #2
-      </div>
-      <div class="qbox-content">Viết tên 1 Dự án em muốn app lên lịch + 2 note Resource em sẽ gắn vào. Đây là
-        nội dung em tạo ngay trong phần thực hành.</div>
-      <div class="nb-input-wrap">
-        <label>Dự án + 2 Resource:</label>
-        <textarea class="nb-input" data-nb-id="2"
-          placeholder="Dự án: ... | Resource 1: ... | Resource 2: ..."></textarea>
-        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
-      </div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Chuẩn bị sẵn tên file giúp em viết Plan
-        ở bước sau nhanh và không sai chính tả link.</div>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide slide-cover" data-slide="14" data-title="05_learning_plan — trái tim của lịch">
-
+<!-- ============ ÔN BUỔI 5 & 6 ============ -->
+<section class="slide slide-cover" data-slide="4" data-title="Nhìn lại Module 2">
   <div class="cover-orb orb-1" style="background:#10B981;"></div>
   <div class="cover-orb orb-2" style="background:#3B82F6;"></div>
   <div class="cover-orb orb-3"></div>
   <div class="cover-content slide-body">
-    <span class="eyebrow">FOLDER QUAN TRỌNG NHẤT</span>
-    <h1 class="hero-title">05_learning_plan — <span class="grad-text">trái tim của Lịch</span></h1>
-    <p class="slide-subtitle">Đây là nơi dễ sai nhất và cũng quyết định Lịch trình có chạy đúng hay không.</p>
-    <div class="cover-chips"><span class="cover-chip">Link dự án</span><span class="cover-chip">Ngày bắt
-        đầu</span><span class="cover-chip">Các buổi học</span></div>
+    <span class="eyebrow">ÔN TẬP NHANH — TRƯỚC KHI BẮT TAY</span>
+    <h1 class="hero-title">Nhìn lại <span class="grad-text">Buổi 5 &amp; 6</span></h1>
+    <p class="slide-subtitle">Hai buổi trước cho bạn <strong>kho kiến thức</strong> (Buổi 5) và <strong>trợ lý
+        AI</strong> (Buổi 6). Hôm nay ta dùng cả hai để tạo ra sản phẩm.</p>
+    <div class="cover-chips"><span class="cover-chip">B5: Obsidian + PARA</span><span class="cover-chip">B6: Công cụ AI
+        + C.O.D.E</span><span class="cover-chip">B7: Tự xây app</span></div>
   </div>
-
 </section>
 
-<section class="slide" data-slide="15" data-title="Cấu trúc 1 file Plan">
-
+<section class="slide" data-slide="5" data-title="Ôn Buổi 5 — Obsidian + PARA">
   <div class="slide-body">
-    <span class="eyebrow">3 PHẦN BẮT BUỘC</span>
-    <h2 class="slide-title">Một file Plan luôn có đủ 3 thứ</h2>
+    <span class="eyebrow">ÔN BUỔI 5 — 4 Ý CHÍNH</span>
+    <h2 class="slide-title">Second Brain: tổ chức kiến thức</h2>
     <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));">
-      <div class="card">
-        <div class="card-icon">🔗</div>
-        <h3>1. Link Dự án</h3>
-        <p>Dòng <code>Dựa trên dự án [[Project_Math_Midterm]]</code> để gắn lịch vào đúng Dự án.</p>
+      <div class="card" style="border-top:4px solid #7C3AED;">
+        <div class="card-icon" style="background:#7C3AED;">🗄️</div>
+        <h3>Obsidian &amp; Vault</h3>
+        <p>Obsidian là phần mềm ghi chú miễn phí. <strong>Vault</strong> là 1 thư mục chứa toàn bộ note
+          <code>.md</code> nằm <strong>ngay trên máy bạn</strong> — không cần internet, không ai xem được nếu bạn
+          không chia sẻ.
+        </p>
       </div>
-      <div class="card">
-        <div class="card-icon">📌</div>
-        <h3>2. Ngày bắt đầu</h3>
-        <p>Dòng <code>**Ngày bắt đầu:** 2026-06-01</code> — mốc neo để tính mọi ngày.</p>
+      <div class="card" style="border-top:4px solid #10B981;">
+        <div class="card-icon" style="background:#10B981;">📂</div>
+        <h3>PARA — 4 ngăn</h3>
+        <p><strong>P</strong>rojects (dự án đang làm) · <strong>A</strong>reas (lĩnh vực lâu dài) ·
+          <strong>R</strong>esources (tài nguyên tham khảo) · <strong>A</strong>rchives (lưu trữ). Nhờ vậy tìm gì
+          cũng nhanh, để đâu cũng có chỗ.
+        </p>
       </div>
-      <div class="card">
-        <div class="card-icon">📅</div>
-        <h3>3. Các buổi học</h3>
-        <p>Mỗi buổi là 1 gạch đầu dòng có mốc: <code>- **Ngày 3:** Nội dung</code>.</p>
+      <div class="card" style="border-top:4px solid #2563EB;">
+        <div class="card-icon" style="background:#2563EB;">✍️</div>
+        <h3>Markdown</h3>
+        <p>Viết văn bản gọn bằng ký hiệu: <code>#</code> tiêu đề, <code>**đậm**</code>, <code>-</code> gạch đầu dòng,
+          <code>- [ ]</code> việc cần làm. Cả người và máy (kể cả AI) đều đọc dễ.
+        </p>
       </div>
-    </div>
-
-    <div class="hl-box danger"><span class="hl-label">THIẾU 1 TRONG 3</span>
-      <p>Thiếu link → không gắn dự án. Thiếu Ngày bắt đầu → lịch sai. Thiếu mốc → buổi học không lên lịch.</p>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="16" data-title="Bắt buộc: Ngày bắt đầu">
-
-  <div class="slide-body">
-    <span class="eyebrow">LỖI SỐ 1 HAY GẶP</span>
-    <h2 class="slide-title">Phải có dòng Ngày bắt đầu</h2>
-    <div class="prompt-box"><span class="prompt-label">Đặt gần ĐẦU file 05_learning_plan</span># Lộ trình ôn thi
-      giữa kỳ Toán
-
-      Dựa trên dự án [[Project_Math_Midterm]]
-      **Ngày bắt đầu:** 2026-06-01</div>
-    <div class="hl-box danger"><span class="hl-label">NẾU THIẾU</span>
-      <p>App không biết "Ngày 1" là ngày nào nên tạm xếp theo ngày hiện tại — lịch sẽ SAI hết. Luôn ghi dòng này
-        trước tiên.</p>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="17" data-title="4 cách ghi mốc thời gian">
-
-  <div class="slide-body">
-    <span class="eyebrow">VIẾT MỐC CHO ĐÚNG</span>
-    <h2 class="slide-title">Chọn kiểu tiện nhất — nhưng phải đúng cú pháp</h2>
-    <table class="cmp-table">
-      <thead>
-        <tr>
-          <th>Kiểu</th>
-          <th>Viết đúng</th>
-          <th>App hiểu là</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Theo Ngày</td>
-          <td>- **Ngày 3:** Nội dung</td>
-          <td>Ngày thứ 3 kể từ Ngày bắt đầu</td>
-        </tr>
-        <tr>
-          <td>Theo Tuần</td>
-          <td>- **Tuần 2:** Nội dung</td>
-          <td>Đầu tuần thứ 2 (cách 7 ngày)</td>
-        </tr>
-        <tr>
-          <td>Theo Thứ</td>
-          <td>- **Thứ 2:** Nội dung</td>
-          <td>Thứ Hai trong tuần</td>
-        </tr>
-        <tr>
-          <td>Ngày cụ thể</td>
-          <td>- **20/06/2026:** Nội dung</td>
-          <td>Đúng ngày 20/06/2026</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="hl-box danger"><span class="hl-label">LỖI HAY GẶP</span>
-      <p>Mốc phải nằm Ở ĐẦU mục: <code>- **Ngày 3:**</code>. Viết giữa câu (vd phân số 1/2) → app BỎ QUA.</p>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="18" data-title="Đánh số: toàn cục vs lồng nhau">
-
-  <div class="slide-body">
-    <span class="eyebrow">ĐỂ KHÔNG BỊ CHỒNG NGÀY</span>
-    <h2 class="slide-title">Hai cách đánh số, app tự nhận</h2>
-    <table class="cmp-table">
-      <thead>
-        <tr>
-          <th>Kiểu đánh số</th>
-          <th>Em viết</th>
-          <th>App tính</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
-          <td>Toàn cục</td>
-          <td>Ngày 1 … Ngày 14 tăng dần</td>
-          <td>Ngày N = Ngày bắt đầu + (N−1)</td>
-        </tr>
-        <tr>
-          <td>Lồng trong Tuần</td>
-          <td>Mỗi ### Tuần lại Ngày 1</td>
-          <td>(số tuần × 7) + ngày</td>
-        </tr>
-        <tr>
-          <td>Lồng trong Tháng</td>
-          <td>Mỗi ### Tháng lại Tuần 1</td>
-          <td>Các tháng nối tiếp, không chồng</td>
-        </tr>
-      </tbody>
-    </table>
-    <div class="hl-box info"><span class="hl-label">MẸO AN TOÀN</span>
-      <p>Mới làm quen? Cứ đánh số TĂNG DẦN liên tục cả file (Ngày 1…14) cho chắc, khỏi lo reset.</p>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="19" data-title="Gắn Quiz vào buổi học">
-
-  <div class="slide-body">
-    <span class="eyebrow">ĐỂ QUIZ HIỆN TRÊN APP</span>
-    <h2 class="slide-title">Dùng 📝[[ ]] ngay trên dòng buổi học</h2>
-    <div class="qbox qbox-blue">
-      <div class="qbox-header">
-        <div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC
-      </div>
-      <div class="qbox-content">Thêm <code>[[wikilink]]</code> tới file trong <code>06_quiz_exam</code> ngay
-        trên dòng buổi học → app tự nạp vào tab Quiz. Các <code>[[link]]</code> khác hiện ở phần Tài nguyên.
+      <div class="card" style="border-top:4px solid #D97706;">
+        <div class="card-icon" style="background:#D97706;">🔗</div>
+        <h3>Wikilink &amp; Graph</h3>
+        <p><code>[[Tên note]]</code> nối hai ghi chú lại với nhau; <strong>Graph View</strong> vẽ ra cả mạng lưới
+          kiến thức, giúp bạn thấy mọi thứ liên quan thế nào.</p>
       </div>
     </div>
-    <div class="prompt-box"><span class="prompt-label">Trong 05_learning_plan</span>- **Ngày 1-2:** Ôn 7 hằng
-      đẳng thức (Sử dụng [[Math_Equation_Basics]]) 📝 [[Math_HangDangThuc]]</div>
-    <div class="hl-box danger"><span class="hl-label">LƯU Ý</span>
-      <p>File Quiz phải nằm trong <code>06_quiz_exam</code> thì app mới nạp. Link sai folder → Quiz không hiện.
+    <div class="hl-box info"><span class="hl-label">VÌ SAO ÔN LẠI?</span>
+      <p>Hôm nay bạn sẽ viết "mục tiêu" cho Agent <strong>theo đúng format Buổi 5</strong> và lưu vào folder
+        <strong>Projects</strong> của vault.
       </p>
     </div>
   </div>
-
 </section>
 
-<section class="slide" data-slide="20" data-title="Game: app đọc được hay bỏ qua?">
-
+<section class="slide" data-slide="6" data-title="Ôn Buổi 6 — Công cụ AI &amp; C.O.D.E">
   <div class="slide-body">
-    <span class="eyebrow">QUICK SELF-TEST</span>
-    <h2 class="slide-title">Dòng nào app HIỂU là mốc hợp lệ?</h2>
-    <p class="slide-subtitle">Kéo (hoặc bấm) từng dòng vào đúng nhóm.</p>
+    <span class="eyebrow">ÔN BUỔI 6</span>
+    <h2 class="slide-title">AI là trợ lý — bạn là người làm chủ</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));">
+      <div class="card">
+        <div class="card-icon">💬</div>
+        <h3>3 loại công cụ AI</h3>
+        <p><strong>Chatbox</strong> (hỏi–đáp) · <strong>Copilot</strong> (tích hợp sẵn) · <strong>Agent</strong> (tự
+          làm trong IDE).</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧠</div>
+        <h3>C.O.D.E + AI</h3>
+        <p>Dùng AI để <strong>Distill</strong> (tóm tắt) và <strong>Express</strong> (tạo Quiz/Đề) cho kho kiến thức.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔍</div>
+        <h3>Kiểm chứng</h3>
+        <p>AI có thể <strong>bịa (hallucination)</strong>. Luôn kiểm tra trước khi tin — tư duy phản biện.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">CẦU NỐI SANG HÔM NAY</span>
+      <p>Buổi 6 bạn đã <em>làm quen</em> Agent &amp; Antigravity. Buổi 7 bạn <strong>dùng thật</strong> Agent để tạo ra
+        một sản phẩm.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="7" data-title="Game: việc này thuộc Buổi 5 hay 6?">
+  <div class="slide-body">
+    <span class="eyebrow">KHỞI ĐỘNG TRÍ NHỚ</span>
+    <h2 class="slide-title">Việc này học ở Buổi 5 hay Buổi 6?</h2>
+    <p class="slide-subtitle">Kéo (hoặc bấm) từng thẻ vào đúng nhóm.</p>
     <div class="game-area">
       <div class="game-items" id="gameItems">
-        <div class="draggable" draggable="true" data-type="doc" data-label="- **Ngày 3:** Ôn tập">- **Ngày 3:**
-          Ôn tập</div>
-        <div class="draggable" draggable="true" data-type="doc" data-label="- **Tuần 2:** Luyện đề">- **Tuần
-          2:** Luyện đề</div>
-        <div class="draggable" draggable="true" data-type="boqua" data-label="Phân số 1/2 nằm giữa câu">Phân số
-          1/2 nằm giữa câu</div>
-        <div class="draggable" draggable="true" data-type="doc" data-label="- **20/06/2026:** Thi thử">-
-          **20/06/2026:** Thi thử</div>
-        <div class="draggable" draggable="true" data-type="boqua" data-label="Mốc nằm giữa câu, không ở đầu mục">Mốc nằm
-          giữa câu, không ở đầu mục</div>
-        <div class="draggable" draggable="true" data-type="doc" data-label="- **Thứ 2:** Học hình học">- **Thứ
-          2:** Học hình học</div>
+        <div class="draggable" draggable="true" data-type="b5" data-label="Sắp note theo PARA">Sắp note theo PARA</div>
+        <div class="draggable" draggable="true" data-type="b6" data-label="Nhờ AI tóm tắt bài (Distill)">Nhờ AI tóm tắt
+          bài (Distill)</div>
+        <div class="draggable" draggable="true" data-type="b5" data-label="Nối note bằng [[wikilink]]">Nối note bằng
+          [[wikilink]]</div>
+        <div class="draggable" draggable="true" data-type="b6" data-label="Kiểm chứng thông tin AI đưa ra">Kiểm chứng
+          thông tin AI đưa ra</div>
+        <div class="draggable" draggable="true" data-type="b5" data-label="Tạo Vault trong Obsidian">Tạo Vault trong
+          Obsidian</div>
+        <div class="draggable" draggable="true" data-type="b6" data-label="Chọn Chatbox / Copilot / Agent">Chọn Chatbox
+          / Copilot / Agent</div>
       </div>
       <div class="game-buckets" style="grid-template-columns:1fr 1fr;">
-        <div class="bucket" data-bucket="doc" data-color="#059669" style="border-color:#10B981;background:#ECFDF5;">
-          <div class="bucket-title" style="color:#059669;">App ĐỌC được</div>
+        <div class="bucket" data-bucket="b5" data-color="#7C3AED" style="border-color:#7C3AED;background:#EEF2FF;">
+          <div class="bucket-title" style="color:#7C3AED;">Buổi 5 — Tổ chức kiến thức</div>
           <div class="bucket-zone"></div>
         </div>
-        <div class="bucket" data-bucket="boqua" data-color="#DC2626" style="border-color:#DC2626;background:#FEF2F2;">
-          <div class="bucket-title" style="color:#DC2626;">App BỎ QUA</div>
+        <div class="bucket" data-bucket="b6" data-color="#2563EB" style="border-color:#2563EB;background:#EFF6FF;">
+          <div class="bucket-title" style="color:#2563EB;">Buổi 6 — AI &amp; Kiểm chứng</div>
           <div class="bucket-zone"></div>
         </div>
       </div>
@@ -3089,199 +204,764 @@
       </div>
     </div>
   </div>
-
 </section>
 
-<section class="slide" data-slide="21" data-title="Quiz: chọn dòng đúng định dạng">
-
+<section class="slide" data-slide="8" data-title="Hỏi bạn cặp #1">
   <div class="slide-body">
-    <span class="eyebrow">KIỂM TRA NHANH</span>
-    <h2 class="slide-title">Dòng nào app rải lên lịch được?</h2>
-    <div class="quiz" data-correct="2"
-      data-explanation="Đúng! Mốc phải nằm ở đầu mục: - **Ngày 5:** … App mới đọc được.">
-      <p class="quiz-q">Dòng nào được app hiểu là một buổi học hợp lệ?</p>
-      <div class="quiz-opts">
-        <button class="quiz-opt" data-index="0">Ngày 5 mình sẽ ôn hình học</button>
-        <button class="quiz-opt" data-index="1">Học vào ngày 5 (xem [[Math]])</button>
-        <button class="quiz-opt" data-index="2">- **Ngày 5:** Ôn hình học 📝 [[Math_Thales]]</button>
-        <button class="quiz-opt" data-index="3">Tuần này làm bài 1/5 số đề</button>
+    <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
+    <h2 class="slide-title">Cùng bạn cặp — ôn nhanh</h2>
+    <div class="qbox qbox-yellow">
+      <div class="qbox-header">
+        <div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận #1
       </div>
-      <div class="quiz-fb"></div>
+      <div class="qbox-content">Hai bạn kể cho nhau: "<em>Từ Buổi 5 &amp; 6, điều gì mình thấy hữu ích nhất? Mình sẽ
+          dùng nó thế nào khi tự làm sản phẩm hôm nay?</em>"</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Nói lại bằng lời của mình là cách ôn tốt nhất
+        — và giúp bạn chọn hướng làm.</div>
     </div>
   </div>
-
 </section>
 
-<section class="slide slide-cover" data-slide="22" data-title="06_quiz_exam — Quiz hiện đúng">
-
+<!-- ============ ÔN AGENT & ANTIGRAVITY ============ -->
+<section class="slide slide-cover" data-slide="9" data-title="Agent &amp; Antigravity">
   <div class="cover-orb orb-1"></div>
   <div class="cover-orb orb-2"></div>
   <div class="cover-orb orb-3"></div>
   <div class="cover-content slide-body">
-    <span class="eyebrow">FOLDER QUIZ/ĐỀ</span>
-    <h1 class="hero-title">06_quiz_exam — <span class="grad-text">để Quiz chấm đúng</span></h1>
-    <p class="slide-subtitle">App đọc file này để hiện câu hỏi và biết đáp án nào đúng. Định dạng phải thật
-      chuẩn.</p>
-    <div class="cover-chips"><span class="cover-chip">### mỗi câu</span><span class="cover-chip">- đáp
-        án</span><span class="cover-chip">✅ đáp án đúng</span></div>
+    <span class="eyebrow">ÔN LẠI CÔNG CỤ CHÍNH HÔM NAY</span>
+    <h1 class="hero-title">Agent &amp; <span class="grad-text">Antigravity IDE</span></h1>
+    <p class="slide-subtitle">Đây là "trợ lý lập trình" sẽ giúp bạn tạo sản phẩm. Trước khi dùng, ta nhắc lại nó là gì
+      và dùng thế nào.</p>
+    <div class="cover-chips"><span class="cover-chip">Goal → Plan → Action</span><span class="cover-chip">IDE
+        agentic</span><span class="cover-chip">Bạn vẫn làm chủ</span></div>
   </div>
-
 </section>
 
-<section class="slide" data-slide="23" data-title="Định dạng Quiz chuẩn">
-
+<section class="slide" data-slide="10" data-title="Agent là gì">
   <div class="slide-body">
-    <span class="eyebrow">MẪU CHUẨN</span>
-    <h2 class="slide-title">Mỗi câu một ###, đáp án đúng có ✅</h2>
-    <div class="prompt-box"><span class="prompt-label">06_quiz_exam / Math_HangDangThuc.md</span>## 📝 Quiz
-      ### Khai triển (x + 4)² bằng?
-      - x² + 16x + 8
-      - x² + 8x + 16 ✅
-      - x² + 4x + 16
-      - x² + 8x + 8
-
-      ### Nghiệm của (x-3)(x+5) = 0 là?
-      - x=3 hoặc x=-5 ✅
-      - x=-3 hoặc x=5
-      - x=3 hoặc x=5</div>
-    <div class="hl-box danger"><span class="hl-label">QUÊN ✅ = LỖI</span>
-      <p>Thiếu dấu <code>✅</code> → app không biết đáp án đúng → chấm sai. Mỗi câu phải có ĐÚNG MỘT đáp án gắn
-        ✅.</p>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="24" data-title="Định dạng Đề (Exam)">
-
-  <div class="slide-body">
-    <span class="eyebrow">PHẦN TỰ LUẬN</span>
-    <h2 class="slide-title">Đề có câu hỏi và đáp án ẩn</h2>
-    <div class="prompt-box"><span class="prompt-label">Cùng file, phần Đề</span>## 🎯 Đề
-      **Câu 1:** Khai triển: (2x + 3)²
-      **Câu 2:** Phân tích thành nhân tử: x³ - 8
-
-      ### Đáp án
-      1. 4x² + 12x + 9
-      2. (x-2)(x²+2x+4)</div>
-    <div class="hl-box "><span class="hl-label">TRÊN APP</span>
-      <p>App hiện đề cho em làm, có nút mở phần <strong>Đáp án</strong> để tự chấm sau khi làm xong.</p>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="25" data-title="Sổ Tay #3 — Quiz của em">
-
-  <div class="slide-body">
-    <span class="eyebrow">ÁP DỤNG</span>
-    <h2 class="slide-title">Em sẽ tạo Quiz cho bài nào?</h2>
-    <div class="qbox qbox-purple">
-      <div class="qbox-header">
-        <div class="qbox-icon">#</div>SỔ TAY #3
-      </div>
-      <div class="qbox-content">Chọn 1 bài em vừa học, viết 1 câu hỏi trắc nghiệm 4 đáp án + đánh dấu đáp án
-        đúng bằng ✅. Đây là câu Quiz đầu tiên em sẽ bỏ vào 06_quiz_exam.</div>
-      <div class="nb-input-wrap">
-        <label>Câu hỏi + 4 đáp án (✅ cái đúng):</label>
-        <textarea class="nb-input" data-nb-id="3" placeholder="### Câu hỏi?
-- A
-- B ✅
-- C
-- D"></textarea>
-        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
-      </div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Viết thử ở đây trước, rồi chép vào file
-        Quiz đúng định dạng để app nạp được.</div>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="26" data-title="Các lỗi thường gặp &amp; cách sửa">
-
-  <div class="slide-body">
-    <span class="eyebrow">DEBUG NỘI DUNG</span>
-    <h2 class="slide-title">6 lỗi khiến app hiển thị sai</h2>
-    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
-      <div class="card">
-        <div class="card-icon" style="background:#DC2626;">✗</div>
-        <h3>Thiếu Ngày bắt đầu</h3>
-        <p>Lịch xếp sai ngày. → Thêm dòng <code>**Ngày bắt đầu:** YYYY-MM-DD</code>.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon" style="background:#DC2626;">✗</div>
-        <h3>Mốc giữa câu</h3>
-        <p>App bỏ qua buổi học. → Đưa mốc ra ĐẦU mục <code>- **Ngày 3:**</code>.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon" style="background:#DC2626;">✗</div>
-        <h3>Quên dấu ✅</h3>
-        <p>Quiz chấm sai. → Gắn ✅ cuối đúng 1 đáp án mỗi câu.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon" style="background:#DC2626;">✗</div>
-        <h3>Link sai folder</h3>
-        <p>Quiz không nạp. → Để file Quiz trong <code>06_quiz_exam</code>.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon" style="background:#DC2626;">✗</div>
-        <h3>Sai tên heading khối</h3>
-        <p>Reset số sai. → Dùng <code>### Tuần 1: …</code> đúng chữ.</p>
-      </div>
-      <div class="card">
-        <div class="card-icon" style="background:#DC2626;">✗</div>
-        <h3>Sửa xong chưa Rescan</h3>
-        <p>App vẫn dữ liệu cũ. → Bấm <strong>🔄 Làm mới</strong>.</p>
-      </div>
-    </div>
-  </div>
-
-</section>
-
-<section class="slide" data-slide="27" data-title="Sửa xong phải Làm mới (Rescan)">
-
-  <div class="slide-body">
-    <span class="eyebrow">BƯỚC CUỐI MỖI LẦN SỬA</span>
-    <h2 class="slide-title">App không tự biết em vừa sửa</h2>
+    <span class="eyebrow">NHẮC LẠI — LOẠI AI CHỦ ĐỘNG NHẤT</span>
+    <h2 class="slide-title">Agent: tự lập kế hoạch &amp; thực thi</h2>
     <div class="qbox qbox-blue">
       <div class="qbox-header">
-        <div class="qbox-icon">?</div>TRƯỚC GIỜ HỌC
+        <div class="qbox-icon">?</div>NHỚ LẠI
       </div>
-      <div class="qbox-content">App đọc vault MỘT LẦN lúc mở. Em sửa note trong Obsidian xong, app vẫn giữ dữ
-        liệu cũ cho tới khi em bấm <strong>🔄 Làm mới (Rescan)</strong>.</div>
+      <div class="qbox-content"><strong>Agent</strong> không chỉ trả lời như chat. Bạn nêu <strong>mục tiêu
+          (Goal)</strong>, agent tự <strong>lập kế hoạch (Plan)</strong> rồi <strong>thực thi từng bước
+          (Action)</strong> — tạo file, viết code, chạy thử, sửa lỗi.</div>
     </div>
-    <ol class="steps stagger">
-      <li>Sửa / thêm nội dung trong Obsidian, nhớ <strong>lưu</strong> (Ctrl/Cmd + S).</li>
-      <li>Quay lại app, bấm nút <strong>🔄 Làm mới (Rescan)</strong>.</li>
-      <li>Kiểm tra Lịch trình / Quiz đã cập nhật đúng chưa.</li>
-    </ol>
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>Khía cạnh</th>
+          <th>Chatbox (chat)</th>
+          <th>Agent (IDE)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Cách làm</td>
+          <td>Hỏi → trả lời 1 lượt</td>
+          <td><strong>Goal → Plan → Action</strong> (nhiều bước)</td>
+        </tr>
+        <tr>
+          <td>Tự làm việc</td>
+          <td>Không — bạn tự thao tác tiếp</td>
+          <td>Có — tự tạo/sửa file, chạy thử</td>
+        </tr>
+        <tr>
+          <td>Hợp việc</td>
+          <td>Hỏi đáp, viết nháp</td>
+          <td>Làm cả một sản phẩm (app, game)</td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-
 </section>
 
-<section class="slide" data-slide="28" data-title="Hỏi bạn cặp #2">
+<section class="slide" data-slide="11" data-title="Dùng Antigravity thế nào">
+  <div class="slide-body">
+    <span class="eyebrow">NHẮC LẠI CÁCH DÙNG — AGENT TRONG IDE</span>
+    <h2 class="slide-title">Google Antigravity — 5 bước</h2>
+    <ol class="steps stagger">
+      <li><span>Tải &amp; cài <strong>Antigravity IDE</strong> tại <code>antigravity.google</code> → đăng nhập tài khoản
+          Google.</span></li>
+      <li><span>Mở đúng <strong>thư mục vault Second Brain</strong> bạn đã tạo ở Buổi 5 (ví dụ
+          <code>My_Second_Brain</code>).</span></li>
+      <li><span>Mở khung <strong>Agent</strong> → nêu <strong>mục tiêu</strong> bằng tiếng Việt.</span></li>
+      <li><span>Agent hiện <strong>Plan</strong> các bước → bạn <strong>ĐỌC</strong> rồi duyệt → Agent
+          <strong>Action</strong>.</span></li>
+      <li><span>Mở file kết quả, <strong>chạy thử</strong>; chưa ưng thì mô tả lại để Agent sửa.</span></li>
+    </ol>
+    <div class="hl-box"><span class="hl-label">MẸO</span>
+      <p>Làm việc ngay trong vault Second Brain giúp Agent đọc được ghi chú &amp; Quiz bạn đã có. Chưa kịp cài
+        Antigravity? Tập với công cụ tạo web bằng AI (như z.ai ở Buổi 3–4) theo cùng vòng lặp <strong>mô tả → chạy →
+          sửa</strong>.</p>
+    </div>
+  </div>
+</section>
 
+<section class="slide" data-slide="12" data-title="Làm chủ Agent">
+  <div class="slide-body">
+    <span class="eyebrow">QUY TẮC QUAN TRỌNG NHẤT</span>
+    <h2 class="slide-title">Agent làm — nhưng bạn là người làm chủ</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="card">
+        <div class="card-icon">📖</div>
+        <h3>Đọc Plan trước</h3>
+        <p>Hiểu Agent định làm gì <strong>trước khi</strong> cho chạy. Đừng bấm duyệt cho qua.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">👣</div>
+        <h3>Duyệt từng bước</h3>
+        <p>Cho chạy từng phần, kiểm tra rồi mới đi tiếp — dễ phát hiện sai sớm.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">✅</div>
+        <h3>Tự kiểm thử</h3>
+        <p>Mở sản phẩm, bấm thử mọi nút. Agent có thể nhầm — bạn là người nghiệm thu.</p>
+      </div>
+    </div>
+    <div class="hl-box danger"><span class="hl-label">KHÔNG BAO GIỜ</span>
+      <p>Đừng để Agent chạy <strong>lệnh lạ</strong> mà bạn không hiểu (xoá file, tải phần mềm…). Không hiểu thì
+        <strong>hỏi GV</strong> trước khi duyệt.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="13" data-title="Quiz: Agent khác chat">
+  <div class="slide-body">
+    <span class="eyebrow">KIỂM TRA NHANH</span>
+    <h2 class="slide-title">Agent khác Chatbox ở điểm nào?</h2>
+    <div class="quiz" data-correct="2"
+      data-explanation="Agent tự lập kế hoạch và thực thi nhiều bước (Goal → Plan → Action); chatbox chỉ trả lời một lượt.">
+      <p class="quiz-q">Điểm khác biệt lớn nhất của Agent so với một Chatbox bình thường là gì?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Agent trả lời nhanh hơn</button>
+        <button class="quiz-opt" data-index="1">Agent nói được nhiều ngôn ngữ hơn</button>
+        <button class="quiz-opt" data-index="2">Agent tự lập Plan rồi thực thi từng bước để làm ra sản phẩm</button>
+        <button class="quiz-opt" data-index="3">Agent không bao giờ sai</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ PHÁT TRIỂN ỨNG DỤNG — 2 CÁCH ============ -->
+<section class="slide slide-cover" data-slide="14" data-title="Tự xây sản phẩm">
+  <div class="cover-orb orb-1" style="background:#3B82F6;"></div>
+  <div class="cover-orb orb-2" style="background:#06B6D4;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">PHẦN CHÍNH CỦA BUỔI</span>
+    <h1 class="hero-title">Hôm nay bạn <span class="grad-text">tự xây 1 sản phẩm</span></h1>
+    <p class="slide-subtitle">Dùng Agent, bạn chọn 1 trong 2 hướng và làm ra một sản phẩm chạy được. Không cần biết code
+      — bạn mô tả, Agent làm.</p>
+    <div class="cover-chips"><span class="cover-chip">Hướng A: Game học tập</span><span class="cover-chip">Hướng B: App
+        mục tiêu</span></div>
+  </div>
+</section>
+
+<section class="slide" data-slide="15" data-title="Vòng lặp tạo sản phẩm">
+  <div class="slide-body">
+    <span class="eyebrow">QUY TRÌNH CHUNG — DÙNG CHO CẢ 2 HƯỚNG</span>
+    <h2 class="slide-title">Vòng lặp: Mô tả → Chạy → Sửa</h2>
+    <ol class="steps stagger">
+      <li><span><strong>Mục tiêu (Goal):</strong> Nói rõ bạn muốn sản phẩm làm được gì.</span></li>
+      <li><span><strong>Plan:</strong> Đọc kế hoạch Agent đề xuất, duyệt.</span></li>
+      <li><span><strong>Action:</strong> Agent tạo file/viết code cho từng phần.</span></li>
+      <li><span><strong>Chạy thử:</strong> Mở sản phẩm, bấm thử các tính năng.</span></li>
+      <li><span><strong>Sửa:</strong> Mô tả chỗ chưa đúng → Agent sửa. Lặp lại tới khi ưng.</span></li>
+      <li><span><strong>Lưu &amp; khoe:</strong> Lưu lại, chụp màn hình chia sẻ nhóm lớp.</span></li>
+    </ol>
+    <div class="hl-box info"><span class="hl-label">ĐÂY CHÍNH LÀ VIBE CODING</span>
+      <p>Bạn mô tả bằng lời, AI viết code, bạn chạy thử và góp ý — cứ lặp lại. Quan trọng là <strong>mô tả rõ
+          ràng</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="16" data-title="Chọn 1 trong 2 hướng">
+  <div class="slide-body">
+    <span class="eyebrow">BẠN CHỌN HƯỚNG NÀO?</span>
+    <h2 class="slide-title">2 hướng — chọn 1 để làm hôm nay</h2>
+    <div class="school-grid">
+      <div class="school-flip" style="--sf-color:#EA580C;">
+        <div class="school-flip-inner">
+          <div class="school-flip-front">
+            <span class="school-num">HƯỚNG A</span>
+            <div class="school-title">🎮 Game học tập</div>
+            <div class="school-en">Học mà chơi — chơi mà học</div>
+            <div class="school-flip-hint">↻ Bấm để lật</div>
+          </div>
+          <div class="school-flip-back">
+            <div class="school-desc">Đố vui trắc nghiệm, ghép thẻ ghi nhớ, ô chữ… có <strong>tính điểm</strong> và
+              <strong>đếm giờ</strong>. Hợp khi bạn muốn ôn bài vui hơn.
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="school-flip" style="--sf-color:#2563EB;">
+        <div class="school-flip-inner">
+          <div class="school-flip-front">
+            <span class="school-num">HƯỚNG B</span>
+            <div class="school-title">🎯 App mục tiêu &amp; lịch trình</div>
+            <div class="school-en">Quản lý việc cần làm</div>
+            <div class="school-flip-hint">↻ Bấm để lật</div>
+          </div>
+          <div class="school-flip-back">
+            <div class="school-desc"><strong>Đọc vault Second Brain</strong>: Dashboard, Lịch trình theo Plan,
+              Study Hub, lọc theo Dự án. Hợp khi bạn muốn học có kỷ luật hơn.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="hl-box"><span class="hl-label">YÊN TÂM</span>
+      <p>Cả hai đều làm theo cùng vòng lặp. Chọn cái bạn <strong>thích</strong> — làm xong còn thời gian thì thử cái
+        kia.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="17" data-title="Khung Dự án — các ý tưởng chính">
+  <div class="slide-body">
+    <span class="eyebrow">NỐI LẠI BUỔI 5 — KHUNG DỰ ÁN</span>
+    <h2 class="slide-title">"Mục tiêu" = một note Dự án có khung</h2>
+    <p class="slide-subtitle">Viết mục tiêu thành note Dự án trong <code>01_Projects</code> theo template Buổi 5 — bỏ
+      timeline, nhưng <strong>bắt buộc có Ý tưởng &amp; Chức năng</strong>.</p>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(190px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#0EA5E9;">❓</div>
+        <h3>Bối cảnh (Problem)</h3>
+        <p>Hiện trạng đang ra sao &amp; vì sao cần làm sản phẩm này.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#3B82F6;">🎯</div>
+        <h3>Mục tiêu SMART</h3>
+        <p>Cụ thể · Đo được · Khả thi · Liên quan · Có hạn.</p>
+      </div>
+      <div class="card" style="border-top:4px solid #F59E0B;">
+        <div class="card-icon" style="background:#F59E0B;">🧩</div>
+        <h3>Ý tưởng &amp; Chức năng</h3>
+        <p>Sản phẩm hoạt động ra sao + các <strong>tính năng/màn chính</strong> (thay cho phần "giai đoạn").</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#06B6D4;">🧭</div>
+        <h3>Phạm vi</h3>
+        <p>LÀM gì / KHÔNG làm gì — để sản phẩm khỏi phình to.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#A855F7;">🔗</div>
+        <h3>Liên kết</h3>
+        <p>Trỏ tới <code>[[Plan]]</code>, <code>[[Area]]</code>, <code>[[Resource]]</code> trong vault.</p>
+      </div>
+    </div>
+    <ol class="steps stagger">
+      <li><span>Mô tả <strong>ý tưởng chính</strong> → nhờ Agent <strong>soạn giúp note Dự án</strong> theo các phần
+          trên.</span></li>
+      <li><span>Bạn <strong>đọc &amp; chỉnh sửa</strong> cùng Agent đến khi note Dự án <strong>thật ưng
+            ý</strong>.</span></li>
+      <li><span>Ưng rồi mới <strong>"chốt"</strong> và cho Agent <strong>bắt đầu tạo sản phẩm</strong> dựa trên note
+          đó.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="slide" data-slide="18" data-title="Cùng khung — Game &amp; App">
+  <div class="slide-body">
+    <span class="eyebrow">MỘT KHUNG — ÁP CHO CẢ 2 HƯỚNG</span>
+    <h2 class="slide-title">Cùng khung, hai sản phẩm khác nhau</h2>
+    <div class="prompt-box"><span class="prompt-label">HƯỚNG A · 01_Projects / Du_An_Game_On_Toan.md</span># Dự án: Game
+      ôn Toán lớp 8
+      **Bối cảnh (Problem):** Em hay quên công thức, ôn bài chán → muốn ôn bằng một game cho vui.
+      **Mục tiêu (SMART):** 1 game đố vui (1 file HTML), 5 câu Toán lớp 8, có tính điểm, làm xong ngay trong buổi.
+      **Ý tưởng & Chức năng:** Nhân vật (chú robot) dẫn qua 5 câu chia màn dễ→khó; ĐÚNG: +10 điểm & hiệu ứng thưởng;
+      SAI: mất 1 mạng (bắt đầu 3 mạng) & hiện đáp án đúng; hết mạng = thua, xong = thắng + nút Chơi lại.
+      **Phạm vi:** KHÔNG đăng nhập, KHÔNG lưu lên mạng, link trực tiếp với vault (refresh theo nội dung được
+      đưa vào).
+      **Giới hạn:** HS lớp 8, chưa biết code, tiếng Việt, đơn giản.
+      **Liên kết:** Lấy câu hỏi từ [[06_quiz_exam]] · thuộc [[Area_Math]]
+      #project #ai #game</div>
+    <div class="prompt-box"><span class="prompt-label">HƯỚNG B · 01_Projects / Du_An_App_Muc_Tieu.md</span># Dự án: App
+      theo dõi mục tiêu cá nhân
+      **Bối cảnh (Problem):** Em hay quên việc cần làm, học thiếu kỷ luật → cần chỗ ghi mục tiêu &amp; theo dõi.
+      **Mục tiêu (SMART):** 1 app (1 file HTML) đọc vault Second Brain, xem mục tiêu–lịch–tiến độ, dùng được ngay trong
+      buổi.
+      **Ý tưởng & Chức năng:** 4 màn — Dashboard (đếm Dự án/Tài nguyên); Lịch trình (rải buổi từ 05_learning_plan);
+      Study Hub (Quiz từ 06_quiz_exam, chấm điểm); Lọc theo Dự án; kèm thanh tiến độ & đánh dấu hoàn thành.
+      **Phạm vi:** KHÔNG đăng nhập, KHÔNG lưu lên mạng, link trực tiếp với vault (refresh theo nội dung được.
+      **Giới hạn:** HS lớp 8, chưa biết code, tiếng Việt, đơn giản.
+      đưa vào).
+      **Liên kết:** Đọc [[01_Projects]], [[05_learning_plan]], [[06_quiz_exam]]
+      #project #ai #app</div>
+    <div class="hl-box success"><span class="hl-label">KẾ HOẠCH TRƯỚC — BUILD SAU</span>
+      <p>Cùng 1 khung, chỉ đổi nội dung. Duyệt kỹ note Dự án trước khi build → đỡ làm lại. Muốn sửa gì thì
+        <strong>sửa trong note Dự án</strong>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="19" data-title="Sổ Tay #2 — Chọn hướng">
+  <div class="slide-body">
+    <span class="eyebrow">ÁP DỤNG</span>
+    <h2 class="slide-title">Chốt hướng &amp; viết mục tiêu của bạn</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header">
+        <div class="qbox-icon">#</div>SỔ TAY #2
+      </div>
+      <div class="qbox-content">Ghi hướng bạn chọn (A hay B), <strong>1 ý tưởng chính</strong>, và <strong>bối
+          cảnh</strong> của bạn. Đây là note Dự án bạn sẽ lưu vào <code>01_Projects</code> và gửi cho Agent.</div>
+      <div class="nb-input-wrap">
+        <label>Hướng + ý tưởng + bối cảnh:</label>
+        <textarea class="nb-input" data-nb-id="2"
+          placeholder="Hướng: A/B | Ý tưởng: ... | Bối cảnh: mình là HS lớp ..., làm tiếng Việt, giữ đơn giản"></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Viết mục tiêu như 1 dự án (Buổi 5) giúp Agent
+        hiểu bối cảnh &amp; giới hạn của bạn → làm đúng và vừa sức.</div>
+    </div>
+  </div>
+</section>
+
+<section class="slide slide-cover" data-slide="20" data-title="Hướng A — Game học tập">
+  <div class="cover-orb orb-1" style="background:#EA580C;"></div>
+  <div class="cover-orb orb-2" style="background:#F59E0B;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">HƯỚNG A</span>
+    <h1 class="hero-title">🎮 Làm <span class="grad-text">Game học tập</span></h1>
+    <p class="slide-subtitle">Không chỉ là hỏi–đáp khô khan: hãy có <strong>nhân vật</strong>, có
+      <strong>thưởng</strong> khi đúng và <strong>phạt</strong> khi sai — biến việc ôn bài thành một cuộc phiêu lưu.
+    </p>
+    <div class="cover-chips"><span class="cover-chip">Nhân vật vui</span><span
+        class="cover-chip">Thưởng/phạt</span><span class="cover-chip">Qua màn &amp; điểm</span></div>
+  </div>
+</section>
+
+<section class="slide" data-slide="21" data-title="Ý tưởng Game học tập">
+  <div class="slide-body">
+    <span class="eyebrow">HƯỚNG A — LÀM GAME HẤP DẪN HƠN</span>
+    <h2 class="slide-title">Cho game có "linh hồn"</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));">
+      <div class="card">
+        <div class="card-icon">🦸</div>
+        <h3>Nhân vật &amp; câu chuyện</h3>
+        <p>Một nhân vật (vd chú robot, mèo thám hiểm) dẫn người chơi qua các câu hỏi, chướng ngại vật — trả lời đúng thì
+          nhân vật tiến
+          lên, vui mừng.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🏆</div>
+        <h3>Thưởng khi ĐÚNG</h3>
+        <p>Đúng được <strong>điểm, sao, huy hiệu</strong>, lên cấp, mở màn mới; có hiệu ứng vui (pháo hoa, âm thanh).
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-icon">💔</div>
+        <h3>Phạt khi SAI</h3>
+        <p>Sai thì <strong>mất 1 mạng/máu</strong> hoặc trừ điểm, nhân vật buồn — nhưng luôn hiện đáp án đúng để học
+          lại.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📈</div>
+        <h3>Qua màn &amp; độ khó</h3>
+        <p>Chia nhiều màn: dễ → khó. Hết mạng thì thua, đúng nhiều thì chiến thắng và xem điểm cao nhất.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">NỘI DUNG ĐÚNG/SAI LẤY TỪ ĐÂU?</span>
+      <p>Dùng các <strong>Quiz đã tạo hoặc chính nội dung trong areas, resources</strong> (bằng AI, <strong>đã kiểm
+          chứng</strong>) làm câu hỏi — thưởng
+        gắn với <strong>kiến thức đúng</strong>, phạt gắn với <strong>đáp án sai</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="22" data-title="Prompt mẫu — Game">
+  <div class="slide-body">
+    <span class="eyebrow">HƯỚNG A — RA LỆNH CHO AGENT</span>
+    <h2 class="slide-title">Trỏ Agent vào Dự án đã viết</h2>
+    <div class="prompt-box"><span class="prompt-label">GOAL gửi Agent — dùng lại note Dự án</span>Hãy đọc note dự án
+      [[Du_An_Game_On_Toan]] trong 01_Projects của vault.
+      Dựa ĐÚNG theo Bối cảnh, Mục tiêu (SMART), Phạm vi và Giới hạn trong note đó để tạo game (1 file HTML).
+      Hãy lập Plan trước, cho mình duyệt, rồi mới làm.</div>
+    <div class="hl-box"><span class="hl-label">KHÔNG MÔ TẢ LẠI</span>
+      <p>Mọi yêu cầu đã nằm trong note Dự án ở bước trước → chỉ cần <strong>trỏ Agent tới nó</strong>. Đỡ lặp lại,
+        Agent bám đúng kế hoạch bạn đã duyệt. Muốn sửa gì thì <strong>sửa trong note Dự án</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="23" data-title="Nâng cấp &amp; test — Game">
+  <div class="slide-body">
+    <span class="eyebrow">HƯỚNG A — CHẠY THỬ RỒI NÂNG CẤP</span>
+    <h2 class="slide-title">Chơi thử, rồi xin Agent thêm</h2>
+    <ol class="steps stagger">
+      <li><span>Chơi thử <strong>cả khi đúng và khi sai</strong> — thưởng cộng điểm, phạt mất mạng có chạy đúng
+          không?</span></li>
+      <li><span>Thêm chất game: <em>"Cho nhân vật cử động khi đúng"</em>, <em>"Trộn thứ tự câu mỗi lần
+            chơi"</em>.</span></li>
+      <li><span>Thêm vui mắt: <em>"Hiệu ứng pháo hoa khi thắng"</em>, <em>"Lời khen/huy hiệu theo số điểm"</em>.</span>
+      </li>
+      <li><span>Sai chỗ nào → <strong>mô tả đúng lỗi</strong> cho Agent sửa (xem slide "vòng lặp sửa lỗi").</span></li>
+    </ol>
+    <div class="hl-box success"><span class="hl-label">XONG HƯỚNG A KHI</span>
+      <p>Game có nhân vật, <strong>thưởng khi đúng &amp; phạt khi sai</strong> chạy đúng, có màn thắng–thua và nút chơi
+        lại.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide slide-cover" data-slide="24" data-title="Hướng B — App mục tiêu">
+  <div class="cover-orb orb-1" style="background:#2563EB;"></div>
+  <div class="cover-orb orb-2" style="background:#06B6D4;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">HƯỚNG B</span>
+    <h1 class="hero-title">🎯 App theo dõi <span class="grad-text">mục tiêu &amp; lịch trình</span></h1>
+    <p class="slide-subtitle">Bám sát <strong>Second Brain</strong>: app <strong>đọc chính vault PARA</strong> của
+      bạn — Dự án thành mục tiêu, Plan thành lịch, Quiz thành ôn tập. App luôn xoay quanh vault, không tách rời.</p>
+    <div class="cover-chips"><span class="cover-chip">Đọc vault PARA</span><span class="cover-chip">Mục tiêu &amp;
+        lịch</span><span class="cover-chip">Tiến độ</span></div>
+  </div>
+</section>
+
+<section class="slide" data-slide="25" data-title="Ý tưởng App mục tiêu">
+  <div class="slide-body">
+    <span class="eyebrow">HƯỚNG B — BÁM SÁT APP MẪU SECOND BRAIN</span>
+    <h2 class="slide-title">4 tính năng theo app mẫu</h2>
+    <p class="slide-subtitle">Lấy đúng 4 tính năng của app mẫu trong Second Brain — mỗi cái đọc 1 folder PARA.</p>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(210px, 1fr));">
+      <div class="card">
+        <div class="card-icon">📊</div>
+        <h3>Dashboard</h3>
+        <p>Đếm số <strong>Dự án / Tài nguyên / Lộ trình / Hoàn thành</strong> từ các folder trong vault.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📅</div>
+        <h3>Lịch trình</h3>
+        <p>Đọc <code>05_learning_plan</code>, <strong>rải các buổi học</strong> lên đúng ngày theo Plan.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎯</div>
+        <h3>Study Hub</h3>
+        <p>Lấy Quiz/Đề từ <code>06_quiz_exam</code>, cho làm và <strong>chấm điểm tại chỗ</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔍</div>
+        <h3>Lọc theo Dự án</h3>
+        <p>Chọn 1 Dự án (mục tiêu) ở <code>01_Projects</code> → cả app đổi theo ngữ cảnh đó.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">QUY TẮC VÀNG</span>
+      <p>App của bạn <strong>luôn bám sát Second Brain</strong>: mọi tính năng đều đọc dữ liệu từ vault PARA, không tự
+        chế dữ liệu rời rạc.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="26" data-title="Prompt mẫu — App mục tiêu">
+  <div class="slide-body">
+    <span class="eyebrow">HƯỚNG B — RA LỆNH CHO AGENT</span>
+    <h2 class="slide-title">Trỏ Agent vào Dự án đã viết</h2>
+    <div class="prompt-box"><span class="prompt-label">GOAL gửi Agent — dùng lại note Dự án</span>Hãy đọc note dự án App
+      của mình trong 01_Projects của vault.
+      Dựa ĐÚNG theo Bối cảnh, Mục tiêu (SMART), Phạm vi và Giới hạn trong note đó để tạo app, và app phải ĐỌC dữ liệu từ
+      vault Second Brain.
+      Hãy lập Plan trước, cho mình duyệt, rồi mới làm.</div>
+    <div class="hl-box"><span class="hl-label">KHÔNG MÔ TẢ LẠI</span>
+      <p>4 tính năng (Dashboard · Lịch trình · Study Hub · Lọc theo Dự án) đã ghi trong note Dự án ở bước trước → chỉ
+        cần <strong>trỏ Agent tới nó</strong>. Muốn sửa gì thì <strong>sửa trong note Dự án</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="27" data-title="Nâng cấp &amp; test — App">
+  <div class="slide-body">
+    <span class="eyebrow">HƯỚNG B — CHẠY THỬ RỒI NÂNG CẤP</span>
+    <h2 class="slide-title">Dùng thử, rồi xin Agent thêm</h2>
+    <ol class="steps stagger">
+      <li><span>Mở app, kiểm tra <strong>Dashboard đếm đúng</strong> số Dự án/Tài nguyên trong vault chưa.</span></li>
+      <li><span>Xem <strong>Lịch trình</strong> có rải đúng các buổi từ <code>05_learning_plan</code> không.</span></li>
+      <li><span>Muốn thêm (vẫn bám vault): <em>"Lọc lịch theo Dự án đang chọn"</em>, <em>"Tô đỏ buổi sắp tới
+            hạn"</em>.</span></li>
+      <li><span>Sai chỗ nào → <strong>mô tả đúng lỗi</strong> cho Agent sửa.</span></li>
+    </ol>
+    <div class="hl-box success"><span class="hl-label">XONG HƯỚNG B KHI</span>
+      <p>App <strong>đọc được vault</strong>, Dashboard đếm đúng, Lịch trình rải đúng theo Plan và lọc được theo Dự
+        án.</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="28" data-title="Vòng lặp sửa lỗi">
+  <div class="slide-body">
+    <span class="eyebrow">DÙNG CHUNG — KHI SẢN PHẨM CHƯA ĐÚNG</span>
+    <h2 class="slide-title">Mô tả lỗi cho Agent thế nào</h2>
+    <div class="qbox qbox-blue">
+      <div class="qbox-header">
+        <div class="qbox-icon">?</div>NGUYÊN TẮC
+      </div>
+      <div class="qbox-content">Agent không thấy màn hình của bạn. Hãy tả / chụp ảnh màn hình <strong>(1) bạn làm gì →
+          (2) bạn thấy gì →
+          (3) bạn mong gì</strong>. Càng cụ thể, Agent càng sửa đúng.</div>
+    </div>
+    <div class="prompt-box"><span class="prompt-label">Mẫu báo lỗi cho Agent</span>Khi bạn bấm "Nộp bài", điểm vẫn hiện
+      0 dù bạn chọn đúng.
+      Bạn mong: chọn đúng thì +10 điểm và tổng điểm cập nhật ngay.
+      Hãy tìm và sửa lỗi này.</div>
+    <div class="hl-box danger"><span class="hl-label">TRÁNH</span>
+      <p>Nói chung chung như <em>"nó bị lỗi rồi"</em> → Agent đoán mò. Luôn nói <strong>thấy gì</strong> và
+        <strong>mong gì</strong>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="29" data-title="Game: Game hay App?">
+  <div class="slide-body">
+    <span class="eyebrow">QUICK SELF-TEST</span>
+    <h2 class="slide-title">Tính năng này hợp với Game hay App mục tiêu?</h2>
+    <p class="slide-subtitle">Kéo (hoặc bấm) từng tính năng vào đúng nhóm.</p>
+    <div class="game-area">
+      <div class="game-items" id="gameItems">
+        <div class="draggable" draggable="true" data-type="game" data-label="Tính điểm khi trả lời đúng">Tính điểm khi
+          trả lời đúng</div>
+        <div class="draggable" draggable="true" data-type="app" data-label="Danh sách việc cần làm">Danh sách việc cần
+          làm</div>
+        <div class="draggable" draggable="true" data-type="game" data-label="Đếm ngược thời gian mỗi câu">Đếm ngược thời
+          gian mỗi câu</div>
+        <div class="draggable" draggable="true" data-type="app" data-label="Thanh tiến độ hoàn thành">Thanh tiến độ hoàn
+          thành</div>
+        <div class="draggable" draggable="true" data-type="game" data-label="Lật thẻ ghi nhớ">Lật thẻ ghi nhớ</div>
+        <div class="draggable" draggable="true" data-type="app" data-label="Nhắc nhở theo ngày hạn">Nhắc nhở theo ngày
+          hạn</div>
+      </div>
+      <div class="game-buckets" style="grid-template-columns:1fr 1fr;">
+        <div class="bucket" data-bucket="game" data-color="#EA580C" style="border-color:#EA580C;background:#FFF7ED;">
+          <div class="bucket-title" style="color:#EA580C;">🎮 Game học tập</div>
+          <div class="bucket-zone"></div>
+        </div>
+        <div class="bucket" data-bucket="app" data-color="#2563EB" style="border-color:#2563EB;background:#EFF6FF;">
+          <div class="bucket-title" style="color:#2563EB;">🎯 App mục tiêu</div>
+          <div class="bucket-zone"></div>
+        </div>
+      </div>
+      <div class="game-score" id="gameScore" style="display:none;">
+        <div id="gameScoreText"></div>
+        <button class="btn-restart" onclick="restartGame()">Chơi lại</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="30" data-title="Hỏi bạn cặp #2">
   <div class="slide-body">
     <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
-    <h2 class="slide-title">Cùng bạn cặp — soát lỗi cho nhau</h2>
+    <h2 class="slide-title">Cùng bạn cặp — demo cho nhau</h2>
     <div class="qbox qbox-yellow">
       <div class="qbox-header">
         <div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận #2
       </div>
-      <div class="qbox-content">Đổi file Plan/Quiz cho nhau và soát: "<em>File này có đủ Ngày bắt đầu chưa? Mốc
-          có ở đầu mục không? Mỗi câu Quiz có đúng 1 dấu ✅ chưa?</em>"</div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Bạn cặp là người "test" giúp em. Lỗi
-        mình hay bỏ sót, người khác nhìn ra ngay.</div>
+      <div class="qbox-content">Cho bạn chơi/dùng thử sản phẩm của bạn 1 phút. Bạn góp ý: "<em>Chỗ nào khó hiểu? Nên
+          thêm tính năng gì? Có chỗ nào bị lỗi không?</em>"</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Người dùng thật phát hiện lỗi mà người làm hay
+        bỏ sót. Ghi lại 1 góp ý hay nhất.</div>
     </div>
   </div>
-
 </section>
 
-<section class="slide" data-slide="29" data-title="Checklist — nội dung sẵn sàng lên app">
-
+<section class="slide" data-slide="31" data-title="Sổ Tay #3 — Tính năng tiếp theo">
   <div class="slide-body">
-    <span class="eyebrow">CUỐI BUỔI 7 — KIỂM TRA NỘI DUNG</span>
+    <span class="eyebrow">ÁP DỤNG</span>
+    <h2 class="slide-title">Tính năng tiếp theo bạn muốn thêm</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header">
+        <div class="qbox-icon">#</div>SỔ TAY #3
+      </div>
+      <div class="qbox-content">Viết 1 tính năng bạn muốn Agent thêm vào sản phẩm và <strong>câu mô tả</strong> bạn sẽ
+        gửi (theo mẫu: bạn làm gì → thấy gì → mong gì).</div>
+      <div class="nb-input-wrap">
+        <label>Tính năng + câu mô tả gửi Agent:</label>
+        <textarea class="nb-input" data-nb-id="3"
+          placeholder="Tính năng: ... | Câu gửi Agent: 'Hãy thêm ... để ...'"></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Luyện thói quen mô tả rõ — kỹ năng quan trọng
+        nhất khi làm việc với AI/Agent.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ AN TOÀN THÔNG TIN, RỦI RO & BẢO MẬT ============ -->
+<section class="slide slide-cover" data-slide="32" data-title="An toàn khi dùng AI">
+  <div class="cover-orb orb-1" style="background:#DC2626;"></div>
+  <div class="cover-orb orb-2" style="background:#F97316;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">PHẦN 4 — RẤT QUAN TRỌNG</span>
+    <h1 class="hero-title">An toàn thông tin <span class="grad-text">khi dùng AI</span></h1>
+    <p class="slide-subtitle">AI rất mạnh, nhưng cũng có rủi ro. Biết phòng tránh thì bạn dùng AI vừa hiệu quả vừa an
+      toàn.</p>
+    <div class="cover-chips"><span class="cover-chip">Rủi ro</span><span class="cover-chip">Bảo vệ thông tin</span><span
+        class="cover-chip">Quy tắc vàng</span></div>
+  </div>
+</section>
+
+<section class="slide" data-slide="33" data-title="4 rủi ro khi dùng AI">
+  <div class="slide-body">
+    <span class="eyebrow">BIẾT ĐỂ TRÁNH</span>
+    <h2 class="slide-title">4 rủi ro thường gặp</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">🔓</div>
+        <h3>Lộ thông tin cá nhân</h3>
+        <p>Mọi thứ bạn gõ vào AI có thể bị lưu lại. Dán mật khẩu, CCCD, địa chỉ → rất nguy hiểm.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">🤥</div>
+        <h3>AI bịa (hallucination)</h3>
+        <p>AI nói rất tự tin nhưng có thể sai sự thật. Tin ngay → học sai, làm sai.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">⚠️</div>
+        <h3>Nội dung độc / lệch</h3>
+        <p>AI có thể đưa thông tin thiên lệch, không phù hợp lứa tuổi, hoặc link lạ.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">📋</div>
+        <h3>Phụ thuộc &amp; đạo văn</h3>
+        <p>Copy nguyên bài AI rồi nộp = gian lận; lười suy nghĩ lâu dài làm yếu kỹ năng của bạn.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="34" data-title="Bảo vệ thông tin cá nhân">
+  <div class="slide-body">
+    <span class="eyebrow">RỦI RO SỐ 1 — DỄ GẶP NHẤT</span>
+    <h2 class="slide-title">Đừng đưa thông tin nhạy cảm cho AI</h2>
+    <div class="hl-box danger"><span class="hl-label">KHÔNG BAO GIỜ DÁN VÀO AI</span>
+      <p>Mật khẩu · Số CCCD/CMND · Số tài khoản, mã OTP · Địa chỉ nhà, số điện thoại · Ảnh riêng tư · Bí mật của người
+        khác.</p>
+    </div>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#10B981;">✓</div>
+        <h3>Cách hỏi an toàn</h3>
+        <p>Hỏi <strong>chung chung, ẩn danh</strong>: thay tên thật bằng "bạn A", bỏ thông tin định danh ra khỏi câu
+          hỏi.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#10B981;">✓</div>
+        <h3>Nghĩ trước khi gửi</h3>
+        <p>Tự hỏi: "Nếu câu này bị đăng công khai, mình có sao không?" Nếu có → đừng gửi.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="35" data-title="An toàn khi Agent chạy">
+  <div class="slide-body">
+    <span class="eyebrow">RIÊNG VỚI AGENT / IDE</span>
+    <h2 class="slide-title">Agent chạy code — cẩn thận hơn chat</h2>
+    <div class="qbox qbox-blue">
+      <div class="qbox-header">
+        <div class="qbox-icon">?</div>VÌ SAO CẦN CẨN THẬN
+      </div>
+      <div class="qbox-content">Agent có thể <strong>tạo, sửa, xoá file</strong> và <strong>chạy lệnh</strong> trên
+        máy. Nếu duyệt bừa, nó có thể làm điều bạn không mong muốn.</div>
+    </div>
+    <ol class="steps stagger">
+      <li><span><strong>Đọc Plan</strong> trước khi cho chạy — hiểu nó định làm gì.</span></li>
+      <li><span>Không cho chạy <strong>lệnh lạ</strong> (xoá nhiều file, tải/cài phần mềm) khi chưa hiểu.</span></li>
+      <li><span>Không tải file/đường link lạ do AI gợi ý mà chưa kiểm tra.</span></li>
+      <li><span>Làm trong <strong>thư mục dự án riêng</strong>, không trỏ Agent vào thư mục quan trọng của cả
+          máy.</span></li>
+    </ol>
+  </div>
+</section>
+
+<section class="slide" data-slide="36" data-title="Quy tắc vàng an toàn AI">
+  <div class="slide-body">
+    <span class="eyebrow">GHI NHỚ CẢ ĐỜI DÙNG AI</span>
+    <h2 class="slide-title">5 quy tắc vàng</h2>
+    <ol class="steps stagger">
+      <li><span><strong>Không chia sẻ thông tin nhạy cảm</strong> (mật khẩu, CCCD, địa chỉ…) với AI.</span></li>
+      <li><span><strong>Luôn kiểm chứng</strong> trước khi tin — AI có thể bịa.</span></li>
+      <li><span><strong>Đọc Plan</strong> &amp; không chạy lệnh/link lạ bạn không hiểu.</span></li>
+      <li><span><strong>Dùng AI để học, không để gian lận</strong> — sản phẩm phải có công sức của bạn.</span></li>
+      <li><span><strong>Không hiểu thì hỏi</strong> thầy cô/người lớn trước khi làm.</span></li>
+    </ol>
+    <div class="hl-box success"><span class="hl-label">CÂU THẦN CHÚ</span>
+      <p>"<strong>AI là trợ lý — bạn là người làm chủ và chịu trách nhiệm.</strong>"</p>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="37" data-title="Game: An toàn — Nên / Không nên">
+  <div class="slide-body">
+    <span class="eyebrow">QUICK SELF-TEST</span>
+    <h2 class="slide-title">Hành động này NÊN hay KHÔNG nên?</h2>
+    <p class="slide-subtitle">Kéo (hoặc bấm) từng hành động vào đúng nhóm.</p>
+    <div class="game-area">
+      <div class="game-items" id="gameItems">
+        <div class="draggable" draggable="true" data-type="nen" data-label="Kiểm chứng trước khi tin AI">Kiểm chứng
+          trước
+          khi tin AI</div>
+        <div class="draggable" draggable="true" data-type="khong" data-label="Dán mật khẩu / số CCCD vào chat AI">Dán
+          mật
+          khẩu / số CCCD vào chat AI</div>
+        <div class="draggable" draggable="true" data-type="nen" data-label="Đọc Plan của Agent trước khi cho chạy">Đọc
+          Plan của Agent trước khi cho chạy</div>
+        <div class="draggable" draggable="true" data-type="khong" data-label="Cho Agent chạy lệnh lạ không đọc">Cho
+          Agent
+          chạy lệnh lạ không đọc</div>
+        <div class="draggable" draggable="true" data-type="nen" data-label="Hỏi AI bằng thông tin ẩn danh">Hỏi AI bằng
+          thông tin ẩn danh</div>
+        <div class="draggable" draggable="true" data-type="khong" data-label="Copy bài AI rồi nộp như của mình">Copy bài
+          AI rồi nộp như của mình</div>
+      </div>
+      <div class="game-buckets" style="grid-template-columns:1fr 1fr;">
+        <div class="bucket" data-bucket="nen" data-color="#059669" style="border-color:#10B981;background:#ECFDF5;">
+          <div class="bucket-title" style="color:#059669;">✓ NÊN làm</div>
+          <div class="bucket-zone"></div>
+        </div>
+        <div class="bucket" data-bucket="khong" data-color="#DC2626" style="border-color:#DC2626;background:#FEF2F2;">
+          <div class="bucket-title" style="color:#DC2626;">✗ KHÔNG nên</div>
+          <div class="bucket-zone"></div>
+        </div>
+      </div>
+      <div class="game-score" id="gameScore" style="display:none;">
+        <div id="gameScoreText"></div>
+        <button class="btn-restart" onclick="restartGame()">Chơi lại</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="slide" data-slide="38" data-title="Quiz: An toàn AI">
+  <div class="slide-body">
+    <span class="eyebrow">KIỂM TRA NHANH</span>
+    <h2 class="slide-title">Bạn bạn định dán gì vào AI?</h2>
+    <div class="quiz" data-correct="1"
+      data-explanation="Không bao giờ dán mật khẩu/thông tin định danh vào AI. Hãy hỏi ẩn danh, bỏ thông tin nhạy cảm ra khỏi câu hỏi.">
+      <p class="quiz-q">Bạn bạn muốn nhờ AI viết đơn, định dán cả số CCCD và mật khẩu email vào. Bạn khuyên gì?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Cứ dán hết cho AI làm nhanh</button>
+        <button class="quiz-opt" data-index="1">Bỏ mật khẩu &amp; CCCD ra, chỉ đưa thông tin chung cần thiết</button>
+        <button class="quiz-opt" data-index="2">Dán mật khẩu thôi, CCCD thì giữ lại</button>
+        <button class="quiz-opt" data-index="3">Gửi cho bạn khác dán giúp</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ TỔNG KẾT ============ -->
+<section class="slide" data-slide="39" data-title="Checklist cuối buổi">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 7 — TỰ KIỂM TRA</span>
     <h2 class="slide-title">Checklist — bấm để tick</h2>
     <div class="cl-container">
       <div class="cl-progress">
@@ -3289,193 +969,179 @@
         <div class="cl-bar">
           <div class="cl-bar-fill" id="clBarFill"></div>
         </div>
-        <div class="cl-stat" id="clStat">0 / 10</div>
+        <div class="cl-stat" id="clStat">0 / 9</div>
       </div>
       <ul class="cl-list" id="clList">
         <li class="cl-item">
-          <div class="cl-check"></div><span>Mở được app và cấp quyền đúng vault</span>
+          <div class="cl-check"></div><span>Giải thích được Goal → Plan → Action của Agent</span>
         </li>
         <li class="cl-item">
-          <div class="cl-check"></div><span>Có ít nhất 1 note trong 01_Projects</span>
+          <div class="cl-check"></div><span>Đã chọn 1 hướng (Game HOẶC App mục tiêu)</span>
         </li>
         <li class="cl-item">
-          <div class="cl-check"></div><span>Có ít nhất 2 note trong 03_Resources</span>
+          <div class="cl-check"></div><span>Đã viết 1 "mục tiêu" (prompt) gửi Agent</span>
         </li>
         <li class="cl-item">
-          <div class="cl-check"></div><span>File Plan có dòng Dựa trên dự án [[ ]]</span>
+          <div class="cl-check"></div><span>Sản phẩm mở lên CHẠY được trọn 1 lượt</span>
         </li>
         <li class="cl-item">
-          <div class="cl-check"></div><span>File Plan có dòng **Ngày bắt đầu:**</span>
+          <div class="cl-check"></div><span>Đã sửa được ít nhất 1 lỗi qua mô tả cho Agent</span>
         </li>
         <li class="cl-item">
-          <div class="cl-check"></div><span>Mỗi buổi học có mốc ở đầu mục - **Ngày/Tuần:**</span>
+          <div class="cl-check"></div><span>Nêu được ít nhất 3 quy tắc an toàn AI</span>
         </li>
         <li class="cl-item">
-          <div class="cl-check"></div><span>Đã gắn Quiz bằng 📝[[ ]] tới 06_quiz_exam</span>
+          <div class="cl-check"></div><span>Biết KHÔNG dán thông tin nhạy cảm vào AI</span>
         </li>
         <li class="cl-item">
-          <div class="cl-check"></div><span>Mỗi câu Quiz có đúng 1 đáp án gắn ✅</span>
-        </li>
-        <li class="cl-item">
-          <div class="cl-check"></div><span>Đã bấm Làm mới (Rescan) và kiểm tra app đúng</span>
+          <div class="cl-check"></div><span>Đã cho bạn cặp demo &amp; nhận 1 góp ý</span>
         </li>
         <li class="cl-item">
           <div class="cl-check"></div><span>Viết Sổ Tay #1, #2, #3</span>
         </li>
       </ul>
     </div>
-    <div class="hl-box success"><span class="hl-label">NẾU CÒN LỖI</span>
-      <p>Đối chiếu slide "6 lỗi thường gặp" để tự sửa, hoặc nhắn GV trong Zalo lớp. <strong>KHÔNG AI BỊ BỎ
-          LẠI.</strong></p>
+    <div class="hl-box success"><span class="hl-label">NẾU CÒN VƯỚNG</span>
+      <p>Xem lại slide "vòng lặp sửa lỗi" hoặc nhắn GV trong Zalo lớp. <strong>KHÔNG AI BỊ BỎ LẠI.</strong></p>
     </div>
   </div>
-
 </section>
 
-<section class="slide" data-slide="30" data-title="Từ điển Buổi 7 — click để lật">
-
+<section class="slide" data-slide="40" data-title="Từ điển Buổi 7 — click để lật">
   <div class="slide-body">
     <span class="eyebrow">8 THUẬT NGỮ — CLICK ĐỂ LẬT</span>
-    <h2 class="slide-title">Các quy ước nội dung cần nhớ</h2>
+    <h2 class="slide-title">Các từ khoá cần nhớ</h2>
     <div class="fc-grid">
-      <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc">
         <div class="fc-inner">
           <div class="fc-front">
-            <div class="fc-term">Ngày bắt đầu</div>
-            <div class="fc-vi">Mốc neo</div>
+            <div class="fc-term">Agent</div>
+            <div class="fc-vi">AI tự làm việc</div>
           </div>
-          <div class="fc-back">Dòng **Ngày bắt đầu:** để app tính mọi ngày trong Plan. Thiếu là lịch sai.</div>
+          <div class="fc-back">AI tự lập kế hoạch &amp; thực thi nhiều bước để làm ra sản phẩm.</div>
         </div>
       </div>
-      <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc">
         <div class="fc-inner">
           <div class="fc-front">
-            <div class="fc-term">Mốc (Marker)</div>
-            <div class="fc-vi">Đầu mục</div>
+            <div class="fc-term">Antigravity</div>
+            <div class="fc-vi">IDE agentic của Google</div>
           </div>
-          <div class="fc-back">- **Ngày/Tuần/Thứ:** ở ĐẦU mục thì app mới đọc.</div>
+          <div class="fc-back">Môi trường để Agent chạy theo Plan và tạo cả sản phẩm.</div>
         </div>
       </div>
-      <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc">
         <div class="fc-inner">
           <div class="fc-front">
-            <div class="fc-term">Toàn cục</div>
-            <div class="fc-vi">Số tăng dần</div>
+            <div class="fc-term">Goal → Plan → Action</div>
+            <div class="fc-vi">Cách Agent làm</div>
           </div>
-          <div class="fc-back">Ngày 1…14 liên tục → app tính thẳng từ Ngày bắt đầu.</div>
+          <div class="fc-back">Bạn nêu mục tiêu → Agent lập kế hoạch → thực thi từng bước.</div>
         </div>
       </div>
-      <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc">
         <div class="fc-inner">
           <div class="fc-front">
-            <div class="fc-term">Lồng nhau</div>
-            <div class="fc-vi">Reset theo khối</div>
+            <div class="fc-term">Vibe Coding</div>
+            <div class="fc-vi">Mô tả → Chạy → Sửa</div>
           </div>
-          <div class="fc-back">Số lặp lại trong mỗi ### Tuần/Tháng → app cộng dồn.</div>
+          <div class="fc-back">Bạn mô tả bằng lời, AI viết code, bạn chạy thử và góp ý — lặp lại.</div>
         </div>
       </div>
-      <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc">
         <div class="fc-inner">
           <div class="fc-front">
-            <div class="fc-term">📝[[ ]]</div>
-            <div class="fc-vi">Gắn Quiz</div>
+            <div class="fc-term">Prompt</div>
+            <div class="fc-vi">Câu lệnh cho AI</div>
           </div>
-          <div class="fc-back">Link tới file 06_quiz_exam ngay trên dòng buổi học để app nạp Quiz.</div>
+          <div class="fc-back">Mô tả rõ: bạn làm gì → thấy gì → mong gì. Càng rõ AI càng đúng.</div>
         </div>
       </div>
-      <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc">
         <div class="fc-inner">
           <div class="fc-front">
-            <div class="fc-term">✅</div>
-            <div class="fc-vi">Đáp án đúng</div>
+            <div class="fc-term">Hallucination</div>
+            <div class="fc-vi">AI bịa</div>
           </div>
-          <div class="fc-back">Đánh dấu cuối đáp án đúng để app chấm Quiz. Mỗi câu đúng 1 cái.</div>
+          <div class="fc-back">AI nói tự tin nhưng sai sự thật → luôn kiểm chứng.</div>
         </div>
       </div>
-      <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc">
         <div class="fc-inner">
           <div class="fc-front">
-            <div class="fc-term">Rescan</div>
-            <div class="fc-vi">Làm mới</div>
+            <div class="fc-term">Thông tin nhạy cảm</div>
+            <div class="fc-vi">Đừng đưa AI</div>
           </div>
-          <div class="fc-back">Bấm để app đọc lại vault sau khi em sửa note.</div>
+          <div class="fc-back">Mật khẩu, CCCD, địa chỉ, OTP… — không bao giờ dán vào AI.</div>
         </div>
       </div>
-      <div class="fc" onclick="this.classList.toggle('flipped')">
+      <div class="fc">
         <div class="fc-inner">
           <div class="fc-front">
-            <div class="fc-term">Liên kết 2 chiều</div>
-            <div class="fc-vi">Backlink</div>
+            <div class="fc-term">localStorage</div>
+            <div class="fc-vi">Lưu dữ liệu</div>
           </div>
-          <div class="fc-back">App đếm cả file [[trỏ]] tới Dự án dù link nằm ở đâu.</div>
+          <div class="fc-back">Cách app web nhớ dữ liệu để mở lần sau vẫn còn.</div>
         </div>
       </div>
     </div>
   </div>
-
 </section>
 
-<section class="slide" data-slide="31" data-title="Tự kiểm tra #1">
-
+<section class="slide" data-slide="41" data-title="Tự kiểm tra #1">
   <div class="slide-body">
     <span class="eyebrow">TỰ KIỂM TRA — KHÔNG NỘP</span>
-    <h2 class="slide-title">Quiz không hiện trên app — vì sao?</h2>
+    <h2 class="slide-title">Sản phẩm chưa đúng — bạn làm gì?</h2>
     <div class="quiz" data-correct="2"
-      data-explanation="Đúng! File Quiz phải nằm trong 06_quiz_exam và được gắn bằng 📝[[ ]] thì app mới nạp.">
-      <p class="quiz-q">Em gắn Quiz vào buổi học nhưng app KHÔNG hiện. Nguyên nhân hợp lý nhất?</p>
+      data-explanation="Đúng! Mô tả rõ bạn làm gì, thấy gì, mong gì rồi nhờ Agent sửa — đó là vòng lặp sửa lỗi.">
+      <p class="quiz-q">Game của bạn bấm "Nộp" mà điểm không cộng. Cách xử lý tốt nhất?</p>
       <div class="quiz-opts">
-        <button class="quiz-opt" data-index="0">Máy tính quá yếu</button>
-        <button class="quiz-opt" data-index="1">App bị hỏng</button>
-        <button class="quiz-opt" data-index="2">File Quiz nằm sai folder hoặc chưa Rescan</button>
-        <button class="quiz-opt" data-index="3">Do trình duyệt Chrome</button>
+        <button class="quiz-opt" data-index="0">Xoá hết làm lại từ đầu</button>
+        <button class="quiz-opt" data-index="1">Bỏ luôn, chuyển hướng khác</button>
+        <button class="quiz-opt" data-index="2">Tả rõ "bấm Nộp, điểm vẫn 0, mong +10" cho Agent sửa</button>
+        <button class="quiz-opt" data-index="3">Nói với Agent "nó lỗi rồi" là đủ</button>
       </div>
       <div class="quiz-fb"></div>
     </div>
   </div>
-
 </section>
 
-<section class="slide" data-slide="32" data-title="Tự kiểm tra #2">
-
+<section class="slide" data-slide="42" data-title="Tự kiểm tra #2">
   <div class="slide-body">
     <span class="eyebrow">TỰ KIỂM TRA — #2</span>
-    <h2 class="slide-title">Sửa note xong cần làm gì?</h2>
-    <div class="quiz" data-correct="2"
-      data-explanation="Đúng! Sửa xong phải bấm Làm mới (Rescan) để app đọc lại dữ liệu mới.">
-      <p class="quiz-q">Sau khi sửa nội dung trong Obsidian, để app cập nhật em bấm nút nào?</p>
+    <h2 class="slide-title">Trước khi cho Agent chạy, bạn nên?</h2>
+    <div class="quiz" data-correct="1"
+      data-explanation="Đúng! Luôn ĐỌC Plan trước khi duyệt — bạn là người làm chủ và chịu trách nhiệm.">
+      <p class="quiz-q">Agent vừa đưa ra một Plan có bước "xoá nhiều file". Bạn nên làm gì?</p>
       <div class="quiz-opts">
-        <button class="quiz-opt" data-index="0">Tắt máy rồi mở lại</button>
-        <button class="quiz-opt" data-index="1">Xoá vault</button>
-        <button class="quiz-opt" data-index="2">Làm mới (Rescan)</button>
-        <button class="quiz-opt" data-index="3">Không cần làm gì</button>
+        <button class="quiz-opt" data-index="0">Cứ duyệt cho nhanh</button>
+        <button class="quiz-opt" data-index="1">ĐỌC kỹ Plan, không hiểu thì hỏi GV trước khi duyệt</button>
+        <button class="quiz-opt" data-index="2">Tắt máy đi</button>
+        <button class="quiz-opt" data-index="3">Dán mật khẩu để Agent làm tiếp</button>
       </div>
       <div class="quiz-fb"></div>
     </div>
   </div>
-
 </section>
 
-<section class="slide" data-slide="33" data-title="Thử AI tại nhà">
-
+<section class="slide" data-slide="43" data-title="Bài tập về nhà">
   <div class="slide-body">
     <span class="eyebrow">BÀI TẬP VỀ NHÀ — TRƯỚC BUỔI 8</span>
-    <h2 class="slide-title">Hoàn thiện vault lên app không lỗi</h2>
+    <h2 class="slide-title">Hoàn thiện &amp; khoe sản phẩm</h2>
     <div class="qbox qbox-orange">
       <div class="qbox-header">
         <div class="qbox-icon">+</div>THỬ AI TẠI NHÀ
       </div>
-      <div class="qbox-content">Hoàn thiện 1 Plan đầy đủ (Ngày bắt đầu + 5 buổi, mỗi buổi gắn 1 Quiz 📝[[ ]]) và
-        đủ file Quiz trong 06_quiz_exam đúng định dạng ✅. Mở app, bấm Rescan, chụp màn hình Lịch trình + 1 Quiz
-        chấm điểm khoe nhóm Zalo lớp.</div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Gợi ý:</span>Nhờ AI (Gemini) tự sinh Quiz từ note
-        Resource — nhưng em phải kiểm lại định dạng ✅ trước khi lưu.</div>
+      <div class="qbox-content">Hoàn thiện sản phẩm bạn chọn (Game hoặc App mục tiêu): thêm ít nhất <strong>1 tính
+          năng mới</strong> qua Agent, kiểm tra chạy không lỗi, rồi <strong>chụp màn hình</strong> khoe nhóm Zalo lớp
+        kèm 1 câu: "Bạn đã dùng quy tắc an toàn nào?"</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Nhớ:</span>Mọi nội dung trong sản phẩm phải do bạn kiểm chứng;
+        không dán thông tin cá nhân vào AI.</div>
     </div>
   </div>
-
 </section>
 
-<section class="slide" data-slide="34" data-title="Sổ Tay #4 — Cuối Module 2">
-
+<section class="slide" data-slide="44" data-title="Sổ Tay #4 — Cuối Module 2">
   <div class="slide-body">
     <span class="eyebrow">BOOKEND CẢ MODULE 2</span>
     <h2 class="slide-title">Nhìn lại hành trình Buổi 5 → 7</h2>
@@ -3483,65 +1149,33 @@
       <div class="qbox-header">
         <div class="qbox-icon">#</div>SỔ TAY #4 — Cuối Module 2
       </div>
-      <div class="qbox-content">Đầu Buổi 5 em chưa có gì. Giờ em có Vault PARA, biết dùng AI/RAG và biết tạo nội
-        dung để app chạy đúng. Điều gì em TỰ HÀO NHẤT? Em sẽ dùng hệ thống này cho kỳ thi sắp tới thế nào?</div>
+      <div class="qbox-content">Đầu Buổi 5 bạn chưa có gì. Giờ bạn có Vault PARA, biết dùng AI có kiểm chứng, và đã
+        <strong>tự tay tạo ra một sản phẩm</strong>. Điều gì bạn TỰ HÀO NHẤT? Và 1 quy tắc an toàn AI bạn sẽ luôn nhớ?
+      </div>
       <div class="nb-input-wrap">
-        <label>Điều em tự hào & dự định dùng:</label>
-        <textarea class="nb-input" data-nb-id="4" placeholder="Tự hào nhất: ... | Sẽ dùng để: ..."></textarea>
+        <label>Tự hào nhất &amp; quy tắc an toàn:</label>
+        <textarea class="nb-input" data-nb-id="4"
+          placeholder="Tự hào nhất: ... | Quy tắc an toàn bạn luôn nhớ: ..."></textarea>
         <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
       </div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Chúc mừng:</span>Em vừa hoàn thành Second Brain của
-        riêng mình. Buổi 8 là Đạo đức AI + Mini-test khép lại Module 2.</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Chúc mừng:</span>Bạn vừa hoàn thành Module 2 — từ tổ chức kiến
+        thức đến tự xây sản phẩm bằng AI. Buổi 8 là Đạo đức AI + Mini-test khép lại Module.</div>
     </div>
   </div>
-
 </section>
 
-<section class="slide slide-cover" data-slide="35" data-title="Hẹn Buổi 8">
-
+<section class="slide slide-cover" data-slide="45" data-title="Hẹn Buổi 8">
   <div class="cover-orb orb-1"></div>
   <div class="cover-orb orb-2"></div>
   <div class="cover-orb orb-3"></div>
   <div class="cover-content slide-body">
     <span class="eyebrow">HẾT BUỔI 7 — HOÀN THÀNH MODULE 2</span>
-    <h1 class="hero-title">Hẹn em ở Buổi 8<br /><span class="grad-text">Đạo đức AI + Mini-test</span></h1>
-    <p class="slide-subtitle">Em đã có hệ thống Second Brain chạy đúng trên app! Buổi 8 ta bàn về dùng AI có đạo
-      đức và làm bài kiểm tra giữa khóa.</p>
-    <div class="cover-chips"><span class="cover-chip">Mang theo vault đã lên app</span><span class="cover-chip">Đem Sổ
+    <h1 class="hero-title">Hẹn bạn ở Buổi 8<br /><span class="grad-text">Đạo đức AI + Mini-test</span></h1>
+    <p class="slide-subtitle">Bạn đã tự xây được một sản phẩm bằng Agent và biết dùng AI an toàn! Buổi 8 ta bàn sâu về
+      đạo đức khi dùng AI và làm bài kiểm tra giữa khoá.</p>
+    <div class="cover-chips"><span class="cover-chip">Mang theo sản phẩm đã làm</span><span class="cover-chip">Đem Sổ
         Tay</span><span class="cover-chip">Ôn lại Buổi 1–7</span></div>
-    <p style="margin-top:2rem;color:rgba(255,255,255,0.85);font-size:1rem;">Cảm ơn em đã hoàn thành Buổi 7 và cả
-      Module 2!</p>
+    <p style="margin-top:2rem;color:rgba(255,255,255,0.85);font-size:1rem;">Cảm ơn bạn đã hoàn thành Buổi 7 và cả Module
+      2!</p>
   </div>
-
 </section>
-
-<script>
-  document.querySelectorAll('.quiz').forEach(quiz => {
-    const correctIndex = parseInt(quiz.dataset.correct);
-    const explanation = quiz.dataset.explanation || '';
-    const options = quiz.querySelectorAll('.quiz-opt');
-    const feedback = quiz.querySelector('.quiz-fb');
-    options.forEach(opt => {
-      opt.addEventListener('click', () => {
-        if (opt.classList.contains('disabled')) return;
-        options.forEach(o => o.classList.add('disabled'));
-        const chosen = parseInt(opt.dataset.index);
-        if (chosen === correctIndex) {
-          opt.classList.add('correct');
-          feedback.textContent = 'Chính xác! ' + explanation;
-          feedback.className = 'quiz-fb show correct';
-        } else {
-          opt.classList.add('wrong');
-          options[correctIndex].classList.add('correct');
-          feedback.textContent = 'Chưa đúng. ' + explanation;
-          feedback.className = 'quiz-fb show wrong';
-        }
-      });
-    });
-  });
-
-  if (window.innerWidth < 1024) {
-    document.getElementById('sidebar').classList.add('collapsed');
-    document.getElementById('app').classList.add('sidebar-collapsed');
-  }
-</script>
