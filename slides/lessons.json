@@ -117,19 +117,22 @@
   {
     "id": 7,
     "slug": "buoi_07",
-    "title": "Hoàn thành APP-3.2 — Lịch ôn tập",
+    "title": "Tự xây ứng dụng bằng Agent + An toàn AI",
     "module": "M2",
     "module_name": "Second Brain",
     "duration_min": 120,
     "file": "buoi_07.html",
     "available": true,
-    "description": "Hoàn thành APP-3.2: web app đọc Vault qua File System Access API, tự rải Lịch trình từ Plan, Dashboard thống kê và Study Hub làm Quiz chấm điểm tại chỗ.",
+    "description": "Ôn nhanh Buổi 5 (Obsidian/PARA) & Buổi 6 (công cụ AI, C.O.D.E, kiểm chứng) và Agent/Antigravity IDE; dùng Agent theo vòng lặp Goal→Plan→Action để tự phát triển 1 trong 2 sản phẩm: Game học tập hoặc App theo dõi mục tiêu & lịch trình; kết thúc bằng an toàn thông tin, rủi ro khi dùng AI và quy tắc bảo mật.",
     "tags": [
-      "app",
-      "spaced-repetition",
-      "file-system-access",
-      "dashboard",
-      "calendar"
+      "agent",
+      "antigravity",
+      "vibe-coding",
+      "game",
+      "goal-tracker",
+      "an-toan-ai",
+      "bao-mat",
+      "an-ninh-thong-tin"
     ]
   },
   {
