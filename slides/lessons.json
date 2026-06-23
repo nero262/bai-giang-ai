@@ -144,10 +144,13 @@
     "duration_min": 120,
     "file": "buoi_08.html",
     "available": false,
-    "description": "Đạo đức trong sử dụng AI và bài kiểm tra giữa module.",
+    "description": "AI Escape Room \"Trường học bị khoá\": vượt 7 phòng (nhập mã qua bàn phím/khoá số/đồng hồ) ôn lại 7 buổi, phân biệt thông tin thật/giả của AI EDU-X, rút ra 5 nguyên tắc đạo đức AI và làm mini-test giữa module.",
     "tags": [
       "ethics",
-      "mini-test"
+      "mini-test",
+      "escape-room",
+      "fact-check",
+      "on-tap"
     ]
   },
   {

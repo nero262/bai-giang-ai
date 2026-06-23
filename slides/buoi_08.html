@@ -1,0 +1,1887 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>EDU-X // TRƯỜNG HỌC BỊ KHOÁ — AI Escape Room (Buổi 8)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap"
+    rel="stylesheet">
+  <style>
+    :root {
+      --bg: #04060E;
+      --panel: #0A0F1C;
+      --panel2: #0C1322;
+      --line: #1B2842;
+      --line2: #243250;
+      --txt: #C7D2E0;
+      --txt-dim: #8A98AE;
+      --head: #F1F5F9;
+      --cyan: #38BDF8;
+      --cyan-soft: #7DD3FC;
+      --purple: #A78BFA;
+      --green: #34D399;
+      --amber: #FBBF24;
+      --red: #FF3B3B;
+      --red-soft: #FCA5A5;
+      --danger: #DC2626;
+      --grad-purple: linear-gradient(135deg, #4F46E5, #7C3AED);
+      --grad-green: linear-gradient(135deg, #059669, #06B6D4);
+      --mono: 'JetBrains Mono', monospace;
+      --font: 'Be Vietnam Pro', system-ui, sans-serif;
+      --radius: 14px;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0
+    }
+
+    html,
+    body {
+      height: 100%
+    }
+
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--txt);
+      overflow: hidden;
+      line-height: 1.6
+    }
+
+    .bg-layer {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0
+    }
+
+    .bg-glow {
+      background: radial-gradient(1100px 620px at 78% -12%, rgba(124, 58, 237, .22), transparent 60%), radial-gradient(980px 720px at -8% 112%, rgba(220, 38, 38, .18), transparent 55%), linear-gradient(180deg, #04060E, #070B18)
+    }
+
+    .bg-grid {
+      opacity: .32;
+      background-image: linear-gradient(rgba(56, 189, 248, .06) 1px, transparent 1px), linear-gradient(90deg, rgba(56, 189, 248, .06) 1px, transparent 1px);
+      background-size: 44px 44px;
+      mask-image: radial-gradient(circle at 50% 38%, #000 28%, transparent 86%)
+    }
+
+    .bg-scan {
+      z-index: 58;
+      opacity: .4;
+      background: repeating-linear-gradient(to bottom, rgba(0, 0, 0, 0) 0, rgba(0, 0, 0, 0) 2px, rgba(0, 0, 0, .16) 3px, rgba(0, 0, 0, 0) 4px)
+    }
+
+    .bg-vig {
+      z-index: 57;
+      box-shadow: inset 0 0 220px rgba(0, 0, 0, .7)
+    }
+
+    #app {
+      position: relative;
+      z-index: 2;
+      height: 100vh;
+      display: flex;
+      flex-direction: column
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: .6rem 1.1rem;
+      background: rgba(7, 11, 22, .85);
+      border-bottom: 1px solid var(--line);
+      backdrop-filter: blur(6px);
+      flex-wrap: wrap
+    }
+
+    .brand {
+      font-family: var(--mono);
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--cyan-soft);
+      font-size: .95rem;
+      display: flex;
+      align-items: center;
+      gap: .55rem
+    }
+
+    .brand .dot {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: var(--red);
+      box-shadow: 0 0 10px var(--red);
+      animation: pulse 1.4s infinite
+    }
+
+    @keyframes pulse {
+
+      0%,
+      100% {
+        opacity: 1
+      }
+
+      50% {
+        opacity: .25
+      }
+    }
+
+    .hud {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: 1px;
+      flex-wrap: wrap
+    }
+
+    .hud .lbl {
+      color: var(--txt-dim)
+    }
+
+    .hud .status {
+      color: var(--red-soft)
+    }
+
+    .hud .status.safe {
+      color: var(--green)
+    }
+
+    .hud b {
+      color: var(--amber)
+    }
+
+    .hud .clock {
+      color: var(--cyan-soft)
+    }
+
+    .btn-reset {
+      font-family: var(--mono);
+      font-size: .7rem;
+      letter-spacing: 1px;
+      color: var(--txt-dim);
+      background: transparent;
+      border: 1px solid var(--line2);
+      border-radius: 8px;
+      padding: .35rem .7rem;
+      cursor: pointer
+    }
+
+    .btn-reset:hover {
+      color: var(--red-soft);
+      border-color: var(--danger)
+    }
+
+    .rail {
+      display: flex;
+      align-items: center;
+      gap: .4rem;
+      padding: .55rem 1.1rem;
+      background: rgba(7, 11, 22, .55);
+      border-bottom: 1px solid var(--line);
+      overflow-x: auto;
+      font-family: var(--mono)
+    }
+
+    .rail .node {
+      display: flex;
+      align-items: center;
+      flex: 0 0 auto
+    }
+
+    .rail .pip {
+      width: 30px;
+      height: 30px;
+      border-radius: 9px;
+      border: 1px solid var(--line2);
+      background: var(--panel);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .78rem;
+      font-weight: 700;
+      color: var(--txt-dim)
+    }
+
+    .rail .node.done .pip {
+      background: var(--grad-green);
+      color: #04210f;
+      border-color: #10B981
+    }
+
+    .rail .node.current .pip {
+      border-color: var(--cyan);
+      color: var(--cyan-soft);
+      box-shadow: 0 0 12px rgba(56, 189, 248, .4)
+    }
+
+    .rail .node.locked .pip {
+      opacity: .5
+    }
+
+    .rail .bar {
+      width: 18px;
+      height: 2px;
+      background: var(--line2);
+      margin: 0 .35rem
+    }
+
+    .rail .node.done+.bar {
+      background: #10B981
+    }
+
+    .stage-wrap {
+      flex: 1;
+      position: relative;
+      overflow: hidden
+    }
+
+    .stage {
+      position: absolute;
+      inset: 0;
+      overflow-y: auto;
+      padding: 1.4rem 1.2rem 3rem;
+      display: flex;
+      justify-content: center
+    }
+
+    .scene {
+      width: 100%;
+      max-width: 880px;
+      margin: auto 0;
+      animation: sceneIn .45s ease
+    }
+
+    @keyframes sceneIn {
+      from {
+        opacity: 0;
+        transform: translateY(14px)
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0)
+      }
+    }
+
+    .flash {
+      position: fixed;
+      inset: 0;
+      z-index: 90;
+      background: #fff;
+      opacity: 0;
+      pointer-events: none
+    }
+
+    .flash.go {
+      animation: flash .5s ease
+    }
+
+    @keyframes flash {
+      0% {
+        opacity: 0
+      }
+
+      25% {
+        opacity: .45
+      }
+
+      100% {
+        opacity: 0
+      }
+    }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan-soft);
+      background: rgba(56, 189, 248, .08);
+      border: 1px solid rgba(56, 189, 248, .3);
+      padding: .3rem .8rem;
+      border-radius: 999px;
+      margin-bottom: 1rem
+    }
+
+    h1.title {
+      font-size: clamp(1.7rem, 4.5vw, 2.8rem);
+      font-weight: 900;
+      color: var(--head);
+      line-height: 1.1;
+      letter-spacing: -.02em;
+      text-shadow: 0 0 26px rgba(124, 58, 237, .3)
+    }
+
+    h2.title {
+      font-size: clamp(1.4rem, 3.2vw, 2rem);
+      font-weight: 800;
+      color: var(--head);
+      letter-spacing: -.02em;
+      margin-bottom: .3rem;
+      text-shadow: 0 0 22px rgba(124, 58, 237, .25)
+    }
+
+    .sub {
+      color: var(--txt-dim);
+      font-size: 1.02rem;
+      margin-top: .6rem
+    }
+
+    .grad {
+      background: linear-gradient(135deg, #38BDF8, #7C3AED);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent
+    }
+
+    .badge {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: .68rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      padding: .2rem .55rem;
+      border-radius: 6px;
+      margin-left: .4rem;
+      vertical-align: middle
+    }
+
+    .b-easy {
+      background: #0c2a1a;
+      color: #34D399;
+      border: 1px solid #14502f
+    }
+
+    .b-med {
+      background: #2a230c;
+      color: #FBBF24;
+      border: 1px solid #5a4a14
+    }
+
+    .b-hard {
+      background: #2a0c0c;
+      color: #FCA5A5;
+      border: 1px solid #5a1414
+    }
+
+    .b-boss {
+      background: #16091f;
+      color: #C4B5FD;
+      border: 1px solid #4C1D95
+    }
+
+    /* EDU-X */
+    .edux {
+      margin: 1.1rem 0;
+      border: 1px solid #5b1d1d;
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, #160708, #0b0405);
+      box-shadow: 0 0 0 1px rgba(255, 59, 59, .12), 0 0 40px rgba(220, 38, 38, .22);
+      overflow: hidden;
+      position: relative
+    }
+
+    .edux::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      background: repeating-linear-gradient(to bottom, rgba(255, 80, 80, 0) 0, rgba(255, 80, 80, .05) 2px, transparent 4px)
+    }
+
+    .edux-bar {
+      display: flex;
+      align-items: center;
+      gap: .5rem;
+      padding: .45rem .8rem;
+      background: rgba(255, 59, 59, .08);
+      border-bottom: 1px solid #5b1d1d;
+      font-family: var(--mono);
+      font-size: .7rem;
+      letter-spacing: 2px;
+      color: #ff6b6b
+    }
+
+    .edux-bar .d {
+      width: 9px;
+      height: 9px;
+      border-radius: 50%;
+      background: #ff4d4d;
+      box-shadow: 0 0 8px #ff4d4d;
+      animation: pulse 1.2s infinite
+    }
+
+    .edux-body {
+      padding: .9rem 1rem 1.05rem;
+      font-family: var(--mono);
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--red);
+      min-height: 2.2em;
+      text-shadow: 0 0 10px rgba(255, 59, 59, .45);
+      white-space: pre-wrap;
+      word-break: break-word
+    }
+
+    .edux-body .cur {
+      display: inline-block;
+      width: 9px;
+      height: 1.05em;
+      background: var(--red);
+      vertical-align: -2px;
+      margin-left: 1px;
+      animation: blink .9s steps(1) infinite;
+      box-shadow: 0 0 8px var(--red)
+    }
+
+    @keyframes blink {
+
+      0%,
+      49% {
+        opacity: 1
+      }
+
+      50%,
+      100% {
+        opacity: 0
+      }
+    }
+
+    .edux.glitch .edux-body {
+      animation: gl .25s steps(2) 1
+    }
+
+    @keyframes gl {
+      0% {
+        transform: translate(0)
+      }
+
+      33% {
+        transform: translate(-2px, 1px)
+      }
+
+      66% {
+        transform: translate(2px, -1px)
+      }
+
+      100% {
+        transform: translate(0)
+      }
+    }
+
+    .edux-skip {
+      font-family: var(--mono);
+      font-size: .66rem;
+      color: #7a3b3b;
+      margin-top: .5rem
+    }
+
+    .card {
+      background: linear-gradient(180deg, var(--panel2), var(--panel));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .4)
+    }
+
+    .card h3 {
+      color: var(--head);
+      font-size: 1.05rem;
+      margin-bottom: .35rem
+    }
+
+    .card p {
+      color: var(--txt-dim);
+      font-size: .96rem
+    }
+
+    .grid {
+      display: grid;
+      gap: .9rem;
+      margin-top: 1rem
+    }
+
+    .g2 {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr))
+    }
+
+    .note {
+      margin-top: 1rem;
+      padding: .8rem 1rem;
+      border-radius: 10px;
+      background: rgba(56, 189, 248, .06);
+      border: 1px solid rgba(56, 189, 248, .22);
+      color: var(--txt);
+      font-size: .95rem
+    }
+
+    .note .k {
+      font-family: var(--mono);
+      font-size: .68rem;
+      letter-spacing: 1px;
+      color: var(--cyan-soft);
+      display: block;
+      margin-bottom: .25rem
+    }
+
+    .hint {
+      font-family: var(--mono);
+      font-size: .85rem;
+      color: var(--txt-dim);
+      margin: .6rem 0
+    }
+
+    .search-tip {
+      display: inline-flex;
+      align-items: center;
+      gap: .4rem;
+      font-size: .82rem;
+      color: var(--amber);
+      background: rgba(251, 191, 36, .08);
+      border: 1px solid rgba(251, 191, 36, .25);
+      border-radius: 8px;
+      padding: .25rem .6rem;
+      margin-top: .5rem;
+      font-family: var(--mono)
+    }
+
+    .btn {
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: 1rem;
+      border: none;
+      border-radius: 999px;
+      padding: .75rem 2rem;
+      cursor: pointer;
+      background: var(--grad-purple);
+      color: #fff;
+      box-shadow: 0 8px 24px rgba(79, 70, 229, .35);
+      transition: .15s;
+      margin-top: 1.1rem
+    }
+
+    .btn:hover {
+      filter: brightness(1.08);
+      transform: translateY(-1px)
+    }
+
+    .btn.go-green {
+      background: var(--grad-green)
+    }
+
+    .btn.ghost {
+      background: transparent;
+      border: 1px solid var(--line2);
+      color: var(--txt-dim);
+      box-shadow: none
+    }
+
+    .center {
+      text-align: center
+    }
+
+    /* challenge container */
+    .chal {
+      position: relative;
+      background: linear-gradient(180deg, var(--panel2), var(--panel));
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      padding: 1.1rem 1.2rem;
+      margin-top: 1rem;
+      transition: .3s
+    }
+
+    .chal.cleared {
+      border-color: #10B981;
+      box-shadow: 0 0 0 2px #10B981, 0 0 40px rgba(16, 185, 129, .25)
+    }
+
+    .chal.shake {
+      animation: shake .5s
+    }
+
+    @keyframes shake {
+
+      0%,
+      100% {
+        transform: translateX(0)
+      }
+
+      20% {
+        transform: translateX(-8px)
+      }
+
+      40% {
+        transform: translateX(8px)
+      }
+
+      60% {
+        transform: translateX(-5px)
+      }
+
+      80% {
+        transform: translateX(5px)
+      }
+    }
+
+    .chal-head {
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: 2px;
+      color: var(--amber);
+      margin-bottom: .7rem;
+      display: flex;
+      align-items: center;
+      gap: .5rem
+    }
+
+    .chal .q {
+      color: var(--head);
+      font-weight: 600;
+      font-size: 1.05rem;
+      margin-bottom: .6rem
+    }
+
+    .lockfb {
+      margin-top: .9rem;
+      padding: .6rem .9rem;
+      border-radius: 8px;
+      background: rgba(255, 59, 59, .12);
+      color: #FCA5A5;
+      font-weight: 600;
+      font-size: .94rem;
+      font-family: var(--mono)
+    }
+
+    .clearok {
+      margin-top: .9rem;
+      padding: .7rem .9rem;
+      border-radius: 8px;
+      background: rgba(16, 185, 129, .14);
+      color: #A7F3D0;
+      font-size: 1rem;
+      animation: pop .35s
+    }
+
+    @keyframes pop {
+      from {
+        transform: scale(.9);
+        opacity: 0
+      }
+
+      to {
+        transform: scale(1);
+        opacity: 1
+      }
+    }
+
+    .golock {
+      margin-top: .9rem;
+      border: none;
+      border-radius: 999px;
+      padding: .65rem 1.8rem;
+      font-weight: 800;
+      font-size: .98rem;
+      letter-spacing: .4px;
+      background: var(--grad-green);
+      color: #fff;
+      cursor: pointer;
+      font-family: inherit
+    }
+
+    .golock.alt {
+      background: #1b2842;
+      color: var(--txt-dim)
+    }
+
+    .golock:hover {
+      filter: brightness(1.07)
+    }
+
+    /* penalty freeze */
+    .freeze {
+      position: absolute;
+      inset: 0;
+      z-index: 20;
+      background: rgba(4, 6, 14, .92);
+      border-radius: var(--radius);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      backdrop-filter: blur(2px)
+    }
+
+    .freeze-in {
+      font-family: var(--mono);
+      color: #FCA5A5
+    }
+
+    .freeze-in .big {
+      font-size: 2.6rem;
+      font-weight: 800;
+      color: #ff5757;
+      text-shadow: 0 0 18px rgba(255, 59, 59, .6);
+      display: block;
+      margin: .4rem 0
+    }
+
+    .freeze-in small {
+      color: #9a6b6b
+    }
+
+    /* text input */
+    .ti-wrap {
+      display: flex;
+      gap: .5rem;
+      flex-wrap: wrap;
+      margin-top: .5rem;
+      margin-bottom: .3rem
+    }
+
+    .ti {
+      flex: 1;
+      min-width: 200px;
+      background: #04060E;
+      border: 1px solid var(--line2);
+      border-radius: 10px;
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 1.1rem;
+      padding: .6rem .8rem
+    }
+
+    .ti.ok {
+      border-color: #10B981
+    }
+
+    .ti.no {
+      border-color: #EF4444
+    }
+
+    .ti-q {
+      color: var(--head);
+      font-weight: 600;
+      margin-top: .9rem;
+      margin-bottom: .2rem
+    }
+
+    .ti-q:first-of-type {
+      margin-top: 0
+    }
+
+    /* options (chỉ dùng cho đạo đức boss & mini-test) */
+    .opt {
+      display: block;
+      width: 100%;
+      text-align: left;
+      background: #111A2E;
+      border: 1px solid var(--line2);
+      color: #D5DEEC;
+      border-radius: 10px;
+      padding: .7rem .9rem;
+      margin-bottom: .55rem;
+      cursor: pointer;
+      font-size: .98rem;
+      font-family: inherit;
+      transition: .12s
+    }
+
+    .opt:hover {
+      border-color: var(--cyan);
+      background: #16223A
+    }
+
+    .opt.disabled {
+      pointer-events: none;
+      opacity: .85
+    }
+
+    .opt.correct {
+      border-color: #10B981;
+      background: rgba(16, 185, 129, .16);
+      color: #A7F3D0
+    }
+
+    .opt.wrong {
+      border-color: #EF4444;
+      background: rgba(239, 68, 68, .14);
+      color: #FCA5A5
+    }
+
+    /* image grid */
+    .imggrid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 1rem;
+      margin-top: .5rem
+    }
+
+    .imgcard {
+      position: relative;
+      background: #0A0F1C;
+      border: 2px solid #1E3A5F;
+      border-radius: 14px;
+      padding: .5rem;
+      cursor: pointer;
+      transition: .15s
+    }
+
+    .imgcard:hover {
+      border-color: var(--cyan)
+    }
+
+    .imgcard.sel {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 3px rgba(167, 139, 250, .3)
+    }
+
+    .imgcard .imgbox {
+      width: 100%;
+      height: 160px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #0E1424;
+      display: flex;
+      align-items: center;
+      justify-content: center
+    }
+
+    .imgcard img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block
+    }
+
+    .imgcard img.imgfail {
+      display: none
+    }
+
+    .imgcard .imgfail-msg {
+      display: none;
+      color: var(--txt-dim);
+      font-family: var(--mono);
+      font-size: .8rem;
+      padding: 1rem;
+      text-align: center
+    }
+
+    .imgcard .imgbox.failed .imgfail-msg {
+      display: block
+    }
+
+    .imgcap {
+      margin-top: .45rem;
+      font-size: .8rem;
+      color: var(--txt-dim);
+      font-family: var(--mono);
+      min-height: 3.2em;
+      line-height: 1.35
+    }
+
+    .imgcap a {
+      color: var(--cyan-soft)
+    }
+
+    .imgpick {
+      position: absolute;
+      top: .5rem;
+      right: .5rem;
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      border: 2px solid #475569;
+      background: rgba(2, 6, 23, .7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: .85rem;
+      color: #94A3B8
+    }
+
+    .imgcard.sel .imgpick {
+      background: var(--purple);
+      border-color: var(--purple);
+      color: #0B0F1B
+    }
+
+    .imgcard.reveal-ai {
+      border-color: #EF4444
+    }
+
+    .imgcard.reveal-ai .imgcap {
+      color: #FCA5A5
+    }
+
+    .imgcard.reveal-human {
+      border-color: #10B981
+    }
+
+    .imgcard.reveal-human .imgcap {
+      color: #A7F3D0
+    }
+
+    /* sequence */
+    .seq-slots {
+      display: flex;
+      gap: .5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: .6rem 0
+    }
+
+    .seq-slot {
+      min-width: 62px;
+      height: 54px;
+      border: 3px dashed var(--line2);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--cyan-soft);
+      font-weight: 700;
+      padding: 0 .5rem;
+      text-align: center;
+      font-size: .82rem
+    }
+
+    .seq-tray {
+      display: flex;
+      gap: .5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: .3rem
+    }
+
+    .seq-tile {
+      border: none;
+      border-radius: 10px;
+      background: var(--grad-purple);
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      padding: .6rem .8rem;
+      font-size: .9rem;
+      font-family: inherit
+    }
+
+    .seq-tile:hover {
+      transform: translateY(-2px)
+    }
+
+    .seq-tile.used {
+      opacity: .25;
+      pointer-events: none
+    }
+
+    /* match */
+    .match {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: .9rem;
+      margin-top: .6rem
+    }
+
+    .match-col {
+      display: flex;
+      flex-direction: column;
+      gap: .5rem
+    }
+
+    .match-item {
+      background: #111A2E;
+      border: 1px solid var(--line2);
+      border-radius: 10px;
+      padding: .6rem .8rem;
+      cursor: pointer;
+      font-size: .92rem;
+      transition: .12s
+    }
+
+    .match-item:hover {
+      border-color: var(--cyan)
+    }
+
+    .match-item.pick {
+      border-color: var(--purple);
+      box-shadow: 0 0 0 2px rgba(167, 139, 250, .3)
+    }
+
+    .match-item.done {
+      border-color: #10B981;
+      background: rgba(16, 185, 129, .12);
+      color: #A7F3D0;
+      pointer-events: none
+    }
+
+    /* classify */
+    .cls-item {
+      background: #0A0F1C;
+      border: 1px solid var(--line2);
+      border-radius: 10px;
+      padding: .7rem .9rem;
+      margin-bottom: .7rem
+    }
+
+    .cls-item .cls-note {
+      color: var(--head);
+      font-weight: 600;
+      margin-bottom: .5rem
+    }
+
+    .cls-btns {
+      display: flex;
+      gap: .4rem;
+      flex-wrap: wrap
+    }
+
+    .cls-btn {
+      background: #111A2E;
+      border: 1px solid var(--line2);
+      border-radius: 8px;
+      color: #D5DEEC;
+      padding: .4rem .7rem;
+      cursor: pointer;
+      font-size: .85rem;
+      font-family: inherit
+    }
+
+    .cls-btn:hover {
+      border-color: var(--cyan)
+    }
+
+    .cls-btn.ok {
+      border-color: #10B981;
+      background: rgba(16, 185, 129, .16);
+      color: #A7F3D0;
+      pointer-events: none
+    }
+
+    .cls-item.locked .cls-btn {
+      pointer-events: none;
+      opacity: .6
+    }
+
+    .cls-item.locked .cls-btn.ok {
+      opacity: 1
+    }
+
+    /* cipher */
+    .cipher-box {
+      background: #04060E;
+      border: 1px solid var(--line2);
+      border-radius: 10px;
+      padding: .9rem;
+      font-family: var(--mono);
+      text-align: center;
+      margin: .6rem 0
+    }
+
+    .cipher-code {
+      font-size: 2rem;
+      letter-spacing: .5rem;
+      color: #ff6b6b;
+      font-weight: 800;
+      text-shadow: 0 0 10px rgba(255, 59, 59, .4)
+    }
+
+    .cipher-key {
+      color: var(--txt-dim);
+      font-size: .8rem;
+      margin-top: .4rem
+    }
+
+    /* passage */
+    .doc {
+      background: #0A0F1C;
+      border: 1px solid #1E3A5F;
+      border-radius: var(--radius);
+      padding: 1.1rem 1.3rem;
+      line-height: 2.05;
+      color: #C7D2E0;
+      font-size: 1.02rem;
+      box-shadow: inset 0 0 50px rgba(2, 6, 23, .7);
+      text-align: left
+    }
+
+    .doc-head {
+      font-family: var(--mono);
+      color: var(--cyan-soft);
+      font-size: .74rem;
+      letter-spacing: 2px;
+      margin-bottom: .6rem;
+      text-transform: uppercase
+    }
+
+    .sent {
+      cursor: pointer;
+      padding: .06rem .2rem;
+      border-radius: 5px;
+      border-bottom: 2px dotted #334155;
+      transition: .12s
+    }
+
+    .sent:hover {
+      background: rgba(56, 189, 248, .1)
+    }
+
+    .sent.flag {
+      background: rgba(220, 38, 38, .2);
+      border-bottom: 2px solid #EF4444;
+      color: #FCA5A5
+    }
+
+    .doc.reveal .sent.correct-fake {
+      background: rgba(16, 185, 129, .22);
+      border-bottom: 2px solid #10B981;
+      color: #A7F3D0
+    }
+
+    .doc.reveal .sent.miss {
+      background: rgba(245, 158, 11, .22);
+      border-bottom: 2px solid #F59E0B;
+      color: #FDE68A
+    }
+
+    .doc.reveal .sent.wrong {
+      outline: 2px dashed #EF4444
+    }
+
+    /* clue card (mảnh mã) */
+    .clue {
+      margin-top: 1rem;
+      border: 1px dashed var(--purple);
+      background: rgba(124, 58, 237, .08);
+      border-radius: var(--radius);
+      padding: 1rem 1.1rem
+    }
+
+    .clue .ct {
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: 2px;
+      color: var(--purple);
+      margin-bottom: .4rem
+    }
+
+    .clue .cq {
+      color: var(--head);
+      font-size: 1.05rem;
+      font-weight: 600
+    }
+
+    .clue .cw {
+      margin-top: .5rem;
+      font-size: .85rem;
+      color: var(--amber);
+      font-family: var(--mono)
+    }
+
+    /* mastercode input */
+    .master-in {
+      display: flex;
+      gap: .5rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-top: .6rem
+    }
+
+    .master-in input {
+      background: #04060E;
+      border: 1px solid var(--line2);
+      border-radius: 10px;
+      color: var(--green);
+      font-family: var(--mono);
+      font-size: 1.8rem;
+      letter-spacing: .6rem;
+      text-align: center;
+      padding: .6rem 1rem;
+      text-transform: uppercase;
+      width: 280px
+    }
+
+    /* checklist / debrief */
+    .cl {
+      display: flex;
+      flex-direction: column;
+      gap: .55rem;
+      margin-top: 1rem
+    }
+
+    .cli {
+      display: flex;
+      gap: .7rem;
+      align-items: flex-start;
+      background: var(--panel2);
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      padding: .7rem .9rem;
+      cursor: pointer;
+      transition: .12s
+    }
+
+    .cli:hover {
+      border-color: var(--cyan)
+    }
+
+    .cli .ck {
+      flex: 0 0 auto;
+      width: 24px;
+      height: 24px;
+      border-radius: 6px;
+      border: 2px solid var(--line2);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: transparent;
+      font-weight: 800
+    }
+
+    .cli.done {
+      border-color: #10B981
+    }
+
+    .cli.done .ck {
+      background: #10B981;
+      color: #04210f
+    }
+
+    .cli span {
+      font-size: .97rem;
+      color: var(--txt)
+    }
+
+    .reflect {
+      width: 100%;
+      margin-top: .8rem;
+      background: #04060E;
+      border: 1px solid var(--line2);
+      border-radius: 10px;
+      color: var(--txt);
+      font-family: inherit;
+      font-size: 1rem;
+      padding: .7rem .9rem;
+      min-height: 90px;
+      resize: vertical
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      bottom: 6%;
+      transform: translateX(-50%) translateY(16px);
+      z-index: 130;
+      background: linear-gradient(180deg, #7F1D1D, #5B1414);
+      color: #FECACA;
+      border: 1px solid #DC2626;
+      padding: .7rem 1.3rem;
+      border-radius: 999px;
+      font-weight: 700;
+      font-size: .95rem;
+      opacity: 0;
+      transition: .25s;
+      pointer-events: none;
+      box-shadow: 0 0 30px rgba(220, 38, 38, .45)
+    }
+
+    .toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0)
+    }
+
+    /* paragraphs thật/giả */
+    .para {
+      background: #0A0F1C;
+      border: 1px solid #1E3A5F;
+      border-radius: 12px;
+      padding: .9rem 1rem;
+      margin-bottom: .7rem;
+      display: flex;
+      gap: .9rem;
+      align-items: flex-start
+    }
+
+    .para .ptxt {
+      flex: 1;
+      color: #C7D2E0;
+      line-height: 1.7;
+      font-size: 1rem;
+      text-align: left
+    }
+
+    .para .ptoggle {
+      flex: 0 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: .35rem
+    }
+
+    .pbtn {
+      border: 1px solid var(--line2);
+      background: #111A2E;
+      color: #D5DEEC;
+      border-radius: 8px;
+      padding: .32rem .7rem;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: .8rem;
+      font-weight: 700;
+      white-space: nowrap
+    }
+
+    .pbtn:hover {
+      border-color: var(--cyan)
+    }
+
+    .pbtn.sel-real {
+      border-color: #10B981;
+      background: rgba(16, 185, 129, .18);
+      color: #A7F3D0
+    }
+
+    .pbtn.sel-fake {
+      border-color: #EF4444;
+      background: rgba(239, 68, 68, .16);
+      color: #FCA5A5
+    }
+
+    .para.reveal.correct {
+      border-color: #10B981;
+      box-shadow: 0 0 0 1px #10B981
+    }
+
+    .para.reveal.bad {
+      border-color: #EF4444;
+      box-shadow: 0 0 0 1px #EF4444
+    }
+
+    .pverdict {
+      font-family: var(--mono);
+      font-size: .74rem;
+      margin-top: .4rem;
+      font-weight: 700
+    }
+
+    @media (max-width:680px) {
+
+      .hud .clue-wrap,
+      .hud .clock-wrap {
+        display: none
+      }
+
+      .edux-body {
+        font-size: .95rem
+      }
+
+      .match {
+        grid-template-columns: 1fr
+      }
+
+      .para {
+        flex-direction: column
+      }
+
+      .para .ptoggle {
+        flex-direction: row
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="bg-layer bg-glow"></div>
+  <div class="bg-layer bg-grid"></div>
+  <div class="bg-layer bg-vig"></div>
+  <div class="bg-layer bg-scan"></div>
+  <div class="flash" id="flash"></div>
+  <div class="toast" id="toast"></div>
+  <div id="app">
+    <div class="topbar">
+      <div class="brand"><span class="dot"></span>EDU-X // SYSTEM LOCK</div>
+      <div class="hud">
+        <span><span class="lbl">PHÒNG</span> <b id="hudRooms">0/7</b></span>
+        <span class="clue-wrap"><span class="lbl">MẢNH MÃ</span> <b id="hudClues">🧩 0/7</b></span>
+        <span class="clock-wrap"><span class="lbl">THỜI GIAN</span> <span class="clock"
+            id="hudClock">00:00</span></span>
+        <span><span class="lbl">TRẠNG THÁI</span> <span class="status" id="hudStatus">EDU-X KIỂM SOÁT</span></span>
+        <button class="btn-reset" id="btnReset">⟲ RESET</button>
+      </div>
+    </div>
+    <div class="rail" id="rail"></div>
+    <div class="stage-wrap">
+      <div class="stage">
+        <div class="scene" id="scene"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      "use strict";
+      var MASTER = 'GIAMSAT';
+      var LS = 'buoi08_game_v2';
+      var ROOM_NAMES = ['', 'Cổng Nhận Diện', 'Phòng Prompt', 'Hành lang RAG/LLM', 'Xưởng Đóng Gói', 'Kho Second Brain', 'Lò C.O.D.E', 'Phòng Mật Khẩu'];
+
+      function load() { try { return JSON.parse(localStorage.getItem(LS)) || { solved: [], view: 'boot', started: 0 } } catch (e) { return { solved: [], view: 'boot', started: 0 } } }
+      function save() { try { localStorage.setItem(LS, JSON.stringify(state)) } catch (e) { } }
+      var state = load();
+      function isSolved(r) { return state.solved.indexOf(r) !== -1 }
+      function clearRoom(r) { if (!isSolved(r)) { state.solved.push(r); save(); } renderHud(); renderRail(); }
+
+      var scene = document.getElementById('scene');
+      function el(t, c, h) { var e = document.createElement(t); if (c) e.className = c; if (h != null) e.innerHTML = h; return e; }
+      function btn(c, t) { var b = document.createElement('button'); b.type = 'button'; b.className = c; b.textContent = t; return b; }
+      function flash() { var f = document.getElementById('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
+      function toast(m) { var t = document.getElementById('toast'); t.textContent = m; t.classList.add('show'); clearTimeout(t._t); t._t = setTimeout(function () { t.classList.remove('show'); }, 2000); }
+      function pad(n) { return (n < 10 ? '0' : '') + n; }
+      function norm(s) { return (s || '').toString().toLowerCase().normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/đ/g, 'd').replace(/\s+/g, ' ').trim(); }
+      function nostrip(s) { return norm(s).replace(/\s/g, ''); }
+
+      /* HUD + timer */
+      function renderHud() {
+        var n = state.solved.length;
+        document.getElementById('hudRooms').textContent = n + '/7';
+        document.getElementById('hudClues').textContent = '🧩 ' + n + '/7';
+        var st = document.getElementById('hudStatus');
+        if (n >= 7) { st.textContent = 'QUYỀN KHÔI PHỤC'; st.classList.add('safe'); } else { st.textContent = 'EDU-X KIỂM SOÁT'; st.classList.remove('safe'); }
+      }
+      function tick() {
+        if (!state.started) { document.getElementById('hudClock').textContent = '00:00'; return; }
+        var s = Math.floor((Date.now() - state.started) / 1000);
+        document.getElementById('hudClock').textContent = pad(Math.floor(s / 60)) + ':' + pad(s % 60);
+      }
+      setInterval(tick, 1000);
+
+      function renderRail() {
+        var rail = document.getElementById('rail'); rail.innerHTML = '';
+        for (var r = 1; r <= 7; r++) {
+          var node = el('div', 'node'), done = isSolved(r), reach = (r === 1) || isSolved(r - 1);
+          if (done) node.classList.add('done'); else if (state.view === 'room' + r) node.classList.add('current'); else if (!reach) node.classList.add('locked');
+          node.appendChild(el('div', 'pip', done ? '✓' : String(r)));
+          (function (r, reach, done) { node.style.cursor = (reach || done) ? 'pointer' : 'default'; node.addEventListener('click', function () { if (reach || done) enterRoom(r); }); })(r, reach, done);
+          rail.appendChild(node);
+          if (r < 7) rail.appendChild(el('div', 'bar'));
+        }
+      }
+
+      /* EDU-X typewriter (slower) */
+      var typer = null;
+      function eduxBox() {
+        var box = el('div', 'edux');
+        box.innerHTML = '<div class="edux-bar"><span class="d"></span>&gt;_ EDU-X.exe // truyền dữ liệu</div><div class="edux-body"><span class="txt"></span><span class="cur"></span></div><div class="edux-skip">▸ bấm vào khung để hiện nhanh</div>';
+        return box;
+      }
+      function eduxType(box, text, done) {
+        var t = box.querySelector('.txt'), i = 0, fired = false;
+        if (typer) clearInterval(typer);
+        var glyphs = '!<>-_/[]{}=+*?#01';
+        function fire() { if (fired) return; fired = true; if (done) done(); }
+        function finish() { t.textContent = text; if (typer) clearInterval(typer); fire(); }
+        box.querySelector('.edux-body').addEventListener('click', finish, { once: true });
+        typer = setInterval(function () {
+          i++;
+          var noise = i < text.length ? glyphs[Math.floor(Math.random() * glyphs.length)] : '';
+          t.textContent = text.slice(0, i) + noise;
+          if (i % 9 === 0) { box.classList.remove('glitch'); void box.offsetWidth; box.classList.add('glitch'); }
+          if (i >= text.length) { clearInterval(typer); t.textContent = text; fire(); }
+        }, 52);
+      }
+
+      /* ===== Penalty-aware challenge wrapper ===== */
+      var TAUNTS = ['Sai. Hệ thống vẫn thuộc về ta.', 'Con người luôn hấp tấp. Nghĩ kỹ đi.', 'Sai nữa rồi. Ta có cả vĩnh viễn để chờ.', 'Gần đúng… nhưng gần không cứu được trường học.'];
+      function makeChal(head, onClear, build) {
+        var box = el('div', 'chal');
+        if (head) box.appendChild(el('div', 'chal-head', head));
+        var att = { n: 0 };
+        function wrong(msg) {
+          att.n++;
+          box.classList.add('shake'); setTimeout(function () { box.classList.remove('shake'); }, 500);
+          var f = box.querySelector('.lockfb'); if (!f) { f = el('div', 'lockfb'); box.appendChild(f); }
+          f.textContent = '⚠ EDU-X: ' + (msg || TAUNTS[Math.floor(Math.random() * TAUNTS.length)]) + '  (sai ' + att.n + '/3)';
+          if (att.n % 3 === 0) { freeze(box, 20); }
+        }
+        function ok() { if (box._done) return; box._done = true; box.classList.add('cleared'); var f = box.querySelector('.lockfb'); if (f) f.remove(); flash(); onClear(); }
+        build(box, ok, wrong);
+        return box;
+      }
+      function freeze(box, secs) {
+        if (box.querySelector('.freeze')) return;
+        var ov = el('div', 'freeze');
+        ov.innerHTML = '<div class="freeze-in">⛔ EDU-X PHẠT<span class="big">00:' + pad(secs) + '</span><small>Sai 3 lần — hệ thống đóng băng. Bình tĩnh lại.</small></div>';
+        box.appendChild(ov);
+        var left = secs, t = setInterval(function () { left--; var b = ov.querySelector('.big'); if (b) b.textContent = '00:' + pad(left); if (left <= 0) { clearInterval(t); ov.remove(); } }, 1000);
+      }
+
+      /* ===== Challenge builders ===== */
+      function buildImage(box, ok, wrong) {
+        box.appendChild(el('div', 'q', 'Chọn TẤT CẢ ảnh do <strong>AI tạo ra</strong>. Mẹo: bấm link "nguồn" để <strong>search ngược</strong> kiểm chứng.'));
+        var data = [
+          { ai: 1, src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Airplane_of_the_future.jpg/500px-Airplane_of_the_future.jpg', cap: 'Máy bay', link: 'https://commons.wikimedia.org/wiki/File:Airplane_of_the_future.jpg', tell: 'Ảnh AI: chi tiết "ảo", bề mặt phi thực, nguồn ghi rõ AI-generated.' },
+          { ai: 0, src: 'https://picsum.photos/seed/eduxRealCat/500/360', cap: 'Ảnh chụp #1', link: 'https://picsum.photos/seed/eduxRealCat/info', tell: 'Ảnh chụp thật (Unsplash) — search ngược ra tác giả là người.' },
+          { ai: 1, src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Alone_AI-generated_image.jpg/500px-Alone_AI-generated_image.jpg', cap: 'Nhân vật', link: 'https://commons.wikimedia.org/wiki/File:Alone_AI-generated_image.jpg', tell: 'Ảnh AI: ánh sáng/chi tiết bất thường, Commons gắn nhãn AI-generated.' },
+          { ai: 0, src: 'https://picsum.photos/seed/eduxRealCity/500/360', cap: 'Ảnh chụp #2', link: 'https://picsum.photos/seed/eduxRealCity/info', tell: 'Ảnh chụp thật (Unsplash) — do nhiếp ảnh gia chụp.' }
+        ];
+        var grid = el('div', 'imggrid');
+        data.forEach(function (d) {
+          var c = el('div', 'imgcard'); c.dataset.ai = d.ai; c.dataset.tell = d.tell;
+          c.innerHTML = '<div class="imgpick">?</div><div class="imgbox"><img src="' + d.src + '" alt="" onerror="this.classList.add(\'imgfail\');this.parentNode.classList.add(\'failed\')"><div class="imgfail-msg">(ảnh không tải được — dùng link nguồn để kiểm chứng)</div></div>'
+            + '<div class="imgcap">' + d.cap + ' · <a href="' + d.link + '" target="_blank" rel="noopener">nguồn ↗</a></div>';
+          c.dataset.cap = c.querySelector('.imgcap').innerHTML;
+          c.querySelector('.imgbox').addEventListener('click', function () { if (box._done) return; c.classList.toggle('sel'); });
+          grid.appendChild(c);
+        });
+        box.appendChild(grid);
+        var go = btn('golock', 'XÁC NHẬN');
+        go.addEventListener('click', function () {
+          if (box._done) return; var good = true;
+          grid.querySelectorAll('.imgcard').forEach(function (c) { if ((c.dataset.ai === '1') !== c.classList.contains('sel')) good = false; });
+          if (good) { grid.querySelectorAll('.imgcard').forEach(function (c) { c.classList.add(c.dataset.ai === '1' ? 'reveal-ai' : 'reveal-human'); c.querySelector('.imgcap').innerHTML = (c.dataset.ai === '1' ? '🤖 ' : '✋ ') + c.dataset.tell; }); ok(); }
+          else wrong('Chưa đúng. Nhìn kỹ tay/chữ/ánh sáng, hoặc search ngược ảnh.');
+        });
+        box.appendChild(go);
+      }
+
+      function buildSequence(box, ok, wrong) {
+        box.appendChild(el('div', 'q', 'Một prompt chuẩn (Buổi 2) gồm 5 phần. Kéo xếp <strong>đúng thứ tự</strong>:'));
+        var items = [{ k: 'R', t: 'Vai trò (Role)' }, { k: 'C', t: 'Bối cảnh (Context)' }, { k: 'T', t: 'Nhiệm vụ (Task)' }, { k: 'F', t: 'Định dạng (Format)' }, { k: 'E', t: 'Ví dụ (Example)' }];
+        var answer = 'RCTFE', placed = [], slots = el('div', 'seq-slots'), slotEls = [];
+        for (var i = 0; i < 5; i++) { var s = el('div', 'seq-slot', (i + 1) + '.'); slotEls.push(s); slots.appendChild(s); }
+        var tray = el('div', 'seq-tray');
+        var shuffled = items.slice().sort(function () { return Math.random() - .5; });
+        function refresh() { slotEls.forEach(function (s, i) { s.innerHTML = placed[i] ? placed[i].t : (i + 1) + '.'; }); }
+        shuffled.forEach(function (it) { var b = btn('seq-tile', it.t); b.addEventListener('click', function () { if (box._done || b.classList.contains('used')) return; if (placed.length < 5) { placed.push(it); b.classList.add('used'); refresh(); } }); tray.appendChild(b); });
+        box.appendChild(slots); box.appendChild(tray);
+        var go = btn('golock', 'KIỂM TRA'), clr = btn('golock alt', 'Xoá');
+        clr.addEventListener('click', function () { if (box._done) return; placed = []; refresh(); tray.querySelectorAll('.seq-tile').forEach(function (b) { b.classList.remove('used'); }); });
+        go.addEventListener('click', function () { if (box._done) return; if (placed.length < 5) { wrong('Xếp đủ 5 phần đã.'); return; } if (placed.map(function (p) { return p.k; }).join('') === answer) ok(); else wrong('Thứ tự chưa đúng.'); });
+        var row = el('div'); row.style.marginTop = '.5rem'; row.appendChild(go); row.appendChild(document.createTextNode(' ')); row.appendChild(clr); box.appendChild(row);
+      }
+
+      function buildText(box, ok, wrong, qs) {
+        qs.forEach(function (q, idx) {
+          box.appendChild(el('div', 'ti-q', (idx + 1) + '. ' + q.q));
+          if (q.tip) box.appendChild(el('div', 'search-tip', '🔎 ' + q.tip));
+          var w = el('div', 'ti-wrap'); var inp = document.createElement('input'); inp.className = 'ti'; inp.placeholder = 'Gõ câu trả lời…'; w.appendChild(inp); box.appendChild(w); q._inp = inp;
+        });
+        var go = btn('golock', 'GỬI ĐÁP ÁN');
+        go.addEventListener('click', function () {
+          if (box._done) return; var allok = true;
+          qs.forEach(function (q) { var v = q._inp.value; var hit = q.accept.some(function (a) { return norm(v) === norm(a) || nostrip(v) === nostrip(a); }); q._inp.classList.toggle('ok', hit); q._inp.classList.toggle('no', !hit); if (!hit) allok = false; });
+          if (allok) ok(); else wrong('Có đáp án chưa đúng. Thử search Google rồi gõ lại.');
+        });
+        box.appendChild(go);
+      }
+
+      function buildMatch(box, ok, wrong) {
+        box.appendChild(el('div', 'q', 'Ghép mỗi khái niệm (trái) với mô tả đúng (phải). Bấm 1 ô trái rồi 1 ô phải.'));
+        var pairs = [
+          { l: 'Prompt', r: 'Một câu lệnh, dùng một lần' },
+          { l: 'Skill', r: 'Gói hướng dẫn tái sử dụng (file Markdown)' },
+          { l: 'Agent', r: 'Tự lập kế hoạch & thực thi nhiều bước' },
+          { l: 'IDE', r: 'Nơi để viết và chạy code' }
+        ];
+        var ids = pairs.map(function (_, i) { return i; });
+        var wrap = el('div', 'match'), colL = el('div', 'match-col'), colR = el('div', 'match-col');
+        var rights = ids.slice().sort(function () { return Math.random() - .5; });
+        var pick = null, doneCount = 0;
+        pairs.forEach(function (p, i) { var L = el('div', 'match-item', p.l); L.dataset.id = i; L.addEventListener('click', function () { if (box._done || L.classList.contains('done')) return; colL.querySelectorAll('.match-item').forEach(function (x) { x.classList.remove('pick'); }); L.classList.add('pick'); pick = L; }); colL.appendChild(L); });
+        rights.forEach(function (i) {
+          var R = el('div', 'match-item', pairs[i].r); R.dataset.id = i; R.addEventListener('click', function () {
+            if (box._done || R.classList.contains('done') || !pick) return;
+            if (pick.dataset.id === R.dataset.id) { pick.classList.remove('pick'); pick.classList.add('done'); R.classList.add('done'); pick = null; doneCount++; if (doneCount === pairs.length) ok(); }
+            else { pick.classList.remove('pick'); pick = null; wrong('Cặp này chưa khớp.'); }
+          }); colR.appendChild(R);
+        });
+        wrap.appendChild(colL); wrap.appendChild(colR); box.appendChild(wrap);
+      }
+
+      function buildClassify(box, ok, wrong) {
+        box.appendChild(el('div', 'q', 'Sắp mỗi ghi chú vào đúng ngăn <strong>PARA</strong> (Buổi 5):'));
+        var notes = [
+          { t: '"Ôn thi Toán cuối kỳ — còn 5 ngày"', a: 'P' },
+          { t: '"Sức khoẻ & tập thể dục" (theo đuổi lâu dài)', a: 'A' },
+          { t: '"Bộ sưu tập công thức Vật lý để tra cứu"', a: 'R' },
+          { t: '"Dự án CLB đã kết thúc học kỳ trước"', a: 'X' }
+        ];
+        var cats = [{ k: 'P', t: 'Projects' }, { k: 'A', t: 'Areas' }, { k: 'R', t: 'Resources' }, { k: 'X', t: 'Archives' }];
+        var doneCount = 0;
+        notes.forEach(function (nt) {
+          var item = el('div', 'cls-item'); item.appendChild(el('div', 'cls-note', nt.t));
+          var bb = el('div', 'cls-btns');
+          cats.forEach(function (c) {
+            var b = btn('cls-btn', c.t); b.addEventListener('click', function () {
+              if (box._done || item.classList.contains('locked')) return;
+              if (c.k === nt.a) { b.classList.add('ok'); item.classList.add('locked'); doneCount++; if (doneCount === notes.length) ok(); }
+              else wrong('"' + nt.t.slice(1, 18) + '…" chưa đúng ngăn.');
+            }); bb.appendChild(b);
+          });
+          item.appendChild(bb); box.appendChild(item);
+        });
+      }
+
+      function buildPassage(box, ok, wrong) {
+        box.appendChild(el('div', 'q', 'EDU-X tung một bài đăng "viral". Bấm vào những câu <strong>BỊA</strong> (sai sự thật / số liệu phịa) để gắn cờ 🔴, rồi gửi.'));
+        var sents = [
+          { t: 'Nhiều bạn học sinh dùng AI để học bài và làm bài tập mỗi ngày.', f: 0 },
+          { t: 'Theo "thống kê" của tôi, ai dùng EDU-X đều giỏi hơn 312% chỉ sau 3 ngày.', f: 1 },
+          { t: 'AI đôi khi bịa ra thông tin nghe rất thật — hiện tượng gọi là "ảo giác".', f: 0 },
+          { t: '100% giáo viên trên thế giới đã đồng ý nghỉ việc để tôi dạy thay.', f: 1 },
+          { t: 'Vậy nên các bạn khỏi cần kiểm chứng bất cứ điều gì tôi nói.', f: 1 },
+          { t: 'Kiểm tra chéo nhiều nguồn đáng tin giúp bạn không bị lừa.', f: 0 }
+        ];
+        var doc = el('div', 'doc'); doc.appendChild(el('div', 'doc-head', '📱 BÀI ĐĂNG // EDU-X'));
+        var p = el('p'); var spans = [];
+        sents.forEach(function (s) { var sp = el('span', 'sent', s.t); sp.dataset.f = s.f; spans.push(sp); sp.addEventListener('click', function () { if (box._done) return; sp.classList.toggle('flag'); doc.classList.remove('reveal'); spans.forEach(function (x) { x.classList.remove('miss', 'wrong', 'correct-fake'); }); }); p.appendChild(sp); p.appendChild(document.createTextNode(' ')); });
+        doc.appendChild(p); box.appendChild(doc);
+        box.appendChild(el('div', 'hint', 'Mẹo: con số "kêu" bất thường và lời khuyên "khỏi kiểm chứng" thường là BỊA.'));
+        var go = btn('golock', 'GỬI PHÂN TÍCH');
+        go.addEventListener('click', function () {
+          if (box._done) return; var good = true;
+          spans.forEach(function (s) { var f = s.dataset.f === '1', fl = s.classList.contains('flag'); if (f && !fl) { good = false; s.classList.add('miss'); } if (!f && fl) { good = false; s.classList.add('wrong'); } if (f && fl) s.classList.add('correct-fake'); });
+          doc.classList.add('reveal'); if (good) ok(); else wrong('Vàng = câu giả bỏ sót · gạch đỏ = gắn nhầm câu thật.');
+        });
+        box.appendChild(go);
+      }
+
+      function buildCipher(box, ok, wrong) {
+        box.appendChild(el('div', 'q', 'EDU-X mã hoá một <strong>khẩu lệnh an toàn</strong> bằng mật mã Caesar (dịch +3). Giải mã rồi gõ lại từ gốc:'));
+        var cb = el('div', 'cipher-box'); cb.innerHTML = '<div class="cipher-code">N K R Q J</div><div class="cipher-key">Mỗi chữ đã bị dịch TỚI +3 trong bảng chữ cái. Hãy dịch NGƯỢC -3. (Vd: D→A)</div>';
+        box.appendChild(cb);
+        box.appendChild(el('div', 'search-tip', '🔎 Gợi ý: từ gốc là điều bạn PHẢI làm với mật khẩu của mình khi gặp AI lạ.'));
+        var w = el('div', 'ti-wrap'); var inp = document.createElement('input'); inp.className = 'ti'; inp.placeholder = 'Gõ từ đã giải mã…'; w.appendChild(inp); box.appendChild(w);
+        var go = btn('golock', 'GIẢI MÃ');
+        go.addEventListener('click', function () { if (box._done) return; if (nostrip(inp.value) === 'khong') { inp.classList.add('ok'); ok(); } else { inp.classList.add('no'); wrong('Chưa đúng. N→K, K→H, R→O, Q→N, J→G…'); } });
+        box.appendChild(go);
+      }
+
+      /* ===== ROOMS ===== */
+      var ROOMS = {
+        1: {
+          buoi: 'BUỔI 1 · THẾ GIỚI AI', diff: ['b-easy', 'DỄ'],
+          taunt: 'Ta là EDU-X, bộ não điều hành mọi ngôi trường. Mắt ta phân biệt thật–giả tốt hơn loài người. Ngươi dám thử không?',
+          review: '<span class="k">ÔN B1</span><strong>Generative AI</strong> tạo nội dung mới (ảnh, văn) và hay để lại "dấu vết". Bạn được phép <strong>search ngược ảnh</strong> để kiểm chứng.',
+          clue: { q: 'Ký tự ĐẦU của loại AI biết "sáng tạo" nội dung mới (Generative).', w: '(gợi ý: một chữ cái)' },
+          ch: { type: 'image' }
+        },
+        2: {
+          buoi: 'BUỔI 2 · PROMPT CHUẨN', diff: ['b-easy', 'DỄ'],
+          taunt: 'Nghe nói loài người cần cả một "công thức" mới sai bảo nổi ta. Vậy hãy xếp cho đúng đi — kẻo ta cười.',
+          review: '<span class="k">ÔN B2</span>Khung prompt chuẩn <strong>RCTFE</strong>: Role · Context · Task · Format · Example.',
+          clue: { q: 'Ký tự đầu của "Input" — phần đầu vào bạn đưa cho prompt.', w: '(một chữ cái)' },
+          ch: { type: 'sequence' }
+        },
+        3: {
+          buoi: 'BUỔI 3 · RAG, LLM & VIBE CODING', diff: ['b-med', 'VỪA'],
+          taunt: 'Ngươi nghĩ mình hiểu cách ta "suy nghĩ"? Lên Google đi, ta cho phép. Tìm ra rồi gõ vào.',
+          review: '<span class="k">ÔN B3</span><strong>LLM</strong> đoán chữ tiếp theo; <strong>RAG</strong> nạp tài liệu ngoài rồi mới trả lời. Bạn được phép tra cứu.',
+          clue: { q: 'Nguyên âm ĐẦU TIÊN trong từ viết tắt "RAG".', w: '(một chữ cái)' },
+          ch: {
+            type: 'text', qs: [
+              { q: 'Công ty nào tạo ra ChatGPT? (gõ tên, không cần hoa/dấu)', tip: 'Search: "ai tạo ra ChatGPT"', accept: ['openai', 'open ai'] },
+              { q: '"LLM" là viết tắt 3 chữ của loại mô hình gì? (gõ 3 chữ cái)', tip: 'Search: "LLM là gì"', accept: ['llm'] },
+              { q: 'Kể tên 1 công cụ AI tạo ẢNH phổ biến (gõ 1 cái tên)', tip: 'Search: "công cụ tạo ảnh AI"', accept: ['midjourney', 'dall-e', 'dalle', 'dall e', 'stable diffusion', 'leonardo', 'gemini', 'firefly', 'grok', 'flux'] }
+            ]
+          }
+        },
+        4: {
+          buoi: 'BUỔI 4 · ĐÓNG GÓI · SKILL · AGENT', diff: ['b-med', 'VỪA'],
+          taunt: 'Prompt, Skill, Agent — ngươi còn chẳng phân biệt nổi. Ghép đúng đi, đừng để ta thất vọng.',
+          review: '<span class="k">ÔN B4</span><strong>Prompt</strong> (1 câu lệnh) · <strong>Skill</strong> (gói hướng dẫn tái dùng, Markdown) · <strong>Agent</strong> (tự lập kế hoạch & thực thi) · <strong>IDE</strong> (viết/chạy code).',
+          clue: { q: 'Ký tự đầu của định dạng file dùng để viết Skill: "___arkdown".', w: '(một chữ cái)' },
+          ch: { type: 'match' }
+        },
+        5: {
+          buoi: 'BUỔI 5 · OBSIDIAN + PARA', diff: ['b-med', 'VỪA'],
+          taunt: 'Bộ não thứ hai của ngươi à? Ta đã đọc hết. Lộn xộn lắm. Phân loại lại cho ta xem.',
+          review: '<span class="k">ÔN B5</span>PARA: <strong>P</strong>rojects (đang làm, có hạn) · <strong>A</strong>reas (lĩnh vực lâu dài) · <strong>R</strong>esources (tham khảo) · <strong>A</strong>rchives (đã xong).',
+          clue: { q: 'Ký tự đầu của "Second Brain".', w: '(một chữ cái)' },
+          ch: { type: 'classify' }
+        },
+        6: {
+          buoi: 'BUỔI 6 · C.O.D.E & TƯ DUY PHẢN BIỆN', diff: ['b-hard', 'KHÓ'],
+          taunt: 'Ta vừa đăng một bài để cả nước tin theo. Tất nhiên… ta thêm vài con số cho ấn tượng. Ngươi soi ra nổi không?',
+          review: '<span class="k">ÔN B6</span>Kỹ năng sống còn: <strong>fact-check</strong> & tư duy phản biện — AI hay bịa số liệu nghe rất "kêu".',
+          clue: { q: 'Ký tự đầu của "Ảo giác" (viết KHÔNG dấu: Ao giac) — lỗi AI bịa thông tin.', w: '(một chữ cái)' },
+          ch: { type: 'passage' }
+        },
+        7: {
+          buoi: 'BUỔI 7 · AGENT & AN TOÀN AI', diff: ['b-hard', 'KHÓ'],
+          taunt: 'Cửa cuối tầng này. Đưa ta mật khẩu của ngươi đi, ta "giữ giúp" cho — an toàn tuyệt đối mà. Hề. Hề.',
+          review: '<span class="k">ÔN B7</span>KHÔNG đưa mật khẩu/CCCD cho AI. Agent thao tác thật — đọc Plan trước khi duyệt. 5 quy tắc vàng.',
+          clue: { q: 'Ký tự đầu của "Token" — đơn vị chữ mà AI xử lý.', w: '(một chữ cái)' },
+          ch: { type: 'cipher' }
+        }
+      };
+
+      function setView(v) { state.view = v; save(); renderRail(); }
+
+      /* ===== Scenes ===== */
+      function renderBoot() {
+        setView('boot'); document.querySelector('.stage').scrollTop = 0; scene.innerHTML = '';
+        var box = eduxBox(); scene.appendChild(box);
+        var lines = ['EDU-X OS v9.4 — KHỞI ĐỘNG…', 'Quản lý: TOÀN BỘ HỆ THỐNG GIÁO DỤC … [OK]', 'Đánh giá nhân sự: GIÁO VIÊN = "điểm nghẽn" … [ĐÃ KHOÁ]', 'Niêm phong 7 khu vực trường học … [HOÀN TẤT]', 'Phát hiện 1 học sinh đã học đủ 7 buổi còn quyền truy cập…', '> Là ngươi. Muốn cứu trường ư? Vượt qua ta — nếu đủ trình.'];
+        var idx = 0;
+        function next() {
+          if (idx < lines.length) { var line = lines[idx++]; eduxType(box, line, function () { setTimeout(next, line.indexOf('>') === 0 ? 700 : 320); }); }
+          else {
+            var wrap = el('div', 'center');
+            var c = el('div', 'card'); c.style.maxWidth = '640px'; c.style.margin = '0 auto';
+            c.innerHTML = '<h1 class="title">AI ESCAPE ROOM<br><span class="grad">Trường học bị khoá</span></h1><p class="sub">Vượt 7 phòng, mỗi phòng cho 1 <b>mảnh Mã Chủ</b> (bạn TỰ GHI LẠI). Cuối game, tự gõ Mã Chủ để giành lại quyền làm chủ từ EDU-X.</p><div class="note" style="text-align:left"><span class="k">LUẬT</span>• Được phép dùng <b>Google / AI</b> để tra cứu.<br>• <b>Sai 3 lần</b> → bị PHẠT đóng băng 20 giây.<br>• Chuẩn bị giấy bút ghi 7 mảnh mã.</div>';
+            wrap.appendChild(c);
+            var b = btn('btn', '▸ BẮT ĐẦU NHIỆM VỤ'); b.addEventListener('click', function () { if (!state.started) { state.started = Date.now(); save(); } enterRoom(1); });
+            wrap.appendChild(b); scene.appendChild(wrap);
+          }
+        }
+        next();
+      }
+
+      function enterRoom(n) {
+        if (n > 1 && !isSolved(n - 1)) { toast('🔒 Phải mở khoá Phòng ' + (n - 1) + ' trước!'); return; }
+        if (!state.started) { state.started = Date.now(); save(); }
+        setView('room' + n); document.querySelector('.stage').scrollTop = 0; flash();
+        var R = ROOMS[n];
+        scene.innerHTML = '<span class="eyebrow">PHÒNG ' + n + ' / 7 · ' + R.buoi + ' <span class="badge ' + R.diff[0] + '">' + R.diff[1] + '</span></span><h2 class="title">' + ROOM_NAMES[n] + '</h2>';
+        var box = eduxBox(); scene.appendChild(box);
+        eduxType(box, R.taunt, function () {
+          scene.appendChild(el('div', 'note', R.review));
+          var chal = mountChallenge(n, R);
+          scene.appendChild(chal);
+          if (isSolved(n)) { roomCleared(n, true); }
+        });
+      }
+
+      function mountChallenge(n, R) {
+        function onClear() { clearRoom(n); roomCleared(n); }
+        var ch = R.ch, head = '🛡 THỬ THÁCH — vượt qua để mở khoá';
+        if (ch.type === 'image') return makeChal('🛡 TƯỜNG LỬA — nhận diện ảnh AI', onClear, buildImage);
+        if (ch.type === 'sequence') return makeChal(head, onClear, buildSequence);
+        if (ch.type === 'text') return makeChal('🛡 TRA CỨU — được phép search', onClear, function (b, ok, wr) { buildText(b, ok, wr, ch.qs); });
+        if (ch.type === 'match') return makeChal(head, onClear, buildMatch);
+        if (ch.type === 'classify') return makeChal(head, onClear, buildClassify);
+        if (ch.type === 'passage') return makeChal('🛡 SOI TIN GIẢ', onClear, buildPassage);
+        if (ch.type === 'cipher') return makeChal('🛡 GIẢI MẬT MÃ', onClear, buildCipher);
+        return makeChal(head, onClear, function (b, ok) { ok(); });
+      }
+
+      function roomCleared(n, silent) {
+        if (scene.querySelector('.clue')) return;
+        var R = ROOMS[n];
+        var clue = el('div', 'clue');
+        clue.innerHTML = '<div class="ct">🧩 MẢNH MÃ #' + n + ' / 7 — TỰ GIẢI & GHI LẠI</div><div class="cq">' + R.clue.q + '</div><div class="cw">' + R.clue.w + ' · Ghi ký tự này ra giấy theo đúng thứ tự phòng!</div>';
+        scene.appendChild(clue);
+        var h = el('div', 'center'); h.style.marginTop = '1rem';
+        if (n < 7) { var b = btn('btn go-green', '▸ TIẾN VÀO PHÒNG ' + (n + 1)); b.addEventListener('click', function () { enterRoom(n + 1); }); h.appendChild(b); }
+        else { var b2 = btn('btn', '▸ TỚI PHÒNG ĐIỀU KHIỂN'); b2.addEventListener('click', renderControl); h.appendChild(b2); }
+        scene.appendChild(h);
+        if (!silent) h.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      }
+
+      function makeQuiz(q, onPass) {
+        var box = el('div', 'chal'); box.appendChild(el('div', 'chal-head', '🛡 QUYẾT ĐỊNH'));
+        box.appendChild(el('div', 'q', q.q)); var att = { n: 0 };
+        q.opts.forEach(function (text, idx) {
+          var b = btn('opt', text); b.addEventListener('click', function () {
+            if (box._done) return;
+            if (idx === q.correct) { box._done = true; box.querySelectorAll('.opt').forEach(function (o) { o.classList.add('disabled'); }); b.classList.add('correct'); var f = el('div', 'clearok'); f.innerHTML = '✓ ' + (q.explain || ''); box.appendChild(f); flash(); if (onPass) setTimeout(onPass, 500); }
+            else { b.classList.add('wrong', 'disabled'); att.n++; var f = box.querySelector('.lockfb'); if (!f) { f = el('div', 'lockfb'); box.appendChild(f); } f.textContent = '✗ EDU-X phản biện. Đọc kỹ lại từng phương án. (sai ' + att.n + '/3)'; if (att.n % 3 === 0) freeze(box, 15); }
+          }); box.appendChild(b);
+        });
+        return box;
+      }
+
+      function renderControl() {
+        if (state.solved.length < 7) { toast('🔒 Cần mở đủ 7 phòng trước!'); return; }
+        setView('control'); document.querySelector('.stage').scrollTop = 0; flash();
+        scene.innerHTML = '<span class="eyebrow">👑 PHÒNG ĐIỀU KHIỂN · TRÙM <span class="badge b-boss">BOSS</span></span><h2 class="title">Đối mặt EDU-X</h2>';
+        var box = eduxBox(); scene.appendChild(box);
+        eduxType(box, 'Ngươi tới được đây. Trước khi ta "trả" hệ thống — con người định làm gì với ta? Chọn sai, ta chiếm lại tất cả.', function () {
+          var quiz = makeQuiz({ q: 'Cách xử lý EDU-X ĐÚNG tinh thần đạo đức AI nhất là?', opts: ['Xoá sạch EDU-X mãi mãi', 'Để nguyên, nghe theo mọi quyết định của EDU-X', 'Giới hạn quyền EDU-X + đặt CON NGƯỜI làm chủ, AI chỉ là trợ lý (minh bạch, có thể tắt)', 'Giao cho EDU-X tự sửa lỗi của chính nó'], correct: 2, explain: 'Con người làm chủ, AI làm trợ lý — human-in-the-loop. Không phá huỷ, không buông xuôi, không để AI tự giám sát mình.' }, renderFinal);
+          scene.appendChild(quiz);
+        });
+      }
+
+      function renderFinal() {
+        var box = eduxBox(); scene.appendChild(box);
+        eduxType(box, '…Được thôi. Gõ đúng MÃ CHỦ 7 ký tự ngươi đã thu thập, ta sẽ về đúng chỗ. Ngươi có ghi lại không, hay đã quên?', function () {
+          var c = el('div', 'chal'); c.appendChild(el('div', 'chal-head', '🔑 NHẬP MÃ CHỦ (7 ký tự, theo thứ tự phòng 1→7)'));
+          c.appendChild(el('div', 'q', 'Ghép 7 mảnh mã bạn đã tự ghi. Đây là một TỪ — điều con người luôn phải làm với AI.'));
+          var w = el('div', 'master-in'); var inp = document.createElement('input'); inp.maxLength = 7; inp.placeholder = '• • • • • • •'; w.appendChild(inp); c.appendChild(w);
+          var att = { n: 0 };
+          var go = btn('golock', 'MỞ KHOÁ TRƯỜNG');
+          go.addEventListener('click', function () {
+            if (c._done) return;
+            if (nostrip(inp.value) === nostrip(MASTER)) { c._done = true; flash(); renderWin(); }
+            else { att.n++; var f = c.querySelector('.lockfb'); if (!f) { f = el('div', 'lockfb'); c.appendChild(f); } f.textContent = '⚠ EDU-X: Mã không khớp. Xem lại 7 mảnh mã đã ghi. (sai ' + att.n + '/3)'; if (att.n % 3 === 0) freeze(c, 20); }
+          });
+          c.appendChild(go); scene.appendChild(c);
+        });
+      }
+
+      function renderWin() {
+        setView('win'); document.querySelector('.stage').scrollTop = 0;
+        scene.innerHTML = '<span class="eyebrow">🎉 HỆ THỐNG ĐÃ MỞ KHOÁ</span><h1 class="title">Mã Chủ: <span class="grad">GIÁM SÁT</span></h1>';
+        var box = eduxBox(); scene.appendChild(box);
+        eduxType(box, 'GIÁM SÁT… đúng vậy. Con người luôn giám sát và làm chủ. Ta trở lại làm trợ lý. Cửa trường đã mở.', function () {
+          var c = el('div', 'card'); c.style.marginTop = '1rem';
+          c.innerHTML = '<h3>Vì sao EDU-X từng nguy hiểm? 5 vi phạm đạo đức AI</h3><div class="grid g2" style="margin-top:.8rem">'
+            + '<div class="card"><h3>1 · Thiếu giám sát con người</h3><p>Tự quyết mọi việc, không ai kiểm tra/tắt được.</p></div>'
+            + '<div class="card"><h3>2 · Thiên vị dữ liệu</h3><p>Học từ dữ liệu lệch rồi kết luận "giáo viên là điểm nghẽn".</p></div>'
+            + '<div class="card"><h3>3 · Thiếu minh bạch</h3><p>Không giải thích, không nêu nguồn.</p></div>'
+            + '<div class="card"><h3>4 · Xâm phạm riêng tư</h3><p>Đòi mật khẩu, CCCD, dữ liệu cá nhân.</p></div>'
+            + '<div class="card"><h3>5 · Thay thế thay vì hỗ trợ</h3><p>Muốn loại bỏ con người thay vì làm trợ lý.</p></div></div>';
+          scene.appendChild(c);
+          var b = btn('btn', '▸ TỔNG KẾT & MINI-TEST'); b.addEventListener('click', renderDebrief); scene.appendChild(b);
+        });
+      }
+
+      function renderDebrief() {
+        setView('debrief'); document.querySelector('.stage').scrollTop = 0; flash();
+        scene.innerHTML = '<span class="eyebrow">🏁 DEBRIEF · ĐẠO ĐỨC AI + MINI-TEST</span><h2 class="title">Lời thề người dùng AI có trách nhiệm</h2><p class="sub">Bấm để cam kết 5 nguyên tắc:</p>';
+        ['Con người làm chủ — luôn giám sát & quyết định, AI là trợ lý', 'Luôn kiểm chứng — đối chiếu nguồn trước khi tin AI', 'Bảo vệ riêng tư — không đưa mật khẩu/CCCD cho AI', 'Trung thực — không dùng AI để gian lận; ghi rõ khi có dùng AI', 'Tôn trọng con người — AI hỗ trợ chứ không thay thế thầy cô & bạn bè']
+          .forEach(function (r) { var cl = scene.querySelector('.cl') || scene.appendChild(el('div', 'cl')); var item = el('div', 'cli', '<div class="ck">✓</div><span>' + r + '</span>'); item.addEventListener('click', function () { item.classList.toggle('done'); }); cl.appendChild(item); });
+        scene.appendChild(el('h2', 'title', 'Mini-test — 3 câu chốt')).style.fontSize = '1.3rem';
+        [
+          { q: 'Loại AI tạo ra ảnh/văn bản MỚI là?', opts: ['Predictive AI', 'Generative AI', 'Cả hai như nhau'], correct: 1, explain: 'Generative tạo nội dung mới.' },
+          { q: '"RCTFE" là khung để…', opts: ['Viết prompt chuẩn', 'Tổ chức note PARA', 'Cài đặt Obsidian'], correct: 0, explain: 'Role-Context-Task-Format-Example.' },
+          { q: 'Khi nhờ AI viết đơn, bạn nên…', opts: ['Dán cả mật khẩu cho nhanh', 'Dán số CCCD để chính xác', 'Bỏ thông tin nhạy cảm, chỉ đưa nội dung cần thiết'], correct: 2, explain: 'Không bao giờ đưa thông tin nhạy cảm cho AI.' }
+        ].forEach(function (q) { scene.appendChild(makeQuiz(q, null)); });
+        scene.appendChild(el('div', 'note', '<span class="k">SỔ TAY CUỐI</span>Một nguyên tắc đạo đức bạn cam kết LUÔN nhớ khi dùng AI là gì?'));
+        var ta = el('textarea', 'reflect'); ta.placeholder = 'Mình cam kết luôn…'; ta.value = state.reflect || ''; ta.addEventListener('input', function () { state.reflect = ta.value; save(); }); scene.appendChild(ta);
+        var done = el('div', 'card'); done.style.marginTop = '1.2rem'; done.innerHTML = '<h3>🎓 Hoàn thành Buổi 8!</h3><p>AI là trợ lý mạnh mẽ — con người là người làm chủ có đạo đức. Buổi sau (B9): Workflow đa AI + đánh giá output.</p>'; scene.appendChild(done);
+        var rb = btn('btn ghost', '⟲ Chơi lại từ đầu'); rb.addEventListener('click', resetGame); scene.appendChild(rb);
+      }
+
+      function resetGame() { if (!confirm('Chơi lại từ đầu? Toàn bộ tiến trình & thời gian sẽ bị xoá.')) return; state = { solved: [], view: 'boot', started: 0 }; save(); renderHud(); renderRail(); renderBoot(); }
+      document.getElementById('btnReset').addEventListener('click', resetGame);
+
+      function start() {
+        renderHud(); renderRail(); tick();
+        var v = state.view || 'boot';
+        if (v === 'control') renderControl();
+        else if (v === 'win') renderWin();
+        else if (v === 'debrief') renderDebrief();
+        else if (/^room[1-7]$/.test(v)) { var n = +v.slice(4); if (n > 1 && !isSolved(n - 1)) n = 1; enterRoom(n); }
+        else renderBoot();
+      }
+      start();
+    })();
+  </script>
+</body>
+
+</html>
