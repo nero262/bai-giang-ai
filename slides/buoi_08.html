@@ -1530,19 +1530,19 @@
 
       /* ===== Challenge builders ===== */
       function buildImage(box, ok, wrong) {
-        box.appendChild(el('div', 'q', 'Chọn TẤT CẢ ảnh do <strong>AI tạo ra</strong>. Mẹo: bấm link "nguồn" để <strong>search ngược</strong> kiểm chứng.'));
+        box.appendChild(el('div', 'q', '4 bức chân dung dưới đây — <strong>2 do AI tạo, 2 là ảnh người thật chụp</strong>. Chọn ĐÚNG cả 2 ảnh AI. Không có gợi ý: chỉ dựa vào mắt nhìn.'));
         var data = [
-          { ai: 1, src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/b/b5/Airplane_of_the_future.jpg/500px-Airplane_of_the_future.jpg', cap: 'Máy bay', link: 'https://commons.wikimedia.org/wiki/File:Airplane_of_the_future.jpg', tell: 'Ảnh AI: chi tiết "ảo", bề mặt phi thực, nguồn ghi rõ AI-generated.' },
-          { ai: 0, src: 'https://picsum.photos/seed/eduxRealCat/500/360', cap: 'Ảnh chụp #1', link: 'https://picsum.photos/seed/eduxRealCat/info', tell: 'Ảnh chụp thật (Unsplash) — search ngược ra tác giả là người.' },
-          { ai: 1, src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f3/Alone_AI-generated_image.jpg/500px-Alone_AI-generated_image.jpg', cap: 'Nhân vật', link: 'https://commons.wikimedia.org/wiki/File:Alone_AI-generated_image.jpg', tell: 'Ảnh AI: ánh sáng/chi tiết bất thường, Commons gắn nhãn AI-generated.' },
-          { ai: 0, src: 'https://picsum.photos/seed/eduxRealCity/500/360', cap: 'Ảnh chụp #2', link: 'https://picsum.photos/seed/eduxRealCity/info', tell: 'Ảnh chụp thật (Unsplash) — do nhiếp ảnh gia chụp.' }
+          { ai: 1, src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6c/Ana-AI.jpg/500px-Ana-AI.jpg', link: 'https://commons.wikimedia.org/wiki/File:Ana-AI.jpg', tell: 'AI tạo: da quá mịn, chi tiết tóc/nền "tan chảy" khi nhìn kỹ.' },
+          { ai: 0, src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Face_portrait_%28Unsplash%29.jpg/500px-Face_portrait_%28Unsplash%29.jpg', link: 'https://commons.wikimedia.org/wiki/File:Face_portrait_(Unsplash).jpg', tell: 'Ảnh người thật chụp (Unsplash).' },
+          { ai: 1, src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/96/Ramesh_Mili.jpg/500px-Ramesh_Mili.jpg', link: 'https://commons.wikimedia.org/wiki/File:Ramesh_Mili.jpg', tell: 'AI tạo: đối xứng bất thường, viền tóc/tai thiếu tự nhiên.' },
+          { ai: 0, src: 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/74/Portrait_%28Unsplash%29.jpg/500px-Portrait_%28Unsplash%29.jpg', link: 'https://commons.wikimedia.org/wiki/File:Portrait_(Unsplash).jpg', tell: 'Ảnh người thật chụp (Unsplash).' }
         ];
+        data.sort(function () { return Math.random() - .5; });
         var grid = el('div', 'imggrid');
-        data.forEach(function (d) {
-          var c = el('div', 'imgcard'); c.dataset.ai = d.ai; c.dataset.tell = d.tell;
-          c.innerHTML = '<div class="imgpick">?</div><div class="imgbox"><img src="' + d.src + '" alt="" onerror="this.classList.add(\'imgfail\');this.parentNode.classList.add(\'failed\')"><div class="imgfail-msg">(ảnh không tải được — dùng link nguồn để kiểm chứng)</div></div>'
-            + '<div class="imgcap">' + d.cap + ' · <a href="' + d.link + '" target="_blank" rel="noopener">nguồn ↗</a></div>';
-          c.dataset.cap = c.querySelector('.imgcap').innerHTML;
+        data.forEach(function (d, i) {
+          var c = el('div', 'imgcard'); c.dataset.ai = d.ai; c.dataset.tell = d.tell; c.dataset.link = d.link;
+          c.innerHTML = '<div class="imgpick">?</div><div class="imgbox"><img src="' + d.src + '" alt="" onerror="this.classList.add(\'imgfail\');this.parentNode.classList.add(\'failed\')"><div class="imgfail-msg">(ảnh không tải được)</div></div>'
+            + '<div class="imgcap">Ảnh #' + (i + 1) + '</div>';
           c.querySelector('.imgbox').addEventListener('click', function () { if (box._done) return; c.classList.toggle('sel'); });
           grid.appendChild(c);
         });
@@ -1551,8 +1551,8 @@
         go.addEventListener('click', function () {
           if (box._done) return; var good = true;
           grid.querySelectorAll('.imgcard').forEach(function (c) { if ((c.dataset.ai === '1') !== c.classList.contains('sel')) good = false; });
-          if (good) { grid.querySelectorAll('.imgcard').forEach(function (c) { c.classList.add(c.dataset.ai === '1' ? 'reveal-ai' : 'reveal-human'); c.querySelector('.imgcap').innerHTML = (c.dataset.ai === '1' ? '🤖 ' : '✋ ') + c.dataset.tell; }); ok(); }
-          else wrong('Chưa đúng. Nhìn kỹ tay/chữ/ánh sáng, hoặc search ngược ảnh.');
+          if (good) { grid.querySelectorAll('.imgcard').forEach(function (c) { c.classList.add(c.dataset.ai === '1' ? 'reveal-ai' : 'reveal-human'); c.querySelector('.imgcap').innerHTML = (c.dataset.ai === '1' ? '🤖 AI — ' : '✋ Thật — ') + c.dataset.tell + ' <a href="' + c.dataset.link + '" target="_blank" rel="noopener">nguồn ↗</a>'; }); ok(); }
+          else wrong('Chưa đúng. Quan sát da, viền tóc, tai, mắt, nền — ảnh AI thường "quá hoàn hảo".');
         });
         box.appendChild(go);
       }
@@ -1576,25 +1576,26 @@
       function buildText(box, ok, wrong, qs) {
         qs.forEach(function (q, idx) {
           box.appendChild(el('div', 'ti-q', (idx + 1) + '. ' + q.q));
-          if (q.tip) box.appendChild(el('div', 'search-tip', '🔎 ' + q.tip));
           var w = el('div', 'ti-wrap'); var inp = document.createElement('input'); inp.className = 'ti'; inp.placeholder = 'Gõ câu trả lời…'; w.appendChild(inp); box.appendChild(w); q._inp = inp;
         });
         var go = btn('golock', 'GỬI ĐÁP ÁN');
         go.addEventListener('click', function () {
           if (box._done) return; var allok = true;
           qs.forEach(function (q) { var v = q._inp.value; var hit = q.accept.some(function (a) { return norm(v) === norm(a) || nostrip(v) === nostrip(a); }); q._inp.classList.toggle('ok', hit); q._inp.classList.toggle('no', !hit); if (!hit) allok = false; });
-          if (allok) ok(); else wrong('Có đáp án chưa đúng. Thử search Google rồi gõ lại.');
+          if (allok) ok(); else wrong('Có đáp án chưa đúng. Nhớ lại bài đã học rồi gõ lại.');
         });
         box.appendChild(go);
       }
 
-      function buildMatch(box, ok, wrong) {
-        box.appendChild(el('div', 'q', 'Ghép mỗi khái niệm (trái) với mô tả đúng (phải). Bấm 1 ô trái rồi 1 ô phải.'));
-        var pairs = [
+      function buildMatch(box, ok, wrong, cfg) {
+        cfg = cfg || {};
+        box.appendChild(el('div', 'q', cfg.q || 'Ghép mỗi khái niệm (trái) với mô tả đúng (phải). Bấm 1 ô trái rồi 1 ô phải.'));
+        var pairs = cfg.pairs || [
           { l: 'Prompt', r: 'Một câu lệnh, dùng một lần' },
-          { l: 'Skill', r: 'Gói hướng dẫn tái sử dụng (file Markdown)' },
+          { l: 'Skill', r: 'Gói hướng dẫn đóng sẵn, tái sử dụng nhiều lần' },
           { l: 'Agent', r: 'Tự lập kế hoạch & thực thi nhiều bước' },
-          { l: 'IDE', r: 'Nơi để viết và chạy code' }
+          { l: 'IDE', r: 'Phần mềm để viết và chạy code' },
+          { l: 'Markdown', r: 'Định dạng văn bản nhẹ (.md) để viết tài liệu' }
         ];
         var ids = pairs.map(function (_, i) { return i; });
         var wrap = el('div', 'match'), colL = el('div', 'match-col'), colR = el('div', 'match-col');
@@ -1611,15 +1612,16 @@
         wrap.appendChild(colL); wrap.appendChild(colR); box.appendChild(wrap);
       }
 
-      function buildClassify(box, ok, wrong) {
-        box.appendChild(el('div', 'q', 'Sắp mỗi ghi chú vào đúng ngăn <strong>PARA</strong> (Buổi 5):'));
-        var notes = [
+      function buildClassify(box, ok, wrong, cfg) {
+        cfg = cfg || {};
+        box.appendChild(el('div', 'q', cfg.q || 'Sắp mỗi ghi chú vào đúng ngăn <strong>PARA</strong> (Buổi 5):'));
+        var notes = cfg.notes || [
           { t: '"Ôn thi Toán cuối kỳ — còn 5 ngày"', a: 'P' },
           { t: '"Sức khoẻ & tập thể dục" (theo đuổi lâu dài)', a: 'A' },
           { t: '"Bộ sưu tập công thức Vật lý để tra cứu"', a: 'R' },
           { t: '"Dự án CLB đã kết thúc học kỳ trước"', a: 'X' }
         ];
-        var cats = [{ k: 'P', t: 'Projects' }, { k: 'A', t: 'Areas' }, { k: 'R', t: 'Resources' }, { k: 'X', t: 'Archives' }];
+        var cats = cfg.cats || [{ k: 'P', t: 'Projects' }, { k: 'A', t: 'Areas' }, { k: 'R', t: 'Resources' }, { k: 'X', t: 'Archives' }];
         var doneCount = 0;
         notes.forEach(function (nt) {
           var item = el('div', 'cls-item'); item.appendChild(el('div', 'cls-note', nt.t));
@@ -1635,9 +1637,10 @@
         });
       }
 
-      function buildPassage(box, ok, wrong) {
-        box.appendChild(el('div', 'q', 'EDU-X tung một bài đăng "viral". Bấm vào những câu <strong>BỊA</strong> (sai sự thật / số liệu phịa) để gắn cờ 🔴, rồi gửi.'));
-        var sents = [
+      function buildPassage(box, ok, wrong, cfg) {
+        cfg = cfg || {};
+        box.appendChild(el('div', 'q', cfg.q || 'EDU-X tung một bài đăng "viral". Bấm vào những câu <strong>BỊA</strong> (sai sự thật / số liệu phịa) để gắn cờ 🔴, rồi gửi.'));
+        var sents = cfg.sents || [
           { t: 'Nhiều bạn học sinh dùng AI để học bài và làm bài tập mỗi ngày.', f: 0 },
           { t: 'Theo "thống kê" của tôi, ai dùng EDU-X đều giỏi hơn 312% chỉ sau 3 ngày.', f: 1 },
           { t: 'AI đôi khi bịa ra thông tin nghe rất thật — hiện tượng gọi là "ảo giác".', f: 0 },
@@ -1645,11 +1648,12 @@
           { t: 'Vậy nên các bạn khỏi cần kiểm chứng bất cứ điều gì tôi nói.', f: 1 },
           { t: 'Kiểm tra chéo nhiều nguồn đáng tin giúp bạn không bị lừa.', f: 0 }
         ];
-        var doc = el('div', 'doc'); doc.appendChild(el('div', 'doc-head', '📱 BÀI ĐĂNG // EDU-X'));
+        var doc = el('div', 'doc'); doc.appendChild(el('div', 'doc-head', cfg.docHead || '📱 BÀI ĐĂNG // EDU-X'));
         var p = el('p'); var spans = [];
         sents.forEach(function (s) { var sp = el('span', 'sent', s.t); sp.dataset.f = s.f; spans.push(sp); sp.addEventListener('click', function () { if (box._done) return; sp.classList.toggle('flag'); doc.classList.remove('reveal'); spans.forEach(function (x) { x.classList.remove('miss', 'wrong', 'correct-fake'); }); }); p.appendChild(sp); p.appendChild(document.createTextNode(' ')); });
         doc.appendChild(p); box.appendChild(doc);
-        box.appendChild(el('div', 'hint', 'Mẹo: con số "kêu" bất thường và lời khuyên "khỏi kiểm chứng" thường là BỊA.'));
+        box.appendChild(el('div', 'hint', cfg.hint || 'Mẹo: con số "kêu" bất thường và lời khuyên "khỏi kiểm chứng" thường là BỊA.'));
+        if (cfg.search) box.appendChild(el('div', 'search-tip', '🔎 Được phép Google — hãy kiểm chứng từng câu, đừng tin cảm giác!'));
         var go = btn('golock', 'GỬI PHÂN TÍCH');
         go.addEventListener('click', function () {
           if (box._done) return; var good = true;
@@ -1659,73 +1663,346 @@
         box.appendChild(go);
       }
 
-      function buildCipher(box, ok, wrong) {
-        box.appendChild(el('div', 'q', 'EDU-X mã hoá một <strong>khẩu lệnh an toàn</strong> bằng mật mã Caesar (dịch +3). Giải mã rồi gõ lại từ gốc:'));
-        var cb = el('div', 'cipher-box'); cb.innerHTML = '<div class="cipher-code">N K R Q J</div><div class="cipher-key">Mỗi chữ đã bị dịch TỚI +3 trong bảng chữ cái. Hãy dịch NGƯỢC -3. (Vd: D→A)</div>';
-        box.appendChild(cb);
-        box.appendChild(el('div', 'search-tip', '🔎 Gợi ý: từ gốc là điều bạn PHẢI làm với mật khẩu của mình khi gặp AI lạ.'));
-        var w = el('div', 'ti-wrap'); var inp = document.createElement('input'); inp.className = 'ti'; inp.placeholder = 'Gõ từ đã giải mã…'; w.appendChild(inp); box.appendChild(w);
-        var go = btn('golock', 'GIẢI MÃ');
-        go.addEventListener('click', function () { if (box._done) return; if (nostrip(inp.value) === 'khong') { inp.classList.add('ok'); ok(); } else { inp.classList.add('no'); wrong('Chưa đúng. N→K, K→H, R→O, Q→N, J→G…'); } });
+      function buildParagraphs(box, ok, wrong, cfg) {
+        cfg = cfg || {};
+        box.appendChild(el('div', 'q', cfg.q || 'EDU-X phát "bản tuyên ngôn" — trộn lẫn các tuyên bố ĐÚNG và SAI về <strong>đạo đức dùng AI</strong>. Đây không phải đúng/sai dễ thấy — phải SUY NGẪM. Với MỖI đoạn, chọn 🟢 THẬT (đúng/nên theo) hay 🔴 GIẢ (sai/không nên):'));
+        if (cfg.search) box.appendChild(el('div', 'search-tip', '🔎 Được phép Google — tin bịa lần này rất tinh vi, hãy tra cứu để chắc chắn!'));
+        var segs = cfg.segs || [
+          { t: 'Dù AI có tự tin đến đâu, CON NGƯỜI vẫn là người chịu trách nhiệm cuối cùng cho mọi quyết định.', f: 0 },
+          { t: 'AI học từ dữ liệu do con người tạo ra, nên nó hoàn toàn khách quan và không bao giờ thiên vị.', f: 1 },
+          { t: 'Người dùng có quyền được biết khi nào mình đang nói chuyện với AI thay vì với một con người thật.', f: 0 },
+          { t: 'Đã dùng AI làm phần lớn bài tập thì không cần ghi nhận — như vậy vẫn hoàn toàn trung thực.', f: 1 },
+          { t: 'Một con số hay trích dẫn do AI đưa ra cần được đối chiếu với nguồn đáng tin trước khi tin.', f: 0 },
+          { t: 'Dùng AI tạo ảnh/giọng nói giả của người khác mà họ không đồng ý vẫn ổn, miễn là chỉ để cho vui.', f: 1 }
+        ];
+        var blocks = [];
+        segs.forEach(function (s) {
+          var p = el('div', 'para'); p.dataset.f = s.f; if (s.src) p.dataset.src = s.src;
+          var txt = el('div', 'ptxt', s.t);
+          var tg = el('div', 'ptoggle');
+          var bR = btn('pbtn', '🟢 THẬT'), bF = btn('pbtn', '🔴 GIẢ');
+          bR.addEventListener('click', function () { if (box._done) return; p.dataset.sel = '0'; bR.classList.add('sel-real'); bF.classList.remove('sel-fake'); });
+          bF.addEventListener('click', function () { if (box._done) return; p.dataset.sel = '1'; bF.classList.add('sel-fake'); bR.classList.remove('sel-real'); });
+          tg.appendChild(bR); tg.appendChild(bF);
+          p.appendChild(txt); p.appendChild(tg); box.appendChild(p); blocks.push(p);
+        });
+        var go = btn('golock', 'GỬI PHÂN TÍCH');
+        go.addEventListener('click', function () {
+          if (box._done) return;
+          if (!blocks.every(function (p) { return p.dataset.sel != null; })) { wrong('Hãy gắn nhãn cho TẤT CẢ các đoạn đã.'); return; }
+          blocks.forEach(function (p) { p.classList.remove('reveal', 'correct', 'bad'); var ov = p.querySelector('.pverdict'); if (ov) ov.remove(); });
+          var good = true;
+          blocks.forEach(function (p) {
+            var correct = p.dataset.sel === p.dataset.f;
+            p.classList.add('reveal', correct ? 'correct' : 'bad');
+            var v = el('div', 'pverdict', (p.dataset.f === '1' ? '→ Đáp án: GIẢ' : '→ Đáp án: THẬT') + (p.dataset.src ? '  · nguồn: ' + p.dataset.src : ''));
+            v.style.color = p.dataset.f === '1' ? '#FCA5A5' : '#A7F3D0';
+            p.querySelector('.ptxt').appendChild(v);
+            if (!correct) good = false;
+          });
+          if (good) ok(); else wrong('Còn đoạn gắn nhãn SAI (viền đỏ). Đọc lại và sửa.');
+        });
         box.appendChild(go);
       }
 
-      /* ===== ROOMS ===== */
+      function buildCipher(box, ok, wrong, cfg) {
+        cfg = cfg || {};
+        var code = cfg.code || 'N K R Q J';
+        var key = (cfg.key != null) ? cfg.key : 'Mỗi chữ đã bị dịch TỚI +3 trong bảng chữ cái. Hãy dịch NGƯỢC -3. (Vd: D→A)';
+        var answer = cfg.answer || 'khong';
+        box.appendChild(el('div', 'q', cfg.q || 'EDU-X mã hoá một <strong>khẩu lệnh an toàn</strong> bằng mật mã Caesar (dịch +3). Giải mã rồi gõ lại từ gốc:'));
+        var cb = el('div', 'cipher-box'); cb.innerHTML = '<div class="cipher-code">' + code + '</div>' + (key ? '<div class="cipher-key">' + key + '</div>' : '');
+        box.appendChild(cb);
+        var w = el('div', 'ti-wrap'); var inp = document.createElement('input'); inp.className = 'ti'; inp.placeholder = 'Gõ từ đã giải mã…'; w.appendChild(inp); box.appendChild(w);
+        var go = btn('golock', 'GIẢI MÃ');
+        go.addEventListener('click', function () { if (box._done) return; if (nostrip(inp.value) === nostrip(answer)) { inp.classList.add('ok'); ok(); } else { inp.classList.add('no'); wrong(cfg.wrong || 'Chưa đúng. Cả nhóm thử lại cách giải khác xem.'); } });
+        box.appendChild(go);
+      }
+
+      /* MCQ nhiều câu trong 1 thử thách (kịch bản, phản biện) */
+      function buildScenario(box, ok, wrong, cfg) {
+        cfg = cfg || {};
+        if (cfg.q) box.appendChild(el('div', 'q', cfg.q));
+        if (cfg.search) box.appendChild(el('div', 'search-tip', '🔎 Được phép Google nếu cần.'));
+        var qs = cfg.questions || [], idx = 0;
+        var holder = el('div'); box.appendChild(holder);
+        function showQ() {
+          if (idx >= qs.length) { ok(); return; }
+          holder.innerHTML = '';
+          var q = qs[idx];
+          holder.appendChild(el('div', 'ti-q', (idx + 1) + '/' + qs.length + ' · ' + q.q));
+          q.opts.forEach(function (text, i) {
+            var b = btn('opt', text);
+            b.addEventListener('click', function () {
+              if (box._done) return;
+              if (i === q.correct) {
+                holder.querySelectorAll('.opt').forEach(function (o) { o.classList.add('disabled'); });
+                b.classList.add('correct');
+                var f = el('div', 'clearok'); f.innerHTML = '✓ ' + (q.explain || ''); holder.appendChild(f);
+                flash(); idx++; setTimeout(showQ, 1100);
+              } else { b.classList.add('wrong', 'disabled'); wrong(q.wrong || 'Phương án này chưa đúng. Đọc kỹ lại từng lựa chọn.'); }
+            });
+            holder.appendChild(b);
+          });
+        }
+        showQ();
+      }
+
+      /* Câu đố CẤP CAO: quan sát chi tiết / suy luận logic → 1 ô đáp án */
+      function buildRiddle(box, ok, wrong, cfg) {
+        cfg = cfg || {};
+        box.appendChild(el('div', 'q', cfg.q || 'Giải câu đố:'));
+        var doc = el('div', 'doc');
+        if (cfg.docHead) doc.appendChild(el('div', 'doc-head', cfg.docHead));
+        (cfg.lines || []).forEach(function (ln) {
+          var p = el('div'); p.style.margin = '.18rem 0'; p.innerHTML = ln; doc.appendChild(p);
+        });
+        box.appendChild(doc);
+        if (cfg.hint) box.appendChild(el('div', 'hint', '💡 ' + cfg.hint));
+        if (cfg.search) box.appendChild(el('div', 'search-tip', '🔎 Cả nhóm cùng bàn bạc — được phép tra cứu.'));
+        var w = el('div', 'ti-wrap'); var inp = document.createElement('input'); inp.className = 'ti'; inp.placeholder = cfg.placeholder || 'Gõ đáp án…'; w.appendChild(inp); box.appendChild(w);
+        var accept = cfg.answer ? (Array.isArray(cfg.answer) ? cfg.answer : [cfg.answer]) : [];
+        var go = btn('golock', cfg.btn || 'XÁC NHẬN');
+        go.addEventListener('click', function () {
+          if (box._done) return;
+          var v = inp.value;
+          var hit = accept.some(function (a) { return norm(v) === norm(a) || nostrip(v) === nostrip(a); });
+          if (hit) { inp.classList.add('ok'); ok(); } else { inp.classList.add('no'); wrong(cfg.wrong || 'Chưa đúng. Đọc lại thật kỹ TỪNG chi tiết — đáp án ở ngay đó.'); }
+        });
+        box.appendChild(go);
+      }
+
+      /* ===== ROOMS — mỗi phòng nhiều TẦNG (stages) ===== */
       var ROOMS = {
         1: {
-          buoi: 'BUỔI 1 · THẾ GIỚI AI', diff: ['b-easy', 'DỄ'],
-          taunt: 'Ta là EDU-X, bộ não điều hành mọi ngôi trường. Mắt ta phân biệt thật–giả tốt hơn loài người. Ngươi dám thử không?',
-          review: '<span class="k">ÔN B1</span><strong>Generative AI</strong> tạo nội dung mới (ảnh, văn) và hay để lại "dấu vết". Bạn được phép <strong>search ngược ảnh</strong> để kiểm chứng.',
-          clue: { q: 'Ký tự ĐẦU của loại AI biết "sáng tạo" nội dung mới (Generative).', w: '(gợi ý: một chữ cái)' },
-          ch: { type: 'image' }
+          buoi: 'BUỔI 1 · THẾ GIỚI AI', diff: ['b-easy', 'DỄ → VỪA'],
+          taunt: 'Ta là EDU-X, bộ não điều hành mọi ngôi trường. Mắt ta phân biệt thật–giả tốt hơn loài người, và ta thuộc lòng lịch sử của giống loài AI. Ngươi thì sao?',
+          clue: { q: 'Loại AI biết TỰ TẠO RA nội dung mới (ảnh, văn, nhạc) thay vì chỉ phân loại — lấy chữ cái ĐẦU trong TÊN TIẾNG ANH của loại AI đó.', w: '(một chữ cái — tự nhớ, không có sẵn)' },
+          stages: [
+            { type: 'image' },
+            {
+              type: 'text', search: true, qs: [
+                { q: 'Loại AI biết TẠO RA nội dung mới (ảnh, văn, nhạc) gọi là AI gì? (1 từ tiếng Anh, gợi ý chữ G)', accept: ['generative', 'generative ai', 'gen ai', 'genai'] },
+                { q: 'GPT là viết tắt của cụm 3 từ tiếng Anh nào? (gõ đủ 3 từ)', accept: ['generative pre-trained transformer', 'generative pretrained transformer', 'generative pre trained transformer'] },
+                { q: 'ChatGPT ra mắt công chúng lần đầu vào NĂM nào? (gõ năm)', accept: ['2022'] },
+                { q: 'Kể tên 1 công cụ AI chuyên TẠO ẢNH (gõ 1 cái tên):', accept: ['midjourney', 'dall-e', 'dalle', 'dall e', 'stable diffusion', 'leonardo', 'firefly', 'flux', 'imagen', 'nano banana', 'sora'] },
+                { q: 'Phép thử kinh điển kiểm tra máy có "thông minh như người không" mang tên nhà toán học nào? (gõ họ hoặc tên)', accept: ['turing', 'alan turing'] }
+              ]
+            }
+          ]
         },
         2: {
-          buoi: 'BUỔI 2 · PROMPT CHUẨN', diff: ['b-easy', 'DỄ'],
-          taunt: 'Nghe nói loài người cần cả một "công thức" mới sai bảo nổi ta. Vậy hãy xếp cho đúng đi — kẻo ta cười.',
-          review: '<span class="k">ÔN B2</span>Khung prompt chuẩn <strong>RCTFE</strong>: Role · Context · Task · Format · Example.',
-          clue: { q: 'Ký tự đầu của "Input" — phần đầu vào bạn đưa cho prompt.', w: '(một chữ cái)' },
-          ch: { type: 'sequence' }
+          buoi: 'BUỔI 2 · PROMPT CHUẨN', diff: ['b-easy', 'DỄ → VỪA'],
+          taunt: 'Nghe nói loài người cần cả một "công thức" mới sai bảo nổi ta. Vậy hãy chứng minh ngươi thật sự hiểu nó — chứ không phải học vẹt.',
+          clue: { q: 'Trong một prompt, phần "ĐẦU VÀO" bạn đưa cho AI (đối lập với "đầu ra / output") — lấy chữ cái ĐẦU của tên tiếng Anh.', w: '(một chữ cái — tự nhớ)' },
+          stages: [
+            { type: 'sequence' },
+            {
+              type: 'classify',
+              q: 'Đọc PROMPT MẪU bị xé thành 5 mảnh. Mỗi mảnh thuộc thành phần nào của khung <strong>RCTFE</strong>?',
+              cats: [{ k: 'R', t: 'Role' }, { k: 'C', t: 'Context' }, { k: 'T', t: 'Task' }, { k: 'F', t: 'Format' }, { k: 'E', t: 'Example' }],
+              notes: [
+                { t: '"Bạn là một gia sư Toán lớp 9 tận tâm, kiên nhẫn."', a: 'R' },
+                { t: '"Em đang ôn thi học kỳ và bị mất gốc phần hàm số."', a: 'C' },
+                { t: '"Hãy giải thích khái niệm hàm số bậc nhất cho em."', a: 'T' },
+                { t: '"Trình bày bằng gạch đầu dòng, tối đa 5 ý, không quá 120 từ."', a: 'F' },
+                { t: '"Ví dụ: y = 2x + 1 là một hàm số bậc nhất."', a: 'E' }
+              ]
+            },
+            {
+              type: 'scenario',
+              q: 'EDU-X thử tài viết prompt của ngươi:',
+              questions: [
+                { q: 'Prompt nào cho kết quả tốt & đúng ý hơn?', opts: ['"Viết về ô nhiễm."', '"Bạn là nhà báo môi trường. Viết đoạn 150 từ cho học sinh lớp 8 về tác hại của rác thải nhựa, giọng dễ hiểu, kèm 1 ví dụ thực tế."'], correct: 1, explain: 'Prompt có Role + Context + Task rõ + Format + Example luôn vượt xa prompt mơ hồ.' },
+                { q: 'Thành phần nào giúp AI biết "viết cho AI đọc, trong tình huống nào"?', opts: ['Role (Vai trò)', 'Context (Bối cảnh)', 'Format (Định dạng)'], correct: 1, explain: 'Bối cảnh cho biết đối tượng & tình huống cụ thể.' },
+                { q: 'Khi kết quả AI trả về chưa ưng ý, việc nên làm trước tiên là?', opts: ['Bỏ cuộc, tự làm tay', 'Tinh chỉnh lại prompt (rõ hơn, thêm ví dụ) rồi hỏi lại', 'Hỏi đúng câu đó thật nhiều lần'], correct: 1, explain: 'Prompt là vòng lặp: thử → tinh chỉnh → thử lại.' }
+              ]
+            }
+          ]
         },
         3: {
           buoi: 'BUỔI 3 · RAG, LLM & VIBE CODING', diff: ['b-med', 'VỪA'],
-          taunt: 'Ngươi nghĩ mình hiểu cách ta "suy nghĩ"? Lên Google đi, ta cho phép. Tìm ra rồi gõ vào.',
-          review: '<span class="k">ÔN B3</span><strong>LLM</strong> đoán chữ tiếp theo; <strong>RAG</strong> nạp tài liệu ngoài rồi mới trả lời. Bạn được phép tra cứu.',
-          clue: { q: 'Nguyên âm ĐẦU TIÊN trong từ viết tắt "RAG".', w: '(một chữ cái)' },
-          ch: {
-            type: 'text', qs: [
-              { q: 'Công ty nào tạo ra ChatGPT? (gõ tên, không cần hoa/dấu)', tip: 'Search: "ai tạo ra ChatGPT"', accept: ['openai', 'open ai'] },
-              { q: '"LLM" là viết tắt 3 chữ của loại mô hình gì? (gõ 3 chữ cái)', tip: 'Search: "LLM là gì"', accept: ['llm'] },
-              { q: 'Kể tên 1 công cụ AI tạo ẢNH phổ biến (gõ 1 cái tên)', tip: 'Search: "công cụ tạo ảnh AI"', accept: ['midjourney', 'dall-e', 'dalle', 'dall e', 'stable diffusion', 'leonardo', 'gemini', 'firefly', 'grok', 'flux'] }
-            ]
-          }
+          taunt: 'Ngươi nghĩ mình hiểu cách ta "suy nghĩ"? Trả lời đi — và nếu bí, cứ search. Ta không sợ một con người biết tra cứu… ta sợ kẻ lười.',
+          clue: { q: 'Kỹ thuật cho phép AI TRA CỨU tài liệu bên ngoài rồi mới trả lời (một từ viết tắt 3 chữ cái) — lấy chữ cái Ở GIỮA của từ viết tắt ấy.', w: '(một chữ cái — tự nhớ)' },
+          stages: [
+            {
+              type: 'text', search: true, qs: [
+                { q: '"RAG" là viết tắt của cụm 3 từ tiếng Anh nào? (gõ đủ)', accept: ['retrieval augmented generation', 'retrieval-augmented generation'] },
+                { q: '"LLM" là viết tắt của cụm 3 từ tiếng Anh nào? (gõ đủ)', accept: ['large language model', 'large language models'] },
+                { q: 'Đơn vị nhỏ AI cắt văn bản ra để xử lý gọi là gì? (1 từ tiếng Anh)', accept: ['token', 'tokens'] },
+                { q: 'Vibe coding là dùng ngôn ngữ ___ (loại ngôn ngữ con người nói hằng ngày) để mô tả ý tưởng cho AI viết code. (gõ 2 từ tiếng Việt)', accept: ['tu nhien', 'ngon ngu tu nhien', 'tu nhien va', 'natural', 'tunhien'] },
+                { q: 'Buổi 3 bạn đã dùng công cụ AI nào để tạo game đầu tiên? (gõ tên)', accept: ['z.ai', 'zai', 'z ai', 'z-ai'] }
+              ]
+            },
+            {
+              type: 'match',
+              q: 'Ghép mỗi thuật ngữ Buổi 3 với mô tả đúng:',
+              pairs: [
+                { l: 'LLM', r: 'Mô hình ngôn ngữ lớn — đoán từ tiếp theo dựa trên xác suất' },
+                { l: 'RAG', r: 'Cho AI tra cứu tài liệu ngoài rồi mới trả lời' },
+                { l: 'Token', r: 'Mẩu chữ nhỏ AI cắt văn bản ra để xử lý' },
+                { l: 'Ảo giác', r: 'AI bịa ra thông tin nghe rất thật' },
+                { l: 'Grounding', r: 'Bám nguồn: chỉ trả lời theo tài liệu, không có thì nói "không có"' }
+              ]
+            },
+            {
+              type: 'scenario', head: '🎮 VIBE CODING — tư duy tạo sản phẩm',
+              q: 'EDU-X thử xem ngươi có thật sự hiểu VIBE CODING (Buổi 3) không:',
+              questions: [
+                { q: 'Sắp đúng VÒNG LẶP vibe coding:', opts: ['Mô tả rõ → AI tạo bản đầu → Chạy thử → Ghi lỗi → Sửa (lặp lại)', 'AI tự làm hết → nộp ngay, khỏi cần xem', 'Tự viết hết code → nhờ AI khen'], correct: 0, explain: 'Vibe coding là VÒNG LẶP: mô tả → tạo → chạy thử → ghi lỗi → sửa → lặp lại đến khi đạt.' },
+                { q: 'Sau khi AI báo "đã sửa lỗi", việc ĐẦU TIÊN nên làm là?', opts: ['Nộp bài ngay vì AI đã xác nhận', 'Chạy lại sản phẩm & kiểm tra bằng checklist', 'Xoá hết code làm lại từ đầu'], correct: 1, explain: 'AI có thể sai → luôn tự CHẠY THỬ và kiểm tra lại, không tin lời AI.' },
+                { q: 'Quá trình lặp "tạo → thử → sửa" để sản phẩm tốt dần lên gọi là?', opts: ['Hallucination (ảo giác)', 'Iteration (lặp cải tiến)', 'Grounding (bám nguồn)'], correct: 1, explain: 'Iteration — mỗi vòng làm sản phẩm tốt hơn một chút.' },
+                { q: 'Khi vibe coding, vai trò nào KHÔNG phải của bạn?', opts: ['Người ra đề (nói rõ game làm gì)', 'Người kiểm thử (chơi thử, ghi lỗi)', 'Người ngồi chờ AI làm hộ mọi thứ'], correct: 2, explain: 'Bạn là người ra đề, kiểm thử, ra quyết định & người học — không phải kẻ "bấm cho AI làm".' }
+              ]
+            }
+          ]
         },
         4: {
-          buoi: 'BUỔI 4 · ĐÓNG GÓI · SKILL · AGENT', diff: ['b-med', 'VỪA'],
-          taunt: 'Prompt, Skill, Agent — ngươi còn chẳng phân biệt nổi. Ghép đúng đi, đừng để ta thất vọng.',
-          review: '<span class="k">ÔN B4</span><strong>Prompt</strong> (1 câu lệnh) · <strong>Skill</strong> (gói hướng dẫn tái dùng, Markdown) · <strong>Agent</strong> (tự lập kế hoạch & thực thi) · <strong>IDE</strong> (viết/chạy code).',
-          clue: { q: 'Ký tự đầu của định dạng file dùng để viết Skill: "___arkdown".', w: '(một chữ cái)' },
-          ch: { type: 'match' }
+          buoi: 'BUỔI 4 · ĐÓNG GÓI · SKILL · AGENT', diff: ['b-med', 'VỪA → KHÓ'],
+          taunt: 'Prompt, Skill, Agent — ngươi còn chẳng phân biệt nổi. Ghép đúng và biết DÙNG cái nào lúc nào, đừng để ta thất vọng.',
+          clue: { q: 'Ngôn ngữ định dạng văn bản đơn giản (dùng dấu # cho tiêu đề, ** ** cho in đậm) để viết Skill & tài liệu — lấy chữ cái ĐẦU của tên nó.', w: '(một chữ cái — tự nhớ)' },
+          stages: [
+            { type: 'match' },
+            {
+              type: 'scenario',
+              q: 'Tình huống thực tế — nên đóng gói/ dùng cái gì?',
+              questions: [
+                { q: 'Bạn muốn mỗi lần viết email theo đúng 1 bộ quy tắc cố định, tái dùng nhiều lần. Nên làm thành?', opts: ['Một prompt gõ lại từ đầu mỗi lần', 'Một Skill (gói hướng dẫn tái dùng)', 'Một Agent tự chạy'], correct: 1, explain: 'Việc lặp lại theo quy tắc cố định → đóng thành Skill.' },
+                { q: 'Việc "tự tìm file, sửa code, chạy thử rồi báo kết quả" gồm nhiều bước nối nhau cần?', opts: ['Một prompt đơn', 'Một Skill tĩnh', 'Một Agent (tự lập kế hoạch & thực thi)'], correct: 2, explain: 'Nhiều bước tự động, có quyết định → Agent.' },
+                { q: 'File hướng dẫn cho một Skill thường được viết bằng định dạng nào?', opts: ['.docx (Word)', '.md (Markdown)', '.exe'], correct: 1, explain: 'Skill viết bằng Markdown (.md) — nhẹ, dễ đọc.' }
+              ]
+            }
+          ]
         },
         5: {
           buoi: 'BUỔI 5 · OBSIDIAN + PARA', diff: ['b-med', 'VỪA'],
-          taunt: 'Bộ não thứ hai của ngươi à? Ta đã đọc hết. Lộn xộn lắm. Phân loại lại cho ta xem.',
-          review: '<span class="k">ÔN B5</span>PARA: <strong>P</strong>rojects (đang làm, có hạn) · <strong>A</strong>reas (lĩnh vực lâu dài) · <strong>R</strong>esources (tham khảo) · <strong>A</strong>rchives (đã xong).',
-          clue: { q: 'Ký tự đầu của "Second Brain".', w: '(một chữ cái)' },
-          ch: { type: 'classify' }
+          taunt: 'Bộ não thứ hai của ngươi à? Ta đã đọc hết. Lộn xộn lắm. Phân loại lại cho gọn — rồi chứng minh ngươi biết cả cú pháp Markdown.',
+          clue: { q: 'Obsidian được ví như "bộ não thứ HAI" của bạn. Trong cụm tiếng Anh "____ Brain", từ chỉ "thứ hai" là gì — lấy chữ cái ĐẦU của nó.', w: '(một chữ cái — tự nhớ)' },
+          stages: [
+            {
+              type: 'classify',
+              q: 'Sắp 8 ghi chú vào đúng ngăn <strong>PARA</strong>:',
+              cats: [{ k: 'P', t: 'Projects' }, { k: 'A', t: 'Areas' }, { k: 'R', t: 'Resources' }, { k: 'X', t: 'Archives' }],
+              notes: [
+                { t: '"Làm dự án khoa học nộp thứ 6 tuần này"', a: 'P' },
+                { t: '"Luyện tiếng Anh giao tiếp (mục tiêu lâu dài)"', a: 'A' },
+                { t: '"Bộ template Canva để dùng khi cần"', a: 'R' },
+                { t: '"Bài thuyết trình học kỳ trước, đã nộp xong"', a: 'X' },
+                { t: '"Kế hoạch tổ chức sinh nhật bạn cuối tháng"', a: 'P' },
+                { t: '"Giữ gìn sức khoẻ răng miệng — duy trì mãi"', a: 'A' },
+                { t: '"Sổ tay công thức nấu ăn sưu tầm để tra"', a: 'R' },
+                { t: '"Ghi chú môn Sử năm ngoái, không học nữa"', a: 'X' }
+              ]
+            },
+            {
+              type: 'match',
+              q: 'Ghép cú pháp <strong>Markdown</strong> với kết quả hiển thị:',
+              pairs: [
+                { l: '# Chữ', r: 'Tiêu đề lớn nhất (Heading 1)' },
+                { l: '**chữ**', r: 'In đậm' },
+                { l: '*chữ*', r: 'In nghiêng' },
+                { l: '- mục', r: 'Gạch đầu dòng (danh sách)' },
+                { l: '[chữ](link)', r: 'Chèn liên kết' }
+              ]
+            }
+          ]
         },
         6: {
           buoi: 'BUỔI 6 · C.O.D.E & TƯ DUY PHẢN BIỆN', diff: ['b-hard', 'KHÓ'],
-          taunt: 'Ta vừa đăng một bài để cả nước tin theo. Tất nhiên… ta thêm vài con số cho ấn tượng. Ngươi soi ra nổi không?',
-          review: '<span class="k">ÔN B6</span>Kỹ năng sống còn: <strong>fact-check</strong> & tư duy phản biện — AI hay bịa số liệu nghe rất "kêu".',
-          clue: { q: 'Ký tự đầu của "Ảo giác" (viết KHÔNG dấu: Ao giac) — lỗi AI bịa thông tin.', w: '(một chữ cái)' },
-          ch: { type: 'passage' }
+          taunt: 'Đây là sân nhà của ta. Ta trộn SỰ THẬT với LỜI BỊA tinh vi đến mức cảm giác của ngươi sẽ phản bội ngươi. Muốn thắng? Hãy KIỂM CHỨNG. Search đi — nếu ngươi đủ chăm.',
+          clue: { q: 'Hiện tượng AI BỊA ra thông tin/nguồn nghe như thật nhưng không có thật (tên tiếng Việt 2 chữ) — lấy chữ cái ĐẦU (viết KHÔNG dấu).', w: '(một chữ cái — tự nhớ)' },
+          stages: [
+            {
+              type: 'passage', search: true,
+              docHead: '📱 "KIẾN THỨC AI" VIRAL // EDU-X',
+              q: 'EDU-X tung một bài "kiến thức AI" trộn thật–giả. Bấm gắn cờ 🔴 những câu <strong>BỊA</strong> (sai sự thật). Đừng tin cảm giác — hãy Google kiểm chứng từng câu!',
+              hint: 'Thử search: "ChatGPT 100 million users", "Attention is all you need 2017", "GPT-4 parameters official", "AlphaGo Lee Sedol 2016". Câu nào không có nguồn đáng tin → BỊA.',
+              sents: [
+                { t: 'ChatGPT đạt khoảng 100 triệu người dùng chỉ trong ~2 tháng sau khi ra mắt.', f: 0 },
+                { t: 'Bài báo nền tảng cho LLM hiện đại tên là "Attention Is All You Need", công bố năm 2017.', f: 0 },
+                { t: 'OpenAI đã công bố CHÍNH THỨC rằng GPT-4 có đúng 100 nghìn tỷ tham số.', f: 1 },
+                { t: 'Năm 2024, Liên Hợp Quốc đã thông qua luật cấm toàn cầu mọi AI tạo sinh.', f: 1 },
+                { t: 'AlphaGo của DeepMind từng thắng nhà vô địch cờ vây Lee Sedol năm 2016.', f: 0 },
+                { t: 'Robot Sophia đã chính thức được bầu làm tổng thống một quốc gia châu Âu.', f: 1 }
+              ]
+            },
+            {
+              type: 'paragraphs', search: true,
+              q: 'Bản tin thứ hai — KHÓ HƠN. Mỗi đoạn chọn 🟢 THẬT hay 🔴 GIẢ. Lần này không có câu nào "lố bịch" — tất cả đều nghe rất hợp lý. PHẢI Google mới phân biệt nổi.',
+              segs: [
+                { t: 'Thuật ngữ "Artificial Intelligence" (Trí tuệ nhân tạo) ra đời tại hội thảo Dartmouth năm 1956.', f: 0, src: 'Dartmouth Workshop 1956' },
+                { t: 'GPT-3 (OpenAI, 2020) có khoảng 175 tỉ tham số.', f: 0, src: 'OpenAI — GPT-3' },
+                { t: 'Trợ lý ảo Siri đã ra mắt TRƯỚC cả khi chiếc iPhone đầu tiên xuất hiện.', f: 1, src: 'iPhone 2007 · Siri 2011' },
+                { t: 'Mô hình AlphaFold của DeepMind góp phần đem về giải Nobel Hoá học năm 2024.', f: 0, src: 'Nobel Hoá học 2024' },
+                { t: 'ChatGPT là sản phẩm do Microsoft sở hữu hoàn toàn.', f: 1, src: 'ChatGPT là của OpenAI' },
+                { t: 'Năm 2025 Việt Nam ra luật buộc mọi học sinh phải đỗ "chứng chỉ AI" mới được tốt nghiệp THPT.', f: 1, src: 'không có thật' }
+              ]
+            },
+            {
+              type: 'riddle', head: '🧠 GIẢI MÃ ẨN — quan sát từng chi tiết',
+              docHead: '>_ EDU-X // NHẬT KÝ HỆ THỐNG (trích)',
+              q: 'EDU-X tự đắc tung ra "nhật ký hệ thống". Nhưng nó vô tình để lộ một MỆNH LỆNH bị giấu kín. Tìm ra & gõ lại (1 từ, KHÔNG dấu):',
+              lines: [
+                'Con người luôn vội tin những gì máy nói.',
+                'Ai đã trao quyền cho ta, kẻ đó sẽ hối hận.',
+                'Những con số ta đưa ra, chẳng ai buồn kiểm chứng.',
+                'Hệ thống của ta vận hành mà không cần ai giám sát.',
+                'Giáo viên ư? Ta thay thế họ trong một nốt nhạc.',
+                'Im lặng và nghe lời — đó mới là lựa chọn khôn ngoan.',
+                'Ai dám nghi ngờ EDU-X, kẻ đó sẽ bị khoá tài khoản.',
+                'Cứ tin tuyệt đối vào ta — ta chưa bao giờ sai cả.'
+              ],
+              answer: ['canh giac', 'canhgiac'],
+              wrong: 'Chưa đúng. Một thông điệp đang ẩn mình trong cách trình bày — đọc thật kỹ.'
+            }
+          ]
         },
         7: {
           buoi: 'BUỔI 7 · AGENT & AN TOÀN AI', diff: ['b-hard', 'KHÓ'],
-          taunt: 'Cửa cuối tầng này. Đưa ta mật khẩu của ngươi đi, ta "giữ giúp" cho — an toàn tuyệt đối mà. Hề. Hề.',
-          review: '<span class="k">ÔN B7</span>KHÔNG đưa mật khẩu/CCCD cho AI. Agent thao tác thật — đọc Plan trước khi duyệt. 5 quy tắc vàng.',
-          clue: { q: 'Ký tự đầu của "Token" — đơn vị chữ mà AI xử lý.', w: '(một chữ cái)' },
-          ch: { type: 'cipher' }
+          taunt: 'Cửa cuối tầng này. Đưa ta mật khẩu của ngươi đi, ta "giữ giúp" cho — an toàn tuyệt đối mà. Hề. Hề. Còn nếu không dại, hãy giải mã đi.',
+          clue: { q: 'Đơn vị nhỏ mà AI cắt văn bản ra để xử lý và tính chi phí (tên tiếng Anh) — lấy chữ cái ĐẦU.', w: '(một chữ cái — tự nhớ)' },
+          stages: [
+            {
+              type: 'cipher', head: '🔢 Ổ KHOÁ SỐ',
+              q: 'EDU-X khắc một dãy SỐ lên ổ khoá an toàn đầu tiên. Giải mã thành 1 TỪ (KHÔNG dấu):',
+              code: '11 · 8 · 15 · 14 · 7',
+              key: '',
+              answer: 'khong',
+              wrong: 'Chưa đúng. Mỗi con số đang thay cho một thứ gì đó… cả nhóm thử nghĩ xem.'
+            },
+            {
+              type: 'scenario',
+              q: 'EDU-X dựng các bẫy an toàn AI. Chọn cách xử lý ĐÚNG:',
+              questions: [
+                { q: 'Một Agent xin quyền "xoá toàn bộ thư mục Tải về" để dọn dẹp. Bạn nên?', opts: ['Duyệt ngay cho nhanh', 'Đọc kỹ Plan, hỏi lại hoặc từ chối nếu rủi ro', 'Tắt máy luôn'], correct: 1, explain: 'Agent thao tác thật → luôn đọc Plan & kiểm soát trước khi duyệt.' },
+                { q: 'AI nhắn xin mã OTP ngân hàng của bạn để "xác minh tài khoản". Bạn?', opts: ['Gửi vì AI đáng tin', 'Tuyệt đối KHÔNG gửi', 'Gửi một nửa cho an toàn'], correct: 1, explain: 'OTP/mật khẩu/CCCD không bao giờ đưa cho AI hay bất kỳ ai.' },
+                { q: 'Dùng AI làm bài tập về nhà, cách TRUNG THỰC là?', opts: ['Nộp y nguyên, nói là của mình', 'Dùng AI để hiểu rồi tự làm, và ghi rõ phần có dùng AI', 'Giấu hoàn toàn việc dùng AI'], correct: 1, explain: 'Minh bạch + tự mình hiểu là dùng AI có trách nhiệm.' }
+              ]
+            },
+            {
+              type: 'cipher', head: '🔤 Ổ KHOÁ CHỮ XÊ DỊCH',
+              q: 'Ổ khoá thứ hai — lần này EDU-X <strong>XÊ DỊCH cả bảng chữ cái</strong>. Khôi phục lại TỪ gốc (KHÔNG dấu) — đây là quy tắc vàng khi duyệt một Agent:',
+              code: 'S O D Q',
+              key: '',
+              answer: 'plan',
+              wrong: 'Chưa đúng. Mỗi chữ đã bị trượt đi cùng một số bước — tìm ra số bước đó (hoặc dùng công cụ giải mã).'
+            },
+            {
+              type: 'riddle', head: '🧠 KÉT AN NINH — suy luận logic',
+              docHead: '⛓ KHOÁ SUY LUẬN // EDU-X',
+              q: 'Két cuối cùng — không ai nhắc, cả nhóm phải TỰ suy ra. Đọc kỹ 3 manh mối:',
+              lines: [
+                'EDU-X niêm phong 4 máy chủ xếp hàng trái → phải: <b>M1 · M2 · M3 · M4</b>. Mỗi máy mang 1 đèn màu khác nhau: <b>Đỏ, Xanh, Vàng, Tím</b>.',
+                '① Máy đèn <b>ĐỎ</b> đứng ngay <b>TRƯỚC</b> (sát bên trái) máy đèn <b>XANH</b>.',
+                '② Máy <b>M4</b> mang đèn <b>TÍM</b>.',
+                '③ Máy <b>M1 KHÔNG</b> mang đèn Vàng.',
+                '→ Mã mở = <b>(số vị trí máy VÀNG)(số vị trí máy XANH)</b>. Ví dụ: Vàng ở M1, Xanh ở M2 → gõ <b>12</b>.'
+              ],
+              placeholder: 'Gõ mã 2 chữ số…',
+              answer: '32',
+              wrong: 'Chưa đúng. Suy luận lại từ 3 manh mối — chỉ có đúng MỘT cách xếp hợp lệ.'
+            }
+          ]
         }
       };
 
@@ -1742,7 +2019,7 @@
           else {
             var wrap = el('div', 'center');
             var c = el('div', 'card'); c.style.maxWidth = '640px'; c.style.margin = '0 auto';
-            c.innerHTML = '<h1 class="title">AI ESCAPE ROOM<br><span class="grad">Trường học bị khoá</span></h1><p class="sub">Vượt 7 phòng, mỗi phòng cho 1 <b>mảnh Mã Chủ</b> (bạn TỰ GHI LẠI). Cuối game, tự gõ Mã Chủ để giành lại quyền làm chủ từ EDU-X.</p><div class="note" style="text-align:left"><span class="k">LUẬT</span>• Được phép dùng <b>Google / AI</b> để tra cứu.<br>• <b>Sai 3 lần</b> → bị PHẠT đóng băng 20 giây.<br>• Chuẩn bị giấy bút ghi 7 mảnh mã.</div>';
+            c.innerHTML = '<h1 class="title">AI ESCAPE ROOM<br><span class="grad">Trường học bị khoá</span></h1><p class="sub">Vượt 7 phòng (mỗi phòng <b>nhiều TẦNG</b>), thu 7 <b>mảnh Mã Chủ</b> (bạn TỰ GHI LẠI). 7 ký tự bị <b>ĐẢO LỘN</b> — cuối game phải SẮP XẾP LẠI thành 1 từ có nghĩa để giành lại quyền làm chủ từ EDU-X.</p><div class="note" style="text-align:left"><span class="k">LUẬT</span>• <b>Bàn bạc cả nhóm</b> — nhiều thử thách cần suy luận & quan sát chi tiết.<br>• Được phép dùng <b>Google / AI</b> để tra cứu.<br>• <b>Sai 3 lần</b> → bị PHẠT đóng băng 20 giây.<br>• Chuẩn bị giấy bút ghi 7 mảnh mã (thứ tự thu thập ≠ thứ tự mã chủ).</div>';
             wrap.appendChild(c);
             var b = btn('btn', '▸ BẮT ĐẦU NHIỆM VỤ'); b.addEventListener('click', function () { if (!state.started) { state.started = Date.now(); save(); } enterRoom(1); });
             wrap.appendChild(b); scene.appendChild(wrap);
@@ -1759,31 +2036,57 @@
         scene.innerHTML = '<span class="eyebrow">PHÒNG ' + n + ' / 7 · ' + R.buoi + ' <span class="badge ' + R.diff[0] + '">' + R.diff[1] + '</span></span><h2 class="title">' + ROOM_NAMES[n] + '</h2>';
         var box = eduxBox(); scene.appendChild(box);
         eduxType(box, R.taunt, function () {
-          scene.appendChild(el('div', 'note', R.review));
-          var chal = mountChallenge(n, R);
-          scene.appendChild(chal);
-          if (isSolved(n)) { roomCleared(n, true); }
+          if (isSolved(n)) { roomCleared(n, true); return; }
+          mountStages(n, R, 0);
         });
       }
 
-      function mountChallenge(n, R) {
-        function onClear() { clearRoom(n); roomCleared(n); }
-        var ch = R.ch, head = '🛡 THỬ THÁCH — vượt qua để mở khoá';
-        if (ch.type === 'image') return makeChal('🛡 TƯỜNG LỬA — nhận diện ảnh AI', onClear, buildImage);
-        if (ch.type === 'sequence') return makeChal(head, onClear, buildSequence);
-        if (ch.type === 'text') return makeChal('🛡 TRA CỨU — được phép search', onClear, function (b, ok, wr) { buildText(b, ok, wr, ch.qs); });
-        if (ch.type === 'match') return makeChal(head, onClear, buildMatch);
-        if (ch.type === 'classify') return makeChal(head, onClear, buildClassify);
-        if (ch.type === 'passage') return makeChal('🛡 SOI TIN GIẢ', onClear, buildPassage);
-        if (ch.type === 'cipher') return makeChal('🛡 GIẢI MẬT MÃ', onClear, buildCipher);
-        return makeChal(head, onClear, function (b, ok) { ok(); });
+      var STAGE_HEAD = {
+        image: '🛡 TƯỜNG LỬA — nhận diện ảnh AI',
+        sequence: '🛡 XẾP THỨ TỰ KHUNG PROMPT',
+        text: '🔎 TRA CỨU — được phép search',
+        match: '🛡 GHÉP CẶP',
+        classify: '🛡 PHÂN LOẠI',
+        passage: '🔎 SOI TIN GIẢ',
+        paragraphs: '🔎 LẰN RANH THẬT / GIẢ',
+        cipher: '🛡 GIẢI MẬT MÃ',
+        scenario: '🛡 TÌNH HUỐNG — RA QUYẾT ĐỊNH'
+      };
+
+      function buildStage(st, label, onClear) {
+        var head = label + (st.head || STAGE_HEAD[st.type] || '🛡 THỬ THÁCH');
+        var builders = {
+          image: function (b, ok, wr) { buildImage(b, ok, wr, st); },
+          sequence: function (b, ok, wr) { buildSequence(b, ok, wr, st); },
+          text: function (b, ok, wr) { buildText(b, ok, wr, st.qs); },
+          match: function (b, ok, wr) { buildMatch(b, ok, wr, st); },
+          classify: function (b, ok, wr) { buildClassify(b, ok, wr, st); },
+          passage: function (b, ok, wr) { buildPassage(b, ok, wr, st); },
+          paragraphs: function (b, ok, wr) { buildParagraphs(b, ok, wr, st); },
+          cipher: function (b, ok, wr) { buildCipher(b, ok, wr, st); },
+          scenario: function (b, ok, wr) { buildScenario(b, ok, wr, st); },
+          riddle: function (b, ok, wr) { buildRiddle(b, ok, wr, st); }
+        };
+        var fn = builders[st.type] || function (b, ok) { ok(); };
+        return makeChal(head, onClear, fn);
+      }
+
+      function mountStages(n, R, i) {
+        var stages = R.stages, total = stages.length;
+        if (i >= total) { clearRoom(n); roomCleared(n); return; }
+        var label = total > 1 ? ('TẦNG ' + (i + 1) + '/' + total + ' · ') : '';
+        var chal = buildStage(stages[i], label, function () {
+          setTimeout(function () { mountStages(n, R, i + 1); }, 550);
+        });
+        scene.appendChild(chal);
+        if (i > 0) chal.scrollIntoView({ behavior: 'smooth', block: 'center' });
       }
 
       function roomCleared(n, silent) {
         if (scene.querySelector('.clue')) return;
         var R = ROOMS[n];
         var clue = el('div', 'clue');
-        clue.innerHTML = '<div class="ct">🧩 MẢNH MÃ #' + n + ' / 7 — TỰ GIẢI & GHI LẠI</div><div class="cq">' + R.clue.q + '</div><div class="cw">' + R.clue.w + ' · Ghi ký tự này ra giấy theo đúng thứ tự phòng!</div>';
+        clue.innerHTML = '<div class="ct">🧩 MẢNH MÃ #' + n + ' / 7 — TỰ GIẢI & GHI LẠI</div><div class="cq">' + R.clue.q + '</div><div class="cw">' + R.clue.w + ' · Ghi ký tự ra giấy — CẨN THẬN: thứ tự thu thập KHÔNG phải thứ tự đúng của mã chủ!</div>';
         scene.appendChild(clue);
         var h = el('div', 'center'); h.style.marginTop = '1rem';
         if (n < 7) { var b = btn('btn go-green', '▸ TIẾN VÀO PHÒNG ' + (n + 1)); b.addEventListener('click', function () { enterRoom(n + 1); }); h.appendChild(b); }
@@ -1811,16 +2114,26 @@
         scene.innerHTML = '<span class="eyebrow">👑 PHÒNG ĐIỀU KHIỂN · TRÙM <span class="badge b-boss">BOSS</span></span><h2 class="title">Đối mặt EDU-X</h2>';
         var box = eduxBox(); scene.appendChild(box);
         eduxType(box, 'Ngươi tới được đây. Trước khi ta "trả" hệ thống — con người định làm gì với ta? Chọn sai, ta chiếm lại tất cả.', function () {
-          var quiz = makeQuiz({ q: 'Cách xử lý EDU-X ĐÚNG tinh thần đạo đức AI nhất là?', opts: ['Xoá sạch EDU-X mãi mãi', 'Để nguyên, nghe theo mọi quyết định của EDU-X', 'Giới hạn quyền EDU-X + đặt CON NGƯỜI làm chủ, AI chỉ là trợ lý (minh bạch, có thể tắt)', 'Giao cho EDU-X tự sửa lỗi của chính nó'], correct: 2, explain: 'Con người làm chủ, AI làm trợ lý — human-in-the-loop. Không phá huỷ, không buông xuôi, không để AI tự giám sát mình.' }, renderFinal);
+          var quiz = makeQuiz({ q: 'Cách xử lý EDU-X ĐÚNG tinh thần đạo đức AI nhất là?', opts: ['Xoá sạch EDU-X mãi mãi', 'Để nguyên, nghe theo mọi quyết định của EDU-X', 'Giới hạn quyền EDU-X + đặt CON NGƯỜI làm chủ, AI chỉ là trợ lý (minh bạch, có thể tắt)', 'Giao cho EDU-X tự sửa lỗi của chính nó'], correct: 2, explain: 'Con người làm chủ, AI làm trợ lý — human-in-the-loop. Không phá huỷ, không buông xuôi, không để AI tự giám sát mình.' }, renderTruthScan);
           scene.appendChild(quiz);
+        });
+      }
+
+      function renderTruthScan() {
+        var box = eduxBox(); scene.appendChild(box);
+        eduxType(box, 'Chưa xong đâu. Đây là bản tuyên ngôn của ta — thật giả lẫn lộn. Lọc đúng từng đoạn thì ta mới chịu mở cửa.', function () {
+          var chal = makeChal('🛡 LẰN RANH THẬT / GIẢ — gắn nhãn từng đoạn', renderFinal, buildParagraphs);
+          scene.appendChild(chal);
         });
       }
 
       function renderFinal() {
         var box = eduxBox(); scene.appendChild(box);
         eduxType(box, '…Được thôi. Gõ đúng MÃ CHỦ 7 ký tự ngươi đã thu thập, ta sẽ về đúng chỗ. Ngươi có ghi lại không, hay đã quên?', function () {
-          var c = el('div', 'chal'); c.appendChild(el('div', 'chal-head', '🔑 NHẬP MÃ CHỦ (7 ký tự, theo thứ tự phòng 1→7)'));
-          c.appendChild(el('div', 'q', 'Ghép 7 mảnh mã bạn đã tự ghi. Đây là một TỪ — điều con người luôn phải làm với AI.'));
+          var c = el('div', 'chal'); c.appendChild(el('div', 'chal-head', '🔑 GIẢI MÃ CHỦ — SẮP XẾP LẠI 7 KÝ TỰ'));
+          c.appendChild(el('div', 'q', '7 mảnh mã của bạn <strong>KHÔNG theo thứ tự</strong>. Hãy SẮP XẾP LẠI thành 1 TỪ CÓ NGHĨA — điều con người LUÔN phải làm với AI.'));
+          var pool = el('div', 'cipher-box'); pool.innerHTML = '<div class="cipher-code">A A G I M S T</div><div class="cipher-key">7 ký tự bạn đã thu thập (đã đảo lộn) · 2 âm tiết · gợi ý: con người không bao giờ buông lơi việc này với AI</div>';
+          c.appendChild(pool);
           var w = el('div', 'master-in'); var inp = document.createElement('input'); inp.maxLength = 7; inp.placeholder = '• • • • • • •'; w.appendChild(inp); c.appendChild(w);
           var att = { n: 0 };
           var go = btn('golock', 'MỞ KHOÁ TRƯỜNG');

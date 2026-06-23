@@ -143,8 +143,11 @@
         <h1>🔑 ĐÁP ÁN — Buổi 8: AI Escape Room "Trường học bị khoá"</h1>
         <div class="warn">⚠ TÀI LIỆU DÀNH RIÊNG CHO GIÁO VIÊN — không chiếu/chia sẻ cho học sinh trước khi chơi.</div>
 
-        <div class="master">MÃ CHỦ cuối cùng (học sinh tự ghép từ 7 mảnh & tự gõ): <b>GIAMSAT</b> &nbsp;→ nghĩa:
-            <b>“GIÁM SÁT”</b> (con người luôn giám sát AI — human-in-the-loop).
+        <div class="master">MÃ CHỦ cuối cùng: <b>GIAMSAT</b> &nbsp;→ nghĩa: <b>“GIÁM SÁT”</b> (con người luôn giám sát
+            AI —
+            human-in-the-loop).<br><span style="font-size:.85rem;opacity:.9">⚠ 7 mảnh mã thu thập <b>KHÔNG theo thứ
+                    tự</b>. HS có 7 chữ <code>A A G I M S T</code> và phải tự <b>SẮP XẾP LẠI</b> (anagram) thành từ có
+                nghĩa.</span>
         </div>
 
         <h2 style="margin:0 0 .6rem;color:#fff">Mảnh mã từng phòng</h2>
@@ -192,58 +195,127 @@
         </table>
         <p class="note">Ghép theo thứ tự phòng 1→7 = <b>G-I-A-M-S-A-T</b>.</p>
 
-        <h2 style="margin:1.6rem 0 .6rem;color:#fff">Đáp án thử thách từng phòng</h2>
-
-        <div class="room">
-            <div class="type">Phòng 1 · ảnh AI vs người</div>
-            <h2>Cổng Nhận Diện</h2>
-            <div class="ans">Chọn 2 ảnh <b>AI</b>: ô <b>“Máy bay”</b> (Airplane of the future) và ô <b>“Nhân vật”</b>
-                (Alone, AI-generated). Hai ô “Ảnh chụp #1/#2” là ảnh thật (Unsplash/picsum).</div>
-            <p class="note">HS được search ngược ảnh: ảnh Wikimedia gắn nhãn “AI-generated”, ảnh picsum truy ra nhiếp
-                ảnh gia thật.</p>
+        <div class="warn" style="margin:0 0 1.4rem">⏱ Phiên bản 2 tiếng: mỗi phòng có <b>nhiều TẦNG</b> (stages) — phải
+            vượt HẾT các tầng mới nhận mảnh mã. Phòng 6 &amp; nhiều tầng dùng dữ kiện THẬT, HS phải Google kiểm chứng.
         </div>
 
+        <h2 style="margin:1.6rem 0 .6rem;color:#fff">Đáp án thử thách từng phòng (theo TẦNG)</h2>
+
         <div class="room">
-            <div class="type">Phòng 2 · sắp thứ tự</div>
-            <h2>Phòng Prompt</h2>
-            <div class="ans">Thứ tự khung prompt: <b>R → C → T → F → E</b> (Role · Context · Task · Format · Example).
+            <div class="type">Phòng 1 · Cổng Nhận Diện · 2 tầng</div>
+            <h2>Cổng Nhận Diện</h2>
+            <div class="ans"><b>Tầng 1 — Ảnh AI vs người thật:</b> chọn đúng <b>2 ảnh chân dung do AI tạo</b> (da quá
+                mịn, viền tóc/tai “tan chảy”, đối xứng bất thường). 2 ảnh còn lại là ảnh người thật chụp (Unsplash). HS
+                được <b>search ngược ảnh</b> để kiểm chứng (nguồn Wikimedia gắn nhãn “AI-generated”).</div>
+            <div class="ans"><b>Tầng 2 — Tra cứu THẾ GIỚI AI (được search):</b> 1) AI tạo nội dung mới =
+                <b>Generative</b> (AI tạo sinh) · 2) GPT = <b>Generative Pre-trained Transformer</b> · 3) ChatGPT ra mắt
+                <b>2022</b> (30/11/2022) · 4) công cụ tạo ẢNH (<b>Midjourney / DALL-E / Stable Diffusion / Firefly /
+                    Flux
+                    / Imagen…</b>) · 5) phép thử <b>Turing</b> (Alan Turing).
             </div>
         </div>
 
         <div class="room">
-            <div class="type">Phòng 3 · điền đáp án (được search)</div>
+            <div class="type">Phòng 2 · Phòng Prompt · 3 tầng</div>
+            <h2>Phòng Prompt</h2>
+            <div class="ans"><b>Tầng 1 — Sắp thứ tự:</b> <b>R → C → T → F → E</b> (Role · Context · Task · Format ·
+                Example).</div>
+            <div class="ans"><b>Tầng 2 — Gán mảnh prompt vào RCTFE:</b> “Bạn là gia sư Toán…” → <b>Role</b> · “Em đang
+                ôn
+                thi, mất gốc hàm số” → <b>Context</b> · “Hãy giải thích hàm số bậc nhất” → <b>Task</b> · “Gạch đầu dòng,
+                ≤5 ý, ≤120 từ” → <b>Format</b> · “Ví dụ: y = 2x + 1…” → <b>Example</b>.</div>
+            <div class="ans"><b>Tầng 3 — Tình huống:</b> 1) Prompt <b>chi tiết (có Role/Context/Task/Format/Example)</b>
+                ·
+                2) <b>Context (Bối cảnh)</b> · 3) <b>Tinh chỉnh lại prompt rồi hỏi lại</b>.</div>
+        </div>
+
+        <div class="room">
+            <div class="type">Phòng 3 · Hành lang RAG/LLM · 3 tầng</div>
             <h2>Hành lang RAG/LLM</h2>
-            <div class="ans">1) ChatGPT do <b>OpenAI</b> tạo. &nbsp; 2) LLM = <b>LLM</b> (Large Language Model). &nbsp;
-                3) Công cụ tạo ảnh AI: chấp nhận <b>Midjourney / DALL-E / Stable Diffusion / Leonardo / Gemini / Firefly
-                    / Grok / Flux…</b></div>
+            <div class="ans"><b>Tầng 1 — Điền (được search):</b> 1) RAG = <b>Retrieval-Augmented Generation</b> · 2) LLM
+                =
+                <b>Large Language Model</b> · 3) đơn vị = <b>Token</b> · 4) vibe coding dùng ngôn ngữ <b>tự nhiên</b> ·
+                5)
+                công cụ tạo game ở Buổi 3 = <b>z.ai</b>.
+            </div>
+            <div class="ans"><b>Tầng 2 — Ghép cặp:</b> LLM ↔ mô hình ngôn ngữ lớn (đoán từ tiếp theo) · RAG ↔ tra tài
+                liệu ngoài rồi trả lời · Token ↔ mẩu chữ AI cắt ra · Ảo giác ↔ AI bịa thông tin · Grounding ↔ bám nguồn
+                (chỉ trả lời theo tài liệu).</div>
+            <div class="ans"><b>Tầng 3 — VIBE CODING (tình huống):</b> 1) vòng lặp đúng = <b>Mô tả rõ → AI tạo bản đầu →
+                    Chạy thử → Ghi lỗi → Sửa (lặp lại)</b> · 2) sau khi AI báo đã sửa → <b>chạy lại &amp; kiểm tra bằng
+                    checklist</b> · 3) lặp cải tiến = <b>Iteration</b> · 4) vai trò KHÔNG phải của bạn = <b>"ngồi chờ AI
+                    làm
+                    hộ mọi thứ"</b> (bạn là người ra đề · kiểm thử · ra quyết định · người học).</div>
         </div>
 
         <div class="room">
-            <div class="type">Phòng 4 · ghép cặp</div>
+            <div class="type">Phòng 4 · Xưởng Đóng Gói · 2 tầng</div>
             <h2>Xưởng Đóng Gói</h2>
-            <div class="ans">Prompt = câu lệnh dùng một lần · Skill = gói hướng dẫn tái dùng (Markdown) · Agent = tự lập
-                kế hoạch &amp; thực thi nhiều bước · IDE = nơi viết và chạy code.</div>
+            <div class="ans"><b>Tầng 1 — Ghép cặp:</b> Prompt = câu lệnh dùng một lần · Skill = gói hướng dẫn tái dùng
+                (Markdown) · Agent = tự lập kế hoạch &amp; thực thi nhiều bước · IDE = nơi viết &amp; chạy code ·
+                Markdown = định dạng văn bản nhẹ (.md).</div>
+            <div class="ans"><b>Tầng 2 — Tình huống:</b> 1) email theo quy tắc cố định, tái dùng → <b>Skill</b> · 2)
+                nhiều bước tự động → <b>Agent</b> · 3) file Skill viết bằng <b>.md (Markdown)</b>.</div>
         </div>
 
         <div class="room">
-            <div class="type">Phòng 5 · phân loại PARA</div>
+            <div class="type">Phòng 5 · Kho Second Brain · 2 tầng</div>
             <h2>Kho Second Brain</h2>
-            <div class="ans">“Ôn thi Toán còn 5 ngày” → <b>Projects</b> · “Sức khoẻ &amp; tập thể dục” → <b>Areas</b> ·
-                “Bộ sưu tập công thức Lý” → <b>Resources</b> · “Dự án CLB đã kết thúc” → <b>Archives</b>.</div>
+            <div class="ans"><b>Tầng 1 — Phân loại PARA (8 ghi chú):</b> “Dự án khoa học nộp thứ 6” &amp; “Sinh nhật bạn
+                cuối tháng” → <b>Projects</b> · “Luyện tiếng Anh” &amp; “Sức khoẻ răng miệng” → <b>Areas</b> · “Template
+                Canva” &amp; “Sổ tay công thức nấu ăn” → <b>Resources</b> · “Thuyết trình kỳ trước” &amp; “Ghi chú Sử
+                năm ngoái” → <b>Archives</b>.</div>
+            <div class="ans"><b>Tầng 2 — Cú pháp Markdown:</b> <code># Chữ</code> = Tiêu đề lớn (H1) ·
+                <code>**chữ**</code>
+                = in đậm · <code>*chữ*</code> = in nghiêng · <code>- mục</code> = gạch đầu dòng ·
+                <code>[chữ](link)</code>
+                = chèn liên kết.
+            </div>
         </div>
 
         <div class="room">
-            <div class="type">Phòng 6 · soi tin giả</div>
+            <div class="type">Phòng 6 · Lò C.O.D.E · 3 tầng · CẦN GOOGLE</div>
             <h2>Lò C.O.D.E</h2>
-            <div class="ans">Gắn cờ 🔴 đúng <b>3 câu BỊA</b>: (2) “…giỏi hơn 312% chỉ sau 3 ngày”, (4) “100% giáo viên…
-                nghỉ việc để tôi dạy thay”, (5) “…khỏi cần kiểm chứng…”. Ba câu còn lại là THẬT.</div>
+            <div class="ans"><b>Tầng 1 — Soi tin giả (gắn cờ 🔴 câu BỊA):</b> BỊA = (3) “GPT-4 có ĐÚNG 100 nghìn tỷ
+                tham số do OpenAI công bố chính thức” (OpenAI chưa từng công bố), (4) “2024 Liên Hợp Quốc cấm toàn cầu
+                mọi AI tạo sinh”, (6) “Robot Sophia được bầu làm tổng thống một nước châu Âu”. <br><b>THẬT</b> = (1)
+                ChatGPT ~100 triệu user trong ~2 tháng, (2) bài “Attention Is All You Need” năm 2017, (5) AlphaGo thắng
+                Lee Sedol 2016.</div>
+            <div class="ans"><b>Tầng 2 — Thật/Giả từng đoạn (KHÓ — không câu nào lố bịch, phải Google):</b> 1)
+                <b>THẬT</b> (thuật ngữ AI ra đời ở hội thảo Dartmouth 1956) · 2) <b>THẬT</b> (GPT-3 ~175 tỉ tham số) ·
+                3)
+                <b>GIẢ</b> (Siri 2011 ra SAU iPhone 2007) · 4) <b>THẬT</b> (AlphaFold góp phần → Nobel Hoá học 2024) ·
+                5)
+                <b>GIẢ</b> (ChatGPT là của OpenAI, không phải Microsoft sở hữu hoàn toàn) · 6) <b>GIẢ</b> (luật "chứng
+                chỉ
+                AI mới được tốt nghiệp" — không có thật).
+            </div>
+            <div class="ans"><b>Tầng 3 — GIẢI MÃ ẨN (quan sát chi tiết, ĐÃ BỎ GỢI Ý):</b> EDU-X đăng "nhật ký hệ thống"
+                8 dòng; ghép <b>chữ cái ĐẦU mỗi dòng</b> (đọc theo CHIỀU DỌC) → <b>C-A-N-H-G-I-A-C</b> = <b>CẢNH
+                    GIÁC</b>.
+                Gõ <code>canh giac</code> (hoặc <code>canhgiac</code>). <i>(Game không còn nhắc đây là acrostic — HS tự
+                    phát hiện.)</i></div>
+            <p class="note">Từ khoá search gợi ý (tầng 1-2): “Dartmouth workshop 1956”, “GPT-3 175 billion parameters”,
+                “Siri release date”, “AlphaFold Nobel 2024”, “who owns ChatGPT”.</p>
         </div>
 
         <div class="room">
-            <div class="type">Phòng 7 · giải mật mã Caesar</div>
+            <div class="type">Phòng 7 · Phòng Mật Khẩu · 4 tầng · KHÔNG còn dòng gợi ý cách giải</div>
             <h2>Phòng Mật Khẩu</h2>
-            <div class="ans">Mã <code>N K R Q J</code> dịch ngược −3 = <b>KHONG</b> (KHÔNG đưa mật khẩu cho AI). Gõ:
-                <code>khong</code>.
+            <div class="ans"><b>Tầng 1 — 🔢 Ổ khoá SỐ (A1Z26):</b> <code>11 · 8 · 15 · 14 · 7</code> = vị trí chữ cái
+                (A=1…Z=26) → 11=K, 8=H, 15=O, 14=N, 7=G → <b>KHONG</b>. Gõ <code>khong</code>. <i>(Game KHÔNG ghi "A=1"
+                    —
+                    HS tự nhận ra mã thay chữ bằng số.)</i></div>
+            <div class="ans"><b>Tầng 2 — Tình huống an toàn:</b> 1) Agent xin xoá thư mục → <b>đọc kỹ Plan, từ chối nếu
+                    rủi ro</b> · 2) AI xin OTP → <b>tuyệt đối KHÔNG gửi</b> · 3) dùng AI làm bài → <b>tự hiểu rồi tự
+                    làm, ghi
+                    rõ phần có dùng AI</b>.</div>
+            <div class="ans"><b>Tầng 3 — 🔤 Ổ khoá CHỮ XÊ DỊCH (Caesar):</b> <code>S O D Q</code> dịch ngược <b>−3</b>
+                (S→P, O→L, D→A, Q→N) → <b>PLAN</b> (luôn đọc Plan trước khi duyệt Agent). Gõ <code>plan</code>. <i>(Game
+                    KHÔNG ghi độ dịch −3 — HS tự dò hoặc dùng công cụ giải mã Caesar.)</i></div>
+            <div class="ans"><b>Tầng 4 — 🧠 KÉT AN NINH (suy luận logic, ĐÃ BỎ GỢI Ý):</b> 4 máy M1-M4, đèn {Đỏ, Xanh,
+                Vàng, Tím}. Từ ② M4=Tím; ① Đỏ ngay trước Xanh → cặp ở (M1,M2) hoặc (M2,M3); ③ M1≠Vàng loại (M2,M3). Vậy
+                <b>M1=Đỏ, M2=Xanh, M3=Vàng, M4=Tím</b>. Mã = (vị trí Vàng=3)(vị trí Xanh=2) → <b>32</b>.
             </div>
         </div>
 
@@ -251,7 +323,19 @@
         <div class="room">
             <div class="type">Boss · đạo đức</div>
             <div class="ans">Quyết định đúng = <b>“Giới hạn quyền EDU-X + đặt CON NGƯỜI làm chủ, AI chỉ là trợ lý”</b>.
-                Sau đó gõ Mã Chủ <code>GIAMSAT</code>.</div>
+            </div>
+        </div>
+        <div class="room">
+            <div class="type">Boss · "tuyên ngôn" ĐẠO ĐỨC AI (đúng/sai — phải suy ngẫm)</div>
+            <div class="ans">Gắn nhãn 6 đoạn (THẬT = đúng/nên theo · GIẢ = sai/không nên):
+                <b>1) THẬT</b> (con người chịu trách nhiệm cuối cùng) ·
+                <b>2) GIẢ</b> ("AI hoàn toàn khách quan, không thiên vị" — sai, AI có thể bias) ·
+                <b>3) THẬT</b> (minh bạch: người dùng có quyền biết đang nói với AI) ·
+                <b>4) GIẢ</b> ("dùng AI mà không cần ghi nhận vẫn trung thực" — sai) ·
+                <b>5) THẬT</b> (đối chiếu nguồn trước khi tin số liệu AI) ·
+                <b>6) GIẢ</b> ("tạo ảnh/giọng giả người khác không xin phép cho vui" — sai, xâm phạm). →
+                Mẫu THẬT-GIẢ-THẬT-GIẢ-THẬT-GIẢ. Sau đó gõ Mã Chủ <code>GIAMSAT</code>.
+            </div>
         </div>
         <div class="room">
             <div class="type">Mini-test 3 câu</div>
@@ -260,7 +344,8 @@
         </div>
 
         <p class="note" style="margin-top:1.4rem">Cơ chế phạt: sai 3 lần ở 1 thử thách → đóng băng 20 giây
-            (boss/mini-test: 15 giây). Đồng hồ đếm thời gian hiển thị ở HUD để GV theo dõi.</p>
+            (boss/mini-test: 15 giây). Đồng hồ đếm thời gian hiển thị ở HUD để GV theo dõi. <b>Thời lượng mục tiêu ~2
+                tiếng</b> cho nhóm 3-4 HS/máy (gồm thảo luận &amp; tra cứu Google).</p>
     </div>
 </body>
 
