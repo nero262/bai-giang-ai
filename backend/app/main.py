@@ -117,6 +117,13 @@ async def view_lesson(request: Request, slug: str):
     if templates is None:
         return FileResponse(file_path, media_type="text/html")
 
+    # File là trang HTML standalone (vd game escape room) → serve thẳng, KHÔNG nhúng
+    # vào template slide. Các fragment thường (chỉ gồm <section class="slide">) không có
+    # <!doctype>/<html> nên không bị ảnh hưởng.
+    _head = file_path.read_text(encoding="utf-8", errors="ignore")[:800].lower()
+    if "<!doctype html" in _head or "<html" in _head:
+        return FileResponse(file_path, media_type="text/html")
+
     fragment = parse_fragment(file_path)
     all_lessons = repo.list_all()
 

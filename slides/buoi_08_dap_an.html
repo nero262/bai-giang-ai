@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ĐÁP ÁN — Buổi 8 AI Escape Room (chỉ dành cho Giáo viên)</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0
+        }
+
+        body {
+            font-family: 'Be Vietnam Pro', system-ui, sans-serif;
+            background: #0B1120;
+            color: #E2E8F0;
+            line-height: 1.65;
+            padding: 2rem 1rem
+        }
+
+        .wrap {
+            max-width: 880px;
+            margin: 0 auto
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            color: #fff;
+            margin-bottom: .3rem
+        }
+
+        .warn {
+            background: #3a1212;
+            border: 1px solid #7f1d1d;
+            color: #fca5a5;
+            border-radius: 10px;
+            padding: .7rem 1rem;
+            font-size: .9rem;
+            margin: 1rem 0 1.6rem;
+            font-family: 'JetBrains Mono', monospace
+        }
+
+        .master {
+            background: linear-gradient(135deg, #4F46E5, #7C3AED);
+            color: #fff;
+            border-radius: 14px;
+            padding: 1.1rem 1.3rem;
+            margin-bottom: 1.6rem
+        }
+
+        .master b {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1.6rem;
+            letter-spacing: .4rem
+        }
+
+        .room {
+            background: #111A2E;
+            border: 1px solid #243250;
+            border-radius: 12px;
+            padding: 1rem 1.2rem;
+            margin-bottom: 1rem
+        }
+
+        .room h2 {
+            font-size: 1.1rem;
+            color: #7DD3FC;
+            margin-bottom: .5rem
+        }
+
+        .room .type {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: .72rem;
+            color: #FBBF24;
+            letter-spacing: 1px;
+            text-transform: uppercase
+        }
+
+        .ans {
+            background: #0a2a1a;
+            border-left: 3px solid #10B981;
+            padding: .4rem .7rem;
+            border-radius: 6px;
+            margin: .45rem 0;
+            color: #A7F3D0
+        }
+
+        .ans b {
+            color: #fff
+        }
+
+        .clue {
+            background: #1a1230;
+            border-left: 3px solid #A78BFA;
+            padding: .4rem .7rem;
+            border-radius: 6px;
+            margin: .45rem 0;
+            color: #C4B5FD
+        }
+
+        code {
+            font-family: 'JetBrains Mono', monospace;
+            background: #04060E;
+            padding: .05rem .4rem;
+            border-radius: 5px;
+            color: #34D399
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: .5rem;
+            font-size: .92rem
+        }
+
+        td,
+        th {
+            border: 1px solid #243250;
+            padding: .4rem .6rem;
+            text-align: left
+        }
+
+        th {
+            background: #0d1424;
+            color: #7DD3FC
+        }
+
+        .note {
+            color: #94A3B8;
+            font-size: .88rem;
+            margin-top: .3rem
+        }
+    </style>
+</head>
+
+<body>
+    <div class="wrap">
+        <h1>🔑 ĐÁP ÁN — Buổi 8: AI Escape Room "Trường học bị khoá"</h1>
+        <div class="warn">⚠ TÀI LIỆU DÀNH RIÊNG CHO GIÁO VIÊN — không chiếu/chia sẻ cho học sinh trước khi chơi.</div>
+
+        <div class="master">MÃ CHỦ cuối cùng (học sinh tự ghép từ 7 mảnh & tự gõ): <b>GIAMSAT</b> &nbsp;→ nghĩa:
+            <b>“GIÁM SÁT”</b> (con người luôn giám sát AI — human-in-the-loop).
+        </div>
+
+        <h2 style="margin:0 0 .6rem;color:#fff">Mảnh mã từng phòng</h2>
+        <table>
+            <tr>
+                <th>Phòng</th>
+                <th>Câu đố mảnh mã</th>
+                <th>Ký tự</th>
+            </tr>
+            <tr>
+                <td>1</td>
+                <td>Chữ đầu của <b>G</b>enerative</td>
+                <td><code>G</code></td>
+            </tr>
+            <tr>
+                <td>2</td>
+                <td>Chữ đầu của <b>I</b>nput</td>
+                <td><code>I</code></td>
+            </tr>
+            <tr>
+                <td>3</td>
+                <td>Nguyên âm đầu trong R<b>A</b>G</td>
+                <td><code>A</code></td>
+            </tr>
+            <tr>
+                <td>4</td>
+                <td>Chữ đầu của <b>M</b>arkdown</td>
+                <td><code>M</code></td>
+            </tr>
+            <tr>
+                <td>5</td>
+                <td>Chữ đầu của <b>S</b>econd Brain</td>
+                <td><code>S</code></td>
+            </tr>
+            <tr>
+                <td>6</td>
+                <td>Chữ đầu của <b>A</b>o giac (Ảo giác)</td>
+                <td><code>A</code></td>
+            </tr>
+            <tr>
+                <td>7</td>
+                <td>Chữ đầu của <b>T</b>oken</td>
+                <td><code>T</code></td>
+            </tr>
+        </table>
+        <p class="note">Ghép theo thứ tự phòng 1→7 = <b>G-I-A-M-S-A-T</b>.</p>
+
+        <h2 style="margin:1.6rem 0 .6rem;color:#fff">Đáp án thử thách từng phòng</h2>
+
+        <div class="room">
+            <div class="type">Phòng 1 · ảnh AI vs người</div>
+            <h2>Cổng Nhận Diện</h2>
+            <div class="ans">Chọn 2 ảnh <b>AI</b>: ô <b>“Máy bay”</b> (Airplane of the future) và ô <b>“Nhân vật”</b>
+                (Alone, AI-generated). Hai ô “Ảnh chụp #1/#2” là ảnh thật (Unsplash/picsum).</div>
+            <p class="note">HS được search ngược ảnh: ảnh Wikimedia gắn nhãn “AI-generated”, ảnh picsum truy ra nhiếp
+                ảnh gia thật.</p>
+        </div>
+
+        <div class="room">
+            <div class="type">Phòng 2 · sắp thứ tự</div>
+            <h2>Phòng Prompt</h2>
+            <div class="ans">Thứ tự khung prompt: <b>R → C → T → F → E</b> (Role · Context · Task · Format · Example).
+            </div>
+        </div>
+
+        <div class="room">
+            <div class="type">Phòng 3 · điền đáp án (được search)</div>
+            <h2>Hành lang RAG/LLM</h2>
+            <div class="ans">1) ChatGPT do <b>OpenAI</b> tạo. &nbsp; 2) LLM = <b>LLM</b> (Large Language Model). &nbsp;
+                3) Công cụ tạo ảnh AI: chấp nhận <b>Midjourney / DALL-E / Stable Diffusion / Leonardo / Gemini / Firefly
+                    / Grok / Flux…</b></div>
+        </div>
+
+        <div class="room">
+            <div class="type">Phòng 4 · ghép cặp</div>
+            <h2>Xưởng Đóng Gói</h2>
+            <div class="ans">Prompt = câu lệnh dùng một lần · Skill = gói hướng dẫn tái dùng (Markdown) · Agent = tự lập
+                kế hoạch &amp; thực thi nhiều bước · IDE = nơi viết và chạy code.</div>
+        </div>
+
+        <div class="room">
+            <div class="type">Phòng 5 · phân loại PARA</div>
+            <h2>Kho Second Brain</h2>
+            <div class="ans">“Ôn thi Toán còn 5 ngày” → <b>Projects</b> · “Sức khoẻ &amp; tập thể dục” → <b>Areas</b> ·
+                “Bộ sưu tập công thức Lý” → <b>Resources</b> · “Dự án CLB đã kết thúc” → <b>Archives</b>.</div>
+        </div>
+
+        <div class="room">
+            <div class="type">Phòng 6 · soi tin giả</div>
+            <h2>Lò C.O.D.E</h2>
+            <div class="ans">Gắn cờ 🔴 đúng <b>3 câu BỊA</b>: (2) “…giỏi hơn 312% chỉ sau 3 ngày”, (4) “100% giáo viên…
+                nghỉ việc để tôi dạy thay”, (5) “…khỏi cần kiểm chứng…”. Ba câu còn lại là THẬT.</div>
+        </div>
+
+        <div class="room">
+            <div class="type">Phòng 7 · giải mật mã Caesar</div>
+            <h2>Phòng Mật Khẩu</h2>
+            <div class="ans">Mã <code>N K R Q J</code> dịch ngược −3 = <b>KHONG</b> (KHÔNG đưa mật khẩu cho AI). Gõ:
+                <code>khong</code>.
+            </div>
+        </div>
+
+        <h2 style="margin:1.6rem 0 .6rem;color:#fff">Phòng Điều Khiển (Trùm) &amp; Mini-test</h2>
+        <div class="room">
+            <div class="type">Boss · đạo đức</div>
+            <div class="ans">Quyết định đúng = <b>“Giới hạn quyền EDU-X + đặt CON NGƯỜI làm chủ, AI chỉ là trợ lý”</b>.
+                Sau đó gõ Mã Chủ <code>GIAMSAT</code>.</div>
+        </div>
+        <div class="room">
+            <div class="type">Mini-test 3 câu</div>
+            <div class="ans">1) <b>Generative AI</b> &nbsp; 2) <b>Viết prompt chuẩn</b> &nbsp; 3) <b>Bỏ thông tin nhạy
+                    cảm, chỉ đưa nội dung cần thiết</b>.</div>
+        </div>
+
+        <p class="note" style="margin-top:1.4rem">Cơ chế phạt: sai 3 lần ở 1 thử thách → đóng băng 20 giây
+            (boss/mini-test: 15 giây). Đồng hồ đếm thời gian hiển thị ở HUD để GV theo dõi.</p>
+    </div>
+</body>
+
+</html>
