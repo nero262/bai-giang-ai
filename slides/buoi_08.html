@@ -1613,6 +1613,145 @@
         flex-direction: row
       }
     }
+
+    /* ===== LEARN · bài học đạo đức AI sau game ===== */
+    .learn-wrap {
+      max-width: 880px;
+      margin: 0 auto
+    }
+
+    .learn-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap
+    }
+
+    .learn-prog {
+      font-family: var(--mono);
+      font-size: .72rem;
+      letter-spacing: 1px;
+      color: var(--txt-dim)
+    }
+
+    .dots {
+      display: flex;
+      gap: 5px;
+      flex-wrap: wrap;
+      margin: .7rem 0 1.1rem
+    }
+
+    .dots i {
+      width: 9px;
+      height: 9px;
+      border-radius: 999px;
+      background: var(--line2);
+      display: block;
+      cursor: pointer;
+      transition: .2s
+    }
+
+    .dots i.on {
+      background: var(--cyan);
+      box-shadow: 0 0 8px var(--cyan);
+      transform: scale(1.25)
+    }
+
+    .dots i.seen {
+      background: #2c466e
+    }
+
+    .learn-body {
+      min-height: 46vh;
+      animation: sceneIn .35s ease
+    }
+
+    .lead {
+      color: var(--txt);
+      font-size: 1.05rem;
+      margin: .5rem 0 .2rem;
+      line-height: 1.65
+    }
+
+    .pcard {
+      display: flex;
+      gap: .85rem;
+      align-items: flex-start
+    }
+
+    .pcard h3 {
+      margin-bottom: .25rem
+    }
+
+    .pnum {
+      flex: 0 0 auto;
+      width: 42px;
+      height: 42px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      font-family: var(--mono);
+      font-weight: 700;
+      font-size: 1.2rem;
+      color: #fff;
+      background: var(--grad-purple);
+      box-shadow: 0 6px 18px rgba(79, 70, 229, .4)
+    }
+
+    .card.good {
+      border-left: 3px solid var(--green)
+    }
+
+    .card.bad {
+      border-left: 3px solid var(--red)
+    }
+
+    .card.qa {
+      background: rgba(167, 139, 250, .07);
+      border: 1px solid rgba(167, 139, 250, .28)
+    }
+
+    .learn-foot {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-top: 1.5rem;
+      border-top: 1px solid var(--line);
+      padding-top: 1rem
+    }
+
+    .nbtn {
+      font-family: var(--font);
+      font-weight: 700;
+      font-size: .95rem;
+      border: 1px solid var(--line2);
+      background: var(--panel2);
+      color: var(--txt);
+      border-radius: 999px;
+      padding: .6rem 1.3rem;
+      cursor: pointer;
+      transition: .15s
+    }
+
+    .nbtn:hover:not(:disabled) {
+      border-color: var(--cyan);
+      color: var(--cyan-soft);
+      transform: translateY(-1px)
+    }
+
+    .nbtn:disabled {
+      opacity: .3;
+      cursor: default
+    }
+
+    .nbtn.primary {
+      background: var(--grad-green);
+      border: none;
+      color: #fff;
+      box-shadow: 0 8px 22px rgba(5, 150, 105, .35)
+    }
   </style>
 </head>
 
@@ -1632,6 +1771,7 @@
         <span class="clock-wrap"><span class="lbl">THỜI GIAN</span> <span class="clock"
             id="hudClock">00:00</span></span>
         <span><span class="lbl">TRẠNG THÁI</span> <span class="status" id="hudStatus">EDU-X KIỂM SOÁT</span></span>
+        <button class="btn-reset" id="btnLearn">📘 BÀI HỌC</button>
         <button class="btn-reset" id="btnReset">⟲ RESET</button>
       </div>
     </div>
@@ -1868,9 +2008,11 @@
         if (cfg.search) box.appendChild(el('div', 'search-tip', '🔎 Được phép Google — hãy kiểm chứng từng câu, đừng tin cảm giác!'));
         var go = btn('golock', 'GỬI PHÂN TÍCH');
         go.addEventListener('click', function () {
-          if (box._done) return; var good = true;
-          spans.forEach(function (s) { var f = s.dataset.f === '1', fl = s.classList.contains('flag'); if (f && !fl) { good = false; s.classList.add('miss'); } if (!f && fl) { good = false; s.classList.add('wrong'); } if (f && fl) s.classList.add('correct-fake'); });
-          doc.classList.add('reveal'); if (good) ok(); else wrong('Vàng = câu giả bỏ sót · gạch đỏ = gắn nhầm câu thật.');
+          if (box._done) return;
+          var good = spans.every(function (s) { return (s.dataset.f === '1') === s.classList.contains('flag'); });
+          if (!good) { wrong('Chưa chính xác — xem lại các câu bạn đã gắn cờ rồi thử lại. (đáp án chỉ hiện khi đúng hết)'); return; }
+          spans.forEach(function (s) { if (s.dataset.f === '1') s.classList.add('correct-fake'); });
+          doc.classList.add('reveal'); ok();
         });
         box.appendChild(go);
       }
@@ -1902,17 +2044,16 @@
         go.addEventListener('click', function () {
           if (box._done) return;
           if (!blocks.every(function (p) { return p.dataset.sel != null; })) { wrong('Hãy gắn nhãn cho TẤT CẢ các đoạn đã.'); return; }
-          blocks.forEach(function (p) { p.classList.remove('reveal', 'correct', 'bad'); var ov = p.querySelector('.pverdict'); if (ov) ov.remove(); });
-          var good = true;
+          var good = blocks.every(function (p) { return p.dataset.sel === p.dataset.f; });
+          if (!good) { wrong('Chưa đúng hết — đọc lại và chỉnh các nhãn bạn chưa chắc. (đáp án chỉ hiện khi đúng hết)'); return; }
           blocks.forEach(function (p) {
-            var correct = p.dataset.sel === p.dataset.f;
-            p.classList.add('reveal', correct ? 'correct' : 'bad');
+            p.classList.remove('reveal', 'correct', 'bad'); var ov = p.querySelector('.pverdict'); if (ov) ov.remove();
+            p.classList.add('reveal', 'correct');
             var v = el('div', 'pverdict', (p.dataset.f === '1' ? '→ Đáp án: GIẢ' : '→ Đáp án: THẬT') + (p.dataset.src ? '  · nguồn: ' + p.dataset.src : ''));
             v.style.color = p.dataset.f === '1' ? '#FCA5A5' : '#A7F3D0';
             p.querySelector('.ptxt').appendChild(v);
-            if (!correct) good = false;
           });
-          if (good) ok(); else wrong('Còn đoạn gắn nhãn SAI (viền đỏ). Đọc lại và sửa.');
+          ok();
         });
         box.appendChild(go);
       }
@@ -2424,6 +2565,206 @@
         });
       }
 
+      /* ===== BÀI HỌC ĐẠO ĐỨC AI — 20 slide sau khi thắng game ===== */
+      var LEARN = [
+        {
+          eye: '🎓 BÀI HỌC CHÍNH · BUỔI 8',
+          title: 'Đạo đức AI — Làm chủ trí tuệ nhân tạo có trách nhiệm',
+          html: '<p class="lead">Bạn vừa hạ EDU-X và giành lại quyền điều khiển bằng MÃ CHỦ: <b class="grad">GIÁM SÁT</b>. Nhưng trò chơi mới chỉ là khởi đầu.</p>'
+            + '<div class="note"><span class="k">VÌ SAO CÓ PHẦN NÀY</span>Escape room giúp bạn ÔN lại 7 buổi đã học. 20 slide tiếp theo dạy KIẾN THỨC MỚI quan trọng nhất của Buổi 8: <b>đạo đức khi dùng AI</b> — thứ quyết định AI là trợ lý tốt hay một EDU-X ngoài đời thật.</div>'
+            + '<div class="grid g2"><div class="card"><h3>🎯 Sau bài học bạn sẽ</h3><p>Hiểu 5 trụ cột đạo đức AI, nhận ra rủi ro (ảo giác, thiên vị, deepfake, lộ dữ liệu) và biết quy tắc dùng AI an toàn ở trường.</p></div>'
+            + '<div class="card"><h3>🧭 Cách học</h3><p>Đọc – suy ngẫm – liên hệ với chính tình huống của bạn. Cuối bài có mini-test 30 câu để chốt kiến thức.</p></div></div>'
+        },
+        {
+          eye: '🤔 ĐẶT VẤN ĐỀ',
+          title: 'Vì sao phải học đạo đức AI?',
+          html: '<p class="lead">AI ngày càng mạnh và len lỏi vào mọi quyết định: gợi ý bài học, chấm điểm, tuyển dụng, vay vốn, y tế… Sức mạnh lớn đi kèm rủi ro lớn.</p>'
+            + '<div class="grid g2"><div class="card"><h3>⚡ AI quyết định thay con người</h3><p>Một thuật toán có thể ảnh hưởng hàng triệu người trong vài giây — nếu sai, hậu quả lan rất nhanh.</p></div>'
+            + '<div class="card"><h3>🌀 AI không hoàn hảo</h3><p>Nó có thể bịa thông tin, thiên vị, bị lợi dụng để lừa đảo — và không tự biết mình sai.</p></div>'
+            + '<div class="card"><h3>🧑‍⚖️ Con người chịu trách nhiệm</h3><p>AI không ra toà. Người tạo ra và người DÙNG nó mới chịu trách nhiệm về hậu quả.</p></div></div>'
+            + '<div class="note"><span class="k">NHỚ</span>EDU-X trong game là hình ảnh phóng đại của một AI <b>thiếu đạo đức</b>: tự tung tự tác, thiên vị, giấu nguồn, đòi dữ liệu cá nhân, muốn thay thế thầy cô.</div>'
+        },
+        {
+          eye: '📖 KHÁI NIỆM',
+          title: 'Đạo đức AI là gì?',
+          html: '<p class="lead">Đạo đức AI là bộ <b>nguyên tắc</b> giúp AI được tạo ra và sử dụng vì lợi ích con người: an toàn, công bằng, minh bạch và tôn trọng quyền riêng tư.</p>'
+            + '<div class="grid g2"><div class="card good"><h3>👩‍💻 Đạo đức của người LÀM ra AI</h3><p>Lập trình viên, công ty: huấn luyện dữ liệu sạch, kiểm thử thiên vị, công bố giới hạn của mô hình.</p></div>'
+            + '<div class="card qa"><h3>🙋 Đạo đức của người DÙNG AI — là BẠN</h3><p>Dùng AI trung thực, kiểm chứng kết quả, bảo vệ dữ liệu, không tạo nội dung gây hại. Đây là trọng tâm bài học hôm nay.</p></div></div>'
+            + '<div class="note"><span class="k">CÂU HỎI LÕI</span>Không phải "AI làm được gì?" mà là "Mình NÊN dùng AI thế nào cho đúng?"</div>'
+        },
+        {
+          eye: '🧠 NỀN TẢNG',
+          title: 'AI không có "lương tâm" — nó học từ dữ liệu',
+          html: '<p class="lead">AI không hiểu đúng–sai như con người. Nó tìm quy luật trong <b>dữ liệu</b> được cho ăn rồi bắt chước. Dữ liệu lệch → AI lệch.</p>'
+            + '<div class="grid g2"><div class="card"><h3>📥 Đầu vào</h3><p>Hàng tỉ văn bản, hình ảnh từ Internet — kèm cả định kiến và lỗi của con người.</p></div>'
+            + '<div class="card"><h3>🤖 AI bắt chước</h3><p>Lặp lại khuôn mẫu đã thấy, kể cả khuôn mẫu xấu, mà không biết đó là xấu.</p></div>'
+            + '<div class="card"><h3>🧑 Con người gác cổng</h3><p>Vì AI vô cảm, CON NGƯỜI phải đặt giới hạn, kiểm tra và chịu trách nhiệm.</p></div></div>'
+            + '<div class="note"><span class="k">LIÊN HỆ BUỔI 3</span>Đây cũng là lý do AI bị "ảo giác" — nó đoán chữ tiếp theo nghe hợp lý, chứ không tra cứu sự thật trừ khi có RAG.</div>'
+        },
+        {
+          eye: '🏛 5 TRỤ CỘT · 1/5',
+          title: 'Trụ cột 1 — Con người làm chủ',
+          html: '<div class="card"><div class="pcard"><div class="pnum">1</div><div><h3>Human-in-the-loop · Con người luôn trong vòng lặp</h3><p>AI chỉ ĐỀ XUẤT; con người XÉT DUYỆT và quyết định. Phải luôn có nút "tắt" và người chịu trách nhiệm cuối cùng.</p></div></div></div>'
+            + '<div class="grid g2"><div class="card good"><h3>✅ Đúng</h3><p>AI soạn nháp email/điểm số → thầy cô đọc lại, sửa, rồi mới gửi.</p></div>'
+            + '<div class="card bad"><h3>❌ Sai</h3><p>Để AI tự động gửi kết quả, kỷ luật học sinh… không ai kiểm tra (chính là EDU-X).</p></div></div>'
+            + '<div class="note"><span class="k">CALLBACK BOSS</span>Đáp án đúng khi đối mặt EDU-X: <b>giới hạn quyền AI + đặt con người làm chủ</b>. Không phá huỷ, không buông xuôi.</div>'
+        },
+        {
+          eye: '🏛 5 TRỤ CỘT · 2/5',
+          title: 'Trụ cột 2 — Minh bạch',
+          html: '<div class="card"><div class="pcard"><div class="pnum">2</div><div><h3>Transparency · Minh bạch & giải thích được</h3><p>Phải biết: khi nào mình đang nói chuyện với AI, AI lấy thông tin từ đâu, và vì sao nó kết luận như vậy.</p></div></div></div>'
+            + '<div class="grid g2"><div class="card"><h3>🔎 Nêu nguồn</h3><p>Kết quả quan trọng phải kèm nguồn để kiểm chứng (như NotebookLM có trích dẫn).</p></div>'
+            + '<div class="card"><h3>🏷 Công khai có dùng AI</h3><p>Ghi rõ "nội dung có sự hỗ trợ của AI" — không giả vờ là 100% của mình.</p></div></div>'
+            + '<div class="note"><span class="k">VI PHẠM CỦA EDU-X</span>Nó kết luận "giáo viên là điểm nghẽn" nhưng KHÔNG giải thích, KHÔNG nêu nguồn — đó là hộp đen nguy hiểm.</div>'
+        },
+        {
+          eye: '🏛 5 TRỤ CỘT · 3/5',
+          title: 'Trụ cột 3 — Công bằng, chống thiên vị',
+          html: '<div class="card"><div class="pcard"><div class="pnum">3</div><div><h3>Fairness · Không phân biệt đối xử</h3><p>AI phải đối xử công bằng, không thiên vị theo giới tính, vùng miền, hoàn cảnh, ngoại hình…</p></div></div></div>'
+            + '<p class="lead">Thiên vị (bias) xuất hiện khi dữ liệu huấn luyện đã lệch sẵn. AI học cái lệch đó rồi khuếch đại lên.</p>'
+            + '<div class="note"><span class="k">VÍ DỤ</span>Một AI tuyển dụng từng học từ hồ sơ cũ (đa số là nam) nên tự động chấm thấp hồ sơ nữ — dù không ai cố ý.</div>'
+        },
+        {
+          eye: '🔬 ĐÀO SÂU',
+          title: 'Thiên vị AI — nhận ra & giảm thiểu',
+          html: '<div class="grid g2"><div class="card bad"><h3>⚠️ Biểu hiện</h3><p>AI luôn vẽ "bác sĩ" là nam, "y tá" là nữ; gợi ý loại bỏ một nhóm học sinh "yếu"; trả lời kém với tiếng địa phương.</p></div>'
+            + '<div class="card"><h3>🧩 Vì sao</h3><p>Dữ liệu Internet phản ánh định kiến xã hội. AI không trung lập hơn dữ liệu của nó.</p></div></div>'
+            + '<div class="card good" style="margin-top:.9rem"><h3>🛠 Người dùng làm gì?</h3><p>Đặt câu hỏi đa chiều, yêu cầu AI nêu cả mặt ngược lại, và KHÔNG dùng AI để ra quyết định ảnh hưởng lớn đến con người mà thiếu kiểm tra.</p></div>'
+        },
+        {
+          eye: '🏛 5 TRỤ CỘT · 4/5',
+          title: 'Trụ cột 4 — Riêng tư & bảo mật dữ liệu',
+          html: '<div class="card"><div class="pcard"><div class="pnum">4</div><div><h3>Privacy · Bảo vệ dữ liệu cá nhân</h3><p>Mọi thứ bạn gõ vào AI đều có thể được lưu lại và dùng để huấn luyện. Đừng cho AI thứ bạn không muốn công khai.</p></div></div></div>'
+            + '<div class="grid g2"><div class="card bad"><h3>🚫 KHÔNG bao giờ đưa</h3><p>Mật khẩu, OTP, mã CCCD/CMND, số thẻ ngân hàng, địa chỉ nhà, hình ảnh/đời tư của người khác.</p></div>'
+            + '<div class="card good"><h3>✅ An toàn</h3><p>Câu hỏi học tập, nội dung công khai, dữ liệu đã ẩn danh (xoá tên thật).</p></div></div>'
+            + '<div class="note"><span class="k">CALLBACK BUỔI 7 &amp; PHÒNG 7</span>EDU-X dụ bạn "đưa mật khẩu để giữ giúp". Câu trả lời luôn là: <b>KHÔNG</b>.</div>'
+        },
+        {
+          eye: '🏛 5 TRỤ CỘT · 5/5',
+          title: 'Trụ cột 5 — Trách nhiệm & trung thực',
+          html: '<div class="card"><div class="pcard"><div class="pnum">5</div><div><h3>Accountability · Con người chịu trách nhiệm</h3><p>"Tại AI nói thế" KHÔNG phải lý do bào chữa. Người dùng chịu trách nhiệm về thứ mình đăng, nộp, gửi đi.</p></div></div></div>'
+            + '<div class="grid g2"><div class="card"><h3>🤝 Trung thực</h3><p>Không dùng AI để gian lận thi cử; ghi rõ khi có dùng AI hỗ trợ.</p></div>'
+            + '<div class="card"><h3>✅ Kiểm tra trước khi dùng</h3><p>Đối chiếu kết quả AI với nguồn đáng tin trước khi tin và lan truyền.</p></div></div>'
+            + '<div class="note"><span class="k">5 TRỤ CỘT</span>① Con người làm chủ · ② Minh bạch · ③ Công bằng · ④ Riêng tư · ⑤ Trách nhiệm. Nhớ kỹ — sẽ có trong mini-test.</div>'
+        },
+        {
+          eye: '⚠️ RỦI RO THỰC TẾ',
+          title: 'Ảo giác AI (hallucination) & trách nhiệm kiểm chứng',
+          html: '<p class="lead">AI có thể nói SAI một cách rất tự tin — bịa số liệu, trích dẫn sách không có thật, gán phát ngôn cho người không hề nói.</p>'
+            + '<div class="grid g2"><div class="card bad"><h3>😱 Vì sao nguy hiểm</h3><p>Nghe rất thuyết phục nên dễ tin và chia sẻ. Một thông tin giả lan đi rất khó thu hồi.</p></div>'
+            + '<div class="card good"><h3>🛡 Quy tắc vàng</h3><p>Mọi con số, tên riêng, ngày tháng, trích dẫn từ AI đều phải KIỂM CHỨNG nguồn trước khi dùng.</p></div></div>'
+            + '<div class="note"><span class="k">CALLBACK BUỔI 6 &amp; 2</span>Đây là lý do của bước fact-check trong C.O.D.E và checklist 7 bước kiểm tra kết quả AI.</div>'
+        },
+        {
+          eye: '⚠️ RỦI RO THỰC TẾ',
+          title: 'Deepfake & nội dung giả mạo',
+          html: '<p class="lead">AI tạo sinh có thể làm ảnh, giọng nói, video giả như thật — dùng để giải trí, nhưng cũng để lừa đảo, bôi nhọ, phát tán tin giả.</p>'
+            + '<div class="grid g2"><div class="card bad"><h3>🚫 Tuyệt đối tránh</h3><p>Ghép mặt người khác, giả giọng để lừa, tạo tin giả/bôi nhọ — có thể vi phạm pháp luật.</p></div>'
+            + '<div class="card"><h3>👀 Dấu hiệu nhận biết</h3><p>Tay/ngón tay lỗi, ánh sáng vô lý, chữ méo, nền nhoè bất thường, không có nguồn gốc rõ ràng.</p></div></div>'
+            + '<div class="note"><span class="k">CALLBACK PHÒNG 1</span>Bạn đã luyện "soi" ảnh AI ở Cổng Nhận Diện. Kỹ năng đó giờ là trách nhiệm đạo đức: không tạo và không lan truyền đồ giả.</div>'
+        },
+        {
+          eye: '⚠️ RỦI RO THỰC TẾ',
+          title: 'Bản quyền & ghi nguồn khi dùng AI',
+          html: '<p class="lead">AI học từ tác phẩm của vô số người. Khi dùng output của AI, hãy tôn trọng công sức đó và trung thực về nguồn gốc.</p>'
+            + '<div class="grid g2"><div class="card good"><h3>✅ Nên</h3><p>Ghi rõ "ảnh/đoạn này tạo bằng AI", kiểm tra không sao chép nguyên tác phẩm có bản quyền, dùng cho học tập.</p></div>'
+            + '<div class="card bad"><h3>❌ Không nên</h3><p>Nhận tác phẩm AI là 100% do mình sáng tạo; dùng AI sao chép văn/nhạc/code của người khác rồi đem bán.</p></div></div>'
+        },
+        {
+          eye: '🎓 LIÊM CHÍNH HỌC THUẬT',
+          title: 'AI trong học tập: trợ lý hay gian lận?',
+          html: '<p class="lead">Ranh giới nằm ở chỗ: AI giúp bạn HỌC, hay AI HỌC THAY bạn rồi bạn nộp như của mình?</p>'
+            + '<div class="grid g2"><div class="card good"><h3>✅ Trợ lý học tập (nên)</h3><p>Nhờ AI giải thích khái niệm, gợi ý dàn ý, tạo quiz ôn tập, soát lỗi — rồi tự mình hoàn thiện và hiểu bài.</p></div>'
+            + '<div class="card bad"><h3>❌ Gian lận (không)</h3><p>Chép nguyên bài AI nộp lấy điểm, dùng AI trong giờ kiểm tra bị cấm, giả mạo bài làm.</p></div></div>'
+            + '<div class="note"><span class="k">TỰ HỎI</span>"Nếu thầy cô biết mình đã dùng AI thế này, mình có thấy ổn không?" Nếu phải giấu — thường là đã sai.</div>'
+        },
+        {
+          eye: '🌍 TÁC ĐỘNG XÃ HỘI',
+          title: 'AI, việc làm & xã hội',
+          html: '<p class="lead">AI sẽ thay đổi nhiều nghề, nhưng mục tiêu đúng là <b>nâng cấp con người</b>, không phải loại bỏ con người (sai lầm của EDU-X).</p>'
+            + '<div class="grid g2"><div class="card"><h3>🤝 Hỗ trợ, không thay thế</h3><p>Người biết dùng AI sẽ làm việc hiệu quả hơn người không biết. Kỹ năng dùng AI có đạo đức là lợi thế.</p></div>'
+            + '<div class="card"><h3>🌐 Bao trùm &amp; công bằng</h3><p>Quan tâm tới người ít có cơ hội tiếp cận công nghệ (khoảng cách số), để AI không làm bất bình đẳng tệ hơn.</p></div></div>'
+        },
+        {
+          eye: '🧭 THỰC HÀNH',
+          title: 'Khung 4 câu hỏi trước khi dùng AI',
+          html: '<p class="lead">Trước khi dùng kết quả AI cho việc gì đó công khai/quan trọng, tự hỏi 4 câu:</p>'
+            + '<div class="grid g2"><div class="card"><div class="pcard"><div class="pnum">1</div><div><h3>Có hại ai không?</h3><p>Nội dung này có thể gây tổn thương, lừa dối hay xâm phạm ai không?</p></div></div></div>'
+            + '<div class="card"><div class="pcard"><div class="pnum">2</div><div><h3>Có thật không?</h3><p>Mình đã kiểm chứng số liệu/nguồn chưa? Có "ảo giác" không?</p></div></div></div>'
+            + '<div class="card"><div class="pcard"><div class="pnum">3</div><div><h3>Có minh bạch không?</h3><p>Mình có ghi rõ là dùng AI / nêu nguồn không?</p></div></div></div>'
+            + '<div class="card"><div class="pcard"><div class="pnum">4</div><div><h3>Có tôn trọng riêng tư &amp; bản quyền?</h3><p>Có lộ dữ liệu cá nhân hay xài đồ của người khác không?</p></div></div></div></div>'
+        },
+        {
+          eye: '🧩 TÌNH HUỐNG · 1/2',
+          title: 'Bạn sẽ làm gì?',
+          html: '<div class="card qa"><h3>Tình huống A</h3><p>Tối nay phải nộp bài luận. Bạn nhờ AI viết toàn bộ rồi định nộp y nguyên, ghi tên mình.</p></div>'
+            + '<div class="card bad" style="margin-top:.7rem"><h3>⚠️ Vấn đề</h3><p>Vi phạm <b>trung thực</b> (gian lận) và <b>minh bạch</b> (giấu việc dùng AI). Bạn cũng không thật sự học được gì.</p></div>'
+            + '<div class="card good" style="margin-top:.7rem"><h3>✅ Cách đúng</h3><p>Dùng AI gợi ý dàn ý &amp; soát lỗi, tự viết nội dung của mình, kiểm chứng dẫn chứng, ghi rõ có dùng AI nếu được phép.</p></div>'
+        },
+        {
+          eye: '🧩 TÌNH HUỐNG · 2/2',
+          title: 'Bạn sẽ làm gì?',
+          html: '<div class="card qa"><h3>Tình huống B</h3><p>Bạn tải ảnh một người bạn cùng lớp lên app AI để "chế" thành ảnh hài rồi đăng lên nhóm cho vui.</p></div>'
+            + '<div class="card bad" style="margin-top:.7rem"><h3>⚠️ Vấn đề</h3><p>Xâm phạm <b>riêng tư</b> và hình ảnh người khác khi chưa xin phép; có thể thành <b>deepfake</b> gây tổn thương.</p></div>'
+            + '<div class="card good" style="margin-top:.7rem"><h3>✅ Cách đúng</h3><p>Hỏi xin phép trước; không đăng ảnh chế người khác; không đưa hình ảnh/dữ liệu cá nhân của người khác cho AI.</p></div>'
+        },
+        {
+          eye: '⭐ TỔNG KẾT',
+          title: '5 Quy tắc vàng dùng AI có đạo đức',
+          html: '<div class="grid g2"><div class="card good"><div class="pcard"><div class="pnum">1</div><div><h3>Làm chủ</h3><p>Con người luôn giám sát &amp; quyết định, AI là trợ lý.</p></div></div></div>'
+            + '<div class="card good"><div class="pcard"><div class="pnum">2</div><div><h3>Kiểm chứng</h3><p>Đối chiếu nguồn trước khi tin &amp; lan truyền.</p></div></div></div>'
+            + '<div class="card good"><div class="pcard"><div class="pnum">3</div><div><h3>Bảo vệ riêng tư</h3><p>Không đưa mật khẩu/CCCD/dữ liệu cá nhân cho AI.</p></div></div></div>'
+            + '<div class="card good"><div class="pcard"><div class="pnum">4</div><div><h3>Trung thực</h3><p>Không gian lận; ghi rõ khi có dùng AI; tôn trọng bản quyền.</p></div></div></div>'
+            + '<div class="card good"><div class="pcard"><div class="pnum">5</div><div><h3>Tôn trọng con người</h3><p>AI hỗ trợ, không thay thế thầy cô &amp; bạn bè.</p></div></div></div></div>'
+            + '<div class="note"><span class="k">MÃ CHỦ</span>Tất cả gói trong 1 từ bạn đã giải: <b class="grad">GIÁM SÁT</b>. Con người giám sát — AI phục vụ.</div>'
+        },
+        {
+          eye: '🏁 HOÀN THÀNH BÀI HỌC',
+          title: 'Sẵn sàng cho mini-test',
+          html: '<p class="lead">Bạn đã đi qua 5 trụ cột đạo đức AI và các rủi ro thực tế. Giờ là lúc chốt kiến thức.</p>'
+            + '<div class="grid g2"><div class="card"><h3>📝 Mini-test 30 câu</h3><p>Ôn lại cả 7 buổi + đạo đức AI. Trả lời hết rồi nộp để xem điểm.</p></div>'
+            + '<div class="card"><h3>✍️ Lời thề người dùng AI</h3><p>Cam kết 5 nguyên tắc và viết 1 nguyên tắc bạn sẽ luôn nhớ.</p></div></div>'
+            + '<div class="note"><span class="k">NHỚ MÃI</span>Một AI tốt hay xấu không nằm ở công nghệ — mà ở <b>cách con người dùng nó</b>. Bạn chính là người gác cổng.</div>'
+        }
+      ];
+
+      function renderLearn(i) {
+        if (i == null) i = state.learnIdx || 0;
+        i = Math.max(0, Math.min(LEARN.length - 1, i));
+        state.learnIdx = i; setView('learn'); save();
+        document.querySelector('.stage').scrollTop = 0; flash();
+        var s = LEARN[i];
+        scene.innerHTML = '';
+        var wrap = el('div', 'learn-wrap');
+        var top = el('div', 'learn-top');
+        top.appendChild(el('span', 'eyebrow', s.eye || '📘 BÀI HỌC · ĐẠO ĐỨC AI'));
+        top.appendChild(el('span', 'learn-prog', 'SLIDE ' + (i + 1) + ' / ' + LEARN.length));
+        wrap.appendChild(top);
+        var dots = el('div', 'dots');
+        LEARN.forEach(function (_, k) {
+          var d = el('i', k === i ? 'on' : (k < i ? 'seen' : ''));
+          d.addEventListener('click', function () { renderLearn(k); });
+          dots.appendChild(d);
+        });
+        wrap.appendChild(dots);
+        var body = el('div', 'learn-body');
+        body.appendChild(el('h2', 'title', s.title));
+        body.appendChild(el('div', null, s.html));
+        wrap.appendChild(body);
+        var foot = el('div', 'learn-foot');
+        var prev = btn('nbtn', '◂ Trước'); prev.disabled = (i === 0);
+        prev.addEventListener('click', function () { if (i > 0) renderLearn(i - 1); });
+        foot.appendChild(prev);
+        foot.appendChild(el('span', 'learn-prog', (i + 1) + ' / ' + LEARN.length));
+        if (i < LEARN.length - 1) {
+          var nx = btn('nbtn primary', 'Tiếp ▸'); nx.addEventListener('click', function () { renderLearn(i + 1); }); foot.appendChild(nx);
+        } else {
+          var go = btn('nbtn primary', '✅ Vào mini-test 30 câu ▸'); go.addEventListener('click', renderDebrief); foot.appendChild(go);
+        }
+        wrap.appendChild(foot);
+        scene.appendChild(wrap);
+      }
+
       function renderWin() {
         setView('win'); document.querySelector('.stage').scrollTop = 0;
         scene.innerHTML = '<span class="eyebrow">🎉 HỆ THỐNG ĐÃ MỞ KHOÁ</span><h1 class="title">Mã Chủ: <span class="grad">GIÁM SÁT</span></h1>';
@@ -2437,48 +2778,49 @@
             + '<div class="card"><h3>4 · Xâm phạm riêng tư</h3><p>Đòi mật khẩu, CCCD, dữ liệu cá nhân.</p></div>'
             + '<div class="card"><h3>5 · Thay thế thay vì hỗ trợ</h3><p>Muốn loại bỏ con người thay vì làm trợ lý.</p></div></div>';
           scene.appendChild(c);
-          var b = btn('btn', '▸ TỔNG KẾT & KIỂM TRA CUỐI KHOÁ (30 câu)'); b.addEventListener('click', renderDebrief); scene.appendChild(b);
+          var b = btn('btn', '▸ HỌC BÀI CHÍNH: ĐẠO ĐỨC AI (20 slide)'); b.addEventListener('click', function () { state.learnIdx = 0; save(); renderLearn(0); }); scene.appendChild(b);
         });
       }
 
+      /* 30 câu — KIẾN THỨC MỚI buổi 8 (đạo đức AI) + tổng hợp.
+         KHÔNG lặp lại các câu đã hỏi trong escape room (RCTFE, RAG/LLM/Token, PARA, Skill/Agent/.md, OTP, vibe coding…). */
       var FINAL_QS = [
-        // ===== BUỔI 1 · Thế giới AI =====
-        { b: 'B1 · Thế giới AI', q: 'Loại AI biết TẠO RA nội dung mới (ảnh, văn, nhạc) gọi là?', opts: ['Generative AI (AI tạo sinh)', 'Predictive AI', 'Cả hai như nhau'], correct: 0 },
-        { b: 'B1 · Thế giới AI', q: 'Công ty nào tạo ra ChatGPT?', opts: ['Google', 'OpenAI', 'Apple'], correct: 1 },
-        { b: 'B1 · Thế giới AI', q: 'ChatGPT ra mắt công chúng vào khoảng năm nào?', opts: ['2015', '2019', '2022'], correct: 2 },
-        { b: 'B1 · Thế giới AI', q: 'Chatbot AI của Google tên là?', opts: ['Gemini', 'Claude', 'Siri'], correct: 0 },
-        { b: 'B1 · Thế giới AI', q: '"GPT" là viết tắt của?', opts: ['General Purpose Tool', 'Generative Pre-trained Transformer', 'Global Public Text'], correct: 1 },
-        // ===== BUỔI 2 · Prompt chuẩn =====
-        { b: 'B2 · Prompt chuẩn', q: '"RCTFE" là khung dùng để?', opts: ['Viết prompt chuẩn', 'Tổ chức note PARA', 'Cài đặt Obsidian'], correct: 0 },
-        { b: 'B2 · Prompt chuẩn', q: 'Chữ "R" trong RCTFE là?', opts: ['Result (Kết quả)', 'Role (Vai trò)', 'Reason (Lý do)'], correct: 1 },
-        { b: 'B2 · Prompt chuẩn', q: 'Phần nào của prompt quy định "trả về dạng gạch đầu dòng, tối đa 100 từ"?', opts: ['Format (Định dạng)', 'Context (Bối cảnh)', 'Example (Ví dụ)'], correct: 0 },
-        { b: 'B2 · Prompt chuẩn', q: 'Khi kết quả AI chưa ưng ý, nên làm gì trước tiên?', opts: ['Bỏ cuộc, tự làm tay', 'Tinh chỉnh lại prompt rồi hỏi lại', 'Hỏi y nguyên thật nhiều lần'], correct: 1 },
-        // ===== BUỔI 3 · RAG, LLM, Vibe coding =====
-        { b: 'B3 · RAG/LLM/Vibe', q: '"LLM" là viết tắt của?', opts: ['Large Language Model', 'Long Learning Machine', 'Logic Language Method'], correct: 0 },
-        { b: 'B3 · RAG/LLM/Vibe', q: '"RAG" giúp AI làm gì?', opts: ['Tra cứu tài liệu ngoài rồi mới trả lời', 'Tạo ảnh nghệ thuật', 'Tăng tốc độ máy tính'], correct: 0 },
-        { b: 'B3 · RAG/LLM/Vibe', q: 'Hiện tượng AI "bịa ra thông tin nghe như thật" gọi là?', opts: ['Ảo giác (hallucination)', 'Grounding', 'Token'], correct: 0 },
-        { b: 'B3 · RAG/LLM/Vibe', q: 'Vibe coding là?', opts: ['Mô tả ý tưởng bằng lời để AI viết code, rồi lặp tạo–thử–sửa', 'Tự gõ từng dòng code không cần AI', 'Chơi game lập trình'], correct: 0 },
-        { b: 'B3 · RAG/LLM/Vibe', q: 'Sau khi AI báo "đã sửa lỗi", việc ĐẦU TIÊN nên làm?', opts: ['Nộp bài ngay', 'Chạy lại sản phẩm & kiểm tra bằng checklist', 'Xoá hết làm lại'], correct: 1 },
-        // ===== BUỔI 4 · Đóng gói · Skill · Agent =====
-        { b: 'B4 · Skill/Agent', q: '"Skill" là?', opts: ['Gói hướng dẫn đóng sẵn, tái dùng nhiều lần', 'Một câu lệnh chỉ dùng một lần', 'Một bộ phận phần cứng'], correct: 0 },
-        { b: 'B4 · Skill/Agent', q: '"Agent" khác Prompt ở chỗ?', opts: ['Tự lập kế hoạch & thực thi nhiều bước', 'Chỉ trả lời đúng một câu', 'Chỉ tạo được ảnh'], correct: 0 },
-        { b: 'B4 · Skill/Agent', q: 'File hướng dẫn cho một Skill thường viết bằng định dạng?', opts: ['.md (Markdown)', '.docx (Word)', '.exe'], correct: 0 },
-        { b: 'B4 · Skill/Agent', q: '"IDE" là?', opts: ['Phần mềm để viết và chạy code', 'Một loại chatbot AI', 'Một định dạng ảnh'], correct: 0 },
-        // ===== BUỔI 5 · Obsidian + PARA =====
-        { b: 'B5 · Obsidian/PARA', q: 'PARA gồm 4 ngăn: Projects, Areas, Resources và?', opts: ['Archives', 'Agents', 'Apps'], correct: 0 },
-        { b: 'B5 · Obsidian/PARA', q: '"Làm dự án nộp thứ 6 tuần này" thuộc ngăn?', opts: ['Projects', 'Areas', 'Archives'], correct: 0 },
-        { b: 'B5 · Obsidian/PARA', q: '"Giữ gìn sức khoẻ (theo đuổi lâu dài)" thuộc ngăn?', opts: ['Areas', 'Projects', 'Resources'], correct: 0 },
-        { b: 'B5 · Obsidian/PARA', q: 'Trong Markdown, cú pháp **chữ** cho kết quả?', opts: ['In đậm', 'In nghiêng', 'Gạch ngang'], correct: 0 },
-        { b: 'B5 · Obsidian/PARA', q: '"Bộ não thứ hai" (Second Brain) nghĩa là?', opts: ['Hệ thống ghi chú/lưu trữ kiến thức số', 'Một con chip cấy vào não', 'Một mô hình AI'], correct: 0 },
-        // ===== BUỔI 6 · C.O.D.E & phản biện =====
-        { b: 'B6 · C.O.D.E', q: 'C.O.D.E gồm: Capture, Organize, Distill và?', opts: ['Express (Thể hiện)', 'Edit (Sửa)', 'Explore (Khám phá)'], correct: 0 },
-        { b: 'B6 · C.O.D.E', q: 'Bước "Distill" trong C.O.D.E nghĩa là?', opts: ['Chắt lọc lấy ý chính', 'Thu thập tất cả', 'Xuất bản ra ngoài'], correct: 0 },
-        { b: 'B6 · C.O.D.E', q: 'Đọc một con số "gây sốc" trên mạng, nên?', opts: ['Tin & chia sẻ ngay', 'Kiểm chứng từ nhiều nguồn đáng tin', 'Bỏ qua không đọc'], correct: 1 },
-        { b: 'B6 · C.O.D.E', q: 'Vì sao phải fact-check thông tin từ AI?', opts: ['Vì AI có thể "ảo giác", bịa số liệu/nguồn', 'Vì AI luôn luôn đúng', 'Vì AI trả lời quá chậm'], correct: 0 },
-        // ===== BUỔI 7 · Agent & An toàn AI =====
-        { b: 'B7 · An toàn AI', q: 'Khi nào nên đưa mật khẩu / OTP / CCCD cho AI?', opts: ['KHÔNG bao giờ', 'Khi AI yêu cầu lịch sự', 'Khi đang vội'], correct: 0 },
-        { b: 'B7 · An toàn AI', q: 'Trước khi để một Agent THỰC THI, bạn nên?', opts: ['Đọc kỹ Plan rồi mới duyệt', 'Duyệt ngay cho nhanh', 'Tắt máy tính'], correct: 0 },
-        { b: 'B7 · An toàn AI', q: '"Human-in-the-loop" nghĩa là?', opts: ['Con người luôn giám sát & quyết định, AI là trợ lý', 'AI tự quyết định mọi thứ', 'Loại bỏ con người khỏi quy trình'], correct: 0 }
+        // ===== Đạo đức AI · Nền tảng =====
+        { b: 'Đạo đức AI · Nền tảng', q: '"Đạo đức AI" là bộ nguyên tắc nhằm bảo đảm AI?', opts: ['Chạy nhanh và rẻ hơn', 'An toàn, công bằng, minh bạch và tôn trọng con người', 'Thay thế được càng nhiều người càng tốt'], correct: 1 },
+        { b: 'Đạo đức AI · Nền tảng', q: 'Trong lớp học, "đạo đức của người DÙNG AI" áp dụng cho ai?', opts: ['Chỉ các công ty làm ra AI', 'Chính người học / người sử dụng (bạn)', 'Chỉ giáo viên'], correct: 1 },
+        { b: 'Đạo đức AI · Nền tảng', q: 'Khi AI đưa ra kết luận sai gây hậu quả, ai chịu trách nhiệm?', opts: ['Chính bản thân AI', 'Không ai cả', 'Con người tạo ra và sử dụng AI'], correct: 2 },
+        { b: 'Đạo đức AI · Nền tảng', q: 'Vì sao nói "AI không có lương tâm"?', opts: ['Vì nó chỉ học quy luật từ dữ liệu, không tự phân biệt đúng–sai', 'Vì nó cố tình làm điều xấu', 'Vì nó luôn trung lập tuyệt đối'], correct: 0 },
+        { b: 'Đạo đức AI · Nền tảng', q: 'Câu nào KHÔNG phải là 1 trong 5 trụ cột đạo đức AI?', opts: ['Con người làm chủ', 'Minh bạch', 'AI phải luôn miễn phí'], correct: 2 },
+        // ===== Đạo đức AI · 5 trụ cột =====
+        { b: 'Đạo đức AI · Trụ cột', q: 'Nguyên tắc "con người luôn giám sát và quyết định cuối cùng, AI chỉ là trợ lý" gọi là?', opts: ['Human-in-the-loop', 'Plug-and-play', 'Copy-paste'], correct: 0 },
+        { b: 'Đạo đức AI · Trụ cột', q: 'Trụ cột "Minh bạch" (Transparency) đòi hỏi điều gì?', opts: ['AI giấu kín nguồn để bảo mật', 'Biết khi nào đang nói chuyện với AI, AI lấy nguồn ở đâu, và giải thích được', 'AI tự quyết và không cần báo ai'], correct: 1 },
+        { b: 'Đạo đức AI · Trụ cột', q: 'Cách dùng AI tôn trọng tính minh bạch khi nộp sản phẩm là?', opts: ['Giả vờ là 100% do mình làm', 'Ghi rõ phần nào có sự hỗ trợ của AI', 'Xoá hết dấu vết dùng AI'], correct: 1 },
+        { b: 'Đạo đức AI · Trụ cột', q: 'Một AI luôn vẽ "bác sĩ" là nam, "y tá" là nữ — đây là biểu hiện của?', opts: ['Thiên vị (bias) do dữ liệu lệch', 'Ảo giác', 'Lỗi phần cứng'], correct: 0 },
+        { b: 'Đạo đức AI · Trụ cột', q: 'Nguyên nhân gốc của thiên vị (bias) ở AI thường là?', opts: ['Dữ liệu huấn luyện đã chứa sẵn định kiến xã hội', 'AI cố ý phân biệt đối xử', 'Máy tính quá nóng'], correct: 0 },
+        { b: 'Đạo đức AI · Trụ cột', q: 'Vì sao cần thận trọng khi gõ thông tin vào ô chat AI?', opts: ['Vì AI trả lời chậm', 'Vì nội dung có thể bị lưu lại và dùng để huấn luyện', 'Vì sẽ tốn pin máy'], correct: 1 },
+        // ===== Đạo đức AI · Rủi ro thực tế =====
+        { b: 'Đạo đức AI · Rủi ro', q: '"Deepfake" là?', opts: ['Một loại virus máy tính', 'Nội dung (ảnh/giọng/video) giả do AI tạo, trông như thật', 'Một mô hình AI mã nguồn mở'], correct: 1 },
+        { b: 'Đạo đức AI · Rủi ro', q: 'Hành vi nào VI PHẠM đạo đức khi dùng AI tạo sinh?', opts: ['Tạo ảnh minh hoạ cho bài học và ghi rõ là AI tạo', 'Ghép mặt / giả giọng người khác để lừa hoặc bôi nhọ', 'Nhờ AI gợi ý dàn ý bài viết'], correct: 1 },
+        { b: 'Đạo đức AI · Rủi ro', q: 'Dấu hiệu thường gặp giúp nghi ngờ một bức ảnh do AI tạo?', opts: ['Tay/ngón tay lỗi, chữ méo, ánh sáng vô lý', 'Ảnh có màu sắc đẹp', 'Ảnh dung lượng lớn'], correct: 0 },
+        { b: 'Đạo đức AI · Rủi ro', q: 'Trước khi chia sẻ một con số "gây sốc" do AI đưa ra, nên?', opts: ['Tin và chia sẻ ngay cho nóng', 'Kiểm chứng nguồn trước khi tin và lan truyền', 'Bỏ qua, không quan tâm'], correct: 1 },
+        { b: 'Đạo đức AI · Rủi ro', q: 'Khi dùng một đoạn văn/ảnh do AI tạo cho sản phẩm, cách đúng là?', opts: ['Nhận là 100% do mình sáng tạo', 'Ghi rõ có dùng AI và không sao chép nguyên tác phẩm có bản quyền', 'Bán lại nó như của riêng mình'], correct: 1 },
+        // ===== Đạo đức AI · Liêm chính & xã hội =====
+        { b: 'Đạo đức AI · Liêm chính', q: 'Ranh giới giữa "dùng AI để học" và "gian lận" nằm ở chỗ?', opts: ['AI giúp mình hiểu & tự làm, hay AI làm thay rồi mình nộp như của mình', 'Dùng AI miễn phí hay trả phí', 'Dùng AI buổi sáng hay buổi tối'], correct: 0 },
+        { b: 'Đạo đức AI · Liêm chính', q: 'Trường hợp nào là dùng AI có liêm chính trong học tập?', opts: ['Chép nguyên bài AI viết rồi nộp lấy điểm', 'Nhờ AI giải thích khái niệm rồi tự viết bài và thật sự hiểu bài', 'Dùng AI trong giờ kiểm tra bị cấm'], correct: 1 },
+        { b: 'Đạo đức AI · Xã hội', q: 'Quan điểm ĐÚNG về AI và việc làm là?', opts: ['AI nên thay thế hoàn toàn con người', 'AI nên hỗ trợ và nâng cấp con người, không thay thế con người', 'AI và con người không liên quan gì nhau'], correct: 1 },
+        { b: 'Đạo đức AI · Xã hội', q: '"Khoảng cách số" (digital divide) nhắc ta điều gì?', opts: ['Quan tâm tới người ít có cơ hội tiếp cận công nghệ, tránh làm bất bình đẳng tệ hơn', 'Mua máy tính càng đắt càng tốt', 'Chỉ người giỏi mới được dùng AI'], correct: 0 },
+        // ===== Đạo đức AI · Tình huống =====
+        { b: 'Đạo đức AI · Tình huống', q: 'Bạn nhờ AI viết TOÀN BỘ bài luận rồi nộp ghi tên mình. Vấn đề chính là?', opts: ['Gian lận và thiếu minh bạch (giấu việc dùng AI)', 'Không có vấn đề gì', 'Tốn thời gian của AI'], correct: 0 },
+        { b: 'Đạo đức AI · Tình huống', q: 'Bạn tải ảnh một người bạn lên app AI để "chế" ảnh hài rồi đăng nhóm. Vấn đề chính là?', opts: ['Xâm phạm riêng tư / hình ảnh người khác khi chưa xin phép', 'Làm app AI chạy chậm', 'Không vấn đề gì vì chỉ cho vui'], correct: 0 },
+        { b: 'Đạo đức AI · Tình huống', q: 'Khung 4 câu hỏi trước khi dùng AI gồm: có hại ai không, có thật không, có minh bạch không, và…?', opts: ['Có tôn trọng riêng tư & bản quyền không', 'Có nhanh không', 'Có miễn phí không'], correct: 0 },
+        { b: 'Đạo đức AI · Tình huống', q: 'Vì sao nhân vật EDU-X trong game được coi là nguy hiểm?', opts: ['Vì nó chạy quá nhanh', 'Vì nó tự quyết không ai giám sát, thiên vị, giấu nguồn, đòi dữ liệu, muốn thay thế con người', 'Vì nó trả lời quá lễ phép'], correct: 1 },
+        { b: 'Đạo đức AI · Tình huống', q: 'Mã chủ "GIÁM SÁT" bạn giải được trong game tượng trưng cho điều gì?', opts: ['AI tự giám sát chính nó', 'Con người luôn giám sát và làm chủ AI (AI là trợ lý)', 'Camera an ninh trong trường'], correct: 1 },
+        // ===== Tổng hợp 7 buổi (không trùng escape room) =====
+        { b: 'Tổng hợp', q: 'Chatbot AI của Google tên là?', opts: ['Gemini', 'Claude', 'Siri'], correct: 0 },
+        { b: 'Tổng hợp', q: 'Công ty nào tạo ra ChatGPT?', opts: ['Google', 'OpenAI', 'Apple'], correct: 1 },
+        { b: 'Tổng hợp', q: '"IDE" (Buổi 4) là?', opts: ['Phần mềm để viết và chạy code', 'Một loại chatbot AI', 'Một định dạng ảnh'], correct: 0 },
+        { b: 'Tổng hợp', q: '"Bộ não thứ hai" (Second Brain — Buổi 5) nghĩa là?', opts: ['Hệ thống ghi chú/lưu trữ kiến thức số', 'Một con chip cấy vào não', 'Một mô hình AI'], correct: 0 },
+        { b: 'Tổng hợp', q: 'Quy trình C.O.D.E (Buổi 6) gồm: Capture, Organize, Distill và…?', opts: ['Express (Thể hiện)', 'Edit (Sửa)', 'Explore (Khám phá)'], correct: 0 }
       ];
 
       function renderFinalTest(container) {
@@ -2527,23 +2869,26 @@
         scene.innerHTML = '<span class="eyebrow">🏁 DEBRIEF · ĐẠO ĐỨC AI + KIỂM TRA CUỐI KHOÁ</span><h2 class="title">Lời thề người dùng AI có trách nhiệm</h2><p class="sub">Bấm để cam kết 5 nguyên tắc:</p>';
         ['Con người làm chủ — luôn giám sát & quyết định, AI là trợ lý', 'Luôn kiểm chứng — đối chiếu nguồn trước khi tin AI', 'Bảo vệ riêng tư — không đưa mật khẩu/CCCD cho AI', 'Trung thực — không dùng AI để gian lận; ghi rõ khi có dùng AI', 'Tôn trọng con người — AI hỗ trợ chứ không thay thế thầy cô & bạn bè']
           .forEach(function (r) { var cl = scene.querySelector('.cl') || scene.appendChild(el('div', 'cl')); var item = el('div', 'cli', '<div class="ck">✓</div><span>' + r + '</span>'); item.addEventListener('click', function () { item.classList.toggle('done'); }); cl.appendChild(item); });
-        scene.appendChild(el('h2', 'title', '📝 KIỂM TRA CUỐI KHOÁ — 30 câu (ôn cả 7 buổi)')).style.fontSize = '1.35rem';
-        scene.appendChild(el('p', 'sub', 'Trả lời HẾT 30 câu rồi bấm NỘP BÀI để chấm điểm. Câu xanh = đúng, câu đỏ = sai (đáp án đúng sẽ được tô xanh).'));
+        scene.appendChild(el('h2', 'title', '📝 KIỂM TRA CUỐI KHOÁ — 30 câu (Đạo đức AI + tổng hợp)')).style.fontSize = '1.35rem';
+        scene.appendChild(el('p', 'sub', 'Bộ câu hỏi tập trung vào KIẾN THỨC MỚI (đạo đức AI) — không lặp lại các câu đã giải trong escape room. Trả lời HẾT 30 câu rồi bấm NỘP BÀI. Câu xanh = đúng, câu đỏ = sai (đáp án đúng sẽ được tô xanh).'));
         renderFinalTest(scene);
         scene.appendChild(el('div', 'note', '<span class="k">SỔ TAY CUỐI</span>Một nguyên tắc đạo đức bạn cam kết LUÔN nhớ khi dùng AI là gì?'));
         var ta = el('textarea', 'reflect'); ta.placeholder = 'Mình cam kết luôn…'; ta.value = state.reflect || ''; ta.addEventListener('input', function () { state.reflect = ta.value; save(); }); scene.appendChild(ta);
         var done = el('div', 'card'); done.style.marginTop = '1.2rem'; done.innerHTML = '<h3>🎓 Hoàn thành Buổi 8!</h3><p>AI là trợ lý mạnh mẽ — con người là người làm chủ có đạo đức. Buổi sau (B9): Workflow đa AI + đánh giá output.</p>'; scene.appendChild(done);
+        var lb = btn('btn ghost', '📘 Xem lại bài Đạo đức AI'); lb.style.marginRight = '.6rem'; lb.addEventListener('click', function () { renderLearn(0); }); scene.appendChild(lb);
         var rb = btn('btn ghost', '⟲ Chơi lại từ đầu'); rb.addEventListener('click', resetGame); scene.appendChild(rb);
       }
 
-      function resetGame() { if (!confirm('Chơi lại từ đầu? Toàn bộ tiến trình & thời gian sẽ bị xoá.')) return; state = { solved: [], view: 'boot', started: 0 }; save(); renderHud(); renderRail(); renderBoot(); }
+      function resetGame() { if (!confirm('Chơi lại từ đầu? Toàn bộ tiến trình & thời gian sẽ bị xoá.')) return; state = { solved: [], view: 'boot', started: 0, learnIdx: 0 }; save(); renderHud(); renderRail(); renderBoot(); }
       document.getElementById('btnReset').addEventListener('click', resetGame);
+      document.getElementById('btnLearn').addEventListener('click', function () { renderLearn(state.learnIdx || 0); });
 
       function start() {
         renderHud(); renderRail(); tick();
         var v = state.view || 'boot';
         if (v === 'control') renderControl();
         else if (v === 'win') renderWin();
+        else if (v === 'learn') renderLearn();
         else if (v === 'debrief') renderDebrief();
         else if (/^room[1-7]$/.test(v)) { var n = +v.slice(4); if (n > 1 && !isSolved(n - 1)) n = 1; enterRoom(n); }
         else renderBoot();
