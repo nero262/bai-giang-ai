@@ -143,7 +143,7 @@
     "module_name": "Second Brain",
     "duration_min": 120,
     "file": "buoi_08.html",
-    "available": false,
+    "available": true,
     "description": "AI Escape Room \"Trường học bị khoá\": vượt 7 phòng (nhập mã qua bàn phím/khoá số/đồng hồ) ôn lại 7 buổi, phân biệt thông tin thật/giả của AI EDU-X, rút ra 5 nguyên tắc đạo đức AI và làm mini-test giữa module.",
     "tags": [
       "ethics",
