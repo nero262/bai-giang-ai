@@ -104,6 +104,16 @@ def build(out_dir: Path) -> None:
         if not file_path.exists():
             print(f"  ! bỏ qua {lesson.slug}: thiếu file {lesson.file}")
             continue
+
+        # File là trang HTML standalone (vd game escape room) → copy thẳng, KHÔNG
+        # nhúng vào template slide. Phải khớp logic của backend (main.py view_lesson):
+        # fragment thường chỉ gồm <section class="slide"> nên không có <!doctype>/<html>.
+        _head = file_path.read_text(encoding="utf-8", errors="ignore")[:800].lower()
+        if "<!doctype html" in _head or "<html" in _head:
+            shutil.copy2(file_path, out_dir / "lesson" / f"{lesson.slug}.html")
+            print(f"  + lesson/{lesson.slug}.html (standalone, copy thẳng)")
+            continue
+
         fragment = parse_fragment(file_path)
         html = lesson_tpl.render(
             current=lesson,
