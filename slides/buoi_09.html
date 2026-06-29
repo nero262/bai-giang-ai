@@ -1,0 +1,1521 @@
+<!--
+  Slide fragment cho Buổi 9 — MODULE VC-1: Bức tranh toàn cảnh — 4 nhóm công cụ Vibe Coding.
+  Format fragment: chỉ gồm cấu hình Sổ Tay + CSS riêng + các <section class="slide">.
+  Chrome (sidebar, top-bar, SlideEngine, notebook, quiz, toàn bộ CSS template)
+  do frontend/templates/lesson.html cung cấp.
+  Đây là slide đầu tiên của module VC (Vibe Coding).
+-->
+
+<script type="application/json" id="nb-questions">
+{
+  "1": {"title": "SỔ TAY #1 — Đầu buổi", "q": "Em đã từng dùng công cụ AI nào để tạo hoặc sửa thứ gì chưa? Công cụ đó là gì và em đã yêu cầu nó làm gì?"},
+  "2": {"title": "SỔ TAY #2 — Sau khi xem 4 nhóm", "q": "Trong 4 nhóm công cụ vibe coding, nhóm nào em thấy phù hợp nhất với mình ngay lúc này? Vì sao?"},
+  "3": {"title": "SỔ TAY #3 — Sau thực hành", "q": "Em đã dùng tool nào để thực hành? Điều gì dễ hơn em nghĩ? Điều gì khó hơn?"},
+  "4": {"title": "SỔ TAY #4 — Cuối buổi", "q": "Bản đồ công cụ của em: Tool nào cho ý tưởng nhanh? Tool nào cho sản phẩm thật? Tool nào em muốn học tiếp?"}
+}
+</script>
+
+<style>
+  /* =========================================================
+     BUỔI 9 — LOCAL STYLES
+     Module VC-1: Bức tranh toàn cảnh — 4 nhóm công cụ Vibe Coding
+     ========================================================= */
+
+  /* Cover: violet/purple gradient — new module VC */
+  .b9-cover {
+    --grad-cover: linear-gradient(135deg, #0F172A 0%, #3B0764 55%, #7C3AED 100%);
+  }
+
+  /* Part dividers: violet */
+  .b9-part {
+    background: linear-gradient(135deg, #2D1B69 0%, #7C3AED 100%);
+  }
+
+  /* ---- Shared content classes (not in template, defined per-lesson) ---- */
+
+  /* Keyword cards */
+  .kw-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.9rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  .kw-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--primary);
+    border-radius: var(--radius-md);
+    padding: 0.95rem 1.1rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+  }
+
+  .kw-card .kw-term {
+    font-weight: 800;
+    color: var(--primary-dark);
+    font-size: 1.02rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .kw-card .kw-def {
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .kw-card.k-cyan {
+    border-left-color: var(--accent);
+  }
+
+  .kw-card.k-cyan .kw-term {
+    color: #0E7490;
+  }
+
+  .kw-card.k-purple {
+    border-left-color: var(--box-purple-border);
+  }
+
+  .kw-card.k-purple .kw-term {
+    color: var(--box-purple-dark);
+  }
+
+  .kw-card.k-orange {
+    border-left-color: var(--box-orange-border);
+  }
+
+  .kw-card.k-orange .kw-term {
+    color: var(--box-orange-dark);
+  }
+
+  .kw-card.k-green {
+    border-left-color: var(--success);
+  }
+
+  .kw-card.k-green .kw-term {
+    color: #065F46;
+  }
+
+  /* Numbered process steps */
+  .pstep {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  .pstep-item {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.8rem 1rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+  }
+
+  .pstep-n {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--grad-primary);
+    color: white;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+  }
+
+  .pstep-item h4 {
+    font-size: 0.98rem;
+    font-weight: 700;
+    margin: 0.1rem 0 0.15rem;
+    color: var(--text);
+  }
+
+  .pstep-item p {
+    font-size: 0.86rem;
+    color: var(--text-dim);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* Summary grid */
+  .sum-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 0.8rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  .sum-item {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.8rem 0.9rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+  }
+
+  .sum-n {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: var(--box-blue);
+    color: var(--primary-dark);
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.85rem;
+  }
+
+  .sum-item p {
+    font-size: 0.86rem;
+    line-height: 1.4;
+    margin: 0;
+    color: var(--text-dim);
+  }
+
+  /* Prompt box */
+  .prompt-box {
+    background: #0F172A;
+    color: #E2E8F0;
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.2rem;
+    width: 100%;
+    text-align: left;
+    font-size: 0.9rem;
+    line-height: 1.6;
+    box-shadow: var(--shadow-md);
+    margin-top: 0.6rem;
+  }
+
+  .prompt-box .pb-label {
+    display: inline-block;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #38BDF8;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .prompt-box code,
+  .prompt-box .pb-ph {
+    color: #FCD34D;
+  }
+
+  .prompt-box .pb-line {
+    display: block;
+    margin: 0.15rem 0;
+  }
+
+  .prompt-box .pb-tag {
+    color: #818CF8;
+    font-weight: 700;
+  }
+
+  /* ---- Tool Group Cards ---- */
+  .tg-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  .tg-card {
+    border-radius: var(--radius-md);
+    padding: 1rem 1.1rem;
+    border: 2px solid;
+    text-align: left;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .tg-card .tg-name {
+    font-weight: 800;
+    font-size: 1rem;
+    margin: 0 0 0.4rem;
+  }
+
+  .tg-card .tg-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.3rem;
+    margin: 0.5rem 0;
+  }
+
+  .tg-pill {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.2rem 0.55rem;
+    border-radius: 100px;
+  }
+
+  .tg-card ul {
+    margin: 0.4rem 0 0;
+    padding-left: 1.1rem;
+  }
+
+  .tg-card ul li {
+    font-size: 0.84rem;
+    color: var(--text-dim);
+    margin-bottom: 0.2rem;
+    line-height: 1.4;
+  }
+
+  /* Group 1 — Blue (Chat-first) */
+  .tg-g1 {
+    background: #EFF6FF;
+    border-color: #2563EB;
+  }
+
+  .tg-g1 .tg-name {
+    color: #1E3A8A;
+  }
+
+  .tg-g1 .tg-pill {
+    background: #DBEAFE;
+    color: #1E3A8A;
+  }
+
+  /* Group 2 — Green (Platform AI-first) */
+  .tg-g2 {
+    background: #ECFDF5;
+    border-color: #059669;
+  }
+
+  .tg-g2 .tg-name {
+    color: #065F46;
+  }
+
+  .tg-g2 .tg-pill {
+    background: #D1FAE5;
+    color: #065F46;
+  }
+
+  /* Group 3 — Orange (IDE AI) */
+  .tg-g3 {
+    background: #FFF7ED;
+    border-color: #EA580C;
+  }
+
+  .tg-g3 .tg-name {
+    color: #7C2D12;
+  }
+
+  .tg-g3 .tg-pill {
+    background: #FFEDD5;
+    color: #7C2D12;
+  }
+
+  /* Group 4 — Indigo (CLI Agent) */
+  .tg-g4 {
+    background: #EEF2FF;
+    border-color: #6366F1;
+  }
+
+  .tg-g4 .tg-name {
+    color: #3730A3;
+  }
+
+  .tg-g4 .tg-pill {
+    background: #E0E7FF;
+    color: #3730A3;
+  }
+
+  /* ---- Comparison Table ---- */
+  .cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.6rem;
+    font-size: 0.82rem;
+  }
+
+  .cmp-table th {
+    background: var(--bg);
+    color: white;
+    padding: 0.6rem 0.8rem;
+    text-align: left;
+    font-size: 0.82rem;
+  }
+
+  .cmp-table td {
+    padding: 0.55rem 0.8rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    font-size: 0.82rem;
+  }
+
+  .cmp-table tr:nth-child(even) td {
+    background: #F8FAFC;
+  }
+
+  .cmp-table .best {
+    color: var(--success);
+    font-weight: 700;
+  }
+
+  .cmp-table .ok {
+    color: var(--warning);
+    font-weight: 600;
+  }
+
+  .cmp-table .no {
+    color: var(--danger);
+  }
+
+  /* ---- Callout (b9 local) ---- */
+  .b9-callout {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-md);
+    width: 100%;
+    margin-top: 0.6rem;
+    text-align: left;
+  }
+
+  .b9-callout .ci {
+    font-size: 1.3rem;
+    flex-shrink: 0;
+  }
+
+  .b9-callout.tip {
+    background: #ECFDF5;
+    border-left: 4px solid var(--success);
+  }
+
+  .b9-callout.warn {
+    background: #FFFBEB;
+    border-left: 4px solid var(--warning);
+  }
+
+  .b9-callout.info {
+    background: var(--box-blue);
+    border-left: 4px solid var(--primary);
+  }
+
+  .b9-callout p {
+    font-size: 0.9rem;
+    line-height: 1.5;
+    margin: 0;
+    color: var(--text-dim);
+  }
+
+  .b9-callout strong {
+    color: var(--text);
+  }
+
+  /* ---- Two-column layout ---- */
+  .b9-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    width: 100%;
+    margin-top: 0.6rem;
+    align-items: start;
+  }
+
+  @media (max-width: 820px) {
+    .b9-two {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  /* ---- Tool Map (Bản đồ công cụ cá nhân) ---- */
+  .tool-map {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    width: 100%;
+    margin-top: 0.7rem;
+  }
+
+  .tm-cell {
+    border-radius: var(--radius-md);
+    border: 2px dashed #CBD5E1;
+    padding: 0.9rem 1rem;
+    text-align: left;
+    background: var(--surface);
+  }
+
+  .tm-cell .tm-q {
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 800;
+    color: var(--text-muted);
+    margin-bottom: 0.4rem;
+  }
+
+  .tm-cell .tm-ans {
+    font-size: 0.88rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .tm-cell.filled {
+    border-style: solid;
+    border-color: var(--primary);
+  }
+
+  /* ---- Checklist Table ---- */
+  .check-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.7rem;
+  }
+
+  .check-table td {
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+    color: var(--text-dim);
+    vertical-align: middle;
+  }
+
+  .check-table td:first-child {
+    width: 2.2rem;
+    font-size: 1.1rem;
+    color: var(--success);
+    text-align: center;
+  }
+
+  .check-table tr:last-child td {
+    border-bottom: none;
+  }
+
+  /* ---- Part divider text ---- */
+  .part-eyebrow {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 0.4rem;
+  }
+
+  .part-num {
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.12);
+    margin-bottom: 0.2rem;
+    letter-spacing: -0.04em;
+  }
+
+  .part-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 0.6rem;
+  }
+
+  .part-sub {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 600px;
+    line-height: 1.5;
+  }
+
+  /* ---- Fit overrides for content-heavy slides ---- */
+  /* Slide 2 — lộ trình nhiều bước */
+  [data-slide="2"] .slide-body {
+    gap: 0.5rem;
+  }
+
+  [data-slide="2"] .pstep-item {
+    padding: 0.55rem 0.8rem;
+  }
+
+  /* Slide 14 — bảng so sánh */
+  [data-slide="14"] .slide-body {
+    gap: 0.4rem;
+  }
+
+  [data-slide="14"] .cmp-table th,
+  [data-slide="14"] .cmp-table td {
+    padding: 0.45rem 0.7rem;
+    font-size: 0.80rem;
+  }
+
+  /* Slide 18 — prompt box */
+  [data-slide="18"] .slide-body {
+    gap: 0.4rem;
+  }
+
+  [data-slide="18"] .prompt-box {
+    font-size: 0.82rem;
+  }
+
+  /* Slide 24 — checklist */
+  [data-slide="24"] .check-table td {
+    padding: 0.55rem 0.8rem;
+    font-size: 0.88rem;
+  }
+
+  /* cmp2 col overrides for slide 9 */
+  .b9-cmp2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  .b9-col {
+    border-radius: var(--radius-md);
+    padding: 1rem 1.1rem;
+    text-align: left;
+  }
+
+  .b9-col h4 {
+    font-size: 0.95rem;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .b9-col p,
+  .b9-col li {
+    font-size: 0.88rem;
+    line-height: 1.5;
+    color: var(--text-dim);
+  }
+
+  .b9-col.col-bad {
+    background: #FFF7ED;
+    border: 2px solid #EA580C;
+  }
+
+  .b9-col.col-bad h4 {
+    color: #7C2D12;
+  }
+
+  .b9-col.col-good {
+    background: #EFF6FF;
+    border: 2px solid #2563EB;
+  }
+
+  .b9-col.col-good h4 {
+    color: #1E3A8A;
+  }
+
+  /* Large single tg-card for group slides */
+  .tg-card-lg {
+    border-radius: var(--radius-lg);
+    padding: 1.2rem 1.4rem;
+    border: 2px solid;
+    text-align: left;
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    margin-top: 0.4rem;
+  }
+
+  .tg-card-lg .tg-name {
+    font-size: 1.15rem;
+    margin: 0 0 0.5rem;
+    font-weight: 800;
+  }
+
+  .tg-card-lg .tg-pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.8rem;
+    margin-top: 0.6rem;
+  }
+
+  .tg-card-lg .pc-col h5 {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+  }
+
+  .tg-card-lg .pc-col.pros h5 {
+    color: var(--success);
+  }
+
+  .tg-card-lg .pc-col.cons h5 {
+    color: var(--danger);
+  }
+
+  .tg-card-lg ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+
+  .tg-card-lg ul li {
+    font-size: 0.84rem;
+    color: var(--text-dim);
+    margin-bottom: 0.25rem;
+    line-height: 1.4;
+  }
+
+  /* Star rating */
+  .stars {
+    color: #F59E0B;
+    font-size: 0.85rem;
+  }
+</style>
+
+<!-- ============================================================
+     SLIDE 1 — COVER
+     ============================================================ -->
+<section class="slide active slide-cover b9-cover" data-slide="1" data-title="Trang bìa">
+  <div class="cover-orb orb-1"></div>
+  <div class="cover-orb orb-2"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">BUỔI 9 · MODULE VC — VIBE CODING</span>
+    <h1 class="hero-title">Bức tranh toàn cảnh — <span class="grad-text">4 nhóm công cụ</span> Vibe Coding</h1>
+    <p class="slide-subtitle">Khám phá cả vũ trụ công cụ · Thực hành tạo sản phẩm · Vẽ bản đồ công cụ cá nhân</p>
+    <div class="cover-chips">
+      <span class="cover-chip">120 phút</span>
+      <span class="cover-chip">Output: Bản đồ công cụ + 1 sản phẩm mini</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 2 — LỘ TRÌNH 2 GIỜ
+     ============================================================ -->
+<section class="slide" data-slide="2" data-title="Lộ trình 2 giờ">
+  <div class="slide-body">
+    <span class="eyebrow">LỘ TRÌNH HÔM NAY</span>
+    <h2 class="slide-title">6 chặng trong 120 phút ⏱️</h2>
+    <div class="pstep">
+      <div class="pstep-item">
+        <div class="pstep-n">1</div>
+        <div>
+          <strong>0–10 phút — Ôn Vibe Coding</strong><br>
+          <span style="font-size:0.88rem;color:var(--text-dim);">Nhắc lại nhanh bằng flashcard &amp; quiz · Nhớ lại vòng
+            lặp cốt lõi</span>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n">2</div>
+        <div>
+          <strong>10–45 phút — Khám phá 4 nhóm công cụ</strong><br>
+          <span style="font-size:0.88rem;color:var(--text-dim);">Từng nhóm 1 slide · Ưu, nhược điểm · Tool free nào dùng
+            ngay được</span>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n">3</div>
+        <div>
+          <strong>45–60 phút — Bảng so sánh &amp; khi nào dùng cái nào</strong><br>
+          <span style="font-size:0.88rem;color:var(--text-dim);">Nhìn 4 nhóm cạnh nhau · Chọn đúng tool = tiết kiệm cả
+            giờ đồng hồ</span>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n">4</div>
+        <div>
+          <strong>60–95 phút — Thực hành 🔨</strong><br>
+          <span style="font-size:0.88rem;color:var(--text-dim);">Dùng 1 tool free tạo sản phẩm mini · Chạy đủ 1 vòng lặp
+            Vibe Coding</span>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n">5</div>
+        <div>
+          <strong>95–110 phút — Vẽ Bản đồ công cụ cá nhân 🗺️</strong><br>
+          <span style="font-size:0.88rem;color:var(--text-dim);">Điền 4 ô: khi nào dùng cái nào · Bản đồ của bạn, không
+            ai giống ai</span>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n">6</div>
+        <div>
+          <strong>110–120 phút — Tổng kết + checklist + bài về nhà</strong><br>
+          <span style="font-size:0.88rem;color:var(--text-dim);">5 điều đã học · Tự đánh giá · Nhiệm vụ trước Buổi
+            10</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 3 — OUTPUT BUỔI
+     ============================================================ -->
+<section class="slide" data-slide="3" data-title="Output buổi học">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 9 — BẠN PHẢI CÓ</span>
+    <h2 class="slide-title">4 thứ bạn mang về nhà 🎒</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+      <div class="card">
+        <div class="card-icon">1</div>
+        <h3>Biết 4 nhóm công cụ</h3>
+        <p>Đặt tên và phân biệt được <strong>Chat-first, Platform AI, IDE AI, CLI Agent</strong> — khác nhau ở chỗ nào.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-icon">2</div>
+        <h3>Biết tool free phù hợp</h3>
+        <p>Danh sách <strong>3+ công cụ miễn phí</strong> dùng ngay, không cần credit card, không cần cài đặt phức tạp.
+        </p>
+      </div>
+      <div class="card">
+        <div class="card-icon">3</div>
+        <h3>1 sản phẩm mini 🚀</h3>
+        <p>Tự tay tạo bằng tool free, <strong>chạy được thật sự</strong> — qua ít nhất 1 vòng lặp mô tả → tạo → sửa.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">4</div>
+        <h3>Bản đồ công cụ cá nhân 🗺️</h3>
+        <p><strong>Biết khi nào dùng cái nào</strong> — đây là kỹ năng thật của một Vibe Coder thực thụ.</p>
+      </div>
+    </div>
+    <div class="hl-box success" style="margin-top:0.8rem;">
+      <span class="hl-label">🔒 NGUYÊN TẮC AN TOÀN</span>
+      <p>Không nhập mật khẩu, thông tin cá nhân, số điện thoại hay nội dung riêng tư vào công cụ AI.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 4 — SỔ TAY #1
+     ============================================================ -->
+<section class="slide" data-slide="4" data-title="Sổ Tay #1 — Đầu buổi">
+  <div class="slide-body">
+    <span class="eyebrow">BẮT ĐẦU</span>
+    <h2 class="slide-title">Bạn đã dùng AI để tạo gì chưa? 🤔</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header">
+        <div class="qbox-icon">#</div>SỔ TAY #1 — Đầu buổi
+      </div>
+      <div class="qbox-content">Em đã từng dùng công cụ AI nào để tạo hoặc sửa thứ gì chưa? <strong>Công cụ đó là
+          gì</strong> và em đã yêu cầu nó làm gì?</div>
+      <div class="nb-input-wrap">
+        <label>Câu trả lời của em:</label>
+        <textarea class="nb-input" data-nb-id="1"
+          placeholder="VD: Mình đã dùng ChatGPT để viết bài văn... / Chưa từng dùng, nhưng mình muốn thử..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">💡 Lưu ý</span>Không sao nếu chưa từng — câu trả lời thật nhất
+        là tốt nhất.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 5 — PART 1 DIVIDER: Ôn Vibe Coding
+     ============================================================ -->
+<section class="slide slide-cover b9-part" data-slide="5" data-title="Phần 1 — Ôn Vibe Coding">
+  <div class="cover-content slide-body" style="text-align:center;">
+    <div class="part-eyebrow">Phần 1 · 0–10 phút</div>
+    <div class="part-num">01</div>
+    <div class="part-title">Ôn Vibe Coding — nhắc lại nhanh</div>
+    <p class="part-sub">4 từ khoá từ các buổi trước — bấm vào thẻ để lật và nhớ lại 🃏</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 6 — FLASHCARD ÔN BÀI
+     ============================================================ -->
+<section class="slide" data-slide="6" data-title="Flashcard — ôn 4 từ khoá">
+  <div class="slide-body">
+    <span class="eyebrow">ÔN TẬP NHANH</span>
+    <h2 class="slide-title">4 từ khoá nền tảng — bấm để lật thẻ 👇</h2>
+    <div class="fc-grid">
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <span style="font-size:1.8rem;">🎵</span>
+            <strong>Vibe Coding</strong>
+            <span style="font-size:0.8rem;opacity:0.6;">Bấm để xem định nghĩa</span>
+          </div>
+          <div class="fc-back">
+            <p>Mô tả ý tưởng bằng lời → AI viết code → chạy thử → sửa qua nhiều vòng lặp.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <span style="font-size:1.8rem;">🔄</span>
+            <strong>Vòng lặp</strong>
+            <span style="font-size:0.8rem;opacity:0.6;">Bấm để xem định nghĩa</span>
+          </div>
+          <div class="fc-back">
+            <p>Mô tả → AI tạo → Chạy thử → Ghi lỗi → Mô tả lại → AI sửa... lặp cho đến khi đạt.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <span style="font-size:1.8rem;">🛡️</span>
+            <strong>Skill</strong>
+            <span style="font-size:0.8rem;opacity:0.6;">Bấm để xem định nghĩa</span>
+          </div>
+          <div class="fc-back">
+            <p>Tập hợp hướng dẫn đóng gói trong file <code>.md</code> — AI dùng để làm việc đúng theo quy tắc bạn đặt
+              ra.</p>
+          </div>
+        </div>
+      </div>
+      <div class="fc">
+        <div class="fc-inner">
+          <div class="fc-front">
+            <span style="font-size:1.8rem;">📝</span>
+            <strong>Prompt R-C-T-F-E</strong>
+            <span style="font-size:0.8rem;opacity:0.6;">Bấm để xem định nghĩa</span>
+          </div>
+          <div class="fc-back">
+            <p><strong>R</strong>ole · <strong>C</strong>ontext · <strong>T</strong>ask · <strong>F</strong>ormat ·
+              <strong>E</strong>xample — khung viết yêu cầu rõ ràng cho AI.
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 7 — QUIZ NHANH
+     ============================================================ -->
+<section class="slide" data-slide="7" data-title="Quiz — Vibe Coding là gì">
+  <div class="slide-body">
+    <span class="eyebrow">KIỂM TRA NHANH</span>
+    <h2 class="slide-title">Bạn nhớ chưa? 🧩</h2>
+    <div class="quiz" data-correct="1"
+      data-explanation="Vibe coding là vòng lặp: mô tả – tạo – chạy thử – sửa. Bạn là người kiểm soát chất lượng, không phải AI.">
+      <div class="quiz-q">Điều gì giúp Vibe Coding khác với việc chỉ hỏi AI một câu duy nhất rồi dùng kết quả?</div>
+      <div class="quiz-opts">
+        <div class="quiz-opt" data-index="0">AI tự quyết định toàn bộ, bạn không cần xem lại gì cả</div>
+        <div class="quiz-opt" data-index="1">Bạn mô tả → AI tạo → bạn chạy thử, ghi lỗi và mô tả lại để sửa nhiều vòng
+        </div>
+        <div class="quiz-opt" data-index="2">AI luôn tạo ra code đúng ngay từ lần đầu tiên</div>
+        <div class="quiz-opt" data-index="3">Chỉ dùng được khi bạn đã biết lập trình từ trước</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 8 — PART 2 DIVIDER: 4 nhóm công cụ
+     ============================================================ -->
+<section class="slide slide-cover b9-part" data-slide="8" data-title="Phần 2 — 4 nhóm công cụ">
+  <div class="cover-content slide-body" style="text-align:center;">
+    <div class="part-eyebrow">Phần 2 · 10–45 phút</div>
+    <div class="part-num">02</div>
+    <div class="part-title">Khám phá 4 nhóm công cụ Vibe Coding</div>
+    <p class="part-sub">Mỗi nhóm có thế mạnh riêng — biết đúng công cụ, chọn đúng lúc 🎯</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 9 — TẠI SAO CÓ NHIỀU TOOL?
+     ============================================================ -->
+<section class="slide" data-slide="9" data-title="Tại sao có nhiều tool?">
+  <div class="slide-body">
+    <span class="eyebrow">VÌ SAO CẦN BIẾT NHIỀU TOOL?</span>
+    <h2 class="slide-title">Không có "tool tốt nhất" — chỉ có "tool phù hợp nhất" 🎯</h2>
+    <div class="b9-cmp2">
+      <div class="b9-col col-bad">
+        <h4>😩 Chọn sai tool</h4>
+        <p>Tốn thời gian loay hoay · Tức bực vì không ra kết quả · Sản phẩm không làm được · Bỏ cuộc sớm</p>
+      </div>
+      <div class="b9-col col-good">
+        <h4>😎 Chọn đúng tool</h4>
+        <p>Chạy nhanh, kết quả ra ngay · Ít lỗi, ít phải fix · Tập trung vào ý tưởng · Tự tin hơn mỗi bước</p>
+      </div>
+    </div>
+    <div class="b9-callout info" style="margin-top:0.8rem;">
+      <span class="ci">💡</span>
+      <p><strong>Ví dụ thực tế:</strong> Muốn thử nhanh 1 ý tưởng trong 5 phút → dùng <strong>Chat-first</strong>. Muốn
+        build app đẹp có preview ngay → dùng <strong>Platform AI</strong>. Muốn quản lý dự án nhiều file → dùng
+        <strong>IDE AI</strong> hoặc <strong>CLI Agent</strong>.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 10 — NHÓM 1: CHAT-FIRST
+     ============================================================ -->
+<section class="slide" data-slide="10" data-title="Nhóm 1 — Chat-first">
+  <div class="slide-body">
+    <span class="eyebrow">NHÓM 1 — CHAT-FIRST</span>
+    <h2 class="slide-title">Nhóm 1 — Nói chuyện, AI viết code, bạn copy 💬</h2>
+    <div class="tg-card-lg tg-g1">
+      <div class="tg-name">💬 Chat-first</div>
+      <div class="tg-tools">
+        <span class="tg-pill" style="background:#DBEAFE;color:#1E3A8A;">Claude.ai</span>
+        <span class="tg-pill" style="background:#DBEAFE;color:#1E3A8A;">ChatGPT</span>
+        <span class="tg-pill" style="background:#DBEAFE;color:#1E3A8A;">Gemini</span>
+        <span class="tg-pill" style="background:#DBEAFE;color:#1E3A8A;">z.ai</span>
+      </div>
+      <div class="tg-pros-cons">
+        <div class="pc-col pros">
+          <h5>✅ Ưu điểm</h5>
+          <ul>
+            <li>Không cần cài đặt gì cả</li>
+            <li>Mở trình duyệt là dùng ngay</li>
+            <li>Phù hợp tạo file HTML đơn lẻ</li>
+            <li>Miễn phí cơ bản, không cần thẻ tín dụng</li>
+          </ul>
+        </div>
+        <div class="pc-col cons">
+          <h5>⚠️ Nhược điểm</h5>
+          <ul>
+            <li>Phải copy-paste code thủ công</li>
+            <li>Khó quản lý project nhiều file</li>
+            <li>Kết quả đôi khi không chạy ngay</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="b9-callout tip">
+      <span class="ci">🕐</span>
+      <p><strong>Dùng khi nào?</strong> Khi bạn muốn thử ý tưởng nhanh trong 5–10 phút hoặc tạo 1 file HTML đơn giản để
+        demo.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 11 — NHÓM 2: PLATFORM AI-FIRST
+     ============================================================ -->
+<section class="slide" data-slide="11" data-title="Nhóm 2 — Platform AI-first">
+  <div class="slide-body">
+    <span class="eyebrow">NHÓM 2 — PLATFORM AI-FIRST</span>
+    <h2 class="slide-title">Nhóm 2 — Mở web, mô tả, thấy preview ngay 🚀</h2>
+    <div class="tg-card-lg tg-g2">
+      <div class="tg-name">🚀 Platform AI-first</div>
+      <div class="tg-tools">
+        <span class="tg-pill" style="background:#D1FAE5;color:#065F46;">Bolt.new</span>
+        <span class="tg-pill" style="background:#D1FAE5;color:#065F46;">v0.dev</span>
+        <span class="tg-pill" style="background:#D1FAE5;color:#065F46;">Replit</span>
+        <span class="tg-pill" style="background:#D1FAE5;color:#065F46;">Lovable</span>
+      </div>
+      <div class="tg-pros-cons">
+        <div class="pc-col pros">
+          <h5>✅ Ưu điểm</h5>
+          <ul>
+            <li>Tạo app đẹp ngay trong trình duyệt</li>
+            <li>Có preview trực tiếp — thấy ngay kết quả</li>
+            <li>Một số miễn phí (Bolt.new, v0.dev, Replit)</li>
+            <li>App hoàn chỉnh hơn Chat-first</li>
+          </ul>
+        </div>
+        <div class="pc-col cons">
+          <h5>⚠️ Nhược điểm</h5>
+          <ul>
+            <li>Free tier có giới hạn credits/ngày</li>
+            <li>Phụ thuộc internet ổn định</li>
+            <li>Xuất code ra ngoài đôi khi khó chỉnh</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="b9-callout tip">
+      <span class="ci">⭐</span>
+      <p><strong>Free tốt nhất cho học sinh:</strong> <strong>Bolt.new</strong> (không cần credit card) và
+        <strong>v0.dev</strong> (~200 credits/ngày). Dùng khi muốn thấy kết quả ngay, có giao diện đẹp — best cho học
+        sinh mới bắt đầu vibe coding!
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 12 — NHÓM 3: IDE AI
+     ============================================================ -->
+<section class="slide" data-slide="12" data-title="Nhóm 3 — IDE AI">
+  <div class="slide-body">
+    <span class="eyebrow">NHÓM 3 — IDE AI</span>
+    <h2 class="slide-title">Nhóm 3 — AI ngồi bên cạnh khi bạn code ⌨️</h2>
+    <div class="tg-card-lg tg-g3">
+      <div class="tg-name">⌨️ IDE AI</div>
+      <div class="tg-tools">
+        <span class="tg-pill" style="background:#FFEDD5;color:#7C2D12;">Cursor</span>
+        <span class="tg-pill" style="background:#FFEDD5;color:#7C2D12;">Github Copilot</span>
+        <span class="tg-pill" style="background:#FFEDD5;color:#7C2D12;">Antigravity</span>
+      </div>
+      <div class="tg-pros-cons">
+        <div class="pc-col pros">
+          <h5>✅ Ưu điểm</h5>
+          <ul>
+            <li>AI gợi ý code ngay khi bạn đang gõ</li>
+            <li>Quản lý project nhiều file dễ dàng</li>
+            <li>Code chất lượng cao hơn</li>
+            <li>Copilot có free tier cho học sinh</li>
+          </ul>
+        </div>
+        <div class="pc-col cons">
+          <h5>⚠️ Nhược điểm</h5>
+          <ul>
+            <li>Cần cài phần mềm vào máy</li>
+            <li>Cần biết chút lập trình cơ bản</li>
+            <li>Không phù hợp cho người hoàn toàn mới</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="b9-callout warn">
+      <span class="ci">📅</span>
+      <p><strong>Dùng khi nào?</strong> Khi bạn đã có chút kiến thức lập trình và muốn làm dự án dài hơi. <strong>Buổi
+          VC-3</strong> chúng ta sẽ học một tool trong nhóm này!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 13 — NHÓM 4: CLI AGENT
+     ============================================================ -->
+<section class="slide" data-slide="13" data-title="Nhóm 4 — CLI Agent">
+  <div class="slide-body">
+    <span class="eyebrow">NHÓM 4 — CLI AGENT</span>
+    <h2 class="slide-title">Nhóm 4 — Ra lệnh bằng chữ, AI làm toàn bộ 🤖</h2>
+    <div class="tg-card-lg tg-g4">
+      <div class="tg-name">🤖 CLI Agent</div>
+      <div class="tg-tools">
+        <span class="tg-pill" style="background:#E0E7FF;color:#3730A3;">Claude Code</span>
+        <span class="tg-pill" style="background:#E0E7FF;color:#3730A3;">OpenCode</span>
+      </div>
+      <div class="tg-pros-cons">
+        <div class="pc-col pros">
+          <h5>✅ Ưu điểm</h5>
+          <ul>
+            <li>AI tự đọc/viết/sửa file trên máy bạn</li>
+            <li>Không phải copy-paste gì cả</li>
+            <li>Xử lý dự án nhiều file tốt nhất</li>
+            <li>Phù hợp để deploy sản phẩm thật lên internet</li>
+          </ul>
+        </div>
+        <div class="pc-col cons">
+          <h5>⚠️ Nhược điểm</h5>
+          <ul>
+            <li>Cần biết sơ về terminal (cửa sổ dòng lệnh)</li>
+            <li>Cần cài đặt (Node.js, ...)</li>
+            <li>Phức tạp hơn các nhóm trên</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="b9-callout info">
+      <span class="ci">🚀</span>
+      <p><strong>Dùng khi nào?</strong> Khi muốn xây app thật và deploy lên internet. <strong>Buổi VC-3 &amp;
+          VC-4</strong> chúng ta sẽ học Open Code — Mã nguồn mở CLI Agent phổ biến nhất hiện nay!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 14 — BẢNG SO SÁNH TỔNG HỢP
+     ============================================================ -->
+<section class="slide" data-slide="14" data-title="Bảng so sánh 4 nhóm">
+  <div class="slide-body">
+    <span class="eyebrow">NHÌN LẠI 4 NHÓM</span>
+    <h2 class="slide-title">Bảng so sánh — chọn đúng lúc 📊</h2>
+    <table class="cmp-table">
+      <thead>
+        <tr>
+          <th>Tiêu chí</th>
+          <th>💬 Chat-first</th>
+          <th>🚀 Platform AI</th>
+          <th>⌨️ IDE AI</th>
+          <th>🤖 CLI Agent</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>Cài đặt cần thiết</strong></td>
+          <td class="best">Không cần</td>
+          <td class="best">Không cần</td>
+          <td class="no">Cần cài app</td>
+          <td class="no">Cần cài app</td>
+        </tr>
+        <tr>
+          <td><strong>Tool free tốt</strong></td>
+          <td>Claude.ai / Gemini</td>
+          <td class="best">Bolt.new / v0.dev</td>
+          <td class="ok">Antigravity</td>
+          <td class="ok">Open Code</td>
+        </tr>
+        <tr>
+          <td><strong>Tốc độ ra sản phẩm</strong></td>
+          <td class="best">Nhanh</td>
+          <td class="best">Rất nhanh ⚡</td>
+          <td class="ok">Trung bình</td>
+          <td class="best">Nhanh</td>
+        </tr>
+        <tr>
+          <td><strong>Chất lượng code</strong></td>
+          <td class="ok">Trung bình</td>
+          <td class="ok">Tốt</td>
+          <td class="best">Rất tốt</td>
+          <td class="best">Rất tốt</td>
+        </tr>
+        <tr>
+          <td><strong>Phù hợp người mới</strong></td>
+          <td><span class="stars">★★★★★</span></td>
+          <td><span class="stars">★★★★</span><span style="color:#CBD5E1;">★</span></td>
+          <td><span class="stars">★★★</span><span style="color:#CBD5E1;">★★</span></td>
+          <td><span class="stars">★★</span><span style="color:#CBD5E1;">★★★</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="b9-callout tip">
+      <span class="ci">💡</span>
+      <p><strong>Không có tool nào hoàn hảo</strong> — bạn sẽ dùng nhiều nhóm khác nhau tuỳ tình huống. Vibe Coder giỏi
+        là người biết chuyển đổi linh hoạt.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 15 — SỔ TAY #2
+     ============================================================ -->
+<section class="slide" data-slide="15" data-title="Sổ Tay #2 — Sau 4 nhóm">
+  <div class="slide-body">
+    <span class="eyebrow">DỪNG LẠI · SUY NGHĨ</span>
+    <h2 class="slide-title">Nhóm nào phù hợp với bạn nhất lúc này? 🤔</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header">
+        <div class="qbox-icon">#</div>SỔ TAY #2 — Sau khi xem 4 nhóm
+      </div>
+      <div class="qbox-content">Trong 4 nhóm công cụ vibe coding, <strong>nhóm nào em thấy phù hợp nhất với mình ngay
+          lúc này?</strong> Vì sao?</div>
+      <div class="nb-input-wrap">
+        <label>Lựa chọn &amp; lý do của em:</label>
+        <textarea class="nb-input" data-nb-id="2"
+          placeholder="VD: Mình chọn Platform AI vì không cần cài đặt và thấy được kết quả ngay..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">💡 Gợi ý</span>Không có câu trả lời sai — phụ thuộc vào mục
+        tiêu và trình độ của bạn hiện tại.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 16 — PART 3 DIVIDER: Thực hành
+     ============================================================ -->
+<section class="slide slide-cover b9-part" data-slide="16" data-title="Phần 3 — Thực hành">
+  <div class="cover-content slide-body" style="text-align:center;">
+    <div class="part-eyebrow">Phần 3 · 60–95 phút</div>
+    <div class="part-num">03</div>
+    <div class="part-title">Thực hành — tạo sản phẩm mini 🔨</div>
+    <p class="part-sub">Chọn 1 tool free, mô tả ý tưởng, tạo thật, chạy thật</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 17 — NHIỆM VỤ THỰC HÀNH
+     ============================================================ -->
+<section class="slide" data-slide="17" data-title="Nhiệm vụ thực hành">
+  <div class="slide-body">
+    <span class="eyebrow">NHIỆM VỤ HÔM NAY</span>
+    <h2 class="slide-title">Tạo 1 trang web mini trong 30 phút ⏱️</h2>
+    <div class="pstep">
+      <div class="pstep-item">
+        <div class="pstep-n">1</div>
+        <div>
+          <strong>Chọn tool</strong> — <span style="color:var(--primary);">Bolt.new</span> hoặc <span
+            style="color:var(--primary);">v0.dev</span> hoặc <span style="color:var(--primary);">Claude.ai</span>
+          <br><span style="font-size:0.85rem;color:var(--text-dim);">Miễn phí, không cần credit card, mở trình duyệt là
+            dùng ngay</span>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n">2</div>
+        <div>
+          <strong>Chọn ý tưởng</strong> — 1 trong 3 gợi ý:
+          <br><span style="font-size:0.85rem;color:var(--text-dim);">
+            (a) Trang giới thiệu bản thân &nbsp;|&nbsp;
+            (b) Trang "Sở thích của tôi" với 3 mục yêu thích &nbsp;|&nbsp;
+            (c) Trang quiz đơn giản 3 câu hỏi
+          </span>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n">3</div>
+        <div>
+          <strong>Viết prompt RCTFE</strong> — dùng khung đã học, mô tả rõ bạn muốn gì
+          <br><span style="font-size:0.85rem;color:var(--text-dim);">Slide tiếp theo có prompt mẫu để copy &amp; dùng
+            ngay</span>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n">4</div>
+        <div>
+          <strong>Chạy thử + ghi lỗi + yêu cầu sửa</strong> — ít nhất 1 lần
+          <br><span style="font-size:0.85rem;color:var(--text-dim);">Đây là phần quan trọng nhất — đừng bỏ qua bước
+            này!</span>
+        </div>
+      </div>
+    </div>
+    <div class="hl-box warn" style="margin-top:0.7rem;">
+      <span class="hl-label">🎯 MỤC TIÊU</span>
+      <p>Mục tiêu <strong>không phải là app hoàn hảo</strong> — mà là trải qua đủ vòng lặp: <strong>Mô tả → Tạo → Chạy
+          thử → Sửa</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 18 — PROMPT MẪU RCTFE
+     ============================================================ -->
+<section class="slide" data-slide="18" data-title="Prompt mẫu RCTFE">
+  <div class="slide-body">
+    <span class="eyebrow">PROMPT MẪU — COPY &amp; DÙNG NGAY</span>
+    <h2 class="slide-title">Ví dụ: Game Đua Vịt May Mắn 🦆</h2>
+    <div class="prompt-box">
+      <span class="pb-label">Prompt R-C-T-F-E · Game Đua Vịt May Mắn</span>
+      <span class="pb-line"><span class="pb-tag">Role:</span> Bạn là "Pháp sư lập trình" chuyên viết code front-end siêu
+        thú vị, giao diện cực cuốn.</span>
+      <span class="pb-line"><span class="pb-tag">Context:</span> Mình muốn tạo mini-game "Đua Vịt May Mắn" chạy trên
+        trình duyệt trong 1 file HTML duy nhất. Nhìn thì công bằng nhưng các tình huống đường đua lại random vô lý đến
+        đi vào lòng đất.</span>
+      <span class="pb-line"><span class="pb-tag">Task:</span> Giao diện Cyberpunk (dark + neon tím/xanh), 4 chú vịt
+        (🦆🐤🦅🐥), nút "ĐẶT CƯỢC &amp; BẮT ĐẦU ĐUA". Vịt di chuyển ngẫu nhiên, kích hoạt 4 tình huống troll: Bay mất ·
+        Quay đầu vì thấy vịt cái · Ngủ gật vì xem TikTok đêm · Chạy ngược vì bị "úp sọt". Cuối cùng CHỈ 1 con về
+        đích.</span>
+      <span class="pb-line"><span class="pb-tag">Format:</span> 2 phần — (1) toàn bộ code trong 1 file HTML duy nhất,
+        (2) checklist 4 bước tự test độ "bất ổn" của trường đua.</span>
+      <span class="pb-line"><span class="pb-tag">Example:</span> Thông báo kết quả kiểu: "Chú vịt của bạn đã hóa thiên
+        nga!" hoặc "Hãy cắm xe để chơi lại!"</span>
+    </div>
+    <div class="b9-callout tip">
+      <span class="ci">🦆</span>
+      <p>Prompt càng <strong>cụ thể và vui vẻ</strong>, AI càng hứng khởi làm! Thử thay tên vịt hoặc thêm tình huống
+        troll của riêng bạn.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 19 — SỔ TAY #3
+     ============================================================ -->
+<section class="slide" data-slide="19" data-title="Sổ Tay #3 — Sau thực hành">
+  <div class="slide-body">
+    <span class="eyebrow">SAU THỰC HÀNH</span>
+    <h2 class="slide-title">Thực hành xong — chuyện gì xảy ra? 🔍</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header">
+        <div class="qbox-icon">#</div>SỔ TAY #3 — Sau thực hành
+      </div>
+      <div class="qbox-content">Em đã dùng <strong>tool nào</strong> để thực hành? <strong>Điều gì dễ hơn em
+          nghĩ?</strong> <strong>Điều gì khó hơn?</strong></div>
+      <div class="nb-input-wrap">
+        <label>Trải nghiệm thực hành của em:</label>
+        <textarea class="nb-input" data-nb-id="3"
+          placeholder="Tool mình dùng: ... Dễ hơn nghĩ: ... Khó hơn nghĩ: ..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">💡 Gợi ý</span>Ghi cả những thứ không như kỳ vọng — đó là dữ
+        liệu quý nhất để lần sau làm tốt hơn.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 20 — PART 4 DIVIDER: Bản đồ công cụ
+     ============================================================ -->
+<section class="slide slide-cover b9-part" data-slide="20" data-title="Phần 4 — Bản đồ công cụ">
+  <div class="cover-content slide-body" style="text-align:center;">
+    <div class="part-eyebrow">Phần 4 · 95–110 phút</div>
+    <div class="part-num">04</div>
+    <div class="part-title">Bản đồ công cụ cá nhân 🗺️</div>
+    <p class="part-sub">Mỗi người có một bản đồ khác nhau — không ai giống ai</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 21 — BẢN ĐỒ CÔNG CỤ
+     ============================================================ -->
+<section class="slide" data-slide="21" data-title="Bản đồ công cụ cá nhân">
+  <div class="slide-body">
+    <span class="eyebrow">BẢN ĐỒ CỦA BẠN</span>
+    <h2 class="slide-title">Điền vào bản đồ công cụ cá nhân 🗺️</h2>
+    <p class="slide-subtitle" style="font-size:0.9rem;margin-bottom:0;">Không có đúng sai — đây là bản đồ của riêng bạn
+      lúc này</p>
+    <div class="tool-map">
+      <div class="tm-cell filled">
+        <div class="tm-q">⚡ Khi cần ý tưởng nhanh (5 phút)</div>
+        <div class="tm-ans">VD: <strong>Claude.ai / ChatGPT</strong> — chat nhanh, thử ngay, không cần cài gì</div>
+      </div>
+      <div class="tm-cell filled">
+        <div class="tm-q">🎨 Khi muốn app đẹp có preview</div>
+        <div class="tm-ans">VD: <strong>Bolt.new / v0.dev</strong> — thấy kết quả ngay trong trình duyệt</div>
+      </div>
+      <div class="tm-cell">
+        <div class="tm-q">📁 Khi làm dự án dài hơi</div>
+        <div class="tm-ans">VD: <strong>Cursor / Windsurf</strong> — buổi VC-3 sẽ học, chờ thêm nhé!</div>
+      </div>
+      <div class="tm-cell">
+        <div class="tm-q">🌐 Khi muốn deploy lên internet</div>
+        <div class="tm-ans">VD: <strong>Claude Code + Vercel</strong> — buổi VC-4 sẽ học chi tiết!</div>
+      </div>
+    </div>
+    <div class="b9-callout info">
+      <span class="ci">🔄</span>
+      <p><strong>Bản đồ này sẽ thay đổi sau mỗi buổi học.</strong> Sau VC-4, bạn sẽ có đủ 4 ô điền được bằng trải nghiệm
+        thật của mình — không phải ví dụ của thầy cô nữa!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 22 — TỔNG KẾT BÀI HỌC
+     ============================================================ -->
+<section class="slide" data-slide="22" data-title="Tổng kết Buổi 9">
+  <div class="slide-body">
+    <span class="eyebrow">5 ĐIỀU ĐÃ HỌC HÔM NAY</span>
+    <h2 class="slide-title">Tổng kết Buổi 9 🏁</h2>
+    <div class="sum-grid">
+      <div class="sum-item">
+        <div class="sum-n">1</div>
+        <div>Vibe Coding = <strong>vòng lặp</strong> mô tả–tạo–chạy thử–sửa, không phải "nhờ AI làm hộ 1 lần là xong"
+        </div>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">2</div>
+        <div><strong>Chat-first</strong> (Claude/Gemini) — nhanh, không cần cài, phù hợp thử ý tưởng trong 5–10 phút
+        </div>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">3</div>
+        <div><strong>Platform AI</strong> (Bolt.new/v0.dev) — app đẹp ngay, free tier đủ dùng cho học sinh, best choice
+          cho mới bắt đầu</div>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">4</div>
+        <div><strong>IDE AI</strong> (Antigravity/Cursor) &amp; <strong>CLI Agent</strong> (Open Code/Claude Code) —
+          chuyên sâu hơn, sẽ học ở
+          VC-3 và VC-4</div>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">5</div>
+        <div><strong>Bản đồ công cụ cá nhân</strong> — biết khi nào dùng cái gì là kỹ năng thật của Vibe Coder thực thụ
+          🗺️</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 23 — SỔ TAY #4
+     ============================================================ -->
+<section class="slide" data-slide="23" data-title="Sổ Tay #4 — Cuối buổi">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI</span>
+    <h2 class="slide-title">Bản đồ công cụ của bạn 🗺️</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header">
+        <div class="qbox-icon">#</div>SỔ TAY #4 — Cuối buổi
+      </div>
+      <div class="qbox-content">Bản đồ công cụ của em: <strong>Tool nào cho ý tưởng nhanh?</strong> <strong>Tool nào cho
+          sản phẩm thật?</strong> <strong>Tool nào em muốn học tiếp?</strong></div>
+      <div class="nb-input-wrap">
+        <label>Bản đồ công cụ cá nhân của em:</label>
+        <textarea class="nb-input" data-nb-id="4"
+          placeholder="Ý tưởng nhanh: ... | Sản phẩm thật: ... | Muốn học tiếp: ..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">💡 Nhớ nhé</span>Câu trả lời hôm nay sẽ thay đổi sau khi bạn
+        học xong cả 4 buổi VC — đó là bằng chứng bạn đã lớn lên!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 24 — CHECKLIST TỰ ĐÁNH GIÁ
+     ============================================================ -->
+<section class="slide" data-slide="24" data-title="Checklist tự đánh giá">
+  <div class="slide-body">
+    <span class="eyebrow">TỰ ĐÁNH GIÁ</span>
+    <h2 class="slide-title">Checklist cuối buổi — bạn làm được chưa? ✅</h2>
+    <table class="check-table">
+      <tbody>
+        <tr>
+          <td>✅</td>
+          <td>Tôi phân biệt được 4 nhóm công cụ vibe coding và ví dụ của từng nhóm</td>
+        </tr>
+        <tr>
+          <td>✅</td>
+          <td>Tôi biết ít nhất 2 tool miễn phí phù hợp cho học sinh (không cần credit card)</td>
+        </tr>
+        <tr>
+          <td>✅</td>
+          <td>Tôi đã tự tay tạo được 1 sản phẩm mini bằng tool free</td>
+        </tr>
+        <tr>
+          <td>✅</td>
+          <td>Tôi đã thực hiện ít nhất 1 vòng lặp: mô tả → tạo → chạy thử → sửa</td>
+        </tr>
+        <tr>
+          <td>✅</td>
+          <td>Tôi điền được ít nhất 2/4 ô trong bản đồ công cụ cá nhân</td>
+        </tr>
+        <tr>
+          <td>✅</td>
+          <td>Tôi <strong>không</strong> nhập thông tin cá nhân, mật khẩu hay số điện thoại vào công cụ AI</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="b9-callout tip" style="margin-top:0.8rem;">
+      <span class="ci">🌟</span>
+      <p>Nếu bạn tick được 5–6 ô — bạn đã làm rất tốt hôm nay! Nếu còn thiếu — không sao, bài về nhà sẽ giúp bù lại.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 25 — BÀI VỀ NHÀ
+     ============================================================ -->
+<section class="slide" data-slide="25" data-title="Bài về nhà — Buổi 10">
+  <div class="slide-body">
+    <span class="eyebrow">BÀI VỀ NHÀ — TRƯỚC BUỔI 10</span>
+    <h2 class="slide-title">2 nhiệm vụ nhỏ 📋</h2>
+    <div class="pstep">
+      <div class="pstep-item">
+        <div class="pstep-n">1</div>
+        <div>
+          <strong>Thử 1 tool CHƯA dùng hôm nay</strong> (khác tool bạn đã dùng trong lớp)
+          <br><span style="font-size:0.85rem;color:var(--text-dim);">→ Tạo bất kỳ thứ gì — một trang web, một đoạn văn,
+            bất cứ thứ gì bạn tò mò → <strong>chụp màn hình kết quả</strong></span>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n">2</div>
+        <div>
+          <strong>Viết 2–3 câu so sánh</strong>: "Tool mới này khác tool hôm nay ở điểm nào?"
+          <br><span style="font-size:0.85rem;color:var(--text-dim);">→ Ghi vào Sổ Tay — không cần văn hay, chỉ cần
+            thật</span>
+        </div>
+      </div>
+    </div>
+    <div class="hl-box info" style="margin-top:0.8rem;">
+      <span class="hl-label">📅 BUỔI 10 (VC-2) — SẮP TỚI</span>
+      <p><strong>Skill — Vũ khí bí mật của Vibe Coder.</strong> Chúng ta sẽ học cách đóng gói prompt thành Skill và viết
+        file <code>.md</code> để AI hiểu rõ hơn ý bạn — mỗi lần không cần giải thích lại từ đầu!</p>
+    </div>
+    <div class="b9-callout tip">
+      <span class="ci">💡</span>
+      <p><strong>Không biết dùng tool nào?</strong> Thử <strong>Bolt.new</strong> — mở <code>bolt.new</code> trên trình
+        duyệt, không cần cài gì, gõ ý tưởng là xong!</p>
+    </div>
+  </div>
+</section>

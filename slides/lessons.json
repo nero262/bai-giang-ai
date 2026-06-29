@@ -156,86 +156,89 @@
   {
     "id": 9,
     "slug": "buoi_09",
-    "title": "Workflow + AI Eval",
+    "title": "Bức tranh toàn cảnh — 4 nhóm công cụ Vibe Coding",
     "module": "M3",
-    "module_name": "Multimedia",
+    "module_name": "Vibe Coding",
     "duration_min": 120,
     "file": "buoi_09.html",
-    "available": false,
-    "description": "Workflow đa AI và đánh giá output.",
+    "available": true,
+    "description": "Khám phá 4 nhóm công cụ vibe coding (Chat-first, Platform AI, IDE AI, CLI Agent); biết tool free phù hợp cho học sinh; thực hành tạo sản phẩm mini bằng tool free; vẽ bản đồ công cụ cá nhân.",
     "tags": [
-      "workflow",
-      "eval"
+      "vibe-coding",
+      "cong-cu",
+      "bolt-new",
+      "v0-dev",
+      "claude-ai",
+      "cursor",
+      "platform-ai",
+      "ban-do-cong-cu"
     ]
   },
   {
     "id": 10,
     "slug": "buoi_10",
-    "title": "Tạo ảnh AI",
+    "title": "Skill — Vũ khí bí mật của Vibe Coder",
     "module": "M3",
-    "module_name": "Multimedia",
+    "module_name": "Vibe Coding",
     "duration_min": 120,
     "file": "buoi_10.html",
     "available": false,
-    "description": "Tạo ảnh với AI (Midjourney, DALL-E, Stable Diffusion).",
+    "description": "Hiểu Prompt → Skill → Agent; giải phẫu file .md; thực hành tìm & dùng skill; tự viết skill đơn giản; thiết kế game Kéo Búa Bao AI bằng file .md và prompt RCTFE.",
     "tags": [
-      "image-gen",
-      "midjourney"
+      "vibe-coding",
+      "skill",
+      "markdown",
+      "rctfe",
+      "ke-bua-bao",
+      "thuat-toan"
     ]
   },
   {
     "id": 11,
     "slug": "buoi_11",
-    "title": "Slide + Audio AI",
+    "title": "CLI Agent — Open Code thực chiến",
     "module": "M3",
-    "module_name": "Multimedia",
+    "module_name": "Vibe Coding",
     "duration_min": 120,
     "file": "buoi_11.html",
     "available": false,
-    "description": "Tạo slide và audio bằng AI.",
+    "description": "Làm quen terminal; hiểu CLI Agent khác chat thường thế nào; cài Open Code; thực hành build Portfolio web app nhiều file; dùng slash command & skill trong Open Code.",
     "tags": [
-      "slide-gen",
-      "audio-gen"
+      "vibe-coding",
+      "open-code",
+      "cli-agent",
+      "terminal",
+      "portfolio",
+      "agent-loop"
     ]
   },
   {
     "id": 12,
     "slug": "buoi_12",
-    "title": "Hoàn thành APP-2.1",
+    "title": "Deploy với Vercel — Đưa sản phẩm ra thế giới",
     "module": "M3",
-    "module_name": "Multimedia",
+    "module_name": "Vibe Coding",
     "duration_min": 120,
     "file": "buoi_12.html",
     "available": false,
-    "description": "Build app Chấm bài văn.",
+    "description": "Hiểu khái niệm deploy (localhost → internet); giới thiệu Vercel free tier; thực hành deploy Portfolio bằng Vercel; polish sản phẩm; chia sẻ link thật với bạn bè.",
     "tags": [
-      "app",
-      "essay-grading"
+      "vibe-coding",
+      "deploy",
+      "vercel",
+      "github",
+      "hosting",
+      "portfolio"
     ]
   },
   {
     "id": 13,
     "slug": "buoi_13",
-    "title": "Hoàn thành APP-1.3",
-    "module": "M3",
-    "module_name": "Multimedia",
-    "duration_min": 120,
-    "file": "buoi_13.html",
-    "available": false,
-    "description": "Build app Phân tích dữ liệu.",
-    "tags": [
-      "app",
-      "data-analysis"
-    ]
-  },
-  {
-    "id": 14,
-    "slug": "buoi_14",
     "title": "Brief APP-1.2",
     "module": "M4",
     "module_name": "Mini Project + Agent",
     "duration_min": 120,
-    "file": "buoi_14.html",
+    "file": "buoi_13.html",
     "available": false,
     "description": "Brief dự án APP-1.2.",
     "tags": [
@@ -243,13 +246,13 @@
     ]
   },
   {
-    "id": 15,
-    "slug": "buoi_15",
+    "id": 14,
+    "slug": "buoi_14",
     "title": "Hoàn thành APP-1.2",
     "module": "M4",
     "module_name": "Mini Project + Agent",
     "duration_min": 120,
-    "file": "buoi_15.html",
+    "file": "buoi_14.html",
     "available": false,
     "description": "Build app Chatbot Socratic.",
     "tags": [
@@ -258,13 +261,13 @@
     ]
   },
   {
-    "id": 16,
-    "slug": "buoi_16",
+    "id": 15,
+    "slug": "buoi_15",
     "title": "Demo Day giữa kỳ",
     "module": "M4",
     "module_name": "Mini Project + Agent",
     "duration_min": 120,
-    "file": "buoi_16.html",
+    "file": "buoi_15.html",
     "available": false,
     "description": "Trình diễn sản phẩm giữa kỳ.",
     "tags": [
@@ -272,13 +275,13 @@
     ]
   },
   {
-    "id": 17,
-    "slug": "buoi_17",
+    "id": 16,
+    "slug": "buoi_16",
     "title": "Brief APP-2.2",
     "module": "M4",
     "module_name": "Mini Project + Agent",
     "duration_min": 120,
-    "file": "buoi_17.html",
+    "file": "buoi_16.html",
     "available": false,
     "description": "Brief dự án APP-2.2.",
     "tags": [
@@ -286,13 +289,13 @@
     ]
   },
   {
-    "id": 18,
-    "slug": "buoi_18",
+    "id": 17,
+    "slug": "buoi_17",
     "title": "Hoàn thành APP-2.2",
     "module": "M4",
     "module_name": "Mini Project + Agent",
     "duration_min": 120,
-    "file": "buoi_18.html",
+    "file": "buoi_17.html",
     "available": false,
     "description": "Build app Custom GPT + Make.com.",
     "tags": [
@@ -301,13 +304,13 @@
     ]
   },
   {
-    "id": 19,
-    "slug": "buoi_19",
+    "id": 18,
+    "slug": "buoi_18",
     "title": "MCP nâng cấp app",
     "module": "M4",
     "module_name": "Mini Project + Agent",
     "duration_min": 120,
-    "file": "buoi_19.html",
+    "file": "buoi_18.html",
     "available": false,
     "description": "Sử dụng MCP để nâng cấp các app đã có.",
     "tags": [
@@ -315,13 +318,13 @@
     ]
   },
   {
-    "id": 20,
-    "slug": "buoi_20",
+    "id": 19,
+    "slug": "buoi_19",
     "title": "Cursor + APP-1.1",
     "module": "M5",
     "module_name": "Vibe Coding",
     "duration_min": 120,
-    "file": "buoi_20.html",
+    "file": "buoi_19.html",
     "available": false,
     "description": "Sử dụng Cursor để vibe coding.",
     "tags": [
@@ -330,13 +333,13 @@
     ]
   },
   {
-    "id": 21,
-    "slug": "buoi_21",
+    "id": 20,
+    "slug": "buoi_20",
     "title": "Hoàn thành APP-1.1",
     "module": "M5",
     "module_name": "Vibe Coding",
     "duration_min": 120,
-    "file": "buoi_21.html",
+    "file": "buoi_20.html",
     "available": false,
     "description": "Build web app prototype với AI.",
     "tags": [
@@ -345,13 +348,13 @@
     ]
   },
   {
-    "id": 22,
-    "slug": "buoi_22",
+    "id": 21,
+    "slug": "buoi_21",
     "title": "Hoàn thành APP-4.1",
     "module": "M5",
     "module_name": "Vibe Coding",
     "duration_min": 120,
-    "file": "buoi_22.html",
+    "file": "buoi_21.html",
     "available": false,
     "description": "Build và deploy web app.",
     "tags": [
@@ -360,13 +363,13 @@
     ]
   },
   {
-    "id": 23,
-    "slug": "buoi_23",
+    "id": 22,
+    "slug": "buoi_22",
     "title": "Polish + Deploy",
     "module": "M6",
     "module_name": "Final Project",
     "duration_min": 120,
-    "file": "buoi_23.html",
+    "file": "buoi_22.html",
     "available": false,
     "description": "Hoàn thiện sản phẩm cuối khóa và deploy.",
     "tags": [
@@ -375,13 +378,13 @@
     ]
   },
   {
-    "id": 24,
-    "slug": "buoi_24",
+    "id": 23,
+    "slug": "buoi_23",
     "title": "Demo Day cuối + Bế giảng",
     "module": "M6",
     "module_name": "Final Project",
     "duration_min": 120,
-    "file": "buoi_24.html",
+    "file": "buoi_23.html",
     "available": false,
     "description": "Trình diễn sản phẩm cuối khóa và bế giảng.",
     "tags": [
