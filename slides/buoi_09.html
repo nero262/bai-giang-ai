@@ -554,17 +554,17 @@
     font-size: 0.80rem;
   }
 
-  /* Slide 18 — prompt box */
-  [data-slide="18"] .slide-body {
+  /* Slide 20 — prompt box */
+  [data-slide="20"] .slide-body {
     gap: 0.4rem;
   }
 
-  [data-slide="18"] .prompt-box {
+  [data-slide="20"] .prompt-box {
     font-size: 0.82rem;
   }
 
   /* Slide 24 — checklist */
-  [data-slide="24"] .check-table td {
+  [data-slide="27"] .check-table td {
     padding: 0.55rem 0.8rem;
     font-size: 0.88rem;
   }
@@ -672,6 +672,182 @@
     color: #F59E0B;
     font-size: 0.85rem;
   }
+
+  /* ---- Slide 15 — Flowchart chọn tool ---- */
+  .b9-flow-q {
+    background: var(--grad-primary);
+    color: white;
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1.2rem;
+    text-align: center;
+    font-weight: 800;
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+    box-shadow: var(--shadow-md);
+  }
+
+  .b9-flow-branches {
+    display: flex;
+    flex-direction: column;
+    gap: 0.42rem;
+    width: 100%;
+  }
+
+  .b9-flow-branch {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.65rem 1rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+    font-size: 0.88rem;
+  }
+
+  .b9-flow-branch .fb-if {
+    flex-shrink: 0;
+    color: var(--text-dim);
+    min-width: 200px;
+  }
+
+  .b9-flow-branch .fb-arrow {
+    color: var(--text-muted);
+    flex-shrink: 0;
+    font-size: 1.1rem;
+  }
+
+  .b9-flow-branch .fb-then {
+    font-weight: 700;
+  }
+
+  .b9-flow-branch.fbc-1 { border-left: 4px solid #3B82F6; }
+  .b9-flow-branch.fbc-1 .fb-then { color: #1D4ED8; }
+  .b9-flow-branch.fbc-2 { border-left: 4px solid #10B981; }
+  .b9-flow-branch.fbc-2 .fb-then { color: #065F46; }
+  .b9-flow-branch.fbc-3 { border-left: 4px solid #F97316; }
+  .b9-flow-branch.fbc-3 .fb-then { color: #7C2D12; }
+  .b9-flow-branch.fbc-4 { border-left: 4px solid #7C3AED; }
+  .b9-flow-branch.fbc-4 .fb-then { color: #3B0764; }
+
+  /* ---- Slide 18 — Bẫy người mới ---- */
+  .b9-trap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(255px, 1fr));
+    gap: 0.65rem;
+    width: 100%;
+    margin-top: 0.4rem;
+  }
+
+  .b9-trap {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid #EF4444;
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+  }
+
+  .b9-trap .trap-head {
+    display: flex;
+    gap: 0.45rem;
+    align-items: center;
+    margin-bottom: 0.3rem;
+  }
+
+  .b9-trap .trap-emoji { font-size: 1.2rem; flex-shrink: 0; }
+  .b9-trap .trap-name { font-weight: 800; font-size: 0.93rem; color: #B91C1C; }
+  .b9-trap .trap-prob { font-size: 0.82rem; color: var(--text-dim); margin: 0 0 0.3rem; }
+  .b9-trap .trap-fix { font-size: 0.82rem; color: #065F46; font-weight: 600; margin: 0; }
+
+  /* ---- Slide 21 — Vòng lặp sửa lỗi ---- */
+  .b9-fix-loop {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 0.3rem;
+  }
+
+  .b9-fix-item {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+  }
+
+  .b9-fix-item .fi-label {
+    font-size: 0.7rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+
+  .b9-fix-item .fi-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    align-items: center;
+    font-size: 0.87rem;
+  }
+
+  .b9-fix-item .fi-when { color: var(--text-dim); }
+  .b9-fix-item .fi-got { background: #FEF2F2; color: #B91C1C; border-radius: 4px; padding: 0.1rem 0.45rem; font-weight: 600; }
+  .b9-fix-item .fi-want { background: #ECFDF5; color: #065F46; border-radius: 4px; padding: 0.1rem 0.45rem; font-weight: 600; }
+  .b9-fix-item .fi-arrow { color: var(--text-muted); }
+
+  /* ---- Slide 28 — Teaser Skill ---- */
+  .b9-teaser {
+    background: linear-gradient(135deg, #1E1B4B 0%, #3730A3 60%, #0891B2 100%);
+    border-radius: var(--radius-lg);
+    padding: 1.3rem 1.5rem;
+    text-align: center;
+    color: white;
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    margin-top: 0.4rem;
+  }
+
+  .b9-teaser .tsr-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+
+  .b9-teaser .tsr-title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    margin: 0.2rem 0 0.4rem;
+  }
+
+  .b9-teaser .tsr-sub {
+    font-size: 0.87rem;
+    opacity: 0.85;
+    margin-bottom: 0.8rem;
+  }
+
+  .b9-teaser .tsr-md {
+    background: rgba(0, 0, 0, 0.38);
+    border-radius: var(--radius-md);
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-family: var(--font-code, monospace);
+    font-size: 0.8rem;
+    line-height: 1.65;
+  }
+
+  .b9-teaser .md-h  { color: #A78BFA; font-weight: 700; }
+  .b9-teaser .md-key { color: #FCD34D; }
+  .b9-teaser .md-val { color: #7DD3FC; }
 </style>
 
 <!-- ============================================================
@@ -1185,9 +1361,46 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 15 — SỔ TAY #2
+     SLIDE 15 — FLOWCHART CHỌN TOOL
      ============================================================ -->
-<section class="slide" data-slide="15" data-title="Sổ Tay #2 — Sau 4 nhóm">
+<section class="slide" data-slide="15" data-title="Chọn tool nào cho đúng?">
+  <div class="slide-body">
+    <span class="eyebrow">BẢN ĐỒ QUYẾT ĐỊNH</span>
+    <h2 class="slide-title">Tôi muốn làm gì → Dùng tool nào? 🗺️</h2>
+    <div class="b9-flow-q">❓ Bạn muốn làm gì ngay bây giờ?</div>
+    <div class="b9-flow-branches">
+      <div class="b9-flow-branch fbc-1">
+        <span class="fb-if">💬 Cần ý tưởng nhanh, thử trong 5 phút, không cần app đẹp</span>
+        <span class="fb-arrow">→</span>
+        <span class="fb-then">💬 Chat-first: Claude.ai / ChatGPT / Gemini</span>
+      </div>
+      <div class="b9-flow-branch fbc-2">
+        <span class="fb-if">🚀 Muốn thấy app chạy ngay, giao diện đẹp, không cần cài gì</span>
+        <span class="fb-arrow">→</span>
+        <span class="fb-then">🚀 Platform AI: Bolt.new / v0.dev / Replit</span>
+      </div>
+      <div class="b9-flow-branch fbc-3">
+        <span class="fb-if">⌨️ Dự án nhiều file, cần kiểm soát từng dòng code</span>
+        <span class="fb-arrow">→</span>
+        <span class="fb-then">⌨️ IDE AI: Cursor / Antigravity / Windsurf</span>
+      </div>
+      <div class="b9-flow-branch fbc-4">
+        <span class="fb-if">🌐 Muốn deploy lên internet, app thật, nhiều file phức tạp</span>
+        <span class="fb-arrow">→</span>
+        <span class="fb-then">🤖 CLI Agent: OpenCode / Claude Code</span>
+      </div>
+    </div>
+    <div class="b9-callout tip">
+      <span class="ci">💡</span>
+      <p>Không cần nhớ tên tool — chỉ cần nhớ <strong>4 câu hỏi</strong> bên trái. Đối chiếu với mục tiêu của bạn là ra tool ngay!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 16 — SỔ TAY #2
+     ============================================================ -->
+<section class="slide" data-slide="16" data-title="Sổ Tay #2 — Sau 4 nhóm">
   <div class="slide-body">
     <span class="eyebrow">DỪNG LẠI · SUY NGHĨ</span>
     <h2 class="slide-title">Nhóm nào phù hợp với bạn nhất lúc này? 🤔</h2>
@@ -1210,9 +1423,9 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 16 — PART 3 DIVIDER: Thực hành
+     SLIDE 17 — PART 3 DIVIDER: Thực hành
      ============================================================ -->
-<section class="slide slide-cover b9-part" data-slide="16" data-title="Phần 3 — Thực hành">
+<section class="slide slide-cover b9-part" data-slide="17" data-title="Phần 3 — Thực hành">
   <div class="cover-content slide-body" style="text-align:center;">
     <div class="part-eyebrow">Phần 3 · 60–95 phút</div>
     <div class="part-num">03</div>
@@ -1222,9 +1435,53 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 17 — NHIỆM VỤ THỰC HÀNH
+     SLIDE 18 — BẪY CỦA NGƯỜI MỚI
      ============================================================ -->
-<section class="slide" data-slide="17" data-title="Nhiệm vụ thực hành">
+<section class="slide" data-slide="18" data-title="Bẫy của người mới — 4 lỗi hay gặp">
+  <div class="slide-body">
+    <span class="eyebrow">PHÒNG TRÁNH TRƯỚC KHI THỰC HÀNH</span>
+    <h2 class="slide-title">4 bẫy hay gặp khi mới học Vibe Coding ⚠️</h2>
+    <div class="b9-trap-grid">
+      <div class="b9-trap">
+        <div class="trap-head">
+          <span class="trap-emoji">🤷</span>
+          <span class="trap-name">Prompt mơ hồ</span>
+        </div>
+        <p class="trap-prob">"Làm game cho tôi" → AI đoán mò, kết quả không như ý</p>
+        <p class="trap-fix">✅ Fix: Dùng RCTFE — nêu rõ Role, Context, Task</p>
+      </div>
+      <div class="b9-trap">
+        <div class="trap-head">
+          <span class="trap-emoji">🙈</span>
+          <span class="trap-name">Copy code mà không chạy thử</span>
+        </div>
+        <p class="trap-prob">Paste xong đóng tab, sau đó không biết lỗi ở đâu</p>
+        <p class="trap-fix">✅ Fix: Chạy ngay sau mỗi lần AI trả code — thấy lỗi → hỏi tiếp</p>
+      </div>
+      <div class="b9-trap">
+        <div class="trap-head">
+          <span class="trap-emoji">😤</span>
+          <span class="trap-name">AI sai 1 lần → bỏ cuộc</span>
+        </div>
+        <p class="trap-prob">Nghĩ "AI không hiểu mình" rồi dừng lại</p>
+        <p class="trap-fix">✅ Fix: Mô tả lỗi cụ thể hơn → hỏi lại theo cách khác</p>
+      </div>
+      <div class="b9-trap">
+        <div class="trap-head">
+          <span class="trap-emoji">🧩</span>
+          <span class="trap-name">Dùng sai tool</span>
+        </div>
+        <p class="trap-prob">Dùng Chat-first để làm dự án 10 file → code vỡ sau 3 vòng</p>
+        <p class="trap-fix">✅ Fix: Nhớ flowchart — đúng tool đúng việc!</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 19 — NHIỆM VỤ THỰC HÀNH
+     ============================================================ -->
+<section class="slide" data-slide="19" data-title="Nhiệm vụ thực hành">
   <div class="slide-body">
     <span class="eyebrow">NHIỆM VỤ HÔM NAY</span>
     <h2 class="slide-title">Tạo 1 trang web mini trong 30 phút ⏱️</h2>
@@ -1275,9 +1532,9 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 18 — PROMPT MẪU RCTFE
+     SLIDE 20 — PROMPT MẪU RCTFE
      ============================================================ -->
-<section class="slide" data-slide="18" data-title="Prompt mẫu RCTFE">
+<section class="slide" data-slide="20" data-title="Prompt mẫu RCTFE">
   <div class="slide-body">
     <span class="eyebrow">PROMPT MẪU — COPY &amp; DÙNG NGAY</span>
     <h2 class="slide-title">Ví dụ: Game Đua Vịt May Mắn 🦆</h2>
@@ -1306,9 +1563,56 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 19 — SỔ TAY #3
+     SLIDE 21 — VÒNG LẶP SỬA LỖI
      ============================================================ -->
-<section class="slide" data-slide="19" data-title="Sổ Tay #3 — Sau thực hành">
+<section class="slide" data-slide="21" data-title="Vòng lặp sửa lỗi — khi AI làm sai">
+  <div class="slide-body">
+    <span class="eyebrow">KỸ NĂNG CỐT LÕI CỦA VIBE CODER</span>
+    <h2 class="slide-title">Khi AI làm sai — mô tả lỗi, đừng bỏ cuộc 🔄</h2>
+    <div class="b9-callout info" style="margin-bottom:0.5rem;">
+      <span class="ci">📝</span>
+      <p>Công thức sửa lỗi: <strong>"Khi tôi [làm X] → AI trả về [Y] → Nhưng tôi muốn [Z]"</strong></p>
+    </div>
+    <div class="b9-fix-loop">
+      <div class="b9-fix-item">
+        <div class="fi-label">Ví dụ 1 — Giao diện</div>
+        <div class="fi-row">
+          <span class="fi-when">Khi mở file HTML →</span>
+          <span class="fi-got">Nền trắng, chữ đen</span>
+          <span class="fi-arrow">→ muốn</span>
+          <span class="fi-want">Dark mode màu tím</span>
+        </div>
+      </div>
+      <div class="b9-fix-item">
+        <div class="fi-label">Ví dụ 2 — Tính năng</div>
+        <div class="fi-row">
+          <span class="fi-when">Khi bấm nút "Gửi" →</span>
+          <span class="fi-got">Không có gì xảy ra</span>
+          <span class="fi-arrow">→ muốn</span>
+          <span class="fi-want">Hiện thông báo "Đã gửi!"</span>
+        </div>
+      </div>
+      <div class="b9-fix-item">
+        <div class="fi-label">Ví dụ 3 — Game Đua Vịt 🦆</div>
+        <div class="fi-row">
+          <span class="fi-when">Khi bấm "Bắt đầu đua" →</span>
+          <span class="fi-got">Vịt không di chuyển</span>
+          <span class="fi-arrow">→ muốn</span>
+          <span class="fi-want">Vịt chạy từ trái sang phải</span>
+        </div>
+      </div>
+    </div>
+    <div class="b9-callout tip">
+      <span class="ci">🎯</span>
+      <p>Vibe Coder giỏi không phải người <strong>không gặp lỗi</strong> — mà là người <strong>mô tả lỗi chuẩn</strong> để AI sửa đúng ngay lần đầu.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 22 — SỔ TAY #3
+     ============================================================ -->
+<section class="slide" data-slide="22" data-title="Sổ Tay #3 — Sau thực hành">
   <div class="slide-body">
     <span class="eyebrow">SAU THỰC HÀNH</span>
     <h2 class="slide-title">Thực hành xong — chuyện gì xảy ra? 🔍</h2>
@@ -1331,9 +1635,9 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 20 — PART 4 DIVIDER: Bản đồ công cụ
+     SLIDE 23 — PART 4 DIVIDER: Bản đồ công cụ
      ============================================================ -->
-<section class="slide slide-cover b9-part" data-slide="20" data-title="Phần 4 — Bản đồ công cụ">
+<section class="slide slide-cover b9-part" data-slide="23" data-title="Phần 4 — Bản đồ công cụ">
   <div class="cover-content slide-body" style="text-align:center;">
     <div class="part-eyebrow">Phần 4 · 95–110 phút</div>
     <div class="part-num">04</div>
@@ -1343,9 +1647,9 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 21 — BẢN ĐỒ CÔNG CỤ
+     SLIDE 24 — BẢN ĐỒ CÔNG CỤ
      ============================================================ -->
-<section class="slide" data-slide="21" data-title="Bản đồ công cụ cá nhân">
+<section class="slide" data-slide="24" data-title="Bản đồ công cụ cá nhân">
   <div class="slide-body">
     <span class="eyebrow">BẢN ĐỒ CỦA BẠN</span>
     <h2 class="slide-title">Điền vào bản đồ công cụ cá nhân 🗺️</h2>
@@ -1378,9 +1682,9 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 22 — TỔNG KẾT BÀI HỌC
+     SLIDE 25 — TỔNG KẾT BÀI HỌC
      ============================================================ -->
-<section class="slide" data-slide="22" data-title="Tổng kết Buổi 9">
+<section class="slide" data-slide="25" data-title="Tổng kết Buổi 9">
   <div class="slide-body">
     <span class="eyebrow">5 ĐIỀU ĐÃ HỌC HÔM NAY</span>
     <h2 class="slide-title">Tổng kết Buổi 9 🏁</h2>
@@ -1416,9 +1720,9 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 23 — SỔ TAY #4
+     SLIDE 26 — SỔ TAY #4
      ============================================================ -->
-<section class="slide" data-slide="23" data-title="Sổ Tay #4 — Cuối buổi">
+<section class="slide" data-slide="26" data-title="Sổ Tay #4 — Cuối buổi">
   <div class="slide-body">
     <span class="eyebrow">CUỐI BUỔI</span>
     <h2 class="slide-title">Bản đồ công cụ của bạn 🗺️</h2>
@@ -1441,9 +1745,9 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 24 — CHECKLIST TỰ ĐÁNH GIÁ
+     SLIDE 27 — CHECKLIST TỰ ĐÁNH GIÁ
      ============================================================ -->
-<section class="slide" data-slide="24" data-title="Checklist tự đánh giá">
+<section class="slide" data-slide="27" data-title="Checklist tự đánh giá">
   <div class="slide-body">
     <span class="eyebrow">TỰ ĐÁNH GIÁ</span>
     <h2 class="slide-title">Checklist cuối buổi — bạn làm được chưa? ✅</h2>
@@ -1483,9 +1787,36 @@
 </section>
 
 <!-- ============================================================
-     SLIDE 25 — BÀI VỀ NHÀ
+     SLIDE 28 — TEASER BUỔI SAU
      ============================================================ -->
-<section class="slide" data-slide="25" data-title="Bài về nhà — Buổi 10">
+<section class="slide" data-slide="28" data-title="Teaser — Buổi 10: Skill">
+  <div class="slide-body">
+    <span class="eyebrow">SẮP TỚI — BUỔI 10 (VC-2)</span>
+    <h2 class="slide-title">Hôm nay: biết chọn tool 🗺️ → Buổi sau: AI làm đúng ý mỗi lần ⚔️</h2>
+    <div class="b9-teaser">
+      <div class="tsr-label">Preview · Buổi 10 · VC-2</div>
+      <div class="tsr-title">Skill — Vũ khí bí mật của Vibe Coder</div>
+      <div class="tsr-sub">Đóng gói prompt thành file <code>.md</code> — viết một lần, dùng mãi mãi, chia sẻ được, AI hiểu ngay không cần giải thích lại</div>
+      <div class="tsr-md">
+        <span class="md-h">---</span><br>
+        <span class="md-key">name:</span> <span class="md-val">game-keo-bua-bao</span><br>
+        <span class="md-key">description:</span> <span class="md-val">Tạo game KBB với AI thông minh học từ thói quen</span><br>
+        <span class="md-h">---</span><br>
+        <span class="md-h">## Vai trò</span><br>
+        Bạn là lập trình viên game web cho học sinh phổ thông...<br>
+        <span class="md-h">## Thuật toán AI</span><br>
+        1. Lưu lịch sử nước đi của người chơi (mảng history)<br>
+        2. Tìm mẫu (pattern) lặp lại...<br>
+        3. Đoán nước tiếp theo → đánh ngược!
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 29 — BÀI VỀ NHÀ
+     ============================================================ -->
+<section class="slide" data-slide="29" data-title="Bài về nhà — Buổi 10">
   <div class="slide-body">
     <span class="eyebrow">BÀI VỀ NHÀ — TRƯỚC BUỔI 10</span>
     <h2 class="slide-title">2 nhiệm vụ nhỏ 📋</h2>
