@@ -177,20 +177,22 @@
   {
     "id": 10,
     "slug": "buoi_10",
-    "title": "Skill — Vũ khí bí mật của Vibe Coder",
+    "title": "Token, Context & Skill — Ba bí kíp làm chủ AI Agent",
     "module": "M3",
     "module_name": "Vibe Coding",
     "duration_min": 120,
     "file": "buoi_10.html",
-    "available": false,
-    "description": "Hiểu Prompt → Skill → Agent; giải phẫu file .md; thực hành tìm & dùng skill; tự viết skill đơn giản; thiết kế game Kéo Búa Bao AI bằng file .md và prompt RCTFE.",
+    "available": true,
+    "description": "Hiểu Token và Context Window; tránh Dumb Zone; làm chủ quy trình RPI (Research-Plan-Implement); viết file GEMINI.md (luật chơi dự án); tạo Skill đơn giản; 5 quy tắc vàng tiết kiệm token.",
     "tags": [
       "vibe-coding",
+      "token",
+      "context-window",
+      "rpi",
       "skill",
-      "markdown",
-      "rctfe",
-      "ke-bua-bao",
-      "thuat-toan"
+      "gemini-md",
+      "caveman-mode",
+      "tiet-kiem-token"
     ]
   },
   {

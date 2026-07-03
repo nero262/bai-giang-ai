@@ -1,0 +1,1516 @@
+<!--
+  Slide fragment cho Buổi 10 — MODULE VC-2: Token, Context & Skill — Ba bí kíp làm chủ AI Agent.
+  Format fragment: chỉ gồm cấu hình Sổ Tay + CSS riêng + các <section class="slide">.
+  Chrome (sidebar, top-bar, SlideEngine, notebook, quiz, toàn bộ CSS template)
+  do frontend/templates/lesson.html cung cấp.
+  Nguồn tham khảo:
+    - Báo cáo khảo sát công cụ tối ưu token khi sử dụng AI Agent
+    - Báo cáo hướng dẫn khóa học Vibe Coding với Google Antigravity
+  Lưu ý: loại bỏ chi tiết đặc thù Claude Code; giữ cơ chế chung áp dụng mọi AI Agent.
+-->
+
+<script type="application/json" id="nb-questions">
+{
+  "1": {"title": "SỔ TAY #1 — Đầu buổi", "q": "Em đã từng thấy AI 'quên' điều gì đó em vừa nói không? Chuyện gì đã xảy ra?"},
+  "2": {"title": "SỔ TAY #2 — Sau phần Token", "q": "Nếu Context Window là 'sổ ghi nhớ', điều gì khiến nó bị đầy nhanh nhất? Em sẽ làm gì để tránh?"},
+  "3": {"title": "SỔ TAY #3 — Sau thực hành", "q": "Em đã thử RPI hoặc tạo file GEMINI.md chưa? Bước nào dễ nhất? Bước nào khó nhất?"},
+  "4": {"title": "SỔ TAY #4 — Cuối buổi", "q": "3 thủ thuật tiết kiệm token mà em chắc chắn sẽ dùng sau buổi học hôm nay là gì?"}
+}
+</script>
+
+<style>
+  /* =========================================================
+     BUỔI 10 — LOCAL STYLES
+     Module VC-2: Token, Context & Skill
+     Color: Teal / Emerald
+     ========================================================= */
+
+  /* Cover: teal gradient */
+  .b10-cover {
+    --grad-cover: linear-gradient(135deg, #0F172A 0%, #042F2E 55%, #0D9488 100%);
+  }
+
+  /* Part dividers: teal */
+  .b10-part {
+    background: linear-gradient(135deg, #042F2E 0%, #0D9488 100%);
+  }
+
+  /* ---- Keyword cards ---- */
+  .kw-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.9rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  .kw-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--primary);
+    border-radius: var(--radius-md);
+    padding: 0.95rem 1.1rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+  }
+
+  .kw-card .kw-term {
+    font-weight: 800;
+    color: var(--primary-dark);
+    font-size: 1.02rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .kw-card .kw-def {
+    font-size: 1rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .kw-card.k-teal { border-left-color: #0D9488; }
+  .kw-card.k-teal .kw-term { color: #115E59; }
+
+  .kw-card.k-cyan { border-left-color: var(--accent); }
+  .kw-card.k-cyan .kw-term { color: #0E7490; }
+
+  .kw-card.k-purple { border-left-color: var(--box-purple-border); }
+  .kw-card.k-purple .kw-term { color: var(--box-purple-dark); }
+
+  .kw-card.k-orange { border-left-color: var(--box-orange-border); }
+  .kw-card.k-orange .kw-term { color: var(--box-orange-dark); }
+
+  .kw-card.k-green { border-left-color: var(--success); }
+  .kw-card.k-green .kw-term { color: #065F46; }
+
+  .kw-card.k-red { border-left-color: #EF4444; }
+  .kw-card.k-red .kw-term { color: #B91C1C; }
+
+  /* ---- Process steps ---- */
+  .pstep {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  .pstep-item {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.8rem 1rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+  }
+
+  .pstep-n {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--grad-primary);
+    color: white;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+  }
+
+  .pstep-n.n-teal {
+    background: linear-gradient(135deg, #0D9488, #06B6D4);
+  }
+
+  .pstep-item h4 {
+    font-size: 0.98rem;
+    font-weight: 700;
+    margin: 0.1rem 0 0.15rem;
+    color: var(--text);
+  }
+
+  .pstep-item p {
+    font-size: 0.96rem;
+    color: var(--text-dim);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* ---- Part divider text ---- */
+  .part-eyebrow {
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 0.4rem;
+  }
+
+  .part-num {
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.12);
+    margin-bottom: 0.2rem;
+    letter-spacing: -0.04em;
+  }
+
+  .part-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 0.6rem;
+  }
+
+  .part-sub {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 600px;
+    line-height: 1.5;
+  }
+
+  /* ---- Callout ---- */
+  .b10-callout {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-md);
+    width: 100%;
+    margin-top: 0.6rem;
+    text-align: left;
+  }
+
+  .b10-callout .ci { font-size: 1.3rem; flex-shrink: 0; }
+  .b10-callout p { font-size: 1rem; line-height: 1.5; margin: 0; color: var(--text-dim); }
+  .b10-callout strong { color: var(--text); }
+
+  .b10-callout.tip { background: #ECFDF5; border-left: 4px solid var(--success); }
+  .b10-callout.warn { background: #FFFBEB; border-left: 4px solid var(--warning); }
+  .b10-callout.danger { background: #FEF2F2; border-left: 4px solid #EF4444; }
+  .b10-callout.info { background: var(--box-blue); border-left: 4px solid var(--primary); }
+  .b10-callout.teal { background: #F0FDFA; border-left: 4px solid #0D9488; }
+
+  /* ---- Two-col ---- */
+  .b10-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    width: 100%;
+    margin-top: 0.6rem;
+    align-items: start;
+  }
+
+  @media (max-width: 820px) {
+    .b10-two { grid-template-columns: 1fr; }
+  }
+
+  /* ---- Context bar (visual meter) ---- */
+  .ctx-meter-wrap {
+    width: 100%;
+    margin-top: 0.8rem;
+  }
+
+  .ctx-meter-label {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--text-dim);
+    margin-bottom: 0.4rem;
+  }
+
+  .ctx-bar {
+    width: 100%;
+    height: 38px;
+    background: #E2E8F0;
+    border-radius: 999px;
+    overflow: hidden;
+    position: relative;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .ctx-fill {
+    height: 100%;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    padding-left: 1rem;
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: white;
+  }
+
+  .ctx-fill.safe {
+    width: 35%;
+    background: linear-gradient(90deg, #10B981, #34D399);
+  }
+
+  .ctx-fill.warn-zone {
+    width: 60%;
+    background: linear-gradient(90deg, #F59E0B, #FBBF24);
+  }
+
+  .ctx-fill.dumb-zone {
+    width: 85%;
+    background: linear-gradient(90deg, #EF4444, #F97316);
+  }
+
+  .ctx-marker {
+    position: absolute;
+    top: 0;
+    height: 100%;
+    width: 3px;
+    background: #B91C1C;
+  }
+
+  .ctx-marker-label {
+    position: absolute;
+    top: -20px;
+    transform: translateX(-50%);
+    font-size: 0.72rem;
+    font-weight: 800;
+    color: #B91C1C;
+    white-space: nowrap;
+  }
+
+  .ctx-zones {
+    display: flex;
+    gap: 0.7rem;
+    margin-top: 0.55rem;
+    flex-wrap: wrap;
+  }
+
+  .ctx-zone {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    font-size: 0.88rem;
+    color: var(--text-dim);
+  }
+
+  .ctx-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+
+  /* ---- RPI cards ---- */
+  .rpi-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.9rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  @media (max-width: 700px) {
+    .rpi-grid { grid-template-columns: 1fr; }
+  }
+
+  .rpi-card {
+    border-radius: var(--radius-md);
+    padding: 1rem 1.1rem;
+    text-align: left;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .rpi-card.r { background: #EFF6FF; border: 2px solid #2563EB; }
+  .rpi-card.p { background: #F5F3FF; border: 2px solid #7C3AED; }
+  .rpi-card.i { background: #ECFDF5; border: 2px solid #059669; }
+
+  .rpi-card .rpi-letter {
+    font-size: 2rem;
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: 0.3rem;
+  }
+
+  .rpi-card.r .rpi-letter { color: #1D4ED8; }
+  .rpi-card.p .rpi-letter { color: #6D28D9; }
+  .rpi-card.i .rpi-letter { color: #047857; }
+
+  .rpi-card .rpi-name {
+    font-size: 0.95rem;
+    font-weight: 800;
+    margin-bottom: 0.4rem;
+  }
+
+  .rpi-card.r .rpi-name { color: #1E3A8A; }
+  .rpi-card.p .rpi-name { color: #3B0764; }
+  .rpi-card.i .rpi-name { color: #065F46; }
+
+  .rpi-card p {
+    font-size: 0.93rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+    margin: 0;
+  }
+
+  /* ---- Prompt box / Code box ---- */
+  /* Override template's white-space: pre-wrap — dùng pb-line block spans thay thế */
+  .prompt-box {
+    background: #0F172A;
+    color: #E2E8F0;
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.2rem;
+    width: 100%;
+    text-align: left;
+    font-size: 0.95rem;
+    line-height: 1.45;
+    box-shadow: var(--shadow-md);
+    margin-top: 0.6rem;
+    white-space: normal;
+    border-left: none;
+    font-family: var(--font-code, ui-monospace, monospace);
+  }
+
+  .prompt-box .pb-label {
+    display: inline-block;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #38BDF8;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .prompt-box code, .prompt-box .pb-ph { color: #FCD34D; }
+  .prompt-box .pb-line { display: block; margin: 0; line-height: 1.5; }
+  .prompt-box .pb-comment { color: #64748B; }
+  .prompt-box .pb-key { color: #818CF8; font-weight: 700; }
+  .prompt-box .pb-val { color: #34D399; }
+  .prompt-box .pb-str { color: #FB923C; }
+
+  /* ---- Prompt → Skill → Agent ladder ---- */
+  .ladder {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  .ladder-rung {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.85rem 1rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+  }
+
+  .rung-badge {
+    flex-shrink: 0;
+    border-radius: var(--radius-sm);
+    padding: 0.25rem 0.6rem;
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  .rung-badge.lvl1 { background: #DBEAFE; color: #1E3A8A; }
+  .rung-badge.lvl2 { background: #EDE9FE; color: #3B0764; }
+  .rung-badge.lvl3 { background: #D1FAE5; color: #065F46; }
+
+  .rung-title { font-weight: 800; font-size: 1rem; color: var(--text); }
+  .rung-desc { font-size: 0.93rem; color: var(--text-dim); line-height: 1.4; }
+
+
+  /* ---- Checklist table ---- */
+  .check-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.7rem;
+  }
+
+  .check-table td {
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 1rem;
+    color: var(--text-dim);
+    vertical-align: middle;
+  }
+
+  .check-table td:first-child {
+    width: 2.2rem;
+    font-size: 1.1rem;
+    color: var(--success);
+    text-align: center;
+  }
+
+  .check-table tr:last-child td { border-bottom: none; }
+
+  /* ---- Teaser buổi 11 ---- */
+  .b10-teaser {
+    background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 60%, #0891B2 100%);
+    border-radius: var(--radius-lg);
+    padding: 1.3rem 1.5rem;
+    text-align: center;
+    color: white;
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    margin-top: 0.4rem;
+  }
+
+  .b10-teaser .tsr-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+
+  .b10-teaser .tsr-title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    margin: 0.2rem 0 0.4rem;
+  }
+
+  .b10-teaser .tsr-sub {
+    font-size: 0.96rem;
+    opacity: 0.85;
+    margin-bottom: 0.8rem;
+  }
+
+  .b10-teaser .tsr-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .b10-teaser .tsr-chip {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 100px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  /* ---- Summary grid ---- */
+  .sum-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 0.8rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  .sum-item {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.8rem 0.9rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+  }
+
+  .sum-n {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #CCFBF1;
+    color: #115E59;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+  }
+
+  .sum-item p {
+    font-size: 0.96rem;
+    line-height: 1.4;
+    margin: 0;
+    color: var(--text-dim);
+  }
+
+  /* ---- Fit overrides ---- */
+  [data-slide="2"] .slide-body { gap: 0.5rem; }
+  [data-slide="2"] .pstep-item { padding: 0.55rem 0.8rem; }
+
+  [data-slide="8"] .slide-body { gap: 0.45rem; }
+
+  [data-slide="12"] .slide-body { gap: 0.45rem; }
+  [data-slide="12"] .rpi-card { padding: 0.85rem 1rem; }
+
+  [data-slide="24"] .slide-body { gap: 0.45rem; }
+  [data-slide="24"] .prompt-box { font-size: 0.88rem; padding: 0.9rem 1rem; }
+
+  [data-slide="27"] .check-table td { padding: 0.55rem 0.8rem; font-size: 0.96rem; }
+
+  [data-slide="31"] .check-table td { padding: 0.55rem 0.8rem; font-size: 0.97rem; }
+</style>
+
+<!-- ============================================================
+     SLIDE 1 — COVER
+     ============================================================ -->
+<section class="slide active slide-cover b10-cover" data-slide="1" data-title="Trang bìa">
+  <div class="cover-orb orb-1"></div>
+  <div class="cover-orb orb-2"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">BUỔI 10 · MODULE VC — VIBE CODING</span>
+    <h1 class="hero-title">Token, Context &amp; Skill — <span class="grad-text">Ba bí kíp</span> làm chủ AI Agent</h1>
+    <p class="slide-subtitle">Hiểu "tiền tệ" của AI · Làm việc như chuyên gia với quy trình RPI · Viết luật chơi và Skill cho Agent</p>
+    <div class="cover-chips">
+      <span class="cover-chip">120 phút</span>
+      <span class="cover-chip">Output: File GEMINI.md + 1 Skill tự viết</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 2 — LỘ TRÌNH 2 GIỜ
+     ============================================================ -->
+<section class="slide" data-slide="2" data-title="Lộ trình 2 giờ">
+  <div class="slide-body">
+    <span class="eyebrow">LỘ TRÌNH HÔM NAY</span>
+    <h2 class="slide-title">5 chặng trong 120 phút ⏱️</h2>
+    <div class="pstep">
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">1</div>
+        <div>
+          <h4>0–15 phút — Ôn nhanh &amp; Token là gì</h4>
+          <p>Nhắc lại 4 nhóm công cụ · Flashcard · Hiểu Token và Context Window</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">2</div>
+        <div>
+          <h4>15–40 phút — Quy trình RPI</h4>
+          <p>Research → Plan → Implement · Tránh "Dumb Zone" · Thực hành đặt câu lệnh mẫu</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">3</div>
+        <div>
+          <h4>40–70 phút — Tiết kiệm Token</h4>
+          <p>Thói quen trước &amp; trong phiên · 3 lệnh cần thuộc lòng · Checklist mang về dùng</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">4</div>
+        <div>
+          <h4>70–105 phút — Skill &amp; File GEMINI.md 🔨</h4>
+          <p>Prompt → Skill → Agent · Viết file GEMINI.md · Tạo 1 Skill đơn giản trong Antigravity</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">5</div>
+        <div>
+          <h4>105–120 phút — Tổng kết + Checklist + Bài về nhà</h4>
+          <p>5 điều đã học · Tự đánh giá · Nhiệm vụ trước Buổi 11</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 3 — OUTPUT BUỔI HỌC
+     ============================================================ -->
+<section class="slide" data-slide="3" data-title="Output buổi học">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 10 — BẠN PHẢI CÓ</span>
+    <h2 class="slide-title">4 thứ bạn mang về nhà 🎒</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+      <div class="card">
+        <div class="card-icon">1</div>
+        <h3>Hiểu Token &amp; Context</h3>
+        <p>Biết tại sao AI "quên", biết <strong>Dumb Zone</strong> là gì và cách tránh rơi vào đó.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">2</div>
+        <h3>Làm được quy trình RPI</h3>
+        <p>Biết phân chia Research → Plan → Implement · Không để AI "đọc cả kho code" một lúc.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">3</div>
+        <h3>File GEMINI.md + 1 Skill</h3>
+        <p>Tự tay viết được <strong>file luật chơi dự án</strong> và ít nhất <strong>1 skill đơn giản</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">4</div>
+        <h3>5 thủ thuật tiết kiệm token</h3>
+        <p>Danh sách ghi nhớ: <strong>Caveman mode, /clear, micro-diffs, chia task nhỏ</strong>…</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 4 — SỔ TAY #1
+     ============================================================ -->
+<section class="slide" data-slide="4" data-title="Sổ Tay #1 — Đầu buổi" data-nb="1">
+  <div class="slide-body">
+    <span class="eyebrow">SỔ TAY #1</span>
+    <h2 class="slide-title">Dừng lại — viết vào sổ 📓</h2>
+    <div class="nb-card nb-active">
+      <div class="nb-q">Em đã từng thấy AI "quên" điều gì đó em vừa nói không? Chuyện gì đã xảy ra?</div>
+      <div class="nb-hint">Hãy cụ thể: em đang dùng tool nào, hỏi gì, AI quên điều gì?</div>
+    </div>
+    <div class="b10-callout tip" style="margin-top:0.8rem;">
+      <span class="ci">💡</span>
+      <p><strong>Gợi ý kết nối:</strong> Sau buổi học hôm nay, em sẽ hiểu TẠI SAO AI "quên" — và có cách phòng tránh chủ động.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 5 — FLASHCARD ÔN BUỔI 9
+     ============================================================ -->
+<section class="slide" data-slide="5" data-title="Flashcard — Ôn buổi 9">
+  <div class="slide-body">
+    <span class="eyebrow">ÔN NHANH BUỔI 9</span>
+    <h2 class="slide-title">4 nhóm công cụ Vibe Coding 🗺️</h2>
+    <div class="kw-grid">
+      <div class="kw-card k-cyan">
+        <div class="kw-term">Chat-first</div>
+        <div class="kw-def">Bolt.new, v0.dev — gõ mô tả, nhận code ngay. Không cần cài đặt.</div>
+      </div>
+      <div class="kw-card k-green">
+        <div class="kw-term">Platform AI-first</div>
+        <div class="kw-def">Antigravity IDE, Replit — Agent đọc file &amp; chạy lệnh trên máy bạn.</div>
+      </div>
+      <div class="kw-card k-orange">
+        <div class="kw-term">IDE AI</div>
+        <div class="kw-def">Cursor, Windsurf — tích hợp AI sâu vào editor, quen với code trước.</div>
+      </div>
+      <div class="kw-card k-purple">
+        <div class="kw-term">CLI Agent</div>
+        <div class="kw-def">Antigravity CLI, Open Code — terminal siêu tốc, dùng skill &amp; slash command.</div>
+      </div>
+    </div>
+    <div class="b10-callout teal" style="margin-top:0.8rem;">
+      <span class="ci">🎯</span>
+      <p><strong>Hôm nay</strong> chúng ta tìm hiểu "nhiên liệu" vận hành cả 4 nhóm: <strong>Token &amp; Context Window</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 6 — PART 1 DIVIDER
+     ============================================================ -->
+<section class="slide slide-part b10-part" data-slide="6" data-title="Phần 1: Token &amp; Context">
+  <div class="slide-body" style="text-align:center;color:white;">
+    <p class="part-eyebrow">Phần 1 / 4</p>
+    <p class="part-num">1</p>
+    <h2 class="part-title">Token &amp; Context Window</h2>
+    <p class="part-sub">"Tiền tệ" và "Sổ ghi nhớ" của mọi AI Agent — hiểu đúng để dùng thông minh</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 7 — TOKEN LÀ GÌ
+     ============================================================ -->
+<section class="slide" data-slide="7" data-title="Token là gì?">
+  <div class="slide-body">
+    <span class="eyebrow">KHÁI NIỆM CỐT LÕI</span>
+    <h2 class="slide-title">Token — "Tiền tệ" của AI 💰</h2>
+    <div class="b10-two">
+      <div>
+        <div class="kw-grid" style="grid-template-columns:1fr;">
+          <div class="kw-card k-teal">
+            <div class="kw-term">Token là gì?</div>
+            <div class="kw-def">Đơn vị nhỏ nhất AI dùng để xử lý ngôn ngữ.<br>~ 0,75 từ tiếng Anh / ~1,3 ký tự tiếng Việt.</div>
+          </div>
+          <div class="kw-card k-cyan">
+            <div class="kw-term">Input token</div>
+            <div class="kw-def">Tất cả nội dung bạn <strong>gửi vào</strong>: câu hỏi, lịch sử chat, file đọc, hướng dẫn hệ thống.</div>
+          </div>
+          <div class="kw-card k-green">
+            <div class="kw-term">Output token</div>
+            <div class="kw-def">Nội dung AI <strong>trả ra</strong>: câu trả lời, code, giải thích. Thường đắt hơn input 3–5 lần!</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="b10-callout warn">
+          <span class="ci">⚠️</span>
+          <p><strong>Sự thật ít ai biết:</strong> Mỗi khi bạn gửi 1 tin nhắn, AI phải <strong>đọc lại TOÀN BỘ lịch sử hội thoại</strong> từ đầu — không phải chỉ câu bạn vừa hỏi. Cuộc chat càng dài, token tiêu thụ càng nhiều!</p>
+        </div>
+        <div class="b10-callout danger" style="margin-top:0.6rem;">
+          <span class="ci">📉</span>
+          <p><strong>Hệ quả:</strong> Trong một phiên chat dài 100 tin nhắn, phần lớn token bị "đốt" chỉ để AI nhớ lại lịch sử — không phải để tạo ra câu trả lời mới.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 8 — CONTEXT WINDOW & DUMB ZONE
+     ============================================================ -->
+<section class="slide" data-slide="8" data-title="Context Window &amp; Dumb Zone">
+  <div class="slide-body">
+    <span class="eyebrow">NGUYÊN LÝ VẬN HÀNH</span>
+    <h2 class="slide-title">Context Window — "Sổ ghi nhớ" của AI 📒</h2>
+    <p style="font-size:1rem;color:var(--text-dim);margin:0.2rem 0 0.6rem;">Mỗi AI Agent có 1 "sổ ghi nhớ" gọi là <strong>Context Window</strong> — chứa mọi thứ AI "nhìn thấy" trong một phiên làm việc: câu hỏi, lịch sử, file, hướng dẫn…</p>
+
+    <div class="ctx-meter-wrap">
+      <div class="ctx-meter-label">
+        <span>0%</span>
+        <span style="color:#EF4444;font-size:0.95rem;">⚡ DUMB ZONE bắt đầu từ đây</span>
+        <span>100%</span>
+      </div>
+      <div class="ctx-bar">
+        <div class="ctx-fill dumb-zone">Ngữ cảnh đang lấp đầy...</div>
+        <div class="ctx-marker" style="left:40%;">
+          <span class="ctx-marker-label">40%</span>
+        </div>
+      </div>
+      <div class="ctx-zones">
+        <div class="ctx-zone"><div class="ctx-dot" style="background:#10B981;"></div><span><strong>0–40%:</strong> AI suy luận tốt, chính xác cao</span></div>
+        <div class="ctx-zone"><div class="ctx-dot" style="background:#F59E0B;"></div><span><strong>40–70%:</strong> Bắt đầu bị chậm &amp; nhầm lẫn</span></div>
+        <div class="ctx-zone"><div class="ctx-dot" style="background:#EF4444;"></div><span><strong>&gt;70%:</strong> "Dumb Zone" — AI bắt đầu bịa &amp; lạc đường</span></div>
+      </div>
+    </div>
+
+    <div class="b10-callout danger">
+      <span class="ci">🧠</span>
+      <p><strong>Tại sao có Dumb Zone?</strong> Kiến trúc Transformer của mọi LLM gặp khó khăn khi "sổ ghi nhớ" quá đầy — giống như bạn cố nhớ 100 việc cùng lúc, bộ não bắt đầu lẫn lộn. Đây là đặc tính chung của TẤT CẢ các mô hình AI hiện tại.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 9 — CƠ CHẾ CỘNG DỒN
+     ============================================================ -->
+<section class="slide" data-slide="9" data-title="Cơ chế cộng dồn ngữ cảnh">
+  <div class="slide-body">
+    <span class="eyebrow">BÍ MẬT ÍT AI TIẾT LỘ</span>
+    <h2 class="slide-title">Ngữ cảnh tích lũy theo từng tin nhắn 📈</h2>
+    <p style="font-size:1rem;color:var(--text-dim);margin:0.2rem 0 0.6rem;">Cửa sổ ngữ cảnh không chỉ chứa câu hỏi của bạn. Nó tích lũy từ <strong>nhiều nguồn</strong>:</p>
+    <div class="kw-grid">
+      <div class="kw-card k-purple">
+        <div class="kw-term">Hướng dẫn hệ thống</div>
+        <div class="kw-def">File GEMINI.md, quy tắc dự án, mô tả công cụ — chiếm dung lượng ngay từ đầu phiên.</div>
+      </div>
+      <div class="kw-card k-orange">
+        <div class="kw-term">Lịch sử hội thoại</div>
+        <div class="kw-def">Tất cả tin nhắn trước đó — càng chat dài, con số này tăng theo cấp số nhân.</div>
+      </div>
+      <div class="kw-card k-cyan">
+        <div class="kw-term">Kết quả đọc file</div>
+        <div class="kw-def">Khi AI đọc code, tài liệu — toàn bộ nội dung file đó đổ vào ngữ cảnh.</div>
+      </div>
+      <div class="kw-card k-teal">
+        <div class="kw-term">Metadata công cụ</div>
+        <div class="kw-def">Tên &amp; mô tả tất cả tool, skill AI được phép dùng — chiếm không gian cố định.</div>
+      </div>
+    </div>
+    <div class="b10-callout tip">
+      <span class="ci">💡</span>
+      <p><strong>Kết luận thực tế:</strong> Kiểm tra <code>/context</code> ngay khi mở session mới để biết "điểm xuất phát" — bạn đang có bao nhiêu token trước khi gõ dòng đầu tiên. Đó là "chi phí cố định" mỗi phiên.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 10 — SỔ TAY #2
+     ============================================================ -->
+<section class="slide" data-slide="10" data-title="Sổ Tay #2 — Sau phần Token" data-nb="2">
+  <div class="slide-body">
+    <span class="eyebrow">SỔ TAY #2</span>
+    <h2 class="slide-title">Dừng lại — viết vào sổ 📓</h2>
+    <div class="nb-card nb-active">
+      <div class="nb-q">Nếu Context Window là "sổ ghi nhớ", điều gì khiến nó bị đầy nhanh nhất? Em sẽ làm gì để tránh?</div>
+      <div class="nb-hint">Gợi ý: nhìn lại 4 nguồn tích lũy ngữ cảnh ở slide trước.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 11 — PART 2 DIVIDER
+     ============================================================ -->
+<section class="slide slide-part b10-part" data-slide="11" data-title="Phần 2: Quy trình RPI">
+  <div class="slide-body" style="text-align:center;color:white;">
+    <p class="part-eyebrow">Phần 2 / 4</p>
+    <p class="part-num">2</p>
+    <h2 class="part-title">Quy trình RPI</h2>
+    <p class="part-sub">Research → Plan → Implement — cách làm việc của chuyên gia để không lãng phí token</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 12 — RPI LÀ GÌ
+     ============================================================ -->
+<section class="slide" data-slide="12" data-title="RPI — 3 bước làm chuyên gia">
+  <div class="slide-body">
+    <span class="eyebrow">QUY TRÌNH CHUYÊN GIA</span>
+    <h2 class="slide-title">RPI — Research → Plan → Implement</h2>
+    <p style="font-size:1rem;color:var(--text-dim);margin:0.2rem 0 0.5rem;">Thay vì "thả" AI vào dự án và để nó tự mò, chuyên gia chia thành 3 giai đoạn rõ ràng:</p>
+    <div class="rpi-grid">
+      <div class="rpi-card r">
+        <div class="rpi-letter">R</div>
+        <div class="rpi-name">Research — Nghiên cứu</div>
+        <p>Dùng <strong>sub-agent</strong> khám phá codebase. Tạo <strong>Research Document</strong> — chụp nhanh các file và dòng code quan trọng.</p>
+      </div>
+      <div class="rpi-card p">
+        <div class="rpi-letter">P</div>
+        <div class="rpi-name">Plan — Lập kế hoạch</div>
+        <p><strong>Nén ý định</strong> (Compression of Intent): duyệt kế hoạch trước khi AI viết code. <em>Đừng đọc code thô — đọc kế hoạch!</em></p>
+      </div>
+      <div class="rpi-card i">
+        <div class="rpi-letter">I</div>
+        <div class="rpi-name">Implement — Thực hiện</div>
+        <p>Sau khi kế hoạch đã duyệt, triển khai trong một <strong>ngữ cảnh mới sạch</strong> để đảm bảo độ chính xác cao nhất.</p>
+      </div>
+    </div>
+    <div class="b10-callout warn">
+      <span class="ci">⚡</span>
+      <p><strong>Quy tắc vàng:</strong> Một dòng kế hoạch sai có thể dẫn đến <strong>100 dòng code hỏng</strong>. Đầu tư vào bước Plan luôn xứng đáng.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 13 — RESEARCH STEP
+     ============================================================ -->
+<section class="slide" data-slide="13" data-title="Bước R — Research">
+  <div class="slide-body">
+    <span class="eyebrow">BƯỚC 1 / 3</span>
+    <h2 class="slide-title">Research — Dùng sub-agent khám phá 🔍</h2>
+    <div class="b10-two">
+      <div>
+        <p style="font-size:1rem;color:var(--text-dim);margin:0 0 0.6rem;"><strong>Nguyên tắc:</strong> Đừng bắt AI đọc toàn bộ dự án cùng lúc — ngốn context như mở toàn bộ 50 tab trình duyệt.</p>
+        <div class="pstep" style="margin-top:0;">
+          <div class="pstep-item">
+            <div class="pstep-n" style="background:linear-gradient(135deg,#2563EB,#38BDF8);font-size:0.8rem;">1</div>
+            <div>
+              <h4>Tạo sub-agent có mục tiêu nhỏ</h4>
+              <p>"Chỉ tìm các file xử lý đăng nhập"</p>
+            </div>
+          </div>
+          <div class="pstep-item">
+            <div class="pstep-n" style="background:linear-gradient(135deg,#2563EB,#38BDF8);font-size:0.8rem;">2</div>
+            <div>
+              <h4>Sub-agent tạo Research Document</h4>
+              <p>File Markdown tóm tắt: tên file, dòng quan trọng, luồng dữ liệu chính</p>
+            </div>
+          </div>
+          <div class="pstep-item">
+            <div class="pstep-n" style="background:linear-gradient(135deg,#2563EB,#38BDF8);font-size:0.8rem;">3</div>
+            <div>
+              <h4>Agent chính đọc document — không đọc code thô</h4>
+              <p>Tiết kiệm hàng chục nghìn token</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="prompt-box">
+          <div class="pb-label">Prompt mẫu — Research</div>
+          <span class="pb-line"><span class="pb-key">Vai trò:</span> <span class="pb-str">Sub-agent khám phá</span></span>
+          <span class="pb-line"><span class="pb-key">Nhiệm vụ:</span></span>
+          <span class="pb-line">Tìm tất cả file xử lý chức năng</span>
+          <span class="pb-line"><span class="pb-ph">[đăng nhập / thanh toán / ...]</span></span>
+          <span class="pb-line"></span>
+          <span class="pb-line"><span class="pb-key">Output:</span></span>
+          <span class="pb-line">Tạo research.md gồm:</span>
+          <span class="pb-line">- Danh sách file &amp; số dòng</span>
+          <span class="pb-line">- Luồng dữ liệu chính</span>
+          <span class="pb-line">- 3 điểm cần chú ý nhất</span>
+          <span class="pb-line"><span class="pb-comment">// ĐỪNG viết code ở bước này</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 14 — PLAN STEP
+     ============================================================ -->
+<section class="slide" data-slide="14" data-title="Bước P — Plan">
+  <div class="slide-body">
+    <span class="eyebrow">BƯỚC 2 / 3</span>
+    <h2 class="slide-title">Plan — "Nén ý định" trước khi gõ code ✍️</h2>
+    <div class="b10-two">
+      <div>
+        <div class="b10-callout info">
+          <span class="ci">📋</span>
+          <p><strong>Compression of Intent:</strong> Thay vì để AI tự suy đoán, bạn ép nó viết kế hoạch cụ thể trước. Kế hoạch được duyệt = AI không phải "thử và sai" nhiều lần.</p>
+        </div>
+        <div class="b10-callout tip" style="margin-top:0.6rem;">
+          <span class="ci">✅</span>
+          <p><strong>Cách duyệt kế hoạch:</strong> Đọc từng bước, hỏi "bước này có đúng chưa?", sửa trước khi AI bắt tay làm. Tiết kiệm hơn sửa code sai sau khi xong.</p>
+        </div>
+      </div>
+      <div>
+        <div class="prompt-box">
+          <div class="pb-label">Prompt mẫu — Plan</div>
+          <span class="pb-line">Lập kế hoạch thêm tính năng</span>
+          <span class="pb-line"><span class="pb-ph">[tên tính năng]</span>.</span>
+          <span class="pb-line"></span>
+          <span class="pb-line"><span class="pb-key">Liệt kê:</span></span>
+          <span class="pb-line">1. Các file sẽ thay đổi</span>
+          <span class="pb-line">2. Logic thực hiện từng bước</span>
+          <span class="pb-line">3. Rủi ro / điểm cần cẩn thận</span>
+          <span class="pb-line"></span>
+          <span class="pb-comment">// CHƯA viết code — chờ tôi duyệt</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 15 — IMPLEMENT STEP
+     ============================================================ -->
+<section class="slide" data-slide="15" data-title="Bước I — Implement">
+  <div class="slide-body">
+    <span class="eyebrow">BƯỚC 3 / 3</span>
+    <h2 class="slide-title">Implement — Thực hiện trong ngữ cảnh sạch ⚡</h2>
+    <div class="b10-two">
+      <div>
+        <p style="font-size:1rem;color:var(--text-dim);margin:0 0 0.5rem;"><strong>Bí quyết:</strong> Sau khi kế hoạch được duyệt, bắt đầu phiên <em>Implement</em> trong một context sạch — không mang theo "rác" từ phiên Research &amp; Plan.</p>
+        <div class="kw-grid" style="grid-template-columns:1fr;">
+          <div class="kw-card k-green">
+            <div class="kw-term">Ngữ cảnh sạch là gì?</div>
+            <div class="kw-def">Dùng <code>/clear</code> để reset hoặc mở session mới. Chỉ paste <strong>Research Document</strong> và <strong>kế hoạch đã duyệt</strong> vào — không có lịch sử dài dòng.</div>
+          </div>
+          <div class="kw-card k-teal">
+            <div class="kw-term">Micro-diffs — không viết lại cả file</div>
+            <div class="kw-def">Yêu cầu AI chỉ gửi <strong>những đoạn thay đổi nhỏ</strong> (micro-diffs), không ghi đè toàn bộ file lớn. Tiết kiệm token + dễ kiểm tra.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="prompt-box">
+          <div class="pb-label">Prompt mẫu — Implement</div>
+          <span class="pb-line"><span class="pb-comment">// Paste kế hoạch đã duyệt</span></span>
+          <span class="pb-line"></span>
+          <span class="pb-line"><span class="pb-key">Kế hoạch:</span></span>
+          <span class="pb-line"><span class="pb-ph">[paste plan đã duyệt ở đây]</span></span>
+          <span class="pb-line"></span>
+          <span class="pb-line"><span class="pb-key">Yêu cầu:</span></span>
+          <span class="pb-line">Thực hiện <span class="pb-str">bước 1</span> trước.</span>
+          <span class="pb-line">Chỉ gửi <span class="pb-str">micro-diff</span> —</span>
+          <span class="pb-line">không viết lại toàn bộ file.</span>
+          <span class="pb-line">Hỏi tôi trước khi làm bước tiếp.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 16 — PART 3 DIVIDER
+     ============================================================ -->
+<section class="slide slide-part b10-part" data-slide="16" data-title="Phần 3: Tiết kiệm Token">
+  <div class="slide-body" style="text-align:center;color:white;">
+    <p class="part-eyebrow">Phần 3 / 4</p>
+    <p class="part-num">3</p>
+    <h2 class="part-title">Tiết kiệm Token</h2>
+    <p class="part-sub">Không chỉ tiết kiệm tiền — mà là giữ AI luôn ở trạng thái thông minh nhất</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 17 — THÓI QUEN: TRƯỚC KHI BẮT ĐẦU
+     ============================================================ -->
+<section class="slide" data-slide="17" data-title="Thói quen trước khi bắt đầu phiên">
+  <div class="slide-body">
+    <span class="eyebrow">HÀNH VI NGƯỜI DÙNG THÔNG MINH</span>
+    <h2 class="slide-title">Trước khi gõ dòng đầu tiên — làm 3 việc này ✅</h2>
+    <div class="pstep">
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">1</div>
+        <div>
+          <h4>Kiểm tra <code>/context</code> — biết điểm xuất phát</h4>
+          <p>Gõ <code>/context</code> ngay khi mở session. Con số hiển thị là lượng token "ẩn" bị tiêu thụ từ đầu (hướng dẫn hệ thống, metadata tool, GEMINI.md...). Biết điểm xuất phát = biết còn bao nhiêu "dư địa" trước khi vào Dumb Zone.</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">2</div>
+        <div>
+          <h4>Xác định rõ 1 mục tiêu duy nhất cho phiên này</h4>
+          <p>Mỗi phiên làm việc chỉ nên có <strong>1 nhiệm vụ cụ thể</strong>. "Sửa bug login" tốt hơn "làm mấy thứ trong dự án". Mục tiêu mờ = AI phải đoán = tốn token vòng vo.</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">3</div>
+        <div>
+          <h4>Dùng RPI — Plan trước, đừng để AI tự mò</h4>
+          <p>Với task phức tạp: yêu cầu AI lập <strong>kế hoạch</strong> trước, duyệt kế hoạch, rồi mới implement. Tránh tình trạng AI viết 200 dòng sai hướng rồi mới phát hiện.</p>
+        </div>
+      </div>
+    </div>
+    <div class="b10-callout teal">
+      <span class="ci">💡</span>
+      <p><strong>Tại sao quan trọng?</strong> Token "ẩn" có thể chiếm 30–50% ngữ cảnh ngay từ đầu — trước khi bạn gõ bất cứ điều gì. Biết điều này giúp bạn quyết định có nên /clear và bắt đầu phiên mới không.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 18 — THÓI QUEN: TRONG PHIÊN LÀM VIỆC
+     ============================================================ -->
+<section class="slide" data-slide="18" data-title="Thói quen trong phiên làm việc">
+  <div class="slide-body">
+    <span class="eyebrow">HÀNH VI NGƯỜI DÙNG THÔNG MINH</span>
+    <h2 class="slide-title">Trong phiên làm việc — 4 thói quen cần có 🔧</h2>
+    <div class="kw-grid">
+      <div class="kw-card k-teal">
+        <div class="kw-term">Chia task thành việc nhỏ</div>
+        <div class="kw-def">Đừng nhồi cả dự án vào 1 phiên. Mỗi micro-task = 1 ngữ cảnh sạch = AI tập trung hơn, ít lỗi hơn.</div>
+      </div>
+      <div class="kw-card k-green">
+        <div class="kw-term">Yêu cầu micro-diff, không viết lại cả file</div>
+        <div class="kw-def">Chỉ nhờ AI thay đổi <strong>đúng dòng cần sửa</strong>. Tránh AI ghi đè toàn bộ file lớn — vừa tốn token, vừa khó kiểm tra.</div>
+      </div>
+      <div class="kw-card k-purple">
+        <div class="kw-term">Yêu cầu AI trả lời ngắn gọn</div>
+        <div class="kw-def">Thêm vào prompt hoặc GEMINI.md: <em>"Trả lời ngắn gọn, không giải thích thừa, không lặp lại câu hỏi."</em> Output token đắt gấp 3–5× input.</div>
+      </div>
+      <div class="kw-card k-orange">
+        <div class="kw-term">Chuyển PDF/HTML sang Markdown trước</div>
+        <div class="kw-def">Khi cần cho AI đọc tài liệu: export sang <code>.md</code> trước. Loại bỏ thẻ HTML, hình ảnh nhúng và metadata thừa giúp giảm đáng kể token đầu vào.</div>
+      </div>
+    </div>
+    <div class="b10-callout warn">
+      <span class="ci">⚠️</span>
+      <p><strong>Bẫy hay gặp:</strong> Hỏi AI quá nhiều câu trong 1 lần ("vừa làm X, vừa kiểm tra Y, vừa giải thích Z") khiến AI phải sinh output dài = tốn nhiều token hơn hỏi từng câu nhỏ.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 19 — LỆNH QUẢN LÝ NGỮ CẢNH
+     ============================================================ -->
+<section class="slide" data-slide="19" data-title="Lệnh quản lý ngữ cảnh">
+  <div class="slide-body">
+    <span class="eyebrow">KHI NÀO DÙNG LỆNH NÀO</span>
+    <h2 class="slide-title">3 lệnh quản lý ngữ cảnh cần thuộc lòng ⌨️</h2>
+    <div class="pstep">
+      <div class="pstep-item">
+        <div class="pstep-n" style="background:linear-gradient(135deg,#EF4444,#F97316);">C</div>
+        <div>
+          <h4><code>/clear</code> — Reset hoàn toàn</h4>
+          <p>Xóa sạch ngữ cảnh, bắt đầu phiên mới. Dùng khi: <strong>xong 1 task lớn</strong>, AI bắt đầu trả lời sai hoặc lặp lại, hoặc bạn muốn chuyển sang nhiệm vụ hoàn toàn khác.</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n" style="background:linear-gradient(135deg,#0D9488,#06B6D4);">K</div>
+        <div>
+          <h4><code>/compact</code> — Nén lịch sử, giữ mạch làm việc</h4>
+          <p>Tóm tắt hội thoại cũ thành bản súc tích, giải phóng token mà không mất ngữ cảnh quan trọng. Dùng khi phiên đã dài nhưng bạn vẫn cần tiếp tục task hiện tại.</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n" style="background:linear-gradient(135deg,#6366F1,#8B5CF6);">?</div>
+        <div>
+          <h4><code>/context</code> — Kiểm tra sức khỏe phiên làm việc</h4>
+          <p>Xem số token đang dùng. Dùng thường xuyên để biết mình đang ở đâu trong "sổ ghi nhớ" — đặc biệt hữu ích trước khi bắt đầu task phức tạp cần nhiều token.</p>
+        </div>
+      </div>
+    </div>
+    <div class="b10-callout teal">
+      <span class="ci">🔌</span>
+      <p><strong>Thêm 1 thói quen:</strong> Ngắt kết nối MCP server và tool không dùng trong phiên. Mỗi tool được kết nối đều chiếm token qua metadata mô tả — dù bạn không dùng đến nó.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 20 — CHECKLIST THÓI QUEN
+     ============================================================ -->
+<section class="slide" data-slide="20" data-title="Checklist thói quen tiết kiệm token">
+  <div class="slide-body">
+    <span class="eyebrow">GHI VÀO SỔ — MANG RA DÙNG MỖI NGÀY</span>
+    <h2 class="slide-title">Checklist Vibe Coder thông minh 📋</h2>
+    <div class="b10-two">
+      <div>
+        <p style="font-size:0.85rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin:0 0 0.5rem;">Trước khi bắt đầu</p>
+        <table class="check-table">
+          <tr><td>☐</td><td>Gõ <code>/context</code> để biết token xuất phát</td></tr>
+          <tr><td>☐</td><td>Xác định <strong>1 mục tiêu cụ thể</strong> cho phiên này</td></tr>
+          <tr><td>☐</td><td>Ngắt tool / MCP server không cần dùng</td></tr>
+          <tr><td>☐</td><td>Với task phức tạp: yêu cầu <strong>Plan trước</strong>, duyệt, rồi mới code</td></tr>
+        </table>
+      </div>
+      <div>
+        <p style="font-size:0.85rem;font-weight:800;text-transform:uppercase;letter-spacing:0.08em;color:var(--text-muted);margin:0 0 0.5rem;">Trong khi làm việc</p>
+        <table class="check-table">
+          <tr><td>☐</td><td>Hỏi <strong>1 việc mỗi lần</strong>, không nhồi nhiều yêu cầu</td></tr>
+          <tr><td>☐</td><td>Yêu cầu <strong>micro-diff</strong>, không viết lại cả file</td></tr>
+          <tr><td>☐</td><td>Tài liệu PDF/HTML → chuyển sang <code>.md</code> trước</td></tr>
+          <tr><td>☐</td><td>Yêu cầu AI trả lời <strong>ngắn gọn</strong> (thêm vào GEMINI.md)</td></tr>
+          <tr><td>☐</td><td>Xong task lớn → <code>/clear</code> ngay</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 21 — PART 4: SKILL & GEMINI.MD
+     ============================================================ -->
+<section class="slide slide-part b10-part" data-slide="21" data-title="Phần 4: Skill &amp; GEMINI.md">
+  <div class="slide-body" style="text-align:center;color:white;">
+    <p class="part-eyebrow">Phần 4 / 4</p>
+    <p class="part-num">4</p>
+    <h2 class="part-title">Skill &amp; File GEMINI.md</h2>
+    <p class="part-sub">Nâng cấp từ "nhắn tin một lần" → "lập trình hành vi" cho AI Agent của bạn</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 22 — PROMPT → SKILL → AGENT
+     ============================================================ -->
+<section class="slide" data-slide="22" data-title="Prompt → Skill → Agent">
+  <div class="slide-body">
+    <span class="eyebrow">3 CẤP ĐỘ RA LỆNH</span>
+    <h2 class="slide-title">Prompt → Skill → Agent: Nâng cấp từng bậc 🪜</h2>
+    <div class="ladder">
+      <div class="ladder-rung">
+        <div style="flex-shrink:0;width:36px;text-align:center;font-size:1.5rem;">1</div>
+        <span class="rung-badge lvl1">Prompt</span>
+        <div>
+          <div class="rung-title">Ra lệnh một lần</div>
+          <div class="rung-desc">Bạn gõ yêu cầu, AI làm, xong. Lần sau muốn làm lại phải gõ lại từ đầu. Phù hợp cho task đơn giản, không lặp lại.</div>
+        </div>
+      </div>
+      <div class="ladder-rung">
+        <div style="flex-shrink:0;width:36px;text-align:center;font-size:1.5rem;">2</div>
+        <span class="rung-badge lvl2">Skill</span>
+        <div>
+          <div class="rung-title">Lưu prompt thành "kỹ năng" tái sử dụng</div>
+          <div class="rung-desc">Viết 1 lần vào file <code>.md</code>, AI gọi lại khi cần mà không cần giải thích lại. Giảm token + đảm bảo nhất quán. Ví dụ: skill "tạo slide", "viết test", "review code".</div>
+        </div>
+      </div>
+      <div class="ladder-rung">
+        <div style="flex-shrink:0;width:36px;text-align:center;font-size:1.5rem;">3</div>
+        <span class="rung-badge lvl3">Agent</span>
+        <div>
+          <div class="rung-title">Hệ thống tự chạy nhiều bước &amp; nhiều skill</div>
+          <div class="rung-desc">Agent tự chọn skill phù hợp, gọi tool, ra quyết định, lặp lại cho đến khi xong. Bạn chỉ cần đặt mục tiêu cao nhất.</div>
+        </div>
+      </div>
+    </div>
+    <div class="b10-callout teal">
+      <span class="ci">🎯</span>
+      <p><strong>Hôm nay:</strong> Bạn sẽ đi từ Prompt → Skill bằng cách viết file <strong>GEMINI.md</strong> và 1 Skill đơn giản.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 23 — FILE GEMINI.MD LÀ GÌ
+     ============================================================ -->
+<section class="slide" data-slide="23" data-title="File GEMINI.md — Luật chơi dự án">
+  <div class="slide-body">
+    <span class="eyebrow">PROJECT RULES</span>
+    <h2 class="slide-title">File GEMINI.md — "Hiến pháp" của dự án 📜</h2>
+    <div class="b10-two">
+      <div>
+        <p style="font-size:1rem;color:var(--text-dim);margin:0 0 0.5rem;"><strong>GEMINI.md</strong> là file Markdown bạn tạo ở thư mục gốc dự án. AI Agent đọc nó mỗi khi bắt đầu phiên làm việc — như người nhân viên đọc "nội quy công ty".</p>
+        <div class="kw-grid" style="grid-template-columns:1fr;">
+          <div class="kw-card k-teal">
+            <div class="kw-term">Dùng để làm gì?</div>
+            <div class="kw-def">Đặt ra "giới hạn đỏ": phong cách code, ngôn ngữ dùng, hành vi mặc định, cảnh báo quan trọng.</div>
+          </div>
+          <div class="kw-card k-green">
+            <div class="kw-term">Lợi ích chính</div>
+            <div class="kw-def">Không cần nhắc lại quy tắc mỗi phiên. Thay thế hàng chục prompt lặp đi lặp lại.</div>
+          </div>
+          <div class="kw-card k-purple">
+            <div class="kw-term">Mẹo quan trọng</div>
+            <div class="kw-def">Giữ file gọn. File quá dài = tốn token mỗi phiên mà không đọc hết. Chỉ ghi những gì <em>thực sự cần nhắc nhở</em>.</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="b10-callout info">
+          <span class="ci">🔧</span>
+          <p><strong>Tên file theo tool:</strong><br>
+          • <strong>Antigravity CLI:</strong> <code>GEMINI.md</code><br>
+          • <strong>Cursor / Windsurf:</strong> <code>.cursorrules</code><br>
+          • <strong>General:</strong> <code>CLAUDE.md</code> hoặc <code>PROJECT.md</code><br><br>
+          Tất cả cùng tư tưởng: file luật chơi mà AI đọc trước khi làm.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 24 — MẪU GEMINI.MD
+     ============================================================ -->
+<section class="slide" data-slide="24" data-title="Mẫu GEMINI.md thực chiến">
+  <div class="slide-body">
+    <span class="eyebrow">VÍ DỤ THỰC CHIẾN</span>
+    <h2 class="slide-title">Mẫu GEMINI.md chuẩn kỹ sư AI 🛡️</h2>
+    <div class="prompt-box" style="margin-top:0.3rem;">
+      <div class="pb-label">GEMINI.md — Project Rules mẫu</div>
+      <span class="pb-line"><span class="pb-key"># QUY TẮC DỰ ÁN (PROJECT RULES)</span></span>
+      <span class="pb-line"></span>
+      <span class="pb-line"><span class="pb-comment">## Giới hạn tư duy &amp; phản hồi</span></span>
+      <span class="pb-line">- <span class="pb-str">Caveman Mode:</span> Trả lời ngắn gọn, không</span>
+      <span class="pb-line">  tán gẫu, không lặp lại câu hỏi.</span>
+      <span class="pb-line">- <span class="pb-str">Micro-diffs only:</span> Chỉ thay đổi dòng</span>
+      <span class="pb-line">  cần thiết — không viết lại cả file.</span>
+      <span class="pb-line"></span>
+      <span class="pb-line"><span class="pb-comment">## An toàn tuyệt đối</span></span>
+      <span class="pb-line">- <span class="pb-str">Xác nhận trước khi xóa file</span> hoặc</span>
+      <span class="pb-line">  thay đổi cấu trúc database.</span>
+      <span class="pb-line">- <span class="pb-str">Không push code</span> khi chưa có lệnh.</span>
+      <span class="pb-line"></span>
+      <span class="pb-line"><span class="pb-comment">## Phong cách code</span></span>
+      <span class="pb-line">- Dùng <span class="pb-val">TypeScript</span>, <span class="pb-val">functional style</span>.</span>
+      <span class="pb-line">- Tên biến tiếng Anh, rõ ràng.</span>
+      <span class="pb-line"></span>
+      <span class="pb-line"><span class="pb-comment">## Ngôn ngữ</span></span>
+      <span class="pb-line">- Trả lời bằng <span class="pb-val">tiếng Việt</span>.</span>
+    </div>
+    <div class="b10-callout tip" style="margin-top:0.5rem;">
+      <span class="ci">✏️</span>
+      <p>Bạn sẽ viết file GEMINI.md riêng của mình trong phần thực hành. Không có bản đúng duy nhất — mỗi dự án có luật chơi khác nhau!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 25 — SKILL HOẠT ĐỘNG THẾ NÀO
+     ============================================================ -->
+<section class="slide" data-slide="25" data-title="Skill hoạt động thế nào?">
+  <div class="slide-body">
+    <span class="eyebrow">BÊN DƯỚI NẮP CAPO</span>
+    <h2 class="slide-title">Skill — "Lazy loading" cho hướng dẫn AI 🔌</h2>
+    <p style="font-size:1rem;color:var(--text-dim);margin:0.1rem 0 0.5rem;">Thay vì nhồi toàn bộ hướng dẫn vào ngữ cảnh từ đầu (tốn token), Skill dùng cơ chế <strong>tải lười</strong>:</p>
+    <div class="pstep">
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">1</div>
+        <div>
+          <h4>Khởi đầu phiên: chỉ load "quảng cáo" ngắn</h4>
+          <p>AI nhận được <strong>tên và mô tả 1–2 dòng</strong> của mỗi Skill — không phải toàn bộ nội dung. Tiết kiệm hàng nghìn token ban đầu.</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">2</div>
+        <div>
+          <h4>Khi task cần → AI gọi Skill</h4>
+          <p>AI nhận ra "task này phù hợp với Skill X", gọi nó — toàn bộ nội dung file <code>.md</code> mới được nạp vào ngữ cảnh lúc đó.</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">3</div>
+        <div>
+          <h4>Skill thực thi và có thể gọi skill con</h4>
+          <p>Skill có thể <code>include</code> file khác, tách điều kiện rẽ nhánh thành nhiều file nhỏ — giúp AI chỉ load đúng phần cần dùng.</p>
+        </div>
+      </div>
+    </div>
+    <div class="b10-callout teal">
+      <span class="ci">💡</span>
+      <p><strong>Kết luận:</strong> Tách skill theo điều kiện rẽ nhánh (thay vì nhồi tất cả vào 1 file lớn) giúp AI load đúng phần cần, tiết kiệm token và ít nhầm lẫn hơn.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 26 — THỰC HÀNH
+     ============================================================ -->
+<section class="slide" data-slide="26" data-title="Thực hành — Viết GEMINI.md + Skill">
+  <div class="slide-body">
+    <span class="eyebrow">THỰC HÀNH 🔨</span>
+    <h2 class="slide-title">Nhiệm vụ: Viết "Luật chơi" + 1 Skill</h2>
+    <div class="b10-two">
+      <div>
+        <p style="font-size:0.97rem;font-weight:700;color:var(--text);margin:0 0 0.4rem;">Nhiệm vụ 1 — File GEMINI.md (20 phút)</p>
+        <div class="pstep" style="margin-top:0;">
+          <div class="pstep-item">
+            <div class="pstep-n" style="background:linear-gradient(135deg,#0D9488,#06B6D4);">1</div>
+            <div><h4>Tạo thư mục dự án mới</h4><p>Tên: <code>du-an-cua-[tên em]</code></p></div>
+          </div>
+          <div class="pstep-item">
+            <div class="pstep-n" style="background:linear-gradient(135deg,#0D9488,#06B6D4);">2</div>
+            <div><h4>Tạo file GEMINI.md</h4><p>Viết ít nhất <strong>3 quy tắc</strong> của riêng bạn: phong cách code, ngôn ngữ, hành vi AI</p></div>
+          </div>
+          <div class="pstep-item">
+            <div class="pstep-n" style="background:linear-gradient(135deg,#0D9488,#06B6D4);">3</div>
+            <div><h4>Mở Antigravity → test thử</h4><p>AI có tuân theo luật chơi của bạn không?</p></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:0.97rem;font-weight:700;color:var(--text);margin:0 0 0.4rem;">Nhiệm vụ 2 — Skill đơn giản (20 phút)</p>
+        <div class="pstep" style="margin-top:0;">
+          <div class="pstep-item">
+            <div class="pstep-n" style="background:linear-gradient(135deg,#7C3AED,#6366F1);">1</div>
+            <div><h4>Chọn 1 task hay làm nhiều lần</h4><p>Ví dụ: "tóm tắt văn bản", "tạo quiz", "dịch tiếng Anh"</p></div>
+          </div>
+          <div class="pstep-item">
+            <div class="pstep-n" style="background:linear-gradient(135deg,#7C3AED,#6366F1);">2</div>
+            <div><h4>Viết skill.md cho task đó</h4><p>Tên, mô tả, hướng dẫn chi tiết cho AI</p></div>
+          </div>
+          <div class="pstep-item">
+            <div class="pstep-n" style="background:linear-gradient(135deg,#7C3AED,#6366F1);">3</div>
+            <div><h4>Đặt skill vào dự án → thử gọi</h4><p>Gọi skill bằng tên và kiểm tra kết quả</p></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 27 — SỔ TAY #3
+     ============================================================ -->
+<section class="slide" data-slide="27" data-title="Sổ Tay #3 — Sau thực hành" data-nb="3">
+  <div class="slide-body">
+    <span class="eyebrow">SỔ TAY #3</span>
+    <h2 class="slide-title">Dừng lại — viết vào sổ 📓</h2>
+    <div class="nb-card nb-active">
+      <div class="nb-q">Em đã thử RPI hoặc tạo file GEMINI.md chưa? Bước nào dễ nhất? Bước nào khó nhất?</div>
+      <div class="nb-hint">Ghi cụ thể: em stuck ở chỗ nào, em đã làm được gì, AI phản ứng thế nào?</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 28 — TỔNG KẾT BUỔI 10
+     ============================================================ -->
+<section class="slide" data-slide="28" data-title="Tổng kết Buổi 10">
+  <div class="slide-body">
+    <span class="eyebrow">TỔNG KẾT</span>
+    <h2 class="slide-title">5 điều đã học hôm nay 🎯</h2>
+    <div class="sum-grid">
+      <div class="sum-item">
+        <div class="sum-n">1</div>
+        <p><strong>Token</strong> là "tiền tệ" — AI đọc lại toàn bộ lịch sử mỗi lần bạn gửi tin. Phiên chat dài = tốn token theo cấp số nhân.</p>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">2</div>
+        <p><strong>Dumb Zone</strong> — khi ngữ cảnh vượt 40%, AI bắt đầu suy luận kém. Dùng <code>/clear</code> &amp; micro-task để tránh.</p>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">3</div>
+        <p><strong>Quy trình RPI</strong> (Research → Plan → Implement) giúp làm việc như chuyên gia: không để AI tự mò.</p>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">4</div>
+        <p><strong>GEMINI.md</strong> là "hiến pháp dự án" — viết 1 lần, AI tuân theo mọi phiên. Thay thế hàng chục prompt lặp lại.</p>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">5</div>
+        <p><strong>Skill</strong> dùng lazy loading — chỉ nạp nội dung khi cần. Tách skill nhỏ theo điều kiện giúp AI chính xác hơn.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 29 — SỔ TAY #4
+     ============================================================ -->
+<section class="slide" data-slide="29" data-title="Sổ Tay #4 — Cuối buổi" data-nb="4">
+  <div class="slide-body">
+    <span class="eyebrow">SỔ TAY #4</span>
+    <h2 class="slide-title">Dừng lại — viết vào sổ 📓</h2>
+    <div class="nb-card nb-active">
+      <div class="nb-q">3 thủ thuật tiết kiệm token mà em chắc chắn sẽ dùng sau buổi học hôm nay là gì?</div>
+      <div class="nb-hint">Hãy ghi cụ thể: thủ thuật nào, khi nào dùng, dùng thế nào. Không ghi chung chung nhé!</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 30 — CHECKLIST TỰ ĐÁNH GIÁ
+     ============================================================ -->
+<section class="slide" data-slide="30" data-title="Checklist tự đánh giá">
+  <div class="slide-body">
+    <span class="eyebrow">TỰ ĐÁNH GIÁ</span>
+    <h2 class="slide-title">Tôi đã làm được những gì hôm nay? ✅</h2>
+    <table class="check-table">
+      <tr><td>✅</td><td><strong>Giải thích được</strong> Token là gì và tại sao AI "quên"</td></tr>
+      <tr><td>✅</td><td><strong>Biết Dumb Zone</strong> bắt đầu từ khoảng nào và cách tránh</td></tr>
+      <tr><td>✅</td><td><strong>Thực hành được quy trình RPI</strong> — phân tách Research, Plan, Implement</td></tr>
+      <tr><td>✅</td><td><strong>Viết được file GEMINI.md</strong> với ít nhất 3 quy tắc thực chiến</td></tr>
+      <tr><td>✅</td><td><strong>Viết được 1 Skill đơn giản</strong> và gọi nó thành công</td></tr>
+      <tr><td>✅</td><td><strong>Biết ít nhất 3 lệnh</strong> quản lý ngữ cảnh (<code>/clear</code>, <code>/compact</code>, <code>/context</code>)</td></tr>
+      <tr><td>✅</td><td><strong>Hiểu Caveman Mode</strong> và cách thêm vào GEMINI.md</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 31 — TEASER BUỔI 11
+     ============================================================ -->
+<section class="slide" data-slide="31" data-title="Teaser — Buổi 11: CLI Agent">
+  <div class="slide-body">
+    <span class="eyebrow">SẮP TỚI</span>
+    <h2 class="slide-title">Buổi 11 — CLI Agent thực chiến 🖥️</h2>
+    <div class="b10-teaser">
+      <div class="tsr-label">Buổi 11 · Module VC-3</div>
+      <div class="tsr-title">Antigravity CLI &amp; Open Code — Cỗ máy vibe coding siêu tốc</div>
+      <div class="tsr-sub">Làm quen terminal · Agent nhiều file · Slash command &amp; Skill trong CLI</div>
+      <div class="tsr-items">
+        <span class="tsr-chip">Terminal cơ bản</span>
+        <span class="tsr-chip">CLI Agent vs Chat</span>
+        <span class="tsr-chip">Open Code / Antigravity CLI</span>
+        <span class="tsr-chip">Build Portfolio web</span>
+        <span class="tsr-chip">Slash command</span>
+        <span class="tsr-chip">Skill trong CLI</span>
+      </div>
+    </div>
+    <div class="b10-callout tip" style="margin-top:0.6rem;">
+      <span class="ci">⚡</span>
+      <p><strong>Tại sao CLI Agent mạnh hơn?</strong> Không giới hạn giao diện web, đọc &amp; ghi file thật, chạy lệnh terminal thật — Agent có thể tự build &amp; deploy cả project chỉ với 1 lệnh của bạn.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 32 — BÀI VỀ NHÀ
+     ============================================================ -->
+<section class="slide" data-slide="32" data-title="Bài về nhà — Buổi 11">
+  <div class="slide-body">
+    <span class="eyebrow">NHIỆM VỤ TRƯỚC BUỔI 11</span>
+    <h2 class="slide-title">Bài về nhà 📚</h2>
+    <div class="pstep">
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">1</div>
+        <div>
+          <h4>Hoàn thiện file GEMINI.md</h4>
+          <p>Mở dự án của mình, chỉnh sửa file GEMINI.md sao cho AI hành xử đúng như bạn muốn. Test ít nhất 3 lần.</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">2</div>
+        <div>
+          <h4>Thêm 1 Skill vào dự án</h4>
+          <p>Viết skill cho 1 task bạn hay làm lặp đi lặp lại. Gọi thử và ghi lại kết quả.</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">3</div>
+        <div>
+          <h4>Thử quy trình RPI 1 lần đầy đủ</h4>
+          <p>Chọn 1 tính năng nhỏ muốn thêm vào dự án · Dùng RPI đúng thứ tự · Ghi lại: "Phiên Research tốn bao nhiêu token? Phiên Implement bao nhiêu?"</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-teal">★</div>
+        <div>
+          <h4>Thử thách nâng cao (tự chọn)</h4>
+          <p>Cài <strong>Antigravity CLI</strong> (terminal) và thử 1 lệnh đơn giản — chuẩn bị cho buổi 11!</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
