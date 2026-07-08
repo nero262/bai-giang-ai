@@ -1,0 +1,1771 @@
+<!--
+  Slide fragment cho Buổi 11 — MODULE VC-3: Làm chủ OpenCode (CLI AI Coding Agent).
+  Format fragment: chỉ gồm cấu hình Sổ Tay + CSS riêng + các <section class="slide">.
+  Chrome (sidebar, top-bar, SlideEngine, notebook, quiz, toàn bộ CSS template)
+  do frontend/templates/lesson.html cung cấp.
+  Màu chủ đề: Indigo/Slate (#0F172A → #1E1B4B → #4F46E5)
+-->
+
+<script type="application/json" id="nb-questions">
+{
+  "1": {"title": "SỔ TAY #1 — Đầu buổi", "q": "Em đã từng mở Terminal (CMD/PowerShell) chưa? Em dùng nó để làm gì? Nếu chưa — em nghĩ người ta dùng nó để làm gì?"},
+  "2": {"title": "SỔ TAY #2 — Sau phần Định vị", "q": "CLI Agent khác Chat-first AI ở điểm nào quan trọng nhất theo em? Điều đó sẽ thay đổi cách em dùng AI như thế nào?"},
+  "3": {"title": "SỔ TAY #3 — Sau thực hành", "q": "Em đã thử bước nào trong Ask → Plan → Build rồi? Điều gì xảy ra khi em nhấn Tab để chuyển sang Plan mode?"},
+  "4": {"title": "SỔ TAY #4 — Cuối buổi", "q": "Một câu thôi: OpenCode giúp em làm được điều gì mà các công cụ AI khác không làm được?"}
+}
+</script>
+
+<style>
+  /* =========================================================
+     BUỔI 11 — LOCAL STYLES
+     Module VC-3: Làm chủ OpenCode — CLI AI Coding Agent
+     Color: Indigo / Slate
+     ========================================================= */
+
+  /* Cover: indigo gradient */
+  .b11-cover {
+    --grad-cover: linear-gradient(135deg, #0F172A 0%, #1E1B4B 55%, #4F46E5 100%);
+  }
+
+  /* Part dividers: indigo */
+  .b11-part {
+    background: linear-gradient(135deg, #1E1B4B 0%, #4F46E5 100%);
+  }
+
+  /* ---- Keyword cards ---- */
+  .kw-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 0.9rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  .kw-card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--primary);
+    border-radius: var(--radius-md);
+    padding: 0.95rem 1.1rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+  }
+
+  .kw-card .kw-term {
+    font-weight: 800;
+    color: var(--primary-dark);
+    font-size: 1.02rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .kw-card .kw-def {
+    font-size: 1rem;
+    color: var(--text-dim);
+    line-height: 1.5;
+  }
+
+  .kw-card.k-indigo { border-left-color: #6366F1; }
+  .kw-card.k-indigo .kw-term { color: #3730A3; }
+
+  .kw-card.k-cyan { border-left-color: var(--accent); }
+  .kw-card.k-cyan .kw-term { color: #0E7490; }
+
+  .kw-card.k-teal { border-left-color: #0D9488; }
+  .kw-card.k-teal .kw-term { color: #115E59; }
+
+  .kw-card.k-purple { border-left-color: var(--box-purple-border); }
+  .kw-card.k-purple .kw-term { color: var(--box-purple-dark); }
+
+  .kw-card.k-orange { border-left-color: var(--box-orange-border); }
+  .kw-card.k-orange .kw-term { color: var(--box-orange-dark); }
+
+  .kw-card.k-green { border-left-color: var(--success); }
+  .kw-card.k-green .kw-term { color: #065F46; }
+
+  .kw-card.k-red { border-left-color: #EF4444; }
+  .kw-card.k-red .kw-term { color: #B91C1C; }
+
+  /* ---- Process steps ---- */
+  .pstep {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  .pstep-item {
+    display: flex;
+    gap: 0.85rem;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.8rem 1rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+  }
+
+  .pstep-n {
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: var(--grad-primary);
+    color: white;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+  }
+
+  .pstep-n.n-indigo {
+    background: linear-gradient(135deg, #4F46E5, #818CF8);
+  }
+
+  .pstep-item h4 {
+    font-size: 0.98rem;
+    font-weight: 700;
+    margin: 0.1rem 0 0.15rem;
+    color: var(--text);
+  }
+
+  .pstep-item p {
+    font-size: 0.96rem;
+    color: var(--text-dim);
+    line-height: 1.45;
+    margin: 0;
+  }
+
+  /* ---- Part divider text ---- */
+  .part-eyebrow {
+    font-size: 0.88rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.55);
+    margin-bottom: 0.4rem;
+  }
+
+  .part-num {
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1;
+    color: rgba(255, 255, 255, 0.12);
+    margin-bottom: 0.2rem;
+    letter-spacing: -0.04em;
+  }
+
+  .part-title {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1.2;
+    margin-bottom: 0.6rem;
+  }
+
+  .part-sub {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.7);
+    max-width: 600px;
+    line-height: 1.5;
+  }
+
+  /* ---- Callout ---- */
+  .b11-callout {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    padding: 0.9rem 1rem;
+    border-radius: var(--radius-md);
+    width: 100%;
+    margin-top: 0.6rem;
+    text-align: left;
+  }
+
+  .b11-callout .ci { font-size: 1.3rem; flex-shrink: 0; }
+  .b11-callout p { font-size: 1rem; line-height: 1.5; margin: 0; color: var(--text-dim); }
+  .b11-callout strong { color: var(--text); }
+
+  .b11-callout.tip { background: #ECFDF5; border-left: 4px solid var(--success); }
+  .b11-callout.warn { background: #FFFBEB; border-left: 4px solid var(--warning); }
+  .b11-callout.danger { background: #FEF2F2; border-left: 4px solid #EF4444; }
+  .b11-callout.info { background: var(--box-blue); border-left: 4px solid var(--primary); }
+  .b11-callout.indigo { background: #EEF2FF; border-left: 4px solid #6366F1; }
+  .b11-callout.indigo p { color: #3730A3; }
+  .b11-callout.indigo strong { color: #1E1B4B; }
+
+  /* ---- Two-column layout ---- */
+  .b11-two {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.2rem;
+    width: 100%;
+    margin-top: 0.6rem;
+    align-items: start;
+  }
+
+  @media (max-width: 820px) {
+    .b11-two { grid-template-columns: 1fr; }
+  }
+
+  /* ---- Terminal / Command box ---- */
+  .cmd-box {
+    background: #0F172A;
+    color: #E2E8F0;
+    border-radius: var(--radius-md);
+    padding: 1rem 1.2rem;
+    width: 100%;
+    text-align: left;
+    font-family: var(--font-code, ui-monospace, monospace);
+    font-size: 0.93rem;
+    line-height: 1.55;
+    box-shadow: var(--shadow-md);
+    margin-top: 0.6rem;
+    white-space: normal;
+  }
+
+  .cmd-box .cb-label {
+    display: inline-block;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #38BDF8;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .cb-line { display: block; margin: 0.1rem 0; }
+  .cb-prompt { color: #A78BFA; font-weight: 700; }
+  .cb-cmd { color: #FCD34D; font-weight: 600; }
+  .cb-arg { color: #6EE7B7; }
+  .cb-out { color: #94A3B8; font-style: italic; }
+  .cb-comment { color: #475569; }
+
+  /* ---- Autonomous loop ---- */
+  .auto-loop {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.4rem;
+    width: 100%;
+    margin-top: 0.6rem;
+    justify-content: center;
+  }
+
+  .al-node {
+    background: #EEF2FF;
+    border: 2px solid #6366F1;
+    border-radius: var(--radius-md);
+    padding: 0.5rem 0.85rem;
+    font-size: 0.92rem;
+    font-weight: 700;
+    color: #3730A3;
+    white-space: nowrap;
+  }
+
+  .al-arrow {
+    color: #6366F1;
+    font-size: 1.1rem;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ---- 4-group comparison cards ---- */
+  .cmp-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 0.8rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  .cg-card {
+    border-radius: var(--radius-md);
+    padding: 0.9rem 1rem;
+    border: 2px solid;
+    text-align: left;
+    box-shadow: var(--shadow-sm);
+    position: relative;
+  }
+
+  .cg-card .cg-tag {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.3rem;
+  }
+
+  .cg-card .cg-name {
+    font-size: 0.97rem;
+    font-weight: 800;
+    margin-bottom: 0.3rem;
+  }
+
+  .cg-card ul {
+    margin: 0;
+    padding-left: 1rem;
+  }
+
+  .cg-card ul li {
+    font-size: 0.91rem;
+    color: var(--text-dim);
+    margin-bottom: 0.2rem;
+    line-height: 1.4;
+  }
+
+  .cg-star {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.6rem;
+    font-size: 0.9rem;
+  }
+
+  /* Group 1 — Blue */
+  .cg-g1 { background: #EFF6FF; border-color: #2563EB; }
+  .cg-g1 .cg-tag { color: #1E3A8A; }
+  .cg-g1 .cg-name { color: #1E3A8A; }
+
+  /* Group 2 — Green */
+  .cg-g2 { background: #ECFDF5; border-color: #059669; }
+  .cg-g2 .cg-tag { color: #065F46; }
+  .cg-g2 .cg-name { color: #065F46; }
+
+  /* Group 3 — Orange */
+  .cg-g3 { background: #FFF7ED; border-color: #EA580C; }
+  .cg-g3 .cg-tag { color: #7C2D12; }
+  .cg-g3 .cg-name { color: #7C2D12; }
+
+  /* Group 4 — Indigo (highlighted) */
+  .cg-g4 { background: #EEF2FF; border-color: #6366F1; border-width: 3px; }
+  .cg-g4 .cg-tag { color: #3730A3; }
+  .cg-g4 .cg-name { color: #3730A3; }
+
+  /* ---- Flow branches (if → then) ---- */
+  .b11-flow-branches {
+    display: flex;
+    flex-direction: column;
+    gap: 0.42rem;
+    width: 100%;
+    margin-top: 0.5rem;
+  }
+
+  .b11-flow-branch {
+    display: flex;
+    align-items: center;
+    gap: 0.7rem;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.65rem 1rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+    font-size: 0.97rem;
+  }
+
+  .b11-flow-branch .fb-if {
+    flex-shrink: 0;
+    color: var(--text-dim);
+    min-width: 200px;
+  }
+
+  .b11-flow-branch .fb-arrow {
+    color: var(--text-muted);
+    flex-shrink: 0;
+    font-size: 1.1rem;
+  }
+
+  .b11-flow-branch .fb-then {
+    font-weight: 700;
+  }
+
+  .b11-flow-branch.fbc-1 { border-left: 4px solid #6366F1; }
+  .b11-flow-branch.fbc-1 .fb-then { color: #4338CA; }
+  .b11-flow-branch.fbc-2 { border-left: 4px solid #6366F1; }
+  .b11-flow-branch.fbc-2 .fb-then { color: #4338CA; }
+  .b11-flow-branch.fbc-3 { border-left: 4px solid #10B981; }
+  .b11-flow-branch.fbc-3 .fb-then { color: #065F46; }
+  .b11-flow-branch.fbc-4 { border-left: 4px solid #F97316; }
+  .b11-flow-branch.fbc-4 .fb-then { color: #7C2D12; }
+
+  /* ---- Pipeline (Ask → Plan → Build) ---- */
+  .pipeline {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    width: 100%;
+    margin-top: 0.6rem;
+    flex-wrap: wrap;
+  }
+
+  .pl-stage {
+    flex: 1;
+    min-width: 180px;
+    border-radius: var(--radius-md);
+    padding: 0.9rem 1rem;
+    text-align: left;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .pl-num {
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    opacity: 0.7;
+    margin-bottom: 0.2rem;
+  }
+
+  .pl-name {
+    font-size: 1.3rem;
+    font-weight: 900;
+    margin-bottom: 0.15rem;
+  }
+
+  .pl-key {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    background: rgba(0,0,0,0.15);
+    border-radius: 4px;
+    padding: 0.15rem 0.5rem;
+    margin-bottom: 0.5rem;
+    letter-spacing: 0.04em;
+  }
+
+  .pl-stage ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+
+  .pl-stage ul li {
+    font-size: 0.9rem;
+    margin-bottom: 0.25rem;
+    line-height: 1.4;
+  }
+
+  .pl-ask {
+    background: #EFF6FF;
+    border: 2px solid #2563EB;
+  }
+  .pl-ask .pl-num { color: #1E3A8A; }
+  .pl-ask .pl-name { color: #1D4ED8; }
+  .pl-ask ul li { color: #1E40AF; }
+
+  .pl-plan {
+    background: #F5F3FF;
+    border: 2px solid #7C3AED;
+    border-left: none;
+    border-right: none;
+  }
+  .pl-plan .pl-num { color: #3B0764; }
+  .pl-plan .pl-name { color: #6D28D9; }
+  .pl-plan ul li { color: #4C1D95; }
+
+  .pl-build {
+    background: #ECFDF5;
+    border: 2px solid #059669;
+  }
+  .pl-build .pl-num { color: #065F46; }
+  .pl-build .pl-name { color: #047857; }
+  .pl-build ul li { color: #065F46; }
+
+  .pl-arrow {
+    display: flex;
+    align-items: center;
+    padding: 0 0.3rem;
+    font-size: 1.2rem;
+    color: #6366F1;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* ---- Install table ---- */
+  .install-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.6rem;
+    font-size: 0.94rem;
+  }
+
+  .install-table th {
+    background: #1E1B4B;
+    color: white;
+    padding: 0.6rem 0.9rem;
+    text-align: left;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .install-table td {
+    padding: 0.55rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-dim);
+    vertical-align: middle;
+  }
+
+  .install-table tr:last-child td { border-bottom: none; }
+
+  .install-table tr.hl-row td {
+    background: #EEF2FF;
+    color: #3730A3;
+    font-weight: 700;
+  }
+
+  .install-table code {
+    background: #F1F5F9;
+    border-radius: 4px;
+    padding: 0.1rem 0.45rem;
+    font-size: 0.88rem;
+    color: #4F46E5;
+  }
+
+  /* ---- Model comparison cards ---- */
+  .model-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  @media (max-width: 700px) {
+    .model-grid { grid-template-columns: 1fr; }
+  }
+
+  .model-card {
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.2rem;
+    text-align: left;
+    box-shadow: var(--shadow-sm);
+    border: 2px solid;
+  }
+
+  .mc-badge {
+    display: inline-block;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border-radius: 100px;
+    padding: 0.2rem 0.6rem;
+    margin-bottom: 0.5rem;
+  }
+
+  .mc-title {
+    font-size: 1.05rem;
+    font-weight: 800;
+    margin-bottom: 0.25rem;
+  }
+
+  .mc-desc {
+    font-size: 0.93rem;
+    color: var(--text-dim);
+    margin-bottom: 0.5rem;
+    line-height: 1.4;
+  }
+
+  .model-card ul {
+    margin: 0;
+    padding-left: 1.1rem;
+  }
+
+  .model-card ul li {
+    font-size: 0.92rem;
+    color: var(--text-dim);
+    margin-bottom: 0.2rem;
+    line-height: 1.4;
+  }
+
+  .mc-flash {
+    background: #FFFBEB;
+    border-color: #D97706;
+  }
+  .mc-flash .mc-badge { background: #FEF3C7; color: #92400E; }
+  .mc-flash .mc-title { color: #92400E; }
+
+  .mc-pro {
+    background: #EEF2FF;
+    border-color: #6366F1;
+  }
+  .mc-pro .mc-badge { background: #E0E7FF; color: #3730A3; }
+  .mc-pro .mc-title { color: #3730A3; }
+
+  /* ---- Checklist table ---- */
+  .check-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 0.7rem;
+  }
+
+  .check-table td {
+    padding: 0.65rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 1rem;
+    color: var(--text-dim);
+    vertical-align: middle;
+  }
+
+  .check-table td:first-child {
+    width: 2.2rem;
+    font-size: 1.1rem;
+    color: var(--success);
+    text-align: center;
+  }
+
+  .check-table tr:last-child td { border-bottom: none; }
+
+  /* ---- Summary grid ---- */
+  .sum-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 0.8rem;
+    width: 100%;
+    margin-top: 0.6rem;
+  }
+
+  .sum-item {
+    display: flex;
+    gap: 0.7rem;
+    align-items: flex-start;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 0.8rem 0.9rem;
+    box-shadow: var(--shadow-sm);
+    text-align: left;
+  }
+
+  .sum-n {
+    flex-shrink: 0;
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #E0E7FF;
+    color: #3730A3;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.95rem;
+  }
+
+  .sum-item p {
+    font-size: 0.96rem;
+    line-height: 1.4;
+    margin: 0;
+    color: var(--text-dim);
+  }
+
+  .sum-item strong { color: var(--text); }
+
+  /* ---- Prompt / code box ---- */
+  .prompt-box {
+    background: #0F172A;
+    color: #E2E8F0;
+    border-radius: var(--radius-md);
+    padding: 1.1rem 1.2rem;
+    width: 100%;
+    text-align: left;
+    font-size: 0.93rem;
+    line-height: 1.5;
+    box-shadow: var(--shadow-md);
+    margin-top: 0.6rem;
+    white-space: normal;
+    border-left: none;
+    font-family: var(--font-code, ui-monospace, monospace);
+  }
+
+  .prompt-box .pb-label {
+    display: inline-block;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: #38BDF8;
+    font-weight: 800;
+    margin-bottom: 0.5rem;
+  }
+
+  .prompt-box code, .prompt-box .pb-ph { color: #FCD34D; }
+  .prompt-box .pb-line { display: block; margin: 0; line-height: 1.5; }
+  .prompt-box .pb-comment { color: #64748B; }
+  .prompt-box .pb-key { color: #818CF8; font-weight: 700; }
+  .prompt-box .pb-val { color: #34D399; }
+  .prompt-box .pb-str { color: #FB923C; }
+
+  /* ---- Teaser buổi 12 ---- */
+  .b11-teaser {
+    background: linear-gradient(135deg, #0F172A 0%, #1E1B4B 60%, #0891B2 100%);
+    border-radius: var(--radius-lg);
+    padding: 1.3rem 1.5rem;
+    text-align: center;
+    color: white;
+    box-shadow: var(--shadow-md);
+    width: 100%;
+    margin-top: 0.4rem;
+  }
+
+  .b11-teaser .tsr-label {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    opacity: 0.75;
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+  }
+
+  .b11-teaser .tsr-title {
+    font-size: 1.35rem;
+    font-weight: 900;
+    margin: 0.2rem 0 0.4rem;
+  }
+
+  .b11-teaser .tsr-sub {
+    font-size: 0.96rem;
+    opacity: 0.85;
+    margin-bottom: 0.8rem;
+  }
+
+  .b11-teaser .tsr-items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: center;
+  }
+
+  .b11-teaser .tsr-chip {
+    background: rgba(255, 255, 255, 0.15);
+    border-radius: 100px;
+    padding: 0.3rem 0.85rem;
+    font-size: 0.88rem;
+    font-weight: 700;
+  }
+
+  /* ---- Fit overrides for content-heavy slides ---- */
+  [data-slide="2"] .slide-body { gap: 0.5rem; }
+  [data-slide="2"] .pstep-item { padding: 0.55rem 0.8rem; }
+
+  [data-slide="7"] .cg-card { padding: 0.75rem 0.9rem; }
+  [data-slide="7"] .cg-card ul li { font-size: 0.88rem; }
+
+  [data-slide="13"] .slide-body { gap: 0.4rem; }
+  [data-slide="13"] .pstep-item { padding: 0.55rem 0.8rem; }
+
+  [data-slide="23"] .slide-body { gap: 0.4rem; }
+  [data-slide="23"] .pl-stage { padding: 0.75rem 0.85rem; }
+  [data-slide="23"] .pl-stage ul li { font-size: 0.87rem; }
+
+  [data-slide="25"] .slide-body { gap: 0.4rem; }
+  [data-slide="25"] .pstep-item { padding: 0.55rem 0.8rem; }
+
+  [data-slide="28"] .check-table td { padding: 0.55rem 0.8rem; font-size: 0.97rem; }
+</style>
+
+<!-- ============================================================
+     SLIDE 1 — COVER
+     ============================================================ -->
+<section class="slide active slide-cover b11-cover" data-slide="1" data-title="Trang bìa">
+  <div class="cover-orb orb-1"></div>
+  <div class="cover-orb orb-2"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">BUỔI 11 · MODULE VC — VIBE CODING</span>
+    <h1 class="hero-title">Làm chủ OpenCode — <span class="grad-text">CLI AI Coding Agent</span></h1>
+    <p class="slide-subtitle">Từ Terminal đến sản phẩm thật · Ask – Plan – Build · Tự động hóa công việc</p>
+    <div class="cover-chips">
+      <span class="cover-chip">120 phút</span>
+      <span class="cover-chip">Output: AGENTS.md + 1 công cụ Python hoạt động</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 2 — LỘ TRÌNH 2 GIỜ
+     ============================================================ -->
+<section class="slide" data-slide="2" data-title="Lộ trình 2 giờ">
+  <div class="slide-body">
+    <span class="eyebrow">LỘ TRÌNH HÔM NAY</span>
+    <h2 class="slide-title">6 chặng trong 120 phút ⏱️</h2>
+    <div class="pstep">
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">1</div>
+        <div>
+          <h4>0–10 phút — Ôn Token &amp; Skill</h4>
+          <p>Flashcard nhanh + quiz · Nhắc lại RPI và file AGENTS.md</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">2</div>
+        <div>
+          <h4>10–40 phút — Định vị CLI Agent</h4>
+          <p>So sánh 4 nhóm · Vòng lặp tự trị · Khi nào dùng OpenCode</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">3</div>
+        <div>
+          <h4>40–60 phút — Terminal &amp; Cài đặt</h4>
+          <p>4 lệnh cơ bản · Cài OpenCode · Connect Provider · Chọn mô hình</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">4</div>
+        <div>
+          <h4>60–95 phút — Thực hành Ask – Plan – Build 🔨</h4>
+          <p>Viết AGENTS.md · Gõ lệnh đầu tiên · Build công cụ Python</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">5</div>
+        <div>
+          <h4>95–110 phút — Trình bày &amp; chia sẻ</h4>
+          <p>Demo sản phẩm trước lớp · Vòng phản hồi 2 phút</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">6</div>
+        <div>
+          <h4>110–120 phút — Tổng kết + Checklist + Bài về nhà</h4>
+          <p>5 điều đã học · Tự đánh giá · Nhiệm vụ trước Buổi 12</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 3 — OUTPUT BUỔI HỌC
+     ============================================================ -->
+<section class="slide" data-slide="3" data-title="Output buổi học">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 11 — BẠN PHẢI CÓ</span>
+    <h2 class="slide-title">4 thứ bạn mang về nhà 🎒</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit,minmax(220px,1fr));">
+      <div class="card">
+        <div class="card-icon">1</div>
+        <h3>Biết định vị CLI Agent</h3>
+        <p>Phân biệt <strong>OpenCode vs Chat AI vs IDE AI</strong> · Hiểu vòng lặp tự trị là gì.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">2</div>
+        <h3>Làm quen Terminal</h3>
+        <p>Biết <strong>4 lệnh cơ bản</strong> · Tự mở thư mục và khởi động OpenCode.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">3</div>
+        <h3>Viết AGENTS.md</h3>
+        <p>Tự tay soạn <strong>file luật chơi</strong> cho dự án cá nhân.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">4</div>
+        <h3>Build xong 1 công cụ</h3>
+        <p>Ứng dụng Python <strong>chạy được</strong> · Dùng Ask–Plan–Build đầy đủ.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 4 — SỔ TAY #1
+     ============================================================ -->
+<section class="slide" data-slide="4" data-title="Sổ Tay #1 — Đầu buổi" data-nb="1">
+  <div class="slide-body">
+    <span class="eyebrow">SỔ TAY #1</span>
+    <h2 class="slide-title">Dừng lại — viết vào sổ 📓</h2>
+    <div class="nb-card nb-active">
+      <div class="nb-q">Em đã từng mở Terminal (CMD/PowerShell) chưa? Em dùng nó để làm gì? Nếu chưa — em nghĩ người ta dùng nó để làm gì?</div>
+      <div class="nb-hint">Không cần biết câu trả lời đúng — ghi thật nhanh cảm nhận đầu tiên của em.</div>
+    </div>
+    <div class="b11-callout tip" style="margin-top:0.8rem;">
+      <span class="ci">💡</span>
+      <p><strong>Gợi ý kết nối:</strong> Sau buổi học hôm nay, em sẽ hiểu TẠI SAO Terminal lại là công cụ mạnh nhất — và OpenCode chính là người bạn đồng hành trong môi trường đó.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 5 — FLASHCARD ÔN BUỔI 10
+     ============================================================ -->
+<section class="slide" data-slide="5" data-title="Flashcard — Ôn buổi 10">
+  <div class="slide-body">
+    <span class="eyebrow">ÔN NHANH BUỔI 10</span>
+    <h2 class="slide-title">3 bí kíp đã học tuần trước 🗝️</h2>
+    <div class="kw-grid">
+      <div class="kw-card k-teal">
+        <div class="kw-term">Token &amp; Context Window</div>
+        <div class="kw-def">"Tiền tệ" và "sổ ghi nhớ" của AI · Dumb Zone bắt đầu khi đầy &gt;70%</div>
+      </div>
+      <div class="kw-card k-purple">
+        <div class="kw-term">Quy trình RPI</div>
+        <div class="kw-def">Research → Plan → Implement · Không để AI đọc cả kho code một lúc</div>
+      </div>
+      <div class="kw-card k-green">
+        <div class="kw-term">File AGENTS.md &amp; Skill</div>
+        <div class="kw-def">Luật chơi dự án · Mở rộng năng lực Agent ngoài text</div>
+      </div>
+    </div>
+    <div class="b11-callout indigo" style="margin-top:0.8rem;">
+      <span class="ci">🚀</span>
+      <p><strong>Hôm nay</strong> chúng ta đưa 3 bí kíp này vào thực chiến trên OpenCode — CLI AI Coding Agent mạnh nhất hiện tại.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 6 — PART 1 DIVIDER
+     ============================================================ -->
+<section class="slide slide-part b11-part" data-slide="6" data-title="Phần 1: Định vị CLI Agent">
+  <div class="slide-body" style="text-align:center;color:white;">
+    <p class="part-eyebrow">Phần 1 / 4</p>
+    <p class="part-num">1</p>
+    <h2 class="part-title">Định vị CLI AI Coding Agent</h2>
+    <p class="part-sub">Tại sao OpenCode đứng ở đầu kim tự tháp quyền năng?</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 7 — SO SÁNH 4 NHÓM CÔNG CỤ
+     ============================================================ -->
+<section class="slide" data-slide="7" data-title="4 nhóm AI — OpenCode đứng ở đâu?">
+  <div class="slide-body">
+    <span class="eyebrow">HỆ QUY CHIẾU BUỔI 9</span>
+    <h2 class="slide-title">4 nhóm AI — OpenCode đứng ở đâu? 🗺️</h2>
+    <p style="font-size:0.97rem;color:var(--text-dim);margin:0.1rem 0 0.4rem;">Cùng nhìn lại bản đồ công cụ từ Buổi 9 — lần này tập trung vào điểm khác biệt của CLI Agent:</p>
+    <div class="cmp-grid">
+      <div class="cg-card cg-g1">
+        <div class="cg-tag">Nhóm 1</div>
+        <div class="cg-name">Chat-first AI</div>
+        <ul>
+          <li>ChatGPT, Claude Web</li>
+          <li>Trả ra văn bản/code rời rạc</li>
+          <li>Người dùng tự copy-paste</li>
+        </ul>
+      </div>
+      <div class="cg-card cg-g2">
+        <div class="cg-tag">Nhóm 2</div>
+        <div class="cg-name">Platform AI</div>
+        <ul>
+          <li>Bolt.new, v0.dev</li>
+          <li>Prototype nhanh</li>
+          <li>Bị giới hạn trong Cloud sandbox</li>
+        </ul>
+      </div>
+      <div class="cg-card cg-g3">
+        <div class="cg-tag">Nhóm 3</div>
+        <div class="cg-name">IDE AI</div>
+        <ul>
+          <li>Cursor, Copilot</li>
+          <li>Gợi ý code trong editor</li>
+          <li>Người dùng phải bấm Accept từng đoạn</li>
+        </ul>
+      </div>
+      <div class="cg-card cg-g4">
+        <span class="cg-star">⭐</span>
+        <div class="cg-tag">Nhóm 4 — Đỉnh tháp</div>
+        <div class="cg-name">CLI Agent</div>
+        <ul>
+          <li>OpenCode, Aider</li>
+          <li>Toàn quyền hệ thống</li>
+          <li>Tự thực thi lệnh · Đọc log · Tự sửa</li>
+        </ul>
+      </div>
+    </div>
+    <div class="b11-callout indigo">
+      <span class="ci">⚡</span>
+      <p>CLI Agent là nhóm <strong>DUY NHẤT</strong> có thể chạy lệnh hệ thống, cài thư viện, đọc log lỗi và tự sửa — tất cả không cần bạn bấm nút.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 8 — VÒNG LẶP TỰ TRỊ
+     ============================================================ -->
+<section class="slide" data-slide="8" data-title="Vòng lặp tự trị">
+  <div class="slide-body">
+    <span class="eyebrow">BẢN CHẤT CLI AGENT</span>
+    <h2 class="slide-title">Vòng lặp tự trị — AI làm thay bạn cả chuỗi 🔄</h2>
+    <p style="font-size:0.97rem;color:var(--text-dim);margin:0.1rem 0 0.3rem;">Trong khi IDE AI chờ bạn bấm Accept, CLI Agent vận hành theo vòng lặp khép kín:</p>
+    <div class="auto-loop">
+      <div class="al-node">Nhận yêu cầu</div>
+      <div class="al-arrow">→</div>
+      <div class="al-node">Duyệt file</div>
+      <div class="al-arrow">→</div>
+      <div class="al-node">Viết code</div>
+      <div class="al-arrow">→</div>
+      <div class="al-node">Chạy lệnh</div>
+      <div class="al-arrow">→</div>
+      <div class="al-node">Đọc log lỗi</div>
+      <div class="al-arrow">→</div>
+      <div class="al-node">Tự sửa 🔁</div>
+    </div>
+    <div class="b11-two">
+      <div class="b11-callout warn">
+        <span class="ci">⚠️</span>
+        <p><strong>Với IDE AI:</strong> Bạn phải bấm Run → đọc lỗi → copy sang chat → đọc gợi ý → bấm Accept → lặp lại. Mỗi vòng mất 2–5 phút.</p>
+      </div>
+      <div class="b11-callout tip">
+        <span class="ci">✅</span>
+        <p><strong>Với CLI Agent:</strong> Bạn gõ yêu cầu → Agent tự chạy cả vòng lặp đến khi hết lỗi. Bạn chỉ việc đọc kết quả cuối.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 9 — KHI NÀO DÙNG CLI AGENT?
+     ============================================================ -->
+<section class="slide" data-slide="9" data-title="Khi nào dùng OpenCode?">
+  <div class="slide-body">
+    <span class="eyebrow">FLOWCHART CHỌN TOOL</span>
+    <h2 class="slide-title">Dùng OpenCode khi nào? ✅</h2>
+    <div class="b11-flow-branches">
+      <div class="b11-flow-branch fbc-1">
+        <span class="fb-if">Cần xây dựng tính năng nhiều file liên kết nhau</span>
+        <span class="fb-arrow">→</span>
+        <span class="fb-then">OpenCode (CLI Agent)</span>
+      </div>
+      <div class="b11-flow-branch fbc-2">
+        <span class="fb-if">Cần tự động hóa: lọc file, đổi tên, xử lý Excel hàng loạt</span>
+        <span class="fb-arrow">→</span>
+        <span class="fb-then">OpenCode (CLI Agent)</span>
+      </div>
+      <div class="b11-flow-branch fbc-3">
+        <span class="fb-if">Muốn thử ý tưởng nhanh, không cần chạy code</span>
+        <span class="fb-arrow">→</span>
+        <span class="fb-then">Chat-first (Bolt.new, Claude Web)</span>
+      </div>
+      <div class="b11-flow-branch fbc-4">
+        <span class="fb-if">Muốn chỉnh sửa 1 file đang mở trong editor</span>
+        <span class="fb-arrow">→</span>
+        <span class="fb-then">IDE AI (Cursor, Windsurf)</span>
+      </div>
+    </div>
+    <div class="b11-callout indigo">
+      <span class="ci">🏆</span>
+      <p><strong>Quy tắc vàng:</strong> Càng nhiều file, càng phức tạp, càng cần tự động hóa sâu → CLI Agent là lựa chọn đúng đắn.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 10 — SỔ TAY #2
+     ============================================================ -->
+<section class="slide" data-slide="10" data-title="Sổ Tay #2 — Sau phần Định vị" data-nb="2">
+  <div class="slide-body">
+    <span class="eyebrow">SỔ TAY #2</span>
+    <h2 class="slide-title">Dừng lại — viết vào sổ 📓</h2>
+    <div class="nb-card nb-active">
+      <div class="nb-q">CLI Agent khác Chat-first AI ở điểm nào quan trọng nhất theo em? Điều đó sẽ thay đổi cách em dùng AI như thế nào?</div>
+      <div class="nb-hint">Gợi ý: nghĩ về vòng lặp tự trị và câu hỏi "ai làm bước tiếp theo?"</div>
+    </div>
+    <div class="b11-callout indigo" style="margin-top:0.8rem;">
+      <span class="ci">💡</span>
+      <p><strong>Gợi ý:</strong> Nghĩ đến một công việc lặp đi lặp lại em thường làm (sắp xếp file, ghi chép, ôn bài...) — CLI Agent có thể tự động hóa điều đó.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 11 — PART 2 DIVIDER
+     ============================================================ -->
+<section class="slide slide-part b11-part" data-slide="11" data-title="Phần 2: Terminal &amp; Cài đặt">
+  <div class="slide-body" style="text-align:center;color:white;">
+    <p class="part-eyebrow">Phần 2 / 4</p>
+    <p class="part-num">2</p>
+    <h2 class="part-title">Terminal &amp; Cài đặt OpenCode</h2>
+    <p class="part-sub">Làm quen bàn phím của Power User — rồi nạp AI vào trong đó</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 12 — TERMINAL & SHELL LÀ GÌ?
+     ============================================================ -->
+<section class="slide" data-slide="12" data-title="Terminal là gì?">
+  <div class="slide-body">
+    <span class="eyebrow">NỀN TẢNG</span>
+    <h2 class="slide-title">Terminal — Bàn phím điều khiển máy tính 💻</h2>
+    <div class="b11-two">
+      <div>
+        <div class="kw-grid" style="grid-template-columns:1fr;">
+          <div class="kw-card k-indigo">
+            <div class="kw-term">Terminal (Giao diện dòng lệnh)</div>
+            <div class="kw-def">Cửa sổ bằng chữ để ra lệnh cho máy tính · Trên Windows: CMD, PowerShell</div>
+          </div>
+          <div class="kw-card k-cyan">
+            <div class="kw-term">Terminal Emulator</div>
+            <div class="kw-def">Phần mềm hiện đại: WezTerm, Alacritty · Phông đẹp hơn, nhiều tab, nhanh hơn nhờ GPU</div>
+          </div>
+          <div class="kw-card k-green">
+            <div class="kw-term">Shell (Bộ thông dịch)</div>
+            <div class="kw-def">Chương trình xử lý lệnh bạn gõ · PowerShell (Windows) · Bash/Zsh (Linux/Mac)</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="b11-callout indigo">
+          <span class="ci">💡</span>
+          <p>Hãy nghĩ Terminal như <strong>điều khiển từ xa</strong> của máy tính — thay vì bấm vào biểu tượng trên màn hình, bạn gõ tên lệnh và máy tính thực hiện ngay.</p>
+        </div>
+        <div class="b11-callout warn" style="margin-top:0.6rem;">
+          <span class="ci">⚠️</span>
+          <p>Người dùng Windows nên chạy OpenCode trên <strong>WSL (Windows Subsystem for Linux)</strong> — môi trường Linux thu nhỏ ngay trong Windows, giúp OpenCode tìm file nhanh hơn và tương thích tốt hơn.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 13 — 4 LỆNH CƠ BẢN
+     ============================================================ -->
+<section class="slide" data-slide="13" data-title="4 lệnh cơ bản">
+  <div class="slide-body">
+    <span class="eyebrow">KỸ NĂNG SỐNG SÓT</span>
+    <h2 class="slide-title">4 lệnh bạn PHẢI biết trước khi dùng OpenCode ⌨️</h2>
+    <div class="pstep">
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">1</div>
+        <div>
+          <h4>Xem danh sách tệp tin — <code>dir</code> (Windows) / <code>ls</code> (Mac/Linux)</h4>
+          <p>Biết mình đang đứng ở thư mục nào, có những gì bên trong</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">2</div>
+        <div>
+          <h4>Tạo thư mục mới — <code>mkdir ten-thu-muc</code></h4>
+          <p>Tạo thư mục chứa dự án trước khi bắt đầu build</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">3</div>
+        <div>
+          <h4>Di chuyển thư mục — <code>cd ten-thu-muc</code> | <code>cd ..</code> (quay ra)</h4>
+          <p>Đi vào thư mục dự án để OpenCode làm việc đúng chỗ</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">4</div>
+        <div>
+          <h4>Làm sạch màn hình — <code>cls</code> (Windows) / <code>clear</code> (Mac/Linux)</h4>
+          <p>Xóa các dòng cũ để dễ nhìn kết quả mới nhất</p>
+        </div>
+      </div>
+    </div>
+    <div class="cmd-box">
+      <span class="cb-label">DEMO — Tạo thư mục và khởi động OpenCode</span>
+      <span class="cb-line"><span class="cb-prompt">~$ </span><span class="cb-cmd">mkdir </span><span class="cb-arg">quiz-app</span></span>
+      <span class="cb-line"><span class="cb-prompt">~$ </span><span class="cb-cmd">cd </span><span class="cb-arg">quiz-app</span></span>
+      <span class="cb-line"><span class="cb-prompt">~/quiz-app$ </span><span class="cb-cmd">opencode</span></span>
+      <span class="cb-line"><span class="cb-out">✓ OpenCode đã khởi động · gõ @ để chọn file · Tab để chuyển mode</span></span>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 14 — TIP WSL CHO WINDOWS
+     ============================================================ -->
+<section class="slide" data-slide="14" data-title="WSL cho Windows">
+  <div class="slide-body">
+    <span class="eyebrow">DÀNH RIÊNG CHO WINDOWS</span>
+    <h2 class="slide-title">WSL — Linux thu nhỏ ngay trong Windows 🪟</h2>
+    <div class="b11-two">
+      <div>
+        <div class="pstep" style="margin-top:0;">
+          <div class="pstep-item">
+            <div class="pstep-n n-indigo">1</div>
+            <div>
+              <h4>Bật WSL</h4>
+              <p>Mở PowerShell với quyền Admin → gõ <code>wsl --install</code></p>
+            </div>
+          </div>
+          <div class="pstep-item">
+            <div class="pstep-n n-indigo">2</div>
+            <div>
+              <h4>Chọn bản Linux</h4>
+              <p>Mặc định cài Ubuntu (bản phổ biến nhất, miễn phí)</p>
+            </div>
+          </div>
+          <div class="pstep-item">
+            <div class="pstep-n n-indigo">3</div>
+            <div>
+              <h4>Mở Ubuntu</h4>
+              <p>Tìm "Ubuntu" trong Start Menu hoặc gõ <code>wsl</code> trong Terminal</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="b11-callout tip">
+          <span class="ci">✅</span>
+          <p><strong>Lợi ích:</strong> OpenCode tìm file nhanh hơn 3–5 lần · Hỗ trợ tính năng duyệt web tự động (agent-browser) · Tương thích 100% với các hướng dẫn Linux trên internet.</p>
+        </div>
+        <div class="cmd-box" style="margin-top:0.6rem;">
+          <span class="cb-label">CÀI WSL (chạy với quyền Admin)</span>
+          <span class="cb-line"><span class="cb-prompt">PS&gt; </span><span class="cb-cmd">wsl </span><span class="cb-arg">--install</span></span>
+          <span class="cb-line"><span class="cb-out">Đang cài Ubuntu... (khởi động lại máy 1 lần)</span></span>
+          <span class="cb-line"><span class="cb-prompt">user@ubuntu:~$ </span><span class="cb-comment"># Chào mừng đến Linux!</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 15 — PART 3 DIVIDER
+     ============================================================ -->
+<section class="slide slide-part b11-part" data-slide="15" data-title="Phần 3: Cài đặt &amp; Cấu hình OpenCode">
+  <div class="slide-body" style="text-align:center;color:white;">
+    <p class="part-eyebrow">Phần 3 / 4</p>
+    <p class="part-num">3</p>
+    <h2 class="part-title">Cài đặt &amp; Cấu hình OpenCode</h2>
+    <p class="part-sub">Từ câu lệnh cài đặt đến lần gõ đầu tiên</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 16 — CÀI ĐẶT OPENCODE
+     ============================================================ -->
+<section class="slide" data-slide="16" data-title="Cài đặt OpenCode">
+  <div class="slide-body">
+    <span class="eyebrow">CÀI ĐẶT</span>
+    <h2 class="slide-title">3 bước đưa OpenCode vào máy 🚀</h2>
+    <div class="pstep" style="margin-top:0.4rem;">
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">1</div>
+        <div>
+          <h4>Chọn cách cài phù hợp</h4>
+          <p>Chọn 1 trong 4 phương án bên dưới tùy công cụ có sẵn trên máy</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">2</div>
+        <div>
+          <h4>Chạy lệnh cài đặt</h4>
+          <p>Dán lệnh vào Terminal, nhấn Enter, chờ hoàn thành</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">3</div>
+        <div>
+          <h4>Kiểm tra thành công</h4>
+          <p>Gõ <code>opencode</code> hoặc phím tắt <code>i</code> — thấy giao diện TUI là xong</p>
+        </div>
+      </div>
+    </div>
+    <table class="install-table">
+      <thead>
+        <tr>
+          <th>Cách cài</th>
+          <th>Câu lệnh</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="hl-row">
+          <td>⭐ Script tự động (Khuyên dùng)</td>
+          <td><code>powershell -c "irm https://opencode.ai/install | iex"</code></td>
+        </tr>
+        <tr>
+          <td>Chocolatey</td>
+          <td><code>choco install opencode</code></td>
+        </tr>
+        <tr>
+          <td>Scoop</td>
+          <td><code>scoop install opencode</code></td>
+        </tr>
+        <tr>
+          <td>NPM (cần Node.js)</td>
+          <td><code>npm install -g opencode</code></td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="b11-callout tip">
+      <span class="ci">💡</span>
+      <p>Sau khi cài xong, gõ <code>opencode</code> (hoặc phím <code>i</code>) để khởi động. Lần đầu sẽ thấy giao diện dòng chữ (TUI) — không có chuột, chỉ có bàn phím!</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 17 — CONNECT PROVIDER
+     ============================================================ -->
+<section class="slide" data-slide="17" data-title="Kết nối Provider">
+  <div class="slide-body">
+    <span class="eyebrow">KẾT NỐI BỘ NÃO</span>
+    <h2 class="slide-title">Nạp AI vào OpenCode qua /connect 🔌</h2>
+    <div class="pstep">
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">1</div>
+        <div>
+          <h4>Gõ <code>/connect</code> trong OpenCode</h4>
+          <p>Lệnh slash command đầu tiên bạn học · Gõ trong giao diện OpenCode đang chạy</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">2</div>
+        <div>
+          <h4>Trình duyệt tự mở</h4>
+          <p>OpenCode chuyển hướng đến trang xác thực để đăng nhập tài khoản</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">3</div>
+        <div>
+          <h4>Đăng nhập và lấy API Key</h4>
+          <p>Sau khi xác thực, trang web cấp cho bạn một chuỗi mã (API Key)</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">4</div>
+        <div>
+          <h4>Dán key vào Terminal</h4>
+          <p>Copy chuỗi mã, quay lại Terminal, dán vào · OpenCode đã có bộ não!</p>
+        </div>
+      </div>
+    </div>
+    <div class="b11-callout indigo">
+      <span class="ci">🔐</span>
+      <p><strong>API Key</strong> như "chứng minh thư" để OpenCode dùng mô hình AI. Giữ bí mật — không chia sẻ, không đưa vào code public.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 18 — OPENCODE ZEN + CHỌN MÔ HÌNH
+     ============================================================ -->
+<section class="slide" data-slide="18" data-title="OpenCode Zen — Danh sách mô hình">
+  <div class="slide-body">
+    <span class="eyebrow">LỰA CHỌN THÔNG MINH</span>
+    <h2 class="slide-title">OpenCode Zen — Danh sách mô hình đã được kiểm chứng ✅</h2>
+    <div class="b11-two">
+      <div>
+        <div class="kw-grid" style="grid-template-columns:1fr;">
+          <div class="kw-card k-indigo">
+            <div class="kw-term">OpenCode Zen là gì?</div>
+            <div class="kw-def">Danh sách các mô hình AI đã được đội chuyên gia kiểm chứng kỹ · Loại bỏ rủi ro từ mô hình kém chất lượng</div>
+          </div>
+          <div class="kw-card k-green">
+            <div class="kw-term">Tại sao cần Zen?</div>
+            <div class="kw-def">Hàng trăm mô hình trên thị trường · Không phải mô hình nào cũng tốt cho lập trình · Zen chọn sẵn những cái tốt nhất cho bạn</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="b11-callout tip">
+          <span class="ci">💡</span>
+          <p><strong>Với người mới:</strong> Chọn mô hình từ danh sách Zen là cách an toàn nhất. Không cần tự tìm hiểu từng mô hình.</p>
+        </div>
+        <div class="b11-callout indigo" style="margin-top:0.6rem;">
+          <span class="ci">📊</span>
+          <p>Khi dùng với cơ chế <strong>Execution Feedback</strong> của OpenCode, các mô hình mã nguồn mở (Qwen, DeepSeek) đạt <strong>83–91%</strong> trên thang đánh giá chuẩn — tiệm cận mô hình trả phí đắt tiền.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 19 — FLASH VS PRO/MAX
+     ============================================================ -->
+<section class="slide" data-slide="19" data-title="Flash hay Pro — Đúng việc, đúng công cụ">
+  <div class="slide-body">
+    <span class="eyebrow">CHỌN ĐÚNG MÔ HÌNH</span>
+    <h2 class="slide-title">Flash hay Pro — Đúng việc, đúng công cụ ⚡</h2>
+    <div class="model-grid">
+      <div class="model-card mc-flash">
+        <span class="mc-badge">Flash · Nhanh &amp; Rẻ</span>
+        <div class="mc-title">DeepSeek Flash · Qwen Plus</div>
+        <div class="mc-desc">Tốc độ cực nhanh, chi phí rất thấp hoặc miễn phí</div>
+        <ul>
+          <li>Viết unit test</li>
+          <li>Kiểm tra lỗi cú pháp</li>
+          <li>Thay đổi nhỏ (đổi tên biến, format code)</li>
+          <li>Trả lời câu hỏi đơn giản</li>
+        </ul>
+      </div>
+      <div class="model-card mc-pro">
+        <span class="mc-badge">Pro/Max · Suy luận sâu</span>
+        <div class="mc-title">Qwen Max · DeepSeek Pro</div>
+        <div class="mc-desc">Suy luận logic chuyên sâu, xử lý ngữ cảnh lớn</div>
+        <ul>
+          <li>Thiết kế kiến trúc hệ thống</li>
+          <li>Xây tính năng mới từ đầu</li>
+          <li>Thuật toán phức tạp nhiều file</li>
+          <li>Debug khó (nguyên nhân sâu)</li>
+        </ul>
+      </div>
+    </div>
+    <div class="b11-callout tip">
+      <span class="ci">🎯</span>
+      <p><strong>Chiến thuật tối ưu:</strong> Dùng Flash để khám phá, Pro để hoàn thiện. Chuyển đổi bằng lệnh <code>/model</code> trong OpenCode.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 20 — PART 4 DIVIDER
+     ============================================================ -->
+<section class="slide slide-part b11-part" data-slide="20" data-title="Phần 4: Ask · Plan · Build">
+  <div class="slide-body" style="text-align:center;color:white;">
+    <p class="part-eyebrow">Phần 4 / 4</p>
+    <p class="part-num">4</p>
+    <h2 class="part-title">Ask · Plan · Build</h2>
+    <p class="part-sub">Quy trình 3 bước kiểm soát rủi ro — không mất code, không đi lạc</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 21 — AGENTS.MD — FILE LUẬT CHƠI
+     ============================================================ -->
+<section class="slide" data-slide="21" data-title="AGENTS.md — Hiến pháp dự án">
+  <div class="slide-body">
+    <span class="eyebrow">BẢN ĐỒ NGỮ CẢNH</span>
+    <h2 class="slide-title">AGENTS.md — "Hiến pháp" của dự án 📜</h2>
+    <p style="font-size:0.97rem;color:var(--text-dim);margin:0.1rem 0 0.3rem;">Chạy <code>opencode --init</code> để tạo tự động, hoặc tự viết trong thư mục dự án. AI đọc file này <strong>TRƯỚC KHI</strong> làm bất cứ điều gì.</p>
+    <div class="b11-two">
+      <div>
+        <div class="kw-grid" style="grid-template-columns:1fr;">
+          <div class="kw-card k-indigo">
+            <div class="kw-term">Chức năng</div>
+            <div class="kw-def">Lưu cấu trúc thư mục, quy tắc code, hướng dẫn riêng · Đảm bảo AI làm đúng theo yêu cầu của bạn mọi lúc</div>
+          </div>
+          <div class="kw-card k-green">
+            <div class="kw-term">Tác dụng</div>
+            <div class="kw-def">Không cần nhắc lại mỗi lần · AI tự động dùng Python, tự viết comment tiếng Việt, tự tuân theo cấu trúc thư mục bạn định</div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="prompt-box">
+          <span class="pb-label">VÍ DỤ — AGENTS.md</span>
+          <span class="pb-line"><span class="pb-key"># Luật chơi dự án Quiz App</span></span>
+          <span class="pb-line"></span>
+          <span class="pb-line"><span class="pb-key">## Ngôn ngữ lập trình</span></span>
+          <span class="pb-line"><span class="pb-val">- Dùng Python cho mọi script</span></span>
+          <span class="pb-line"><span class="pb-val">- Comment bằng tiếng Việt</span></span>
+          <span class="pb-line"></span>
+          <span class="pb-line"><span class="pb-key">## Cấu trúc thư mục</span></span>
+          <span class="pb-line"><span class="pb-val">- /src — mã nguồn chính</span></span>
+          <span class="pb-line"><span class="pb-val">- /data — dữ liệu từ vựng</span></span>
+          <span class="pb-line"><span class="pb-val">- /output — kết quả xuất</span></span>
+          <span class="pb-line"></span>
+          <span class="pb-line"><span class="pb-key">## Quy tắc code</span></span>
+          <span class="pb-line"><span class="pb-val">- Không dùng thư viện ngoài khi có thể</span></span>
+          <span class="pb-line"><span class="pb-val">- Mỗi hàm cần docstring ngắn</span></span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 22 — SKILLS FOLDER — MỞ RỘNG NĂNG LỰC
+     ============================================================ -->
+<section class="slide" data-slide="22" data-title="Skills — Mở rộng năng lực Agent">
+  <div class="slide-body">
+    <span class="eyebrow">NÂNG CẤP AGENT</span>
+    <h2 class="slide-title">Skills — Trang bị thêm năng lực cho AI 🔧</h2>
+    <p style="font-size:0.97rem;color:var(--text-dim);margin:0.1rem 0 0.4rem;">OpenCode không bị giới hạn trong đọc/viết chữ. Cài thêm Skill để mở rộng khả năng:</p>
+    <div class="kw-grid">
+      <div class="kw-card k-cyan">
+        <div class="kw-term">agent-browser (Duyệt web tự động)</div>
+        <div class="kw-def">AI tự truy cập internet · Đọc tài liệu hướng dẫn mới nhất · Tìm giải pháp khi gặp lỗi lạ · Cập nhật cú pháp thư viện đã thay đổi</div>
+      </div>
+      <div class="kw-card k-purple">
+        <div class="kw-term">trycua (Điều khiển giao diện đồ họa)</div>
+        <div class="kw-def">AI tương tác với app Desktop/Web như người dùng thật · Tự động test UI (nhấn nút, điền form) · Kiểm thử sản phẩm không cần người</div>
+      </div>
+    </div>
+    <div class="b11-callout warn">
+      <span class="ci">⚠️</span>
+      <p>Skills mở rộng quyền truy cập của AI. Chỉ cài Skills từ <strong>nguồn tin cậy</strong> — đọc kỹ mô tả trước khi cài.</p>
+    </div>
+    <div class="b11-callout tip">
+      <span class="ci">💡</span>
+      <p>Skill cơ bản (đọc/viết file, chạy Python) đã có sẵn trong OpenCode — <strong>không cần cài thêm để bắt đầu.</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 23 — QUY TRÌNH ASK → PLAN → BUILD
+     ============================================================ -->
+<section class="slide" data-slide="23" data-title="Ask → Plan → Build">
+  <div class="slide-body">
+    <span class="eyebrow">QUY TRÌNH VẬN HÀNH</span>
+    <h2 class="slide-title">Ask → Plan → Build — 3 bước kiểm soát rủi ro 🎯</h2>
+    <p style="font-size:0.95rem;color:var(--text-dim);margin:0.1rem 0 0.3rem;">Nhấn <strong>[Tab]</strong> để chuyển giữa các mode. Code chỉ thay đổi khi bạn vào Build:</p>
+    <div class="pipeline">
+      <div class="pl-stage pl-ask">
+        <div class="pl-num">Bước 1</div>
+        <div class="pl-name">ASK</div>
+        <span class="pl-key">@ + Enter</span>
+        <ul>
+          <li>Nhấn @ để chọn file cần xử lý</li>
+          <li>Mô tả yêu cầu bằng ngôn ngữ tự nhiên</li>
+          <li>AI hỏi lại nếu chưa rõ</li>
+          <li>Chưa thay đổi gì</li>
+        </ul>
+      </div>
+      <div class="pl-arrow">Tab ▶</div>
+      <div class="pl-stage pl-plan">
+        <div class="pl-num">Bước 2</div>
+        <div class="pl-name">PLAN</div>
+        <span class="pl-key">[Tab]</span>
+        <ul>
+          <li>Agent đề xuất kiến trúc &amp; các bước</li>
+          <li>Chỉ có văn bản — chưa có code</li>
+          <li>Bạn duyệt và chỉnh kế hoạch</li>
+          <li>An toàn tuyệt đối</li>
+        </ul>
+      </div>
+      <div class="pl-arrow">Tab ▶</div>
+      <div class="pl-stage pl-build">
+        <div class="pl-num">Bước 3</div>
+        <div class="pl-name">BUILD</div>
+        <span class="pl-key">[Tab]</span>
+        <ul>
+          <li>Agent viết code + chạy kiểm tra</li>
+          <li>Đọc log lỗi → tự sửa</li>
+          <li>Chạy đến khi không còn lỗi</li>
+          <li>Gõ /undo để hoàn tác</li>
+        </ul>
+      </div>
+    </div>
+    <div class="b11-callout tip">
+      <span class="ci">🎯</span>
+      <p><strong>Mẹo quan trọng:</strong> Luôn duyệt Plan kỹ trước khi bấm Tab sang Build. 5 phút đọc Plan = tiết kiệm 30 phút sửa lỗi.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 24 — DEMO THỰC TẾ
+     ============================================================ -->
+<section class="slide" data-slide="24" data-title="OpenCode trong hành động">
+  <div class="slide-body">
+    <span class="eyebrow">XEM THỰC TẾ</span>
+    <h2 class="slide-title">OpenCode trong hành động — ví dụ thực 🎬</h2>
+    <div class="b11-two">
+      <div>
+        <div class="prompt-box">
+          <span class="pb-label">ASK MODE — Yêu cầu</span>
+          <span class="pb-line"><span class="pb-str">Tạo script Python đọc file Excel</span></span>
+          <span class="pb-line"><span class="pb-str">và lọc các dòng có cột 'Điểm' &gt; 8,</span></span>
+          <span class="pb-line"><span class="pb-str">lưu kết quả ra file mới.</span></span>
+          <span class="pb-line"><span class="pb-str">File gốc: /data/bảng-điểm.xlsx</span></span>
+          <span class="pb-line" style="margin-top:0.5rem;color:#818CF8;font-weight:700;">[Tab] → chuyển sang PLAN...</span>
+        </div>
+      </div>
+      <div>
+        <div class="prompt-box">
+          <span class="pb-label">PLAN MODE — Kế hoạch Agent đề xuất</span>
+          <span class="pb-line"><span class="pb-key">1. </span><span class="pb-val">Đọc file xlsx bằng openpyxl</span></span>
+          <span class="pb-line"><span class="pb-key">2. </span><span class="pb-val">Lọc sheet 'Kết quả', cột 'Điểm'</span></span>
+          <span class="pb-line"><span class="pb-key">3. </span><span class="pb-val">Tạo file mới: điểm-cao.xlsx</span></span>
+          <span class="pb-line"><span class="pb-key">4. </span><span class="pb-val">Ghi dòng header + dữ liệu lọc</span></span>
+          <span class="pb-line"><span class="pb-key">5. </span><span class="pb-val">Kiểm tra: in số dòng tìm được</span></span>
+          <span class="pb-line" style="margin-top:0.5rem;color:#818CF8;font-weight:700;">[Tab] → chuyển sang BUILD...</span>
+        </div>
+      </div>
+    </div>
+    <div class="b11-callout tip">
+      <span class="ci">⏱️</span>
+      <p><strong>Đây là ví dụ thực tế:</strong> mất khoảng 90 giây từ lúc gõ yêu cầu đến khi có file Excel kết quả. Thủ công có thể mất 20–30 phút.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 25 — THỰC HÀNH
+     ============================================================ -->
+<section class="slide" data-slide="25" data-title="Thực hành — Build công cụ học tập">
+  <div class="slide-body">
+    <span class="eyebrow">THỰC HÀNH 🔨</span>
+    <h2 class="slide-title">Build công cụ học tập cá nhân</h2>
+    <p style="font-size:0.97rem;color:var(--text-dim);margin:0.1rem 0 0.3rem;">Bài tập: Xây ứng dụng trắc nghiệm từ vựng tiếng Anh bằng Python</p>
+    <div class="pstep">
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">1</div>
+        <div>
+          <h4>Chuẩn bị thư mục</h4>
+          <p>Mở Terminal → <code>mkdir quiz-app</code> → <code>cd quiz-app</code></p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">2</div>
+        <div>
+          <h4>Khởi động OpenCode</h4>
+          <p>Gõ <code>opencode</code> (hoặc <code>i</code>) → Thấy giao diện TUI là thành công</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">3</div>
+        <div>
+          <h4>Viết AGENTS.md</h4>
+          <p>Gõ <code>opencode --init</code> hoặc tự tạo file · Định nghĩa: Python, comment tiếng Việt, cấu trúc thư mục</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">4</div>
+        <div>
+          <h4>Ask: Mô tả yêu cầu</h4>
+          <p>Gõ <code>@</code> để chọn AGENTS.md · Nhập: "Tạo app trắc nghiệm từ vựng tiếng Anh — 10 câu/lần, lưu điểm vào file text, chạy trên terminal"</p>
+        </div>
+      </div>
+      <div class="pstep-item">
+        <div class="pstep-n n-indigo">5</div>
+        <div>
+          <h4>Plan → Build</h4>
+          <p>Duyệt kế hoạch Agent đề xuất · Bấm Tab sang Build · Chờ Agent hoàn thành · Test ngay!</p>
+        </div>
+      </div>
+    </div>
+    <div class="b11-callout indigo">
+      <span class="ci">🚀</span>
+      <p><strong>Mở rộng khi xong:</strong> Thêm yêu cầu "lưu điểm vào file Excel" hoặc "phân loại từ theo chủ đề". Agent sẽ tự cập nhật code.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 26 — SỔ TAY #3
+     ============================================================ -->
+<section class="slide" data-slide="26" data-title="Sổ Tay #3 — Sau thực hành" data-nb="3">
+  <div class="slide-body">
+    <span class="eyebrow">SỔ TAY #3</span>
+    <h2 class="slide-title">Dừng lại — viết vào sổ 📓</h2>
+    <div class="nb-card nb-active">
+      <div class="nb-q">Em đã thử bước nào trong Ask → Plan → Build rồi? Điều gì xảy ra khi em nhấn Tab để chuyển sang Plan mode?</div>
+      <div class="nb-hint">Ghi lại cụ thể: bước nào dễ, bước nào khó, điều gì bất ngờ nhất.</div>
+    </div>
+    <div class="b11-callout indigo" style="margin-top:0.8rem;">
+      <span class="ci">🔍</span>
+      <p><strong>Gợi ý:</strong> So sánh lại với những lần dùng ChatGPT/Claude Web để làm tương tự — OpenCode giải quyết bước nào nhanh hơn nhiều nhất?</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 27 — TỔNG KẾT 5 ĐIỀU ĐÃ HỌC
+     ============================================================ -->
+<section class="slide" data-slide="27" data-title="Tổng kết buổi 11">
+  <div class="slide-body">
+    <span class="eyebrow">TỔNG KẾT BUỔI 11</span>
+    <h2 class="slide-title">5 điều bạn đã nắm được hôm nay 🎓</h2>
+    <div class="sum-grid">
+      <div class="sum-item">
+        <div class="sum-n">1</div>
+        <p><strong>CLI Agent đứng đầu kim tự tháp</strong> — Toàn quyền hệ thống · Vòng lặp tự trị · Không cần bấm Accept từng dòng</p>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">2</div>
+        <p><strong>Terminal không đáng sợ</strong> — 4 lệnh cơ bản đủ để bắt đầu · dir/ls, mkdir, cd, cls/clear</p>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">3</div>
+        <p><strong>AGENTS.md là "hiến pháp" dự án</strong> — AI đọc trước khi làm gì · Đảm bảo nhất quán mọi lúc</p>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">4</div>
+        <p><strong>Chọn đúng mô hình = tối ưu chi phí</strong> — Flash cho việc nhỏ · Pro/Max cho kiến trúc &amp; thuật toán phức tạp</p>
+      </div>
+      <div class="sum-item">
+        <div class="sum-n">5</div>
+        <p><strong>Ask → Plan → Build = kiểm soát rủi ro</strong> — Không code nào thay đổi khi bạn chưa duyệt Plan · /undo để hoàn tác</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 28 — CHECKLIST TỰ ĐÁNH GIÁ
+     ============================================================ -->
+<section class="slide" data-slide="28" data-title="Checklist buổi 11">
+  <div class="slide-body">
+    <span class="eyebrow">TỰ ĐÁNH GIÁ</span>
+    <h2 class="slide-title">Checklist buổi 11 — Em đã làm được chưa? ✅</h2>
+    <table class="check-table">
+      <tbody>
+        <tr>
+          <td>✓</td>
+          <td>Giải thích được CLI Agent khác Chat AI và IDE AI ở điểm nào</td>
+        </tr>
+        <tr>
+          <td>✓</td>
+          <td>Biết 4 lệnh terminal cơ bản và dùng được trong thực tế</td>
+        </tr>
+        <tr>
+          <td>✓</td>
+          <td>Cài được OpenCode và kết nối Provider thành công</td>
+        </tr>
+        <tr>
+          <td>✓</td>
+          <td>Tự viết file AGENTS.md cho dự án của mình</td>
+        </tr>
+        <tr>
+          <td>✓</td>
+          <td>Dùng quy trình Ask → Plan → Build ít nhất 1 lần</td>
+        </tr>
+        <tr>
+          <td>✓</td>
+          <td>Build được 1 công cụ Python chạy được trên Terminal</td>
+        </tr>
+        <tr>
+          <td>✓</td>
+          <td>Biết khi nào dùng mô hình Flash và khi nào cần Pro/Max</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="b11-callout tip">
+      <span class="ci">🎯</span>
+      <p><strong>Được 5/7 trở lên:</strong> Bạn đã sẵn sàng cho Buổi 12! Dưới 5: Xem lại phần còn thiếu và thực hành thêm trước buổi sau.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 29 — SỔ TAY #4
+     ============================================================ -->
+<section class="slide" data-slide="29" data-title="Sổ Tay #4 — Cuối buổi" data-nb="4">
+  <div class="slide-body">
+    <span class="eyebrow">SỔ TAY #4</span>
+    <h2 class="slide-title">Dừng lại — viết vào sổ 📓</h2>
+    <div class="nb-card nb-active">
+      <div class="nb-q">Một câu thôi: OpenCode giúp em làm được điều gì mà các công cụ AI khác không làm được?</div>
+      <div class="nb-hint">Không cần câu trả lời dài — một câu súc tích nhất em có thể viết.</div>
+    </div>
+    <div class="b11-callout tip" style="margin-top:0.8rem;">
+      <span class="ci">🌐</span>
+      <p><strong>Đây là câu hỏi bạn sẽ tự trả lời được sau khi deploy sản phẩm ra internet vào Buổi 12!</strong></p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 30 — TEASER BUỔI 12
+     ============================================================ -->
+<section class="slide" data-slide="30" data-title="Teaser Buổi 12">
+  <div class="slide-body">
+    <span class="eyebrow">SẮP ĐẾN</span>
+    <h2 class="slide-title">Buổi tiếp theo — Deploy thật sự 🚀</h2>
+    <div class="b11-teaser">
+      <div class="tsr-label">BUỔI TIẾP THEO</div>
+      <div class="tsr-title">Buổi 12 · Deploy với Vercel 🌐</div>
+      <div class="tsr-sub">Công cụ đã build xong — đã đến lúc đưa nó ra thế giới! Một link thật để gửi cho bạn bè.</div>
+      <div class="tsr-items">
+        <span class="tsr-chip">GitHub cơ bản</span>
+        <span class="tsr-chip">Vercel free tier</span>
+        <span class="tsr-chip">localhost → internet</span>
+        <span class="tsr-chip">Custom domain</span>
+        <span class="tsr-chip">Polish sản phẩm</span>
+      </div>
+    </div>
+    <div class="b11-callout indigo">
+      <span class="ci">📋</span>
+      <p><strong>Bài về nhà:</strong> Chắc chắn đã có 1 sản phẩm chạy được trên máy (từ bài thực hành hôm nay). Buổi 12 sẽ đưa nó lên internet — cần có tài khoản <strong>GitHub</strong> và <strong>Vercel</strong> (đăng ký miễn phí).</p>
+    </div>
+  </div>
+</section>

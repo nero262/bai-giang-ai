@@ -203,7 +203,7 @@
     "module_name": "Vibe Coding",
     "duration_min": 120,
     "file": "buoi_11.html",
-    "available": false,
+    "available": true,
     "description": "Làm quen terminal; hiểu CLI Agent khác chat thường thế nào; cài Open Code; thực hành build Portfolio web app nhiều file; dùng slash command & skill trong Open Code.",
     "tags": [
       "vibe-coding",
