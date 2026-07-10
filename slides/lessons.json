@@ -217,20 +217,22 @@
   {
     "id": 12,
     "slug": "buoi_12",
-    "title": "Deploy với Vercel — Đưa sản phẩm ra thế giới",
+    "title": "OpenCode thực chiến — Làm chủ AI Agent",
     "module": "M3",
     "module_name": "Vibe Coding",
     "duration_min": 120,
     "file": "buoi_12.html",
-    "available": false,
-    "description": "Hiểu khái niệm deploy (localhost → internet); giới thiệu Vercel free tier; thực hành deploy Portfolio bằng Vercel; polish sản phẩm; chia sẻ link thật với bạn bè.",
+    "available": true,
+    "description": "Hiểu OpenCode từ bên trong: mã nguồn mở, 3 khả năng cốt lõi và vòng lặp ReAct; thực hành Working with Code (đọc, sửa, tạo file); áp dụng Best Practices (Be Specific, Provide Context, Review Changes); kết nối kiến thức 12 buổi thành hệ thống hoàn chỉnh.",
     "tags": [
       "vibe-coding",
-      "deploy",
-      "vercel",
-      "github",
-      "hosting",
-      "portfolio"
+      "open-code",
+      "cli-agent",
+      "react-loop",
+      "best-practices",
+      "working-with-code",
+      "growth-mindset",
+      "ket-noi-hanh-trinh"
     ]
   },
   {
