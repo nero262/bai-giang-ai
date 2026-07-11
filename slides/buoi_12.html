@@ -643,6 +643,38 @@
   .cap-3 { background: #ECFDF5; border-color: #059669; color: #065F46; }
   .cap-3 .cap-desc { color: #047857; }
 
+  /* ---- Screenshot / illustration image ---- */
+  .b12-screenshot {
+    width: 100%;
+    border-radius: var(--radius-md);
+    box-shadow: 0 6px 24px rgba(15, 23, 42, 0.13);
+    border: 1px solid var(--border);
+    display: block;
+    margin-top: 0.4rem;
+  }
+
+  .b12-url-box {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    background: #F8FAFC;
+    border: 1px solid #CBD5E1;
+    border-radius: var(--radius-md);
+    padding: 0.55rem 0.9rem;
+    margin-top: 0.6rem;
+    word-break: break-all;
+  }
+
+  .b12-url-box .url-icon { font-size: 1rem; flex-shrink: 0; }
+  .b12-url-box a {
+    font-family: var(--font-code, monospace);
+    font-size: 0.82rem;
+    color: #0369A1;
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .b12-url-box a:hover { text-decoration: underline; }
+
   /* ---- Fit overrides ---- */
   [data-slide="2"] .slide-body { gap: 0.5rem; }
   [data-slide="2"] .pstep-item { padding: 0.55rem 0.8rem; }
@@ -1719,6 +1751,155 @@
     <div class="b12-callout emerald" style="margin-top:0.8rem;">
       <span class="ci">🌟</span>
       <p><strong>Từ người dùng AI → Người kiến trúc sư với AI.</strong> Em không chỉ biết dùng công cụ — em hiểu <em>tại sao</em>, biết <em>khi nào</em>, và nhận thức được <em>giới hạn</em>. Đó là sự trưởng thành thật sự.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 34 — PART DIVIDER: DEPLOY SẢN PHẨM LÊN INTERNET
+     ============================================================ -->
+<section class="slide slide-part b12-part" data-slide="34" data-title="Phần thực chiến: Deploy sản phẩm lên Internet">
+  <div class="slide-body" style="text-align:center;color:white;">
+    <p class="part-eyebrow">Thực chiến</p>
+    <p class="part-num">🚀</p>
+    <h2 class="part-title">Deploy sản phẩm lên Internet bằng Skill Vercel</h2>
+    <p class="part-sub">Từ app chạy trên máy → URL công khai toàn thế giới truy cập được · Sử dụng OpenCode + Skill deploy-to-vercel</p>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 35 — SKILL MARKETPLACE: SKILLHUB.CLUB
+     ============================================================ -->
+<section class="slide" data-slide="35" data-title="Skill Marketplace — skillhub.club">
+  <div class="slide-body">
+    <span class="eyebrow">CỘNG ĐỒNG SKILL CHO AI AGENT</span>
+    <h2 class="slide-title">skillhub.club — Kho Skill cộng đồng 🌐</h2>
+    <div class="b12-two">
+      <div>
+        <div class="kw-card k-emerald" style="margin-bottom:0.7rem;">
+          <div class="kw-term">skillhub.club là gì?</div>
+          <div class="kw-def">Marketplace lưu trữ và chia sẻ <strong>Skill</strong> cho AI Agent từ cộng đồng toàn cầu. Ai cũng có thể tải về và sử dụng miễn phí — đúng tinh thần mã nguồn mở.</div>
+        </div>
+        <div class="kw-card k-teal" style="margin-bottom:0.7rem;">
+          <div class="kw-term">deploy-to-vercel skill</div>
+          <div class="kw-def">Tác giả: <strong>vercel-labs</strong> · ⭐ 28.6k sao · 2.6k forks · AI Score: <strong>Grade B</strong> · Best Practices: B · Chuyên deploy app lên Vercel chỉ bằng 1 câu lệnh tự nhiên</div>
+        </div>
+        <div class="b12-url-box">
+          <span class="url-icon">🔗</span>
+          <a href="https://www.skillhub.club/skills/vercel-labs-agent-skills-deploy-to-vercel" target="_blank">
+            skillhub.club/skills/vercel-labs-agent-skills-deploy-to-vercel
+          </a>
+        </div>
+        <div class="b12-callout emerald" style="margin-top:0.6rem;">
+          <span class="ci">📦</span>
+          <p><strong>Skill là gì?</strong> Là "bộ chỉ dẫn chuyên biệt" cho AI Agent — giống như cài thêm module cho OpenCode. Mỗi Skill dạy AI làm được 1 việc cụ thể mà mặc định nó không biết.</p>
+        </div>
+      </div>
+      <div>
+        <p style="font-size:0.85rem;font-weight:700;color:var(--text-dim);margin:0 0 0.4rem;text-transform:uppercase;letter-spacing:0.06em;">Giao diện trang skill trên skillhub.club</p>
+        <img src="buoi_12_images/skillhub_vercel.png"
+             alt="Trang deploy-to-vercel trên skillhub.club — Grade B, Download Complete Skill, One-Click Install"
+             class="b12-screenshot"
+             loading="lazy">
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 36 — 5 BƯỚC TRIỂN KHAI VỚI SKILL VERCEL
+     ============================================================ -->
+<section class="slide" data-slide="36" data-title="5 bước deploy sản phẩm lên Internet">
+  <div class="slide-body">
+    <span class="eyebrow">QUY TRÌNH THỰC CHIẾN</span>
+    <h2 class="slide-title">5 bước deploy sản phẩm lên Internet 🛠️</h2>
+    <div class="install-steps">
+      <div class="is-row">
+        <div class="is-num">1</div>
+        <div>
+          <h4>Vào dự án &amp; kiểm tra app chạy được</h4>
+          <p><code>cd tên-dự-án</code> · Mở OpenCode · Dùng prompt: <strong>"Kiểm tra dự án này và chạy thử app trên máy tôi"</strong> · Đảm bảo app hoạt động trước khi deploy</p>
+        </div>
+      </div>
+      <div class="is-row">
+        <div class="is-num">2</div>
+        <div>
+          <h4>Tạo thư mục <code>skills</code> trong dự án</h4>
+          <p>Tạo folder <code>skills/</code> ngay trong thư mục gốc của dự án · Đây là nơi chứa tất cả Skill cho AI Agent của dự án</p>
+        </div>
+      </div>
+      <div class="is-row">
+        <div class="is-num">3</div>
+        <div>
+          <h4>Tải Skill từ skillhub.club</h4>
+          <p>Vào trang skill <strong>deploy-to-vercel</strong> · Bấm <strong>"Download Complete Skill"</strong> → tải về file <code>.zip</code> · Giải nén ra</p>
+        </div>
+      </div>
+      <div class="is-row">
+        <div class="is-num">4</div>
+        <div>
+          <h4>Thêm Skill vào thư mục dự án</h4>
+          <p>Copy toàn bộ folder đã giải nén (<code>vercel-labs-agent-skills-deploy-to-vercel/</code>) vào thư mục <code>skills/</code> vừa tạo</p>
+        </div>
+      </div>
+      <div class="is-row">
+        <div class="is-num">5</div>
+        <div>
+          <h4>Ra lệnh deploy trong OpenCode</h4>
+          <p>Mở OpenCode trong dự án · Nhập prompt: <strong>"Deploy my app in this project and give me the link"</strong> · Chờ AI tự động build &amp; deploy</p>
+        </div>
+      </div>
+    </div>
+    <div class="b12-callout tip">
+      <span class="ci">💡</span>
+      <p><strong>OpenCode tự nhận diện Skill:</strong> Khi bạn gõ prompt, OpenCode đọc thư mục <code>skills/</code>, tìm đúng skill phù hợp và sử dụng — không cần chỉ định tên skill thủ công.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================
+     SLIDE 37 — DEMO: DEPLOY BẰNG OPENCODE
+     ============================================================ -->
+<section class="slide" data-slide="37" data-title="Demo — Deploy bằng OpenCode & kết quả">
+  <div class="slide-body">
+    <span class="eyebrow">KẾT QUẢ THỰC TẾ</span>
+    <h2 class="slide-title">OpenCode tự deploy — bạn nhận link 🔗</h2>
+    <div class="b12-two">
+      <div>
+        <p style="font-size:0.95rem;font-weight:700;color:var(--text);margin:0 0 0.5rem;">Cấu trúc thư mục sau khi cài Skill:</p>
+        <div class="cmd-box" style="font-size:0.88rem;">
+          <span class="cb-label">project structure</span>
+          <span class="cb-line"><span class="cb-good">📁</span> <span class="cb-arg">THUC_HANH_VIBE_CODE/</span></span>
+          <span class="cb-line">  <span class="cb-good">📁</span> <span class="cb-arg">ecommerce-dashboard/</span></span>
+          <span class="cb-line">  <span class="cb-good">📁</span> <span class="cb-arg">skills/</span></span>
+          <span class="cb-line">    <span class="cb-good">📁</span> <span class="cb-arg">vercel-labs-agent-skills-deploy-to-vercel/</span></span>
+          <span class="cb-line">      <span class="cb-cmd">SKILL.md</span>   <span class="cb-comment"># Hướng dẫn cho AI</span></span>
+          <span class="cb-line">      <span class="cb-cmd">AGENTS.md</span>  <span class="cb-comment"># Context cho Agent</span></span>
+          <span class="cb-line">      <span class="cb-cmd">app.py</span></span>
+          <span class="cb-line">  <span class="cb-cmd">requirements.txt</span></span>
+        </div>
+        <div class="cmd-box" style="margin-top:0.6rem;font-size:0.88rem;">
+          <span class="cb-label">opencode terminal</span>
+          <span class="cb-line"><span class="cb-prompt">&gt;</span> <span class="cb-cmd">Deploy my app in this project and give me the link</span></span>
+          <span class="cb-line cb-think">Using skill 'skills/vercel-labs-agent-skills-deploy-to-vercel'</span>
+          <span class="cb-line cb-think">and deploy my app in the internet and give me the link.</span>
+          <span class="cb-line"><span class="cb-out">Build · DeepSeek V4 Flash Free · medium</span></span>
+        </div>
+      </div>
+      <div>
+        <div class="b12-callout emerald">
+          <span class="ci">✅</span>
+          <p><strong>Kết quả trả về:</strong> OpenCode tự động chạy build, kết nối Vercel API và trả ra <strong>link URL công khai</strong> — sản phẩm của bạn đã live trên Internet, được build ngay trên máy cá nhân của bạn.</p>
+        </div>
+        <div class="kw-card k-teal" style="margin-top:0.7rem;">
+          <div class="kw-term">Vercel là gì?</div>
+          <div class="kw-def">Nền tảng hosting miễn phí · Chuyên deploy web app · Tự động cấp <strong>HTTPS</strong> · URL dạng <code>tên-app.vercel.app</code> · Ai cũng truy cập được toàn cầu</div>
+        </div>
+        <div class="b12-callout warn" style="margin-top:0.7rem;">
+          <span class="ci">⚠️</span>
+          <p><strong>Lưu ý:</strong> Cần có tài khoản Vercel (miễn phí) và đã đăng nhập <code>vercel login</code> trước lần đầu deploy. OpenCode sẽ hướng dẫn nếu chưa đăng nhập.</p>
+        </div>
+      </div>
     </div>
   </div>
 </section>
