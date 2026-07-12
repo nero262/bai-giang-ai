@@ -1,0 +1,623 @@
+<!--
+  Slide fragment cho Buổi 14 — MODULE M4: Nền tảng Lập trình & Hạ tầng.
+  Buổi 14: Git & GitHub — Cỗ máy thời gian cho code (backup, quản phiên bản, tái dùng mã nguồn).
+  Format fragment: cấu hình Sổ Tay + CSS riêng + các <section class="slide">.
+  Chrome do frontend/templates/lesson.html cung cấp. Xưng "em", "GV". Navigation chạy theo thứ tự DOM.
+  Trục kể chuyện (5 màn): Nỗi đau → Điểm lưu trên máy (Git) → Lưu đám mây, web sống & khoe (GitHub) → Học từ thế giới → Tự tay làm.
+-->
+
+<script type="application/json" id="nb-questions">
+{
+  "1": {"title": "SỔ TAY #1 — Đầu buổi", "q": "Em từng lỡ xoá/ghi đè mất một bài làm hay đoạn code chưa? Em thường lưu nhiều phiên bản của một file bằng cách nào?"},
+  "2": {"title": "SỔ TAY #2 — Sau thực hành", "q": "Link repo + link GitHub Pages (web sống) của em là gì? Và 1 repo hay em tìm thấy để tham khảo?"},
+  "3": {"title": "SỔ TAY #3 — Cuối buổi", "q": "Git giúp em điều gì mà cách lưu file cũ (đặt tên v1, v2...) không làm được?"}
+}
+</script>
+
+<style>
+  /* BUỔI 14 — Local styles (Module M4) */
+  .slide-body .qbox,
+  .slide-body .steps,
+  .slide-body .prompt-box,
+  .slide-body .hl-box,
+  .slide-body .cl-container {
+    width: 100%;
+    max-width: none;
+  }
+  .slide { justify-content: flex-start; }
+  .slide-body { margin-top: auto; margin-bottom: auto; }
+</style>
+
+<!-- ============ MỞ ĐẦU ============ -->
+
+<!-- 1 -->
+<section class="slide active slide-cover" data-slide="1" data-title="Chào mừng">
+  <div class="cover-orb orb-1" style="background:#059669;"></div>
+  <div class="cover-orb orb-2" style="background:#F59E0B;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">BUỔI 14 · MODULE 4 — NỀN TẢNG LẬP TRÌNH & HẠ TẦNG</span>
+    <h1 class="hero-title">Git &amp; GitHub — <span class="grad-text">Cỗ máy thời gian cho code</span></h1>
+    <p class="slide-subtitle">Lưu lại mọi phiên bản code (kẻo AI viết đè mất bản đang chạy ngon!); đưa sản phẩm lên GitHub và
+      biến nó thành 1 <strong>web sống</strong> gửi khoe cả thế giới.</p>
+    <div class="cover-chips"><span class="cover-chip">120 phút</span><span class="cover-chip">Commit · Repo · GitHub Pages</span><span class="cover-chip">Output: link web sống</span></div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-slide="2" data-title="4 loại câu hỏi tương tác">
+  <div class="slide-body">
+    <span class="eyebrow">CÁCH HỌC HÔM NAY</span>
+    <h2 class="slide-title">4 loại câu hỏi em sẽ gặp</h2>
+    <p class="slide-subtitle">Mỗi loại có một màu riêng. Thấy hộp màu nào, em biết ngay mình cần làm gì.</p>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="qbox qbox-blue" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#3B82F6;">?</div>Trước giờ học</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Đọc trước, ngẫm 30 giây. Giúp em phát biểu tự tin khi GV gọi.</div>
+      </div>
+      <div class="qbox qbox-yellow" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#F59E0B;">!</div>Hỏi bạn cặp</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Quay sang bạn cặp cùng bàn để trao đổi. Bạn lớp 10 giảng lại cho bạn lớp 8.</div>
+      </div>
+      <div class="qbox qbox-purple" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#A855F7;">#</div>Suy ngẫm Sổ Tay</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Em tự ngẫm rồi viết vào Sổ Tay Cá Nhân (nút trên cùng). Riêng tư, không nộp.</div>
+      </div>
+      <div class="qbox qbox-orange" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#F97316;">+</div>Thử AI tại nhà</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Không bắt buộc, làm nếu em hứng thú. Kể lại trong nhóm Zalo lớp nếu có phát hiện hay.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-slide="3" data-title="Cuối buổi em có gì">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 14 — EM PHẢI CÓ</span>
+    <h2 class="slide-title">3 thứ em mang về</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#059669;">1</div>
+        <h3>Hiểu Git</h3>
+        <p>Biết <strong>repo · commit · branch</strong> và vì sao lập trình viên nào cũng dùng.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#059669;">2</div>
+        <h3>Web chạy thật để khoe</h3>
+        <p>Đưa sản phẩm lên GitHub + bật <strong>GitHub Pages</strong> → có <strong>link web sống</strong>.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#059669;">3</div>
+        <h3>Tìm &amp; tái dùng</h3>
+        <p>Tìm mã nguồn hay để học, và biết <strong>license</strong> nào được dùng lại.</p>
+      </div>
+    </div>
+    <div class="hl-box success"><span class="hl-label">OUTPUT BẮT BUỘC — SHOW ĐƯỢC</span>
+      <p><strong>APP-14.1</strong>: 1 repo GitHub công khai (commit rõ nghĩa + README có ảnh) và <strong>bật GitHub Pages</strong> → có <strong>link web SỐNG</strong> gửi bạn bè/bố mẹ mở ngay trên điện thoại.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-slide="4" data-title="Sổ Tay #1 — Đầu buổi">
+  <div class="slide-body">
+    <span class="eyebrow">BẮT ĐẦU</span>
+    <h2 class="slide-title">Em đã từng mất bài vì lỡ tay chưa?</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #1 — Đầu buổi</div>
+      <div class="qbox-content">Em từng lỡ xoá/ghi đè mất một bài làm hay đoạn code chưa? Em thường lưu nhiều phiên bản của một file bằng cách nào?</div>
+      <div class="nb-input-wrap">
+        <label>Câu trả lời của em:</label>
+        <textarea class="nb-input" data-nb-id="1" placeholder="Ví dụ: mình hay đặt tên baitap_v1, v2, v2_final..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Vì sao em viết?</span>Cuối buổi em sẽ thấy Git giải quyết đúng nỗi khổ này gọn gàng thế nào.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 1 — NỖI ĐAU ============ -->
+
+<!-- 5 -->
+<section class="slide slide-cover" data-slide="5" data-title="Nỗi khổ phiên bản">
+  <div class="cover-orb orb-1" style="background:#DC2626;"></div>
+  <div class="cover-orb orb-2" style="background:#F59E0B;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">VẤN ĐỀ QUEN THUỘC</span>
+    <h1 class="hero-title">"baitap_v2_final_<span class="grad-text">THAT_final.doc</span>"</h1>
+    <p class="slide-subtitle">Ai cũng từng có mớ file hỗn loạn: v1, v2, bản_cuối, bản_cuối_thật... Tệ hơn: bảo AI "sửa giúp",
+      nó viết lại sạch trơn, <strong>mất luôn bản đang chạy ngon</strong>. Git sinh ra để chấm dứt cảnh này.</p>
+    <div class="cover-chips"><span class="cover-chip">Hỗn loạn phiên bản</span><span class="cover-chip">→ Git</span></div>
+  </div>
+</section>
+
+<!-- ============ MÀN 2 — ĐIỂM LƯU TRÊN MÁY (GIT) ============ -->
+
+<!-- 6 -->
+<section class="slide" data-slide="6" data-title="Git là gì">
+  <div class="slide-body">
+    <span class="eyebrow">KHÁI NIỆM CỐT LÕI</span>
+    <h2 class="slide-title">Git = cỗ máy thời gian cho dự án của em</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#3B82F6;">⏱️</div>
+        <h3>Lưu mọi mốc</h3>
+        <p>Mỗi lần lưu (commit) là một "mốc thời gian" — quay lại bất kỳ mốc nào đều được.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#06B6D4;">↩️</div>
+        <h3>Không sợ hỏng</h3>
+        <p>Sửa hỏng? Quay về mốc trước. Không bao giờ mất bản đang chạy được.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#A855F7;">👥</div>
+        <h3>Làm nhóm</h3>
+        <p>Nhiều người sửa cùng dự án mà không đè lên nhau.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">ẨN DỤ GAME</span>
+      <p>Git giống <strong>checkpoint trong game</strong>: mỗi commit là một điểm lưu. Chết ở màn sau? Load lại checkpoint gần nhất, không phải chơi lại từ đầu.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-slide="7" data-title="3 khái niệm Git">
+  <div class="slide-body">
+    <span class="eyebrow">3 TỪ EM SẼ NGHE HOÀI</span>
+    <h2 class="slide-title">Repository · Commit · Branch</h2>
+    <div class="met-grid">
+      <div class="met-card model">
+        <div class="met-emoji">📁</div>
+        <div class="met-term">Repository</div>
+        <div class="met-metaphor">= Kho dự án</div>
+        <div class="met-desc">Thư mục chứa toàn bộ code + lịch sử của một dự án. Gọi tắt là "repo".</div>
+      </div>
+      <div class="met-card llm">
+        <div class="met-emoji">💾</div>
+        <div class="met-term">Commit</div>
+        <div class="met-metaphor">= Điểm lưu</div>
+        <div class="met-desc">Một mốc lưu kèm lời nhắn "mình vừa làm gì" (vd: "thêm tính điểm").</div>
+      </div>
+      <div class="met-card token">
+        <div class="met-emoji">🌿</div>
+        <div class="met-term">Branch</div>
+        <div class="met-metaphor">= Nhánh thử nghiệm</div>
+        <div class="met-desc">Bản sao để thử ý tưởng mới mà không đụng vào bản chính đang chạy tốt.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-slide="8" data-title="Git khác GitHub">
+  <div class="slide-body">
+    <span class="eyebrow">GIT KHÁC GITHUB</span>
+    <h2 class="slide-title">GitHub = nơi cất repo lên mây &amp; chia sẻ</h2>
+    <table class="cmp-table">
+      <thead>
+        <tr><th>Tiêu chí</th><th>Git</th><th>GitHub</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Là gì</td><td>Công cụ chạy trên máy em</td><td>Website cất repo lên internet</td></tr>
+        <tr><td>Việc chính</td><td>Lưu mốc, quản lý phiên bản</td><td>Chia sẻ, làm nhóm, khoe sản phẩm</td></tr>
+        <tr><td>Ví dụ ví von</td><td>Máy quay lại checkpoint</td><td>"Mạng xã hội của lập trình viên"</td></tr>
+        <tr><td>Cần mạng?</td><td>Không (chạy offline)</td><td>Có (đưa code lên/xuống)</td></tr>
+      </tbody>
+    </table>
+    <div class="hl-box info"><span class="hl-label">GHI NHỚ</span>
+      <p><strong>Git</strong> là công cụ; <strong>GitHub</strong> là "đám mây" để cất, khoe repo — và còn cho em 1 web sống miễn phí (GitHub Pages, lát nữa học).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide" data-slide="9" data-title="Vòng làm việc Git">
+  <div class="slide-body">
+    <span class="eyebrow">4 BƯỚC LẶP ĐI LẶP LẠI</span>
+    <h2 class="slide-title">Vòng làm việc cơ bản với Git</h2>
+    <ol class="steps stagger">
+      <li><strong>Sửa code</strong> trong dự án như bình thường.</li>
+      <li><strong>add</strong> — chọn những thay đổi muốn lưu vào mốc này.</li>
+      <li><strong>commit</strong> — chốt mốc, ghi lời nhắn "vừa làm gì" (vd: "thêm màn 2").</li>
+      <li><strong>push</strong> — đẩy mốc lên GitHub cho an toàn &amp; chia sẻ.</li>
+    </ol>
+    <div class="prompt-box"><span class="prompt-label">TERMINAL (cho lớp 10 / ai thích dòng lệnh)</span>git add .
+git commit -m "them tinh diem cho game"
+git push</div>
+    <div class="hl-box info"><span class="hl-label">LỚP 8 — DỄ HƠN</span>
+      <p>Không cần gõ lệnh: dùng <strong>GitHub Desktop</strong> hoặc nút bấm ngay trên github.com — cùng ý tưởng add → commit → push nhưng bằng chuột.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-slide="10" data-title="Quiz commit">
+  <div class="slide-body">
+    <span class="eyebrow">KIỂM TRA NHANH</span>
+    <h2 class="slide-title">Một "commit" tốt nên có gì?</h2>
+    <div class="quiz" data-correct="1"
+      data-explanation="Commit là một mốc lưu KÈM lời nhắn mô tả rõ vừa làm gì (vd 'thêm màn 2'). Lời nhắn rõ giúp em (và người khác) đọc lại lịch sử hiểu ngay.">
+      <p class="quiz-q">Khi commit, điều quan trọng nhất nên kèm theo là?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Xoá hết code cũ cho gọn</button>
+        <button class="quiz-opt" data-index="1">Lời nhắn mô tả rõ vừa thay đổi gì</button>
+        <button class="quiz-opt" data-index="2">Đổi tên file thành v2_final</button>
+        <button class="quiz-opt" data-index="3">Tắt internet</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-slide="11" data-title="Thảo luận: Chấm commit message">
+  <div class="slide-body">
+    <span class="eyebrow">THẢO LUẬN CẶP — HỘP MÀU VÀNG</span>
+    <h2 class="slide-title">Chấm &amp; sửa lời nhắn commit</h2>
+    <div class="qbox qbox-yellow">
+      <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận</div>
+      <div class="qbox-content">
+        <p>Hai bạn cùng xem 4 lời nhắn commit dưới đây. Cái nào <strong>tốt</strong>, cái nào <strong>tệ</strong>? Sửa lại 2 cái tệ cho rõ nghĩa:</p>
+        <ul style="margin:8px 0 0 20px;">
+          <li><code>"asdfgh"</code></li>
+          <li><code>"thêm màn 2 và tính điểm khi ăn mồi"</code></li>
+          <li><code>"sửa"</code></li>
+          <li><code>"đổi màu rắn sang xanh + tăng tốc độ"</code></li>
+        </ul>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Vì sao quan trọng?</span>3 tháng sau đọc lại lịch sử, lời nhắn rõ giúp em biết ngay mốc nào làm gì mà không phải mở từng file.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 3 — LƯU ĐÁM MÂY, WEB SỐNG & KHOE (GITHUB) ============ -->
+
+<!-- 12 -->
+<section class="slide" data-slide="12" data-title="Từ điển thao tác — lật thẻ">
+  <div class="slide-body">
+    <span class="eyebrow">6 THAO TÁC — CLICK ĐỂ LẬT</span>
+    <h2 class="slide-title">Từ vựng thao tác Git &amp; GitHub</h2>
+    <div class="fc-grid">
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Push</div><div class="fc-vi">Đẩy lên</div></div>
+        <div class="fc-back">Đưa các commit từ máy em lên GitHub.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Pull</div><div class="fc-vi">Kéo về</div></div>
+        <div class="fc-back">Lấy bản mới nhất từ GitHub về máy.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Clone</div><div class="fc-vi">Nhân bản</div></div>
+        <div class="fc-back">Tải nguyên một repo của người khác về máy để xem/sửa.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Fork</div><div class="fc-vi">Rẽ nhánh riêng</div></div>
+        <div class="fc-back">Tạo bản sao repo người khác vào tài khoản GitHub của em.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">README</div><div class="fc-vi">Giới thiệu</div></div>
+        <div class="fc-back">File mô tả dự án — thứ người ta đọc đầu tiên.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Star</div><div class="fc-vi">Thả sao</div></div>
+        <div class="fc-back">"Thích" một repo — càng nhiều sao càng được tin dùng.</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-slide="13" data-title="Game: phân loại lệnh Git">
+  <div class="slide-body">
+    <span class="eyebrow">QUICK SELF-TEST</span>
+    <h2 class="slide-title">Kéo mỗi việc vào đúng nhóm</h2>
+    <p class="slide-subtitle">Kéo (hoặc bấm) từng ô vào: Lưu mốc trên máy · Đưa lên GitHub · Lấy về máy.</p>
+    <div class="game-area">
+      <div class="game-items" id="gameItems">
+        <div class="draggable" draggable="true" data-type="luu" data-label="git commit -m 'thêm điểm'">git commit -m 'thêm điểm'</div>
+        <div class="draggable" draggable="true" data-type="luu" data-label="git add game.js">git add game.js</div>
+        <div class="draggable" draggable="true" data-type="len" data-label="git push">git push</div>
+        <div class="draggable" draggable="true" data-type="len" data-label="Tạo repository mới trên github.com">Tạo repository mới trên github.com</div>
+        <div class="draggable" draggable="true" data-type="ve" data-label="git clone (link repo bạn khác)">git clone (link repo bạn khác)</div>
+        <div class="draggable" draggable="true" data-type="ve" data-label="git pull (lấy bản mới nhất)">git pull (lấy bản mới nhất)</div>
+      </div>
+      <div class="game-buckets" style="grid-template-columns:repeat(3,1fr);">
+        <div class="bucket" data-bucket="luu" data-color="#2563EB" style="border-color:#2563EB;background:#EFF6FF;">
+          <div class="bucket-title" style="color:#2563EB;">💾 Lưu mốc trên máy</div>
+          <div class="bucket-zone"></div>
+        </div>
+        <div class="bucket" data-bucket="len" data-color="#059669" style="border-color:#10B981;background:#ECFDF5;">
+          <div class="bucket-title" style="color:#059669;">☁️ Đưa lên GitHub</div>
+          <div class="bucket-zone"></div>
+        </div>
+        <div class="bucket" data-bucket="ve" data-color="#7C3AED" style="border-color:#A855F7;background:#F5F3FF;">
+          <div class="bucket-title" style="color:#7C3AED;">⬇️ Lấy về máy</div>
+          <div class="bucket-zone"></div>
+        </div>
+      </div>
+      <div class="game-score" id="gameScore" style="display:none;">
+        <div id="gameScoreText"></div>
+        <button class="btn-restart" onclick="restartGame()">Chơi lại</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-slide="14" data-title="Tạo repo đầu tiên">
+  <div class="slide-body">
+    <span class="eyebrow">THỰC HÀNH — TẠO REPO</span>
+    <h2 class="slide-title">Đưa dự án lên GitHub trong 5 bước</h2>
+    <ol class="steps stagger">
+      <li>Tạo tài khoản tại <code>github.com</code> (dưới 16 tuổi: đăng ký cùng phụ huynh).</li>
+      <li>Bấm <strong>New repository</strong> → đặt tên (vd <code>game-ran-cua-em</code>) → Create.</li>
+      <li>Kéo-thả các file dự án vào, hoặc bấm <strong>Add file → Upload files</strong>.</li>
+      <li>Viết lời nhắn commit (vd "phiên bản đầu tiên") → <strong>Commit changes</strong>.</li>
+      <li>Xong! Repo của em giờ có 1 link chia sẻ được cho cả thế giới.</li>
+    </ol>
+    <div class="hl-box success"><span class="hl-label">MẸO</span>
+      <p>Đặt repo ở chế độ <strong>Public</strong> để khoe &amp; để bật GitHub Pages được; <strong>Private</strong> nếu chưa muốn ai xem.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-slide="15" data-title="README">
+  <div class="slide-body">
+    <span class="eyebrow">BỘ MẶT CỦA REPO</span>
+    <h2 class="slide-title">README — thứ người ta đọc đầu tiên</h2>
+    <div class="prompt-box"><span class="prompt-label">README.md — ví dụ</span># Game Rắn Săn Mồi
+
+Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
+
+## Cách chơi
+- Dùng phím mũi tên để điều khiển
+- Ăn mồi để dài ra và ghi điểm
+
+## Công cụ dùng
+- Vibe code với sự hỗ trợ của AI</div>
+    <div class="hl-box success"><span class="hl-label">MẸO KHOE</span>
+      <p>Chèn 1 <strong>ảnh chụp / GIF</strong> sản phẩm đang chạy vào README → trang repo trông như một "landing page" chuyên nghiệp.</p>
+    </div>
+    <div class="hl-box info"><span class="hl-label">VÌ SAO CẦN</span>
+      <p>README nói rõ dự án <strong>là gì, chạy sao, ai làm</strong>. Repo không có README trông như quán không biển hiệu.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-slide="16" data-title="Thử AI viết README">
+  <div class="slide-body">
+    <span class="eyebrow">HỘP CÂU HỎI MÀU CAM</span>
+    <h2 class="slide-title">Nhờ AI viết README (không bắt buộc)</h2>
+    <div class="qbox qbox-orange">
+      <div class="qbox-header"><div class="qbox-icon">+</div>THỬ AI TẠI NHÀ / TẠI LỚP</div>
+      <div class="qbox-content">Mô tả dự án của em cho AI và yêu cầu: "<em>Viết giúp mình file README.md cho dự án này: có phần giới thiệu,
+        cách chạy, công cụ dùng, và ghi 'có sự hỗ trợ của AI'.</em>"</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Để làm gì?</span>Có README chuyên nghiệp trong 1 phút — nhớ đọc lại &amp; sửa cho đúng dự án của em.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 -->
+<section class="slide" data-slide="17" data-title="GitHub Pages — link sống">
+  <div class="slide-body">
+    <span class="eyebrow">BIẾN REPO THÀNH WEB SỐNG</span>
+    <h2 class="slide-title">GitHub Pages — 1 nút bật, có link để khoe</h2>
+    <ol class="steps stagger">
+      <li>Vào repo → <strong>Settings</strong> → mục <strong>Pages</strong>.</li>
+      <li>"Source": chọn nhánh <strong>main</strong>, thư mục <strong>/ (root)</strong> → <strong>Save</strong>.</li>
+      <li>Đợi ~1 phút, GitHub hiện link: <code>https://&lt;tên-em&gt;.github.io/&lt;tên-repo&gt;/</code></li>
+      <li>Mở link trên điện thoại → <strong>game của em chạy thật trên internet!</strong></li>
+    </ol>
+    <div class="hl-box success"><span class="hl-label">ĐÂY LÀ THỨ ĐỂ KHOE 🎉</span>
+      <p>Repo là "kho code"; <strong>link GitHub Pages là sản phẩm SỐNG</strong> — bạn bè, bố mẹ mở ngay trên điện thoại, không cần cài gì. Áp dụng cho web/game <strong>tĩnh</strong> (HTML/CSS/JS); app cần máy chủ sẽ deploy bằng Vercel ở buổi 16.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 4 — HỌC TỪ THẾ GIỚI ============ -->
+
+<!-- 18 -->
+<section class="slide slide-cover" data-slide="18" data-title="Tìm & tái dùng mã nguồn">
+  <div class="cover-orb orb-1" style="background:#7C3AED;"></div>
+  <div class="cover-orb orb-2" style="background:#3B82F6;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">SIÊU NĂNG LỰC</span>
+    <h1 class="hero-title">Tìm &amp; tái dùng <span class="grad-text">mã nguồn của thế giới</span></h1>
+    <p class="slide-subtitle">GitHub có hàng trăm triệu dự án mở. Biết cách tìm, đọc và (được phép) dùng lại
+      giúp em học nhanh gấp nhiều lần — nhưng phải đúng luật bản quyền.</p>
+    <div class="cover-chips"><span class="cover-chip">Search</span><span class="cover-chip">Đánh giá repo</span><span class="cover-chip">License</span></div>
+  </div>
+</section>
+
+<!-- 19 -->
+<section class="slide" data-slide="19" data-title="Tìm & đánh giá repo">
+  <div class="slide-body">
+    <span class="eyebrow">KỸ NĂNG SĂN CODE HAY</span>
+    <h2 class="slide-title">Tìm &amp; đánh giá nhanh 1 repo</h2>
+    <ol class="steps stagger">
+      <li><strong>Tìm:</strong> gõ từ khoá tiếng Anh vào ô Search ("snake game javascript"), lọc theo ngôn ngữ &amp; chủ đề.</li>
+      <li><strong>Đọc README:</strong> dự án làm gì, chạy sao? Khó hiểu ngay từ đây thì cân nhắc bỏ qua.</li>
+      <li><strong>Nhìn Stars &amp; ngày cập nhật:</strong> nhiều sao + mới cập nhật = đáng tin; repo bỏ hoang 5 năm thường đã lỗi thời.</li>
+      <li><strong>Ngó code &amp; License:</strong> mở vài file đọc thử (kỹ năng buổi 13!) và kiểm tra có được phép dùng lại không.</li>
+    </ol>
+    <div class="hl-box"><span class="hl-label">DÙNG AI HỖ TRỢ</span>
+      <p>Dán link/đoạn code repo cho AI: "repo này làm gì, có phù hợp để mình học cách làm game X không?".</p>
+    </div>
+  </div>
+</section>
+
+<!-- 20 -->
+<section class="slide" data-slide="20" data-title="Fork & Clone">
+  <div class="slide-body">
+    <span class="eyebrow">MƯỢN CODE VỀ ĐỂ HỌC</span>
+    <h2 class="slide-title">Fork &amp; Clone — hai cách "mượn" repo</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">🍴</div>
+        <h3>Fork</h3>
+        <p>Tạo một bản sao repo của người khác vào tài khoản GitHub của em — để nghịch, sửa, phát triển tiếp mà không đụng bản gốc.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">⬇️</div>
+        <h3>Clone</h3>
+        <p>Tải repo về máy để chạy thử &amp; đọc code. Kết hợp kỹ năng đọc code (buổi 13) để học cách người ta làm.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">CÁCH HỌC NHANH</span>
+      <p>Fork một game đơn giản → đọc code → đổi thử vài biến → xem điều gì thay đổi. Học từ code thật hiệu quả hơn học lý thuyết suông.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 21 -->
+<section class="slide" data-slide="21" data-title="Hỏi bạn cặp — săn repo">
+  <div class="slide-body">
+    <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
+    <h2 class="slide-title">Cùng bạn cặp — săn repo hay</h2>
+    <div class="qbox qbox-yellow">
+      <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận</div>
+      <div class="qbox-content">Mỗi bạn lên GitHub tìm <em>1 repo game hoặc tool thú vị</em>, rồi kể cho bạn cặp: repo tên gì,
+        làm gì, được bao nhiêu sao, có license mở không?</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Luyện phản xạ "tìm — đọc — đánh giá" một repo lạ trong 2 phút.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 22 -->
+<section class="slide" data-slide="22" data-title="License & ghi nguồn">
+  <div class="slide-body">
+    <span class="eyebrow">CỰC KỲ QUAN TRỌNG</span>
+    <h2 class="slide-title">Code công khai ≠ được tự do lấy dùng</h2>
+    <table class="cmp-table">
+      <thead>
+        <tr><th>License</th><th>Nghĩa là</th><th>Được dùng lại?</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>MIT / Apache</td><td>Cho dùng thoải mái, chỉ cần ghi nguồn</td><td>✅ Được (nhớ ghi credit)</td></tr>
+        <tr><td>GPL</td><td>Dùng được nhưng dự án của em cũng phải mở</td><td>⚠️ Có điều kiện</td></tr>
+        <tr><td>Không có license</td><td>Mặc định: bản quyền thuộc tác giả</td><td>❌ Không nên dùng lại</td></tr>
+      </tbody>
+    </table>
+    <div class="hl-box danger"><span class="hl-label">QUY TẮC AN TOÀN</span>
+      <p>Tìm file <code>LICENSE</code> trong repo. Không rõ → coi như <strong>không được phép</strong>. Học hỏi ý tưởng thì luôn ổn; copy nguyên code cần đúng license.</p>
+    </div>
+    <div class="hl-box success"><span class="hl-label">KIM CHỈ NAM KHI TÁI DÙNG</span>
+      <p>Học ý tưởng rồi tự viết lại → luôn được. Dùng lại code (đúng license) → <strong>ghi tên tác giả + link</strong> trong README. Không nhận vơ code người khác là của mình.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 23 -->
+<section class="slide" data-slide="23" data-title="Quiz license">
+  <div class="slide-body">
+    <span class="eyebrow">KIỂM TRA NHANH</span>
+    <h2 class="slide-title">Em có được dùng lại đoạn code này không?</h2>
+    <div class="quiz" data-correct="3"
+      data-explanation="Repo KHÔNG có file LICENSE → mặc định bản quyền thuộc tác giả, không được tự ý copy dùng lại. Em vẫn có thể đọc để HỌC ý tưởng, nhưng muốn dùng code thì phải xin phép hoặc tìm repo có license mở (MIT/Apache).">
+      <p class="quiz-q">Em tìm thấy 1 repo game hay nhưng nó KHÔNG có file LICENSE. Đúng nhất là?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Cứ copy hết, code công khai mà</button>
+        <button class="quiz-opt" data-index="1">Copy nhưng đổi tên biến là được</button>
+        <button class="quiz-opt" data-index="2">Copy vì mình là học sinh nên miễn</button>
+        <button class="quiz-opt" data-index="3">Chỉ đọc để học ý tưởng; muốn dùng code phải xin phép / tìm repo có license mở</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 5 — TỰ TAY LÀM & KHÉP LẠI ============ -->
+
+<!-- 24 -->
+<section class="slide" data-slide="24" data-title="Thực hành APP-14.1">
+  <div class="slide-body">
+    <span class="eyebrow">THỰC HÀNH HÔM NAY</span>
+    <h2 class="slide-title">APP-14.1 — Repo &amp; web sống của em</h2>
+    <ol class="steps stagger">
+      <li>Lấy sản phẩm em mang theo (BTVN buổi 13) — game hoặc trang web nhỏ.</li>
+      <li>Tạo repo trên GitHub, upload file, viết <strong>1 commit</strong> "phiên bản đầu tiên".</li>
+      <li>Thêm <strong>README</strong> (tên, cách dùng, công cụ + <strong>1 ảnh</strong>).</li>
+      <li><strong>Bật GitHub Pages</strong> → lấy <strong>link web sống</strong>, mở thử trên điện thoại.</li>
+      <li>Tìm <strong>1 repo tham khảo</strong> cùng chủ đề, ghi link + 1 điều học được.</li>
+    </ol>
+    <div class="hl-box success"><span class="hl-label">LỚP 8 / LỚP 10</span>
+      <p>Lớp 8: dùng nút bấm trên github.com (không cần lệnh). Lớp 10: thử làm bằng terminal <code>git add/commit/push</code> để quen dòng lệnh cho buổi sau.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 25 -->
+<section class="slide" data-slide="25" data-title="Sổ Tay #2 — Sau thực hành">
+  <div class="slide-body">
+    <span class="eyebrow">GHI LẠI KẾT QUẢ</span>
+    <h2 class="slide-title">Link web sống &amp; repo tham khảo của em</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #2 — Sau thực hành</div>
+      <div class="qbox-content">Link repo + <strong>link GitHub Pages (web sống)</strong> của em là gì? Và 1 repo hay em tìm thấy để tham khảo?</div>
+      <div class="nb-input-wrap">
+        <label>Link của em:</label>
+        <textarea class="nb-input" data-nb-id="2" placeholder="Repo: github.com/... | Web sống: ...github.io/... | Tham khảo: github.com/..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Link web sống này là viên gạch đầu tiên của Portfolio — nơi khoe sản phẩm ở Final Project.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 26 -->
+<section class="slide" data-slide="26" data-title="Checklist cuối buổi">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 14 — EM ĐÃ LÀM GÌ</span>
+    <h2 class="slide-title">Checklist — bấm để tick</h2>
+    <div class="cl-container">
+      <ul class="cl-list">
+        <li class="cl-item"><span class="cl-check"></span><span>Hiểu commit là một "điểm lưu" có lời nhắn rõ nghĩa</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Phân biệt được Git và GitHub</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Tạo được repo công khai trên GitHub</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Viết README có ảnh cho dự án</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Bật GitHub Pages → có link web sống để khoe</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Biết đọc license &amp; tìm 1 repo tham khảo</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 27 -->
+<section class="slide" data-slide="27" data-title="Sổ Tay #3 + BTVN">
+  <div class="slide-body">
+    <span class="eyebrow">PHẢN TƯ &amp; CHUẨN BỊ BUỔI 15</span>
+    <h2 class="slide-title">Nhìn lại — và việc về nhà</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #3 — Cuối buổi</div>
+      <div class="qbox-content">Git giúp em điều gì mà cách lưu file cũ (đặt tên v1, v2, bản_cuối...) không làm được?</div>
+      <div class="nb-input-wrap">
+        <label>Suy ngẫm của em:</label>
+        <textarea class="nb-input" data-nb-id="3" placeholder="Ví dụ: git nhớ mọi mốc và mình quay lại được bất kỳ lúc nào..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+    </div>
+    <div class="hl-box "><span class="hl-label">BÀI TẬP VỀ NHÀ — TRƯỚC BUỔI 15</span>
+      <p>Gửi <strong>link web sống</strong> (GitHub Pages) của em cho 3 người mở thử. Và chọn <strong>1 app/web em hay dùng</strong>: khi em mở nó, nội dung đến từ đâu — trong máy em hay từ một "máy chủ" ở xa? Buổi 15 mình mổ xẻ <strong>Internet hoạt động thế nào</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 28 -->
+<section class="slide slide-cover" data-slide="28" data-title="Hết Buổi 14">
+  <div class="cover-orb orb-1" style="background:#059669;"></div>
+  <div class="cover-orb orb-2" style="background:#F59E0B;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">HẾT BUỔI 14</span>
+    <h1 class="hero-title">Hẹn em ở <span class="grad-text">Buổi 15</span></h1>
+    <p class="slide-subtitle">Em đã có "cỗ máy thời gian" và một <strong>web sống để khoe</strong>. Buổi 15: hé lộ <strong>Internet hoạt động ra sao</strong> —
+      vì sao cái link đó bạn ở xa mở được, còn "localhost" thì không?</p>
+    <div class="cover-chips"><span class="cover-chip">Mang theo 1 app/web quen thuộc</span><span class="cover-chip">Sẵn sàng khám phá Internet</span></div>
+  </div>
+</section>
