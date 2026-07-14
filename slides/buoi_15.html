@@ -1,0 +1,570 @@
+<!--
+  Slide fragment cho Buổi 15 — MODULE M4: Nền tảng Lập trình & Hạ tầng.
+  Buổi 15: Internet & Hosting — Cách thế giới CNTT vận hành & mọi người kết nối với nhau qua ứng dụng.
+  Format fragment: cấu hình Sổ Tay + CSS riêng + các <section class="slide">.
+  Chrome do frontend/templates/lesson.html cung cấp. Xưng "em", "GV". Navigation chạy theo thứ tự DOM.
+  Trục kể chuyện (5 màn): Câu hỏi lớn → Client & Server → Server kết nối mọi người → Địa chỉ & Hosting → Tự tay cho web nói chuyện với server.
+-->
+
+<script type="application/json" id="nb-questions">
+{
+  "1": {"title": "SỔ TAY #1 — Đầu buổi", "q": "Khi em mở TikTok hay Zalo, thứ em nhìn thấy (video, tin nhắn) đến từ đâu? Nằm sẵn trong điện thoại em, hay được gửi từ một nơi nào khác?"},
+  "2": {"title": "SỔ TAY #2 — Sau thực hành", "q": "Trang web em vừa làm gọi dữ liệu gì từ server? Khi em bấm nút, đâu là 'client', đâu là 'server'?"},
+  "3": {"title": "SỔ TAY #3 — Cuối buổi", "q": "Hãy giải thích cho một người chưa biết gì: vì sao em và bạn ở hai nơi khác nhau mà cùng xem được một video trên mạng?"}
+}
+</script>
+
+<style>
+  /* BUỔI 15 — Local styles (Module M4) */
+  .slide-body .qbox,
+  .slide-body .steps,
+  .slide-body .prompt-box,
+  .slide-body .hl-box,
+  .slide-body .cl-container {
+    width: 100%;
+    max-width: none;
+  }
+  .slide { justify-content: flex-start; }
+  .slide-body { margin-top: auto; margin-bottom: auto; }
+  /* Steps: cho chữ chảy inline bình thường (tránh mỗi <strong>/<code> thành 1 ô flex riêng làm vỡ layout) */
+  .slide-body .steps li { display: block; padding-left: 3.6rem; }
+  .slide-body .steps li::before { position: absolute; left: 1.1rem; top: 0.8rem; margin-right: 0; }
+</style>
+
+<!-- ============ MỞ ĐẦU ============ -->
+
+<!-- 1 -->
+<section class="slide active slide-cover" data-slide="1" data-title="Chào mừng">
+  <div class="cover-orb orb-1" style="background:#059669;"></div>
+  <div class="cover-orb orb-2" style="background:#3B82F6;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">BUỔI 15 · MODULE 4 — NỀN TẢNG LẬP TRÌNH & HẠ TẦNG</span>
+    <h1 class="hero-title">Internet hoạt động ra sao — <span class="grad-text">cách cả thế giới kết nối</span></h1>
+    <p class="slide-subtitle">Vì sao em nhắn 1 câu là bạn ở xa nhận được ngay? Vì sao cả lớp cùng xem 1 video? Hôm nay em sẽ hiểu
+      <strong>Client – Server</strong>, và tự tay làm 1 trang web "nói chuyện" với server thật.</p>
+    <div class="cover-chips"><span class="cover-chip">120 phút</span><span class="cover-chip">Client · Server · API</span><span class="cover-chip">Output: web gọi dữ liệu sống</span></div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-slide="2" data-title="4 loại câu hỏi tương tác">
+  <div class="slide-body">
+    <span class="eyebrow">CÁCH HỌC HÔM NAY</span>
+    <h2 class="slide-title">4 loại câu hỏi em sẽ gặp</h2>
+    <p class="slide-subtitle">Mỗi loại có một màu riêng. Thấy hộp màu nào, em biết ngay mình cần làm gì.</p>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="qbox qbox-blue" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#3B82F6;">?</div>Trước giờ học</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Đọc trước, ngẫm 30 giây. Giúp em phát biểu tự tin khi GV gọi.</div>
+      </div>
+      <div class="qbox qbox-yellow" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#F59E0B;">!</div>Hỏi bạn cặp</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Quay sang bạn cặp cùng bàn để trao đổi. Bạn lớp 10 giảng lại cho bạn lớp 8.</div>
+      </div>
+      <div class="qbox qbox-purple" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#A855F7;">#</div>Suy ngẫm Sổ Tay</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Em tự ngẫm rồi viết vào Sổ Tay Cá Nhân (nút trên cùng). Riêng tư, không nộp.</div>
+      </div>
+      <div class="qbox qbox-orange" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#F97316;">+</div>Thực hành / Thử AI</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Bắt tay làm trên máy — tự tay build trang web gọi server và khoe kết quả.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-slide="3" data-title="Cuối buổi em có gì">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 15 — EM PHẢI CÓ</span>
+    <h2 class="slide-title">3 thứ em mang về</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#059669;">1</div>
+        <h3>Hiểu Internet</h3>
+        <p>Nói được <strong>Client · Server · Request · Response</strong> và vì sao mọi người kết nối được với nhau.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#059669;">2</div>
+        <h3>Web gọi dữ liệu sống</h3>
+        <p>Tự tay làm 1 trang web bấm nút → <strong>xin dữ liệu thật từ server</strong> và hiện ra.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#059669;">3</div>
+        <h3>Hiểu Hosting</h3>
+        <p>Biết vì sao web cần "máy chủ luôn bật" thì người khác mới vào được (localhost vs internet).</p>
+      </div>
+    </div>
+    <div class="hl-box success"><span class="hl-label">OUTPUT BẮT BUỘC — SHOW ĐƯỢC</span>
+      <p><strong>APP-15.1</strong>: 1 trang web "tra cứu sống" — bấm nút là <strong>gọi API thật</strong> và hiện dữ liệu từ server (ảnh vui 🐶 hoặc câu hỏi quiz ❓). Tận mắt thấy "client hỏi — server trả lời".</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-slide="4" data-title="Sổ Tay #1 — Đầu buổi">
+  <div class="slide-body">
+    <span class="eyebrow">BẮT ĐẦU</span>
+    <h2 class="slide-title">Thứ em thấy trên app đến từ đâu?</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #1 — Đầu buổi</div>
+      <div class="qbox-content">Khi em mở TikTok hay Zalo, thứ em nhìn thấy (video, tin nhắn) đến từ đâu? Nằm sẵn trong điện thoại em, hay được gửi từ một nơi nào khác?</div>
+      <div class="nb-input-wrap">
+        <label>Dự đoán của em:</label>
+        <textarea class="nb-input" data-nb-id="1" placeholder="Ví dụ: chắc là tải từ mạng về... nhưng từ đâu thì mình chưa rõ..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Vì sao em viết?</span>Cuối buổi em sẽ tự trả lời được câu này một cách rõ ràng.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 1 — CÂU HỎI LỚN ============ -->
+
+<!-- 5 -->
+<section class="slide slide-cover" data-slide="5" data-title="Câu hỏi lớn">
+  <div class="cover-orb orb-1" style="background:#DC2626;"></div>
+  <div class="cover-orb orb-2" style="background:#3B82F6;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">HAI CÂU HỎI QUEN THUỘC</span>
+    <h1 class="hero-title">"Web chạy trên máy em, sao <span class="grad-text">bạn mở link lại trắng trơn?</span>"</h1>
+    <p class="slide-subtitle">Và: em với bạn ở hai đầu thành phố, sao lại <strong>cùng xem một video</strong>, cùng chơi một trận game online?
+      Câu trả lời cho cả hai chỉ nằm ở đúng một chữ: <strong>SERVER</strong>.</p>
+    <div class="cover-chips"><span class="cover-chip">localhost ≠ internet</span><span class="cover-chip">→ Client &amp; Server</span></div>
+  </div>
+</section>
+
+<!-- ============ MÀN 2 — CLIENT & SERVER ============ -->
+
+<!-- 6 -->
+<section class="slide" data-slide="6" data-title="Internet là gì">
+  <div class="slide-body">
+    <span class="eyebrow">BỨC TRANH LỚN</span>
+    <h2 class="slide-title">Internet = hàng tỉ máy tính nối với nhau</h2>
+    <p class="slide-subtitle">Internet không phải "đám mây" mơ hồ. Nó là <strong>một mạng lưới máy tính thật</strong> khắp thế giới, nối bằng dây cáp (kể cả cáp ngầm dưới biển!) và sóng, để trao đổi dữ liệu cho nhau.</p>
+    <div class="hl-box info"><span class="hl-label">ẨN DỤ GAME</span>
+      <p>Giống <strong>một server Minecraft/Roblox khổng lồ</strong> mà cả thế giới cùng vào: máy của mỗi người kết nối tới các "máy chủ" chung để cùng thấy một thế giới, cùng chơi với nhau.</p>
+    </div>
+    <div class="hl-box"><span class="hl-label">GHI NHỚ</span>
+      <p>Không có gì "biến mất trong không khí". Mọi thứ em xem đều nằm trên một <strong>máy tính thật</strong> ở đâu đó, và được gửi tới em.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-slide="7" data-title="Client & Server">
+  <div class="slide-body">
+    <span class="eyebrow">HAI VAI TRÒ CỐT LÕI</span>
+    <h2 class="slide-title">Client &amp; Server — ai hỏi, ai trả lời?</h2>
+    <div class="met-grid">
+      <div class="met-card model">
+        <div class="met-emoji">📱</div>
+        <div class="met-term">Client</div>
+        <div class="met-metaphor">= Máy của em (người chơi)</div>
+        <div class="met-desc">Điện thoại/laptop của em, chạy app hoặc trình duyệt. Nó <strong>đi hỏi</strong> và hiển thị kết quả.</div>
+      </div>
+      <div class="met-card llm">
+        <div class="met-emoji">🗄️</div>
+        <div class="met-term">Server</div>
+        <div class="met-metaphor">= Máy chủ luôn bật</div>
+        <div class="met-desc">Một máy tính mạnh, <strong>bật 24/7</strong>, giữ dữ liệu (video, tin nhắn, tài khoản) và <strong>trả lời</strong> khi được hỏi.</div>
+      </div>
+      <div class="met-card token">
+        <div class="met-emoji">🌐</div>
+        <div class="met-term">Internet</div>
+        <div class="met-metaphor">= Con đường nối 2 bên</div>
+        <div class="met-desc">Đường truyền để client và server gửi dữ liệu qua lại cho nhau.</div>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">ẨN DỤ</span>
+      <p>Client như <strong>người chơi</strong> bấm nút; Server như <strong>máy chủ game</strong> giữ cả thế giới và trả lời mọi người chơi cùng lúc.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-slide="8" data-title="Request & Response">
+  <div class="slide-body">
+    <span class="eyebrow">MỘT LẦN "HỎI — ĐÁP"</span>
+    <h2 class="slide-title">Request → Response: chuyện xảy ra khi em bấm</h2>
+    <ol class="steps stagger">
+      <li>Em mở app / gõ địa chỉ → <strong>Client</strong> gửi một <strong>Request</strong> ("cho tôi xin video này").</li>
+      <li>Request đi qua Internet tới đúng <strong>Server</strong> giữ dữ liệu đó.</li>
+      <li>Server xử lý, rồi gửi lại một <strong>Response</strong> (chính video/dữ liệu đó).</li>
+      <li>Client nhận Response và <strong>hiển thị</strong> lên màn hình cho em xem.</li>
+    </ol>
+    <div class="hl-box info"><span class="hl-label">ẨN DỤ QUÁN ĂN</span>
+      <p>Em (client) <strong>gọi món</strong> (request) → bếp (server) <strong>làm xong bưng ra</strong> (response). Cả tỉ lần "gọi món – bưng ra" mỗi giây chính là internet đang chạy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 9 -->
+<section class="slide" data-slide="9" data-title="Server kết nối mọi người">
+  <div class="slide-body">
+    <span class="eyebrow">TRẢ LỜI CÂU HỎI ĐẦU BUỔI</span>
+    <h2 class="slide-title">Server = "điểm hẹn" nối mọi người lại</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#3B82F6;">💬</div>
+        <h3>Nhắn tin (Zalo)</h3>
+        <p>Tin của em đi <strong>máy em → server Zalo → máy bạn</strong>. Server là trạm trung chuyển ở giữa.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#EF4444;">🎬</div>
+        <h3>Cùng xem (TikTok)</h3>
+        <p>Video nằm trên <strong>1 server chung</strong>; triệu người cùng "gọi" nó → ai cũng xem được cùng một thứ.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#A855F7;">🎮</div>
+        <h3>Chơi chung (Game online)</h3>
+        <p>Mọi người chơi <strong>cùng vào 1 server</strong> → thấy cùng một trận đấu, cùng lúc.</p>
+      </div>
+    </div>
+    <div class="hl-box success"><span class="hl-label">CHÌA KHOÁ</span>
+      <p>Mọi người không nối thẳng máy này với máy kia. Tất cả <strong>gặp nhau ở server chung</strong> — đó là cách các ứng dụng kết nối cả thế giới.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-slide="10" data-title="Quiz client/server">
+  <div class="slide-body">
+    <span class="eyebrow">KIỂM TRA NHANH</span>
+    <h2 class="slide-title">Đâu là việc của Server?</h2>
+    <div class="quiz" data-correct="2"
+      data-explanation="Giữ dữ liệu cho mọi người và trả lời khi được hỏi là việc của SERVER (máy chủ luôn bật). Bấm nút, cuộn xem, gõ địa chỉ... là việc của CLIENT (máy của em).">
+      <p class="quiz-q">Việc nào dưới đây là của <strong>Server</strong>?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Em bấm nút "thích" trên điện thoại</button>
+        <button class="quiz-opt" data-index="1">Em cuộn xem video trong app</button>
+        <button class="quiz-opt" data-index="2">Giữ toàn bộ video và gửi lại khi có người xin</button>
+        <button class="quiz-opt" data-index="3">Em gõ địa chỉ web vào trình duyệt</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 3 — ĐỊA CHỈ & HOSTING ============ -->
+
+<!-- 11 -->
+<section class="slide" data-slide="11" data-title="Địa chỉ trên internet">
+  <div class="slide-body">
+    <span class="eyebrow">LÀM SAO TÌM ĐÚNG SERVER?</span>
+    <h2 class="slide-title">Domain · IP · DNS — địa chỉ của server</h2>
+    <div class="met-grid">
+      <div class="met-card model">
+        <div class="met-emoji">🏷️</div>
+        <div class="met-term">Domain</div>
+        <div class="met-metaphor">= Tên dễ nhớ</div>
+        <div class="met-desc">Tên miền như <code>tiktok.com</code> — dễ đọc, dễ nhớ (giống tên quán).</div>
+      </div>
+      <div class="met-card llm">
+        <div class="met-emoji">🔢</div>
+        <div class="met-term">IP</div>
+        <div class="met-metaphor">= Số nhà thật</div>
+        <div class="met-desc">Địa chỉ số của server (vd <code>142.250.x.x</code>) — máy tính dùng cái này để tìm nhau.</div>
+      </div>
+      <div class="met-card token">
+        <div class="met-emoji">📖</div>
+        <div class="met-term">DNS</div>
+        <div class="met-metaphor">= Danh bạ</div>
+        <div class="met-desc">Tra <strong>tên miền → số nhà IP</strong>. Em gõ tên, DNS tìm ra đúng server.</div>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">GỘP LẠI</span>
+      <p>Gõ <code>tiktok.com</code> → DNS tra ra IP server → client gửi request tới đúng "số nhà" đó.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="slide" data-slide="12" data-title="Hosting & luôn bật">
+  <div class="slide-body">
+    <span class="eyebrow">VÌ SAO CẦN "MÁY CHỦ LUÔN BẬT"</span>
+    <h2 class="slide-title">localhost (chỉ mình em) vs Hosting (ai cũng vào)</h2>
+    <table class="cmp-table">
+      <thead>
+        <tr><th>Tiêu chí</th><th>Chạy trên máy em (localhost)</th><th>Hosting (đặt lên server)</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Ai xem được?</td><td>Chỉ mình em, trên máy em</td><td>Bất kỳ ai có link, ở bất kỳ đâu</td></tr>
+        <tr><td>Khi em tắt máy?</td><td>Web "chết", không ai vào được</td><td>Server luôn bật → web vẫn sống</td></tr>
+        <tr><td>Đặt ở đâu?</td><td>Ngay trong laptop em</td><td>Máy chủ trong "data center" (trung tâm dữ liệu)</td></tr>
+      </tbody>
+    </table>
+    <div class="hl-box success"><span class="hl-label">EM ĐÃ LÀM RỒI!</span>
+      <p>Buổi 14 bật <strong>GitHub Pages</strong> chính là đưa web tĩnh của em lên hosting — vì thế bạn ở xa mới mở link được. Buổi 16 sẽ deploy app "động" bằng Vercel.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-slide="13" data-title="Từ điển internet — lật thẻ">
+  <div class="slide-body">
+    <span class="eyebrow">8 THUẬT NGỮ — CLICK ĐỂ LẬT</span>
+    <h2 class="slide-title">Từ vựng Internet</h2>
+    <div class="fc-grid">
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Client</div><div class="fc-vi">Máy đi hỏi</div></div>
+        <div class="fc-back">Máy của em (app/trình duyệt) gửi yêu cầu và hiển thị kết quả.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Server</div><div class="fc-vi">Máy chủ trả lời</div></div>
+        <div class="fc-back">Máy luôn bật, giữ dữ liệu và trả lời khi được hỏi.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Request</div><div class="fc-vi">Yêu cầu</div></div>
+        <div class="fc-back">Lời "xin dữ liệu" client gửi lên server.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Response</div><div class="fc-vi">Phản hồi</div></div>
+        <div class="fc-back">Dữ liệu server gửi trả lại cho client.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Domain</div><div class="fc-vi">Tên miền</div></div>
+        <div class="fc-back">Tên dễ nhớ của web, vd tiktok.com.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">IP</div><div class="fc-vi">Số nhà</div></div>
+        <div class="fc-back">Địa chỉ số để máy tính tìm ra server.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">DNS</div><div class="fc-vi">Danh bạ</div></div>
+        <div class="fc-back">Tra tên miền ra địa chỉ IP.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Hosting</div><div class="fc-vi">Nơi đặt web</div></div>
+        <div class="fc-back">Đặt web lên 1 server luôn bật để ai cũng vào được.</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 14 -->
+<section class="slide" data-slide="14" data-title="Game: Client hay Server?">
+  <div class="slide-body">
+    <span class="eyebrow">QUICK SELF-TEST</span>
+    <h2 class="slide-title">Kéo mỗi việc về đúng vai</h2>
+    <p class="slide-subtitle">Kéo (hoặc bấm) từng ô vào: việc của Client (máy em) hay của Server (máy chủ)?</p>
+    <div class="game-area">
+      <div class="game-items" id="gameItems">
+        <div class="draggable" draggable="true" data-type="client" data-label="Điện thoại mở app, bấm nút">Điện thoại mở app, bấm nút</div>
+        <div class="draggable" draggable="true" data-type="client" data-label="Gõ tiktok.com vào trình duyệt">Gõ tiktok.com vào trình duyệt</div>
+        <div class="draggable" draggable="true" data-type="client" data-label="Hiển thị video lên màn hình">Hiển thị video lên màn hình</div>
+        <div class="draggable" draggable="true" data-type="server" data-label="Giữ toàn bộ video của mọi người">Giữ toàn bộ video của mọi người</div>
+        <div class="draggable" draggable="true" data-type="server" data-label="Luôn bật 24/7 để trả lời">Luôn bật 24/7 để trả lời</div>
+        <div class="draggable" draggable="true" data-type="server" data-label="Lưu tài khoản &amp; tin nhắn mọi người">Lưu tài khoản &amp; tin nhắn mọi người</div>
+      </div>
+      <div class="game-buckets" style="grid-template-columns:repeat(2,1fr);">
+        <div class="bucket" data-bucket="client" data-color="#2563EB" style="border-color:#2563EB;background:#EFF6FF;">
+          <div class="bucket-title" style="color:#2563EB;">📱 Việc của CLIENT (máy em)</div>
+          <div class="bucket-zone"></div>
+        </div>
+        <div class="bucket" data-bucket="server" data-color="#059669" style="border-color:#10B981;background:#ECFDF5;">
+          <div class="bucket-title" style="color:#059669;">🗄️ Việc của SERVER (máy chủ)</div>
+          <div class="bucket-zone"></div>
+        </div>
+      </div>
+      <div class="game-score" id="gameScore" style="display:none;">
+        <div id="gameScoreText"></div>
+        <button class="btn-restart" onclick="restartGame()">Chơi lại</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 4 — TỰ TAY CHO WEB NÓI CHUYỆN VỚI SERVER ============ -->
+
+<!-- 15 -->
+<section class="slide slide-cover" data-slide="15" data-title="Thực hành: web gọi server">
+  <div class="cover-orb orb-1" style="background:#059669;"></div>
+  <div class="cover-orb orb-2" style="background:#F59E0B;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">ĐỦ LÝ THUYẾT — GIỜ TỰ TAY LÀM</span>
+    <h1 class="hero-title">Cho web của em <span class="grad-text">"nói chuyện" với server thật</span></h1>
+    <p class="slide-subtitle">Em sẽ vibe-code 1 trang web: bấm nút → gửi request tới 1 server công khai → nhận dữ liệu sống và hiện ra.
+      Chính tay em điều khiển một lần "client hỏi – server trả lời".</p>
+    <div class="cover-chips"><span class="cover-chip">API</span><span class="cover-chip">fetch</span><span class="cover-chip">Dữ liệu sống</span></div>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-slide="16" data-title="API là gì">
+  <div class="slide-body">
+    <span class="eyebrow">CÁCH XIN DỮ LIỆU TỪ SERVER</span>
+    <h2 class="slide-title">API — "quầy nhận đơn" của server</h2>
+    <p class="slide-subtitle">Server không cho em vào lục đồ lung tung. Nó mở sẵn một <strong>API</strong> — cái "quầy" có ô nhận yêu cầu và trả về dữ liệu gọn gàng (thường ở dạng <strong>JSON</strong>).</p>
+    <div class="hl-box info"><span class="hl-label">ẨN DỤ QUẦY ORDER</span>
+      <p>API giống quầy order ở quán: em đưa đúng yêu cầu qua ô cửa (địa chỉ API) → server đưa lại đúng phần dữ liệu. Em không cần biết bếp nấu thế nào.</p>
+    </div>
+    <div class="hl-box"><span class="hl-label">TRONG CODE</span>
+      <p>Trình duyệt gọi API bằng lệnh <code>fetch("địa-chỉ-api")</code> → nhận về dữ liệu → hiển thị. (AI sẽ viết phần này cho em.)</p>
+    </div>
+  </div>
+</section>
+
+<!-- 17 -->
+<section class="slide" data-slide="17" data-title="Chọn 1 trong 2 API">
+  <div class="slide-body">
+    <span class="eyebrow">CHỌN "MÓN" EM THÍCH</span>
+    <h2 class="slide-title">Trang tra cứu sống — chọn 1 trong 2</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#F59E0B;">🐶</div>
+        <h3>Ảnh vui</h3>
+        <p>Bấm nút → hiện 1 ảnh chó ngẫu nhiên từ server.</p>
+        <p style="font-size:0.8rem;color:var(--text-muted);"><code>dog.ceo/api/breeds/image/random</code></p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#3B82F6;">❓</div>
+        <h3>Quiz học tập</h3>
+        <p>Bấm nút → hiện 1 câu hỏi trắc nghiệm ngẫu nhiên từ server.</p>
+        <p style="font-size:0.8rem;color:var(--text-muted);"><code>opentdb.com/api.php?amount=1&amp;type=multiple</code></p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">CẢ HAI ĐỀU MIỄN PHÍ</span>
+      <p>Không cần đăng ký, không cần "chìa khoá" — gọi thẳng từ trình duyệt là có dữ liệu sống.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 18 -->
+<section class="slide" data-slide="18" data-title="Thực hành APP-15.1">
+  <div class="slide-body">
+    <span class="eyebrow">THỰC HÀNH — HỘP MÀU CAM</span>
+    <h2 class="slide-title">APP-15.1 — 4 bước có web gọi server</h2>
+    <ol class="steps stagger">
+      <li>Mở công cụ vibe-code quen thuộc (z.ai, Bolt, Cursor, hoặc chatbot AI).</li>
+      <li>Dán prompt (đổi <em>[API em chọn]</em> theo slide trước):</li>
+    </ol>
+    <div class="prompt-box"><span class="prompt-label">PROMPT MẪU</span>Tạo 1 trang HTML đơn giản có 1 nút. Khi bấm nút, dùng fetch() gọi API
+[dán địa chỉ API em chọn], rồi hiện kết quả (ảnh hoặc câu hỏi) ra màn hình
+cho đẹp. Giải thích ngắn dòng nào là "gửi request" và dòng nào "nhận response".</div>
+    <ol class="steps stagger" start="3">
+      <li>Chạy thử → <strong>bấm nút</strong> → dữ liệu sống hiện ra. Mỗi lần bấm là 1 request mới!</li>
+      <li><strong>Khoe:</strong> đẩy trang lên GitHub, bật GitHub Pages (buổi 14) → có link sống gửi bạn.</li>
+    </ol>
+  </div>
+</section>
+
+<!-- 19 -->
+<section class="slide" data-slide="19" data-title="Thử AI nâng cấp">
+  <div class="slide-body">
+    <span class="eyebrow">HỘP CÂU HỎI MÀU CAM</span>
+    <h2 class="slide-title">Nhờ AI nâng cấp trang (không bắt buộc)</h2>
+    <div class="qbox qbox-orange">
+      <div class="qbox-header"><div class="qbox-icon">+</div>THỬ THÊM</div>
+      <div class="qbox-content">Bảo AI: "<em>Thêm hiệu ứng loading khi đang chờ server trả lời</em>", hoặc "<em>đổi sang API khác</em>",
+        hoặc "<em>hiện thêm thông tin từ dữ liệu server trả về</em>".</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Để làm gì?</span>Hiệu ứng "loading" cho em thấy rõ khoảnh khắc <strong>đang chờ response</strong> từ server — đúng thứ vừa học.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 5 — KHÉP LẠI ============ -->
+
+<!-- 20 -->
+<section class="slide" data-slide="20" data-title="Thảo luận cặp">
+  <div class="slide-body">
+    <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
+    <h2 class="slide-title">Cùng bạn cặp — mổ xẻ 1 app quen</h2>
+    <div class="qbox qbox-yellow">
+      <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận</div>
+      <div class="qbox-content">Chọn 1 app cả hai cùng dùng (Zalo, 1 game online, Google Docs...). Thử chỉ ra:
+        đâu là <strong>client</strong>, đâu là <strong>server</strong>, và server giúp <strong>kết nối mọi người</strong> với nhau như thế nào?</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Áp mô hình Client–Server vào một ứng dụng thật em dùng hằng ngày.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 21 -->
+<section class="slide" data-slide="21" data-title="Sổ Tay #2 — Sau thực hành">
+  <div class="slide-body">
+    <span class="eyebrow">GHI LẠI KẾT QUẢ</span>
+    <h2 class="slide-title">Trang gọi server của em</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #2 — Sau thực hành</div>
+      <div class="qbox-content">Trang web em vừa làm gọi dữ liệu gì từ server? Khi em bấm nút, đâu là 'client', đâu là 'server'?</div>
+      <div class="nb-input-wrap">
+        <label>Câu trả lời của em:</label>
+        <textarea class="nb-input" data-nb-id="2" placeholder="Ví dụ: trang mình gọi ảnh chó; client là trình duyệt của mình, server là dog.ceo..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 22 -->
+<section class="slide" data-slide="22" data-title="Quiz tổng hợp">
+  <div class="slide-body">
+    <span class="eyebrow">TỰ KIỂM TRA</span>
+    <h2 class="slide-title">Khi em bấm nút gọi API, thứ tự đúng là?</h2>
+    <div class="quiz" data-correct="1"
+      data-explanation="Đúng thứ tự: Client gửi Request → Server nhận & xử lý → Server trả Response → Client hiển thị. Client luôn là bên đi hỏi trước; server là bên trả lời.">
+      <p class="quiz-q">Chọn thứ tự đúng của một lần "hỏi – đáp":</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Server hỏi client → client trả lời → hiện ra</button>
+        <button class="quiz-opt" data-index="1">Client gửi request → server trả response → client hiển thị</button>
+        <button class="quiz-opt" data-index="2">Client tự tạo dữ liệu, không cần server</button>
+        <button class="quiz-opt" data-index="3">DNS tạo ra video rồi gửi cho server</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 23 -->
+<section class="slide" data-slide="23" data-title="Checklist cuối buổi">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 15 — EM ĐÃ LÀM GÌ</span>
+    <h2 class="slide-title">Checklist — bấm để tick</h2>
+    <div class="cl-container">
+      <ul class="cl-list">
+        <li class="cl-item"><span class="cl-check"></span><span>Phân biệt được Client và Server</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Mô tả được vòng Request → Response</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Giải thích được vì sao mọi người kết nối qua server chung</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Hiểu Domain/IP/DNS và Hosting (localhost vs internet)</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Tự làm 1 trang web gọi API thật, hiện dữ liệu sống</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 24 -->
+<section class="slide" data-slide="24" data-title="Sổ Tay #3 + BTVN">
+  <div class="slide-body">
+    <span class="eyebrow">PHẢN TƯ &amp; CHUẨN BỊ BUỔI 16</span>
+    <h2 class="slide-title">Nhìn lại — và việc về nhà</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #3 — Cuối buổi</div>
+      <div class="qbox-content">Hãy giải thích cho một người chưa biết gì: vì sao em và bạn ở hai nơi khác nhau mà cùng xem được một video trên mạng?</div>
+      <div class="nb-input-wrap">
+        <label>Cách em giải thích:</label>
+        <textarea class="nb-input" data-nb-id="3" placeholder="Ví dụ: vì video nằm trên 1 server chung, cả hai đều 'gọi' server đó..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+    </div>
+    <div class="hl-box "><span class="hl-label">BÀI TẬP VỀ NHÀ — TRƯỚC BUỔI 16</span>
+      <p>Hoàn thiện trang gọi API của em cho chạy được. Buổi 16 mình sẽ <strong>deploy</strong> nó (và các sản phẩm khác) lên internet bằng <strong>Vercel</strong> để có link sống cho app "động" — không chỉ web tĩnh.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 25 -->
+<section class="slide slide-cover" data-slide="25" data-title="Hết Buổi 15">
+  <div class="cover-orb orb-1" style="background:#059669;"></div>
+  <div class="cover-orb orb-2" style="background:#3B82F6;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">HẾT BUỔI 15</span>
+    <h1 class="hero-title">Hẹn em ở <span class="grad-text">Buổi 16 — Deploy lên Vercel</span></h1>
+    <p class="slide-subtitle">Giờ em đã hiểu internet vận hành thế nào và mọi người kết nối qua server ra sao. Buổi 16:
+      đưa sản phẩm của em lên một server thật với <strong>Vercel</strong> — có link sống gửi cả thế giới.</p>
+    <div class="cover-chips"><span class="cover-chip">Mang theo trang API của em</span><span class="cover-chip">Sẵn sàng deploy</span></div>
+  </div>
+</section>
