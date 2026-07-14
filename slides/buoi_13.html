@@ -24,6 +24,13 @@
   }
   .slide { justify-content: flex-start; }
   .slide-body { margin-top: auto; margin-bottom: auto; }
+  /* Steps: cho chữ chảy inline bình thường (tránh mỗi <strong>/<code> thành 1 ô flex riêng làm vỡ layout) */
+  .slide-body .steps li { display: block; padding-left: 3.6rem; }
+  .slide-body .steps li::before { position: absolute; left: 1.1rem; top: 0.8rem; margin-right: 0; }
+  /* Chip logo ngôn ngữ / framework (slide Ngôn ngữ → Framework) */
+  .slide-body .tech-cell { display: flex; flex-wrap: wrap; gap: 7px 14px; align-items: center; }
+  .slide-body .tech { display: inline-flex; align-items: center; gap: 6px; white-space: nowrap; }
+  .slide-body .tech img { width: 20px; height: 20px; display: block; flex-shrink: 0; }
 </style>
 
 <!-- 1 -->
@@ -104,16 +111,31 @@
   <div class="slide-body">
     <span class="eyebrow">KHOA HỌC MÁY TÍNH VỠ LÒNG</span>
     <h2 class="slide-title">Lập trình thực chất là gì?</h2>
-    <div class="met-grid">
-      <div class="met-card model">
-        <div class="met-emoji">🧠</div>
-        <div class="met-term">Giải Quyết Vấn Đề (Problem Solving)</div>
-        <div class="met-desc">Lập trình không phải là việc gõ phím mù quáng, mà là quá trình tư duy đi từ <strong>Input (Đầu vào)</strong> đến <strong>Output (Kết quả)</strong>. Mã nguồn (code) chỉ là công cụ để thể hiện ý tưởng.</div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:18px; align-items:start; margin-top:4px;">
+      <div class="met-grid" style="grid-template-columns:1fr; gap:12px; margin:0;">
+        <div class="met-card model">
+          <div class="met-emoji">🧠</div>
+          <div class="met-term">Giải Quyết Vấn Đề (Problem Solving)</div>
+          <div class="met-desc">Lập trình không phải là việc gõ phím mù quáng, mà là quá trình tư duy đi từ <strong>Input (Đầu vào)</strong> đến <strong>Output (Kết quả)</strong>. Mã nguồn (code) chỉ là công cụ để thể hiện ý tưởng.</div>
+        </div>
+        <div class="met-card llm">
+          <div class="met-emoji">⚙️</div>
+          <div class="met-term">Tư Duy Thuật Toán (Algorithmic Thinking)</div>
+          <div class="met-desc">Máy tính rất vâng lời nhưng không có trực giác. Lập trình là kỹ năng <strong>chia nhỏ vấn đề phức tạp</strong> thành một chuỗi các chỉ dẫn cực kỳ chi tiết và logic.</div>
+        </div>
       </div>
-      <div class="met-card llm">
-        <div class="met-emoji">⚙️</div>
-        <div class="met-term">Tư Duy Thuật Toán (Algorithmic Thinking)</div>
-        <div class="met-desc">Máy tính rất vâng lời nhưng không có trực giác. Lập trình là kỹ năng <strong>chia nhỏ vấn đề phức tạp</strong> thành một chuỗi các chỉ dẫn cực kỳ chi tiết và logic.</div>
+      <div>
+        <div style="font-weight:700; margin-bottom:6px; color:#059669; font-size:0.9rem;">💡 Minh hoạ: một project chính là code trong các file</div>
+        <div class="cl-container" style="background:#1E293B; color:#fff; padding:14px; border-radius:8px; font-family:monospace; font-size:0.8rem; line-height:1.65;">
+          <p>📁 game-ran/</p>
+          <p>├── 📄 index.html</p>
+          <p>├── 📄 style.css</p>
+          <p>├── 📄 game.js&nbsp;&nbsp;<span style="color:#5C6370;">← mở ra:</span></p>
+          <p>└── 📁 assets/ <span style="color:#5C6370;">(ảnh, nhạc)</span></p>
+          <p style="border-top:1px solid #334155; margin-top:8px; padding-top:8px;"><span style="color:#5C6370;">// game.js</span></p>
+          <p><span style="color:#C678DD;">let</span> diem = <span style="color:#D19A66;">0</span>;</p>
+          <p><span style="color:#C678DD;">function</span> <span style="color:#61AFEF;">anMoi</span>() { diem = diem + <span style="color:#D19A66;">1</span>; }</p>
+        </div>
       </div>
     </div>
     <div class="hl-box info"><span class="hl-label">TƯ DUY QUAN TRỌNG HƠN CÚ PHÁP</span>
@@ -323,12 +345,36 @@
         <tr><th>Hệ sinh thái</th><th>Ngôn ngữ chính</th><th>Framework / Thư viện phổ biến</th></tr>
       </thead>
       <tbody>
-        <tr><td>🌐 Web Frontend</td><td>JavaScript / TS</td><td>React · Vue · Next.js · Tailwind CSS</td></tr>
-        <tr><td>🖥️ Web Backend</td><td>Node.js · Python · PHP</td><td>Express · Django · FastAPI · Laravel</td></tr>
-        <tr><td>🧠 AI &amp; Dữ liệu</td><td>Python</td><td>PyTorch · TensorFlow · Pandas</td></tr>
-        <tr><td>📱 Mobile</td><td>Dart · JS · Swift/Kotlin</td><td>Flutter · React Native · SwiftUI</td></tr>
-        <tr><td>🎮 Game</td><td>C# · C++ · Lua</td><td>Unity · Unreal · Roblox Studio</td></tr>
-        <tr><td>🤖 Nhúng &amp; IoT</td><td>C · C++</td><td>Arduino · ESP-IDF</td></tr>
+        <tr>
+          <td>🌐 Web Frontend</td>
+          <td><span class="tech-cell"><span class="tech"><img src="buoi_13_images/javascript.svg" alt="">JavaScript</span><span class="tech"><img src="buoi_13_images/typescript.svg" alt="">TS</span></span></td>
+          <td><span class="tech-cell"><span class="tech"><img src="buoi_13_images/react.svg" alt="">React</span><span class="tech"><img src="buoi_13_images/vue.svg" alt="">Vue</span><span class="tech"><img src="buoi_13_images/nextjs.svg" alt="">Next.js</span><span class="tech"><img src="buoi_13_images/tailwind.svg" alt="">Tailwind</span></span></td>
+        </tr>
+        <tr>
+          <td>🖥️ Web Backend</td>
+          <td><span class="tech-cell"><span class="tech"><img src="buoi_13_images/nodejs.svg" alt="">Node.js</span><span class="tech"><img src="buoi_13_images/python.svg" alt="">Python</span><span class="tech"><img src="buoi_13_images/php.svg" alt="">PHP</span></span></td>
+          <td><span class="tech-cell"><span class="tech"><img src="buoi_13_images/express.svg" alt="">Express</span><span class="tech"><img src="buoi_13_images/django.svg" alt="">Django</span><span class="tech"><img src="buoi_13_images/fastapi.svg" alt="">FastAPI</span><span class="tech"><img src="buoi_13_images/laravel.svg" alt="">Laravel</span></span></td>
+        </tr>
+        <tr>
+          <td>🧠 AI &amp; Dữ liệu</td>
+          <td><span class="tech-cell"><span class="tech"><img src="buoi_13_images/python.svg" alt="">Python</span></span></td>
+          <td><span class="tech-cell"><span class="tech"><img src="buoi_13_images/pytorch.svg" alt="">PyTorch</span><span class="tech"><img src="buoi_13_images/tensorflow.svg" alt="">TensorFlow</span><span class="tech"><img src="buoi_13_images/pandas.svg" alt="">Pandas</span></span></td>
+        </tr>
+        <tr>
+          <td>📱 Mobile</td>
+          <td><span class="tech-cell"><span class="tech"><img src="buoi_13_images/dart.svg" alt="">Dart</span><span class="tech"><img src="buoi_13_images/swift.svg" alt="">Swift</span><span class="tech"><img src="buoi_13_images/kotlin.svg" alt="">Kotlin</span></span></td>
+          <td><span class="tech-cell"><span class="tech"><img src="buoi_13_images/flutter.svg" alt="">Flutter</span><span class="tech"><img src="buoi_13_images/react.svg" alt="">React Native</span><span class="tech"><img src="buoi_13_images/swift.svg" alt="">SwiftUI</span></span></td>
+        </tr>
+        <tr>
+          <td>🎮 Game</td>
+          <td><span class="tech-cell"><span class="tech"><img src="buoi_13_images/csharp.svg" alt="">C#</span><span class="tech"><img src="buoi_13_images/cpp.svg" alt="">C++</span><span class="tech"><img src="buoi_13_images/lua.svg" alt="">Lua</span></span></td>
+          <td><span class="tech-cell"><span class="tech"><img src="buoi_13_images/unity.svg" alt="">Unity</span><span class="tech"><img src="buoi_13_images/unreal.svg" alt="">Unreal</span><span class="tech">🧩 Roblox Studio</span></span></td>
+        </tr>
+        <tr>
+          <td>🤖 Nhúng &amp; IoT</td>
+          <td><span class="tech-cell"><span class="tech"><img src="buoi_13_images/c.svg" alt="">C</span><span class="tech"><img src="buoi_13_images/cpp.svg" alt="">C++</span></span></td>
+          <td><span class="tech-cell"><span class="tech"><img src="buoi_13_images/arduino.svg" alt="">Arduino</span><span class="tech">📟 ESP-IDF</span></span></td>
+        </tr>
       </tbody>
     </table>
   </div>
@@ -381,48 +427,69 @@
 </section>
 
 <!-- 18 -->
-<section class="slide" data-slide="18" data-title="Bộ 5 Prompt Giải Mã Project">
+<section class="slide" data-slide="18" data-title="Bộ 12 Prompt (1/2) — Đọc & Hiểu">
   <div class="slide-body">
-    <span class="eyebrow">CÔNG CỤ BỎ TÚI — CHỤP LẠI NGAY</span>
-    <h2 class="slide-title">Bộ 5 Prompt "Phỏng vấn AI" về project của em</h2>
-    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px;">
+    <span class="eyebrow">CÔNG CỤ BỎ TÚI — CHỤP LẠI NGAY (1/2)</span>
+    <h2 class="slide-title">Bộ 12 Prompt "Phỏng vấn AI" — Phần 1: ĐỌC &amp; HIỂU</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(3, 1fr); gap:11px;">
       <div class="qbox qbox-blue" style="margin:0;">
-        <div class="qbox-header"><div class="qbox-icon">1</div>🗺️ Toàn cảnh project</div>
-        <div class="qbox-content" style="font-size:0.9rem;"><em>"Đây là project của mình. Giải thích cấu trúc thư mục, mỗi file làm nhiệm vụ gì, cho học sinh lớp 8 hiểu."</em></div>
-      </div>
-      <div class="qbox qbox-blue" style="margin:0;">
-        <div class="qbox-header"><div class="qbox-icon">2</div>🔍 Zoom 1 khối code</div>
-        <div class="qbox-content" style="font-size:0.9rem;"><em>"Giải thích đoạn code này như mình 13 tuổi. Chỉ rõ đâu là Biến, Điều kiện, Vòng lặp, Hàm."</em></div>
+        <div class="qbox-header"><div class="qbox-icon">1</div>🗺️ Nhìn toàn cảnh</div>
+        <div class="qbox-content" style="font-size:0.84rem;"><em>"Đây là project của mình. Cho học sinh lớp 8 hiểu: nó làm gì, dùng công nghệ nào, các thư mục chính làm gì, nên đọc file nào trước?"</em></div>
       </div>
       <div class="qbox qbox-yellow" style="margin:0;">
-        <div class="qbox-header"><div class="qbox-icon">3</div>📊 Trực quan hóa</div>
-        <div class="qbox-content" style="font-size:0.9rem;"><em>"Biến logic đoạn này thành flowchart (hoặc các bước 1-2-3) để mình dễ hình dung."</em></div>
+        <div class="qbox-header"><div class="qbox-icon">2</div>▶️ Tìm điểm bắt đầu</div>
+        <div class="qbox-content" style="font-size:0.84rem;"><em>"Chương trình bắt đầu từ đâu? Lệnh nào để chạy, file nào chạy đầu tiên, rồi gọi sang file nào? Vẽ đường đi 1→2→3."</em></div>
       </div>
       <div class="qbox qbox-purple" style="margin:0;">
-        <div class="qbox-header"><div class="qbox-icon">4</div>🧩 Đào sâu từ khóa lạ</div>
-        <div class="qbox-content" style="font-size:0.9rem;"><em>"'React Component' là gì? Giải thích cho học sinh lớp 8 bằng ẩn dụ xếp hình Lego."</em></div>
+        <div class="qbox-header"><div class="qbox-icon">3</div>🔍 Soi 1 khối code</div>
+        <div class="qbox-content" style="font-size:0.84rem;"><em>"Giải thích đoạn code này như mình 13 tuổi: nó làm gì, input/output là gì, đâu là Biến / Điều kiện / Vòng lặp / Hàm?"</em></div>
       </div>
-      <div class="qbox qbox-orange" style="margin:0;">
-        <div class="qbox-header"><div class="qbox-icon">5</div>✅ Tự kiểm tra</div>
-        <div class="qbox-content" style="font-size:0.9rem;"><em>"Đặt cho mình 2 câu trắc nghiệm để kiểm tra mình hiểu đúng đoạn này chưa (giấu đáp án nhé)."</em></div>
+      <div class="qbox qbox-blue" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">4</div>🧩 Giải mã từ khóa lạ</div>
+        <div class="qbox-content" style="font-size:0.84rem;"><em>"Tìm từ khóa người mới chưa biết trong đoạn này. Mỗi từ: giải thích đơn giản + ví dụ đời thường + nó đang làm gì ở đây."</em></div>
+      </div>
+      <div class="qbox qbox-yellow" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">5</div>🔗 Liên hệ giữa file</div>
+        <div class="qbox-content" style="font-size:0.84rem;"><em>"File này liên quan file nào? Nó import gì, gọi hàm nào, file nào gọi nó? Vẽ sơ đồ quan hệ đơn giản."</em></div>
+      </div>
+      <div class="qbox qbox-purple" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">6</div>🚰 Dòng chảy dữ liệu</div>
+        <div class="qbox-content" style="font-size:0.84rem;"><em>"Chọn 1 dữ liệu (vd tên người dùng nhập) và theo dõi: sinh ở đâu → lưu biến nào → qua hàm nào → hiển thị ở đâu?"</em></div>
       </div>
     </div>
   </div>
 </section>
 
 <!-- 19 -->
-<section class="slide" data-slide="19" data-title="Prompt sửa có kiểm soát">
+<section class="slide" data-slide="19" data-title="Bộ 12 Prompt (2/2) — Làm chủ">
   <div class="slide-body">
-    <span class="eyebrow">TỪ HIỂU → TỰ TAY SỬA</span>
-    <h2 class="slide-title">Prompt "sửa có kiểm soát" — em cầm lái</h2>
-    <p class="slide-subtitle">Muốn đổi gì đó? Đừng để AI viết đè cả file. Bắt nó chỉ đúng chỗ, để <strong>chính em</strong> ra tay.</p>
-    <div class="qbox qbox-orange">
-      <div class="qbox-header"><div class="qbox-icon">→</div>PROMPT MẪU</div>
-      <div class="qbox-content"><em>"Trong game của mình, mình muốn đổi <strong>tốc độ rắn</strong> (hoặc màu / luật thắng). Hãy chỉ cho mình ĐÚNG dòng hoặc biến cần sửa, giải thích vì sao, và <strong>đừng viết lại cả file</strong>."</em></div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Vì sao?</span>Em thấy rõ 1 biến điều khiển 1 hành vi → hiểu nhân-quả, và luôn quay lại được nếu lỡ sửa hỏng.</div>
-    </div>
-    <div class="hl-box success"><span class="hl-label">ĐÂY CHÍNH LÀ APP-13.1</span>
-      <p>Sửa xong → quay clip <strong>before–after</strong>: "Đây là thứ mình tự tay đổi trong game, không phải AI làm hết!"</p>
+    <span class="eyebrow">CÔNG CỤ BỎ TÚI — CHỤP LẠI NGAY (2/2)</span>
+    <h2 class="slide-title">Bộ 12 Prompt — Phần 2: THEO DÕI &amp; LÀM CHỦ</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(3, 1fr); gap:11px;">
+      <div class="qbox qbox-blue" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">7</div>🖱️ Theo dõi 1 hành động</div>
+        <div class="qbox-content" style="font-size:0.84rem;"><em>"Khi người dùng bấm nút [X], giải thích từng bước: sự kiện gì → hàm nào chạy → có gọi API không → kết quả hiện ra sao?"</em></div>
+      </div>
+      <div class="qbox qbox-yellow" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">8</div>🔮 Đoán trước khi chạy</div>
+        <div class="qbox-content" style="font-size:0.84rem;"><em>"Đừng đưa đáp án ngay. Hỏi mình: đoạn này chạy thứ tự nào, vòng lặp mấy lần, output là gì? Chờ mình trả lời rồi giải thích."</em></div>
+      </div>
+      <div class="qbox qbox-orange" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">9</div>🔧 Thử sửa code</div>
+        <div class="qbox-content" style="font-size:0.84rem;"><em>"Chọn 1 thay đổi nhỏ an toàn cho mình tự làm. Đừng viết hộ — chỉ file cần sửa + gợi ý từng bước, rồi review bài mình."</em></div>
+      </div>
+      <div class="qbox qbox-purple" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">10</div>🐛 Học debug</div>
+        <div class="qbox-content" style="font-size:0.84rem;"><em>"Đừng sửa lỗi hộ. Hướng dẫn mình: đọc lỗi → đoán file/dòng → nêu 2-3 giả thuyết → thêm log → loại trừ → tự sửa."</em></div>
+      </div>
+      <div class="qbox qbox-blue" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">11</div>🧹 Code tốt vs chưa tốt</div>
+        <div class="qbox-content" style="font-size:0.84rem;"><em>"Tìm 1 đoạn có thể viết tốt hơn: cho xem bản hiện tại, chỗ khó đọc, bản cải thiện, và vì sao tốt hơn."</em></div>
+      </div>
+      <div class="qbox qbox-orange" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">12</div>🎓 Phỏng vấn ngược mình</div>
+        <div class="qbox-content" style="font-size:0.84rem;"><em>"Đóng vai giáo viên, mỗi lần hỏi mình 1 câu về project. Dựa câu trả lời hỏi sâu hơn. Đừng đưa đáp án trước."</em></div>
+      </div>
     </div>
   </div>
 </section>
@@ -435,7 +502,7 @@
     <div class="qbox qbox-yellow">
       <div class="qbox-header"><div class="qbox-icon">!</div>THẢO LUẬN CẶP ĐÔI</div>
       <div class="qbox-content">
-        <p>Mỗi bạn mở 1 project cũ (game/web buổi 3, 4, 11...), chọn <strong>1 khối code</strong> rồi thả <strong>prompt #1 và #2</strong> cho AI. Sau đó kể cho bạn cặp:</p>
+        <p>Mỗi bạn mở 1 project cũ (game/web buổi 3, 4, 11...), chọn <strong>1 khối code</strong> rồi thả <strong>prompt #1 (toàn cảnh) và #3 (soi 1 khối code)</strong> cho AI. Sau đó kể cho bạn cặp:</p>
         <ul style="margin:8px 0 0 20px;">
           <li>AI nói file/khối đó làm gì? Có đúng như em đoán không?</li>
           <li><strong>Kiểm chứng:</strong> em tin AI tới đâu — chỗ nào cần thử chạy để chắc chắn?</li>
@@ -473,8 +540,8 @@
         <li class="cl-item"><span class="cl-check"></span><span>Nhận diện Biến (Balo) & Điều kiện (Luật).</span></li>
         <li class="cl-item"><span class="cl-check"></span><span>Nhận diện Vòng lặp (Auto/Cày — for &amp; while) & Hàm (Combo).</span></li>
         <li class="cl-item"><span class="cl-check"></span><span>Phân biệt được Ngôn ngữ (Xi măng) và Framework (Nhà đúc sẵn).</span></li>
-        <li class="cl-item"><span class="cl-check"></span><span>Có bộ 5 prompt "phỏng vấn AI" để giải mã project.</span></li>
-        <li class="cl-item"><span class="cl-check"></span><span>Biết prompt "sửa có kiểm soát" để tự tay đổi 1 thứ trong game.</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Có bộ 12 prompt "phỏng vấn AI" để đọc, hiểu &amp; làm chủ project.</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Biết dùng prompt để AI hướng dẫn mình tự sửa code &amp; học debug (không viết hộ).</span></li>
       </ul>
     </div>
   </div>
@@ -499,7 +566,7 @@
       <p>Mở lại 1 sản phẩm cũ của em (Game z.ai, Web Cursor, portfolio buổi 11...):</p>
       <ul style="margin-left: 20px;">
         <li><strong>Giải mã:</strong> dùng prompt #1 &amp; #2 bắt AI giải thích cấu trúc + 1 khối logic bằng tiếng Việt (chụp lại cuộc phỏng vấn).</li>
-        <li><strong>Tự sửa:</strong> dùng prompt "sửa có kiểm soát" để đổi ≥1 thứ (tốc độ/màu/luật) → quay clip <strong>before–after</strong>.</li>
+        <li><strong>Tự sửa:</strong> dùng prompt #9 "Thử sửa code" (AI chỉ chỗ, không viết hộ) để đổi ≥1 thứ (tốc độ/màu/luật) → quay clip <strong>before–after</strong>.</li>
         <li><strong>Nộp lên nhóm:</strong> ảnh phỏng vấn AI + clip before–after + 1 câu <strong>tự em</strong> giải thích khối code đó.</li>
       </ul>
     </div>

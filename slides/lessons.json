@@ -262,11 +262,12 @@
     "duration_min": 120,
     "file": "buoi_14.html",
     "available": true,
-    "description": "Hiểu Git như 'cỗ máy thời gian / điểm lưu game' để không bao giờ mất code; phân biệt Git và GitHub; tạo repo GitHub công khai có commit + README có ảnh, bật GitHub Pages để có link web sống; biết tìm, đánh giá và tái dùng mã nguồn người khác đúng license. Output APP-14.1: 1 repo + link web sống gửi khoe được.",
+    "description": "Hiểu Git như 'cỗ máy thời gian / điểm lưu game' để không bao giờ mất code; phân biệt Git và GitHub; dùng AI làm trợ lý Git (giải thích khái niệm, viết commit message, chỉ đường thao tác, gỡ lỗi); tạo repo GitHub công khai có commit + README có ảnh, bật GitHub Pages để có link web sống; biết tìm, đánh giá và tái dùng mã nguồn người khác đúng license. Output APP-14.1: 1 repo + link web sống gửi khoe được.",
     "tags": [
       "git",
       "github",
       "github-pages",
+      "ai-tutor",
       "version-control",
       "commit",
       "repository",
@@ -278,15 +279,21 @@
   {
     "id": 15,
     "slug": "buoi_15",
-    "title": "Demo Day giữa kỳ",
+    "title": "Internet & Hosting — Thế giới kết nối thế nào",
     "module": "M4",
-    "module_name": "Mini Project + Agent",
+    "module_name": "Nền tảng Lập trình & Hạ tầng",
     "duration_min": 120,
     "file": "buoi_15.html",
-    "available": false,
-    "description": "Trình diễn sản phẩm giữa kỳ.",
+    "available": true,
+    "description": "Hiểu cách Internet vận hành và vì sao mọi người kết nối được với nhau qua ứng dụng: mô hình Client–Server, vòng Request–Response, server là 'điểm hẹn' chung; Domain/IP/DNS và Hosting (localhost vs internet). Thực hành APP-15.1: tự làm 1 trang web gọi API thật để hiện dữ liệu sống từ server.",
     "tags": [
-      "demo"
+      "internet",
+      "client-server",
+      "request-response",
+      "api",
+      "dns",
+      "hosting",
+      "fetch"
     ]
   },
   {
