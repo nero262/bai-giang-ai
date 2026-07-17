@@ -1,16 +1,18 @@
 <!--
   Slide fragment cho Buổi 15 — MODULE M4: Nền tảng Lập trình & Hạ tầng.
-  Buổi 15: Internet & Hosting — Cách thế giới CNTT vận hành & mọi người kết nối với nhau qua ứng dụng.
+  Buổi 15 (GỘP 15+16): Internet, Hosting & Deploy — Cách thế giới kết nối & đưa sản phẩm động ra internet có link sống 24/7.
   Format fragment: cấu hình Sổ Tay + CSS riêng + các <section class="slide">.
   Chrome do frontend/templates/lesson.html cung cấp. Xưng "em", "GV". Navigation chạy theo thứ tự DOM.
-  Trục kể chuyện (5 màn): Câu hỏi lớn → Client & Server → Server kết nối mọi người → Địa chỉ & Hosting → Tự tay cho web nói chuyện với server.
+  Trục kể chuyện (4 màn): Câu hỏi lớn → Internet vận hành (Client-Server) → Hosting (localhost/tĩnh vs động) → Deploy lên Vercel → Tự tay làm (build API page → push → deploy).
+  Phân hoá CƠ BẢN (chuột/dashboard) / NÂNG CAO (env var, CLI) — dùng cho cả lớp 8 và lớp 12.
+  Nối buổi: dùng repo + Pages (buổi 14); khác buổi 12 (nhờ AI-agent deploy hộ) — ở đây em TỰ TAY hiểu từng bước.
 -->
 
 <script type="application/json" id="nb-questions">
 {
-  "1": {"title": "SỔ TAY #1 — Đầu buổi", "q": "Khi em mở TikTok hay Zalo, thứ em nhìn thấy (video, tin nhắn) đến từ đâu? Nằm sẵn trong điện thoại em, hay được gửi từ một nơi nào khác?"},
-  "2": {"title": "SỔ TAY #2 — Sau thực hành", "q": "Trang web em vừa làm gọi dữ liệu gì từ server? Khi em bấm nút, đâu là 'client', đâu là 'server'?"},
-  "3": {"title": "SỔ TAY #3 — Cuối buổi", "q": "Hãy giải thích cho một người chưa biết gì: vì sao em và bạn ở hai nơi khác nhau mà cùng xem được một video trên mạng?"}
+  "1": {"title": "SỔ TAY #1 — Đầu buổi", "q": "Khi em mở TikTok/Zalo, thứ em thấy (video, tin nhắn) đến từ đâu — nằm sẵn trong máy em hay gửi từ nơi khác? Và nếu em làm 1 web trên máy rồi tắt máy, bạn ở xa còn mở được không?"},
+  "2": {"title": "SỔ TAY #2 — Sau thực hành", "q": "Trang web em vừa làm gọi dữ liệu gì từ server? Và link Vercel (sống 24/7) của em là gì?"},
+  "3": {"title": "SỔ TAY #3 — Cuối buổi", "q": "Từ code trên máy đến 1 link cả thế giới mở được, em đã đi qua những chặng nào (Git → Internet/Server → Deploy)?"}
 }
 </script>
 
@@ -40,10 +42,10 @@
   <div class="cover-orb orb-3"></div>
   <div class="cover-content slide-body">
     <span class="eyebrow">BUỔI 15 · MODULE 4 — NỀN TẢNG LẬP TRÌNH & HẠ TẦNG</span>
-    <h1 class="hero-title">Internet hoạt động ra sao — <span class="grad-text">cách cả thế giới kết nối</span></h1>
-    <p class="slide-subtitle">Vì sao em nhắn 1 câu là bạn ở xa nhận được ngay? Vì sao cả lớp cùng xem 1 video? Hôm nay em sẽ hiểu
-      <strong>Client – Server</strong>, và tự tay làm 1 trang web "nói chuyện" với server thật.</p>
-    <div class="cover-chips"><span class="cover-chip">120 phút</span><span class="cover-chip">Client · Server · API</span><span class="cover-chip">Output: web gọi dữ liệu sống</span></div>
+    <h1 class="hero-title">Internet, Hosting &amp; Deploy — <span class="grad-text">đưa sản phẩm ra cả thế giới</span></h1>
+    <p class="slide-subtitle">Vì sao cả lớp cùng xem 1 video? Vì sao web chạy trên máy em mà bạn mở link lại trắng trơn? Hôm nay em hiểu
+      <strong>Client – Server</strong>, rồi tự tay <strong>deploy</strong> sản phẩm lên Vercel để có <strong>link sống 24/7</strong>.</p>
+    <div class="cover-chips"><span class="cover-chip">120 phút</span><span class="cover-chip">Client · Server · Deploy</span><span class="cover-chip">Output: app sống trên Vercel</span></div>
   </div>
 </section>
 
@@ -60,7 +62,7 @@
       </div>
       <div class="qbox qbox-yellow" style="margin:0;">
         <div class="qbox-header"><div class="qbox-icon" style="background:#F59E0B;">!</div>Hỏi bạn cặp</div>
-        <div class="qbox-content" style="font-size:0.88rem;">Quay sang bạn cặp cùng bàn để trao đổi. Bạn lớp 10 giảng lại cho bạn lớp 8.</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Quay sang bạn cặp cùng bàn để trao đổi. Bạn hiểu nhanh giảng lại cho bạn còn lúng túng.</div>
       </div>
       <div class="qbox qbox-purple" style="margin:0;">
         <div class="qbox-header"><div class="qbox-icon" style="background:#A855F7;">#</div>Suy ngẫm Sổ Tay</div>
@@ -68,7 +70,7 @@
       </div>
       <div class="qbox qbox-orange" style="margin:0;">
         <div class="qbox-header"><div class="qbox-icon" style="background:#F97316;">+</div>Thực hành / Thử AI</div>
-        <div class="qbox-content" style="font-size:0.88rem;">Bắt tay làm trên máy — tự tay build trang web gọi server và khoe kết quả.</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Bắt tay làm trên máy — build web gọi server, deploy lên Vercel, dùng AI trợ lý.</div>
       </div>
     </div>
   </div>
@@ -87,17 +89,17 @@
       </div>
       <div class="card">
         <div class="card-icon" style="background:#059669;">2</div>
-        <h3>Web gọi dữ liệu sống</h3>
-        <p>Tự tay làm 1 trang web bấm nút → <strong>xin dữ liệu thật từ server</strong> và hiện ra.</p>
+        <h3>Hiểu Hosting</h3>
+        <p>Phân biệt <strong>localhost vs internet</strong>, <strong>web tĩnh vs app động</strong> — vì sao cần "server luôn bật".</p>
       </div>
       <div class="card">
         <div class="card-icon" style="background:#059669;">3</div>
-        <h3>Hiểu Hosting</h3>
-        <p>Biết vì sao web cần "máy chủ luôn bật" thì người khác mới vào được (localhost vs internet).</p>
+        <h3>App sống 24/7</h3>
+        <p>Tự tay <strong>deploy lên Vercel</strong> → có <strong>link <code>.vercel.app</code></strong> chạy thật, gửi khoe.</p>
       </div>
     </div>
     <div class="hl-box success"><span class="hl-label">OUTPUT BẮT BUỘC — SHOW ĐƯỢC</span>
-      <p><strong>APP-15.1</strong>: 1 trang web "tra cứu sống" — bấm nút là <strong>gọi API thật</strong> và hiện dữ liệu từ server (ảnh vui 🐶 hoặc câu hỏi quiz ❓). Tận mắt thấy "client hỏi — server trả lời".</p>
+      <p><strong>APP-15.1</strong>: 1 trang web "tra cứu sống" — bấm nút là <strong>gọi API thật</strong> lấy dữ liệu từ server — rồi <strong>deploy lên Vercel</strong> để có <strong>link sống 24/7</strong> mở trên điện thoại. Cả buổi có AI làm trợ lý.</p>
     </div>
   </div>
 </section>
@@ -109,18 +111,18 @@
     <h2 class="slide-title">Thứ em thấy trên app đến từ đâu?</h2>
     <div class="qbox qbox-purple">
       <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #1 — Đầu buổi</div>
-      <div class="qbox-content">Khi em mở TikTok hay Zalo, thứ em nhìn thấy (video, tin nhắn) đến từ đâu? Nằm sẵn trong điện thoại em, hay được gửi từ một nơi nào khác?</div>
+      <div class="qbox-content">Khi em mở TikTok/Zalo, thứ em thấy (video, tin nhắn) đến từ đâu — nằm sẵn trong máy em hay gửi từ nơi khác? Và nếu em làm 1 web trên máy rồi tắt máy, bạn ở xa còn mở được không?</div>
       <div class="nb-input-wrap">
         <label>Dự đoán của em:</label>
-        <textarea class="nb-input" data-nb-id="1" placeholder="Ví dụ: chắc là tải từ mạng về... nhưng từ đâu thì mình chưa rõ..."></textarea>
+        <textarea class="nb-input" data-nb-id="1" placeholder="Ví dụ: chắc tải từ mạng về... tắt máy chắc web chết... nhưng vì sao thì mình chưa rõ."></textarea>
         <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
       </div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Vì sao em viết?</span>Cuối buổi em sẽ tự trả lời được câu này một cách rõ ràng.</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Vì sao em viết?</span>Cuối buổi em sẽ tự trả lời được, và còn tự tay đưa web của mình sống 24/7.</div>
     </div>
   </div>
 </section>
 
-<!-- ============ MÀN 1 — CÂU HỎI LỚN ============ -->
+<!-- ============ MÀN 1 — CÂU HỎI LỚN + INTERNET VẬN HÀNH ============ -->
 
 <!-- 5 -->
 <section class="slide slide-cover" data-slide="5" data-title="Câu hỏi lớn">
@@ -130,31 +132,14 @@
   <div class="cover-content slide-body">
     <span class="eyebrow">HAI CÂU HỎI QUEN THUỘC</span>
     <h1 class="hero-title">"Web chạy trên máy em, sao <span class="grad-text">bạn mở link lại trắng trơn?</span>"</h1>
-    <p class="slide-subtitle">Và: em với bạn ở hai đầu thành phố, sao lại <strong>cùng xem một video</strong>, cùng chơi một trận game online?
-      Câu trả lời cho cả hai chỉ nằm ở đúng một chữ: <strong>SERVER</strong>.</p>
-    <div class="cover-chips"><span class="cover-chip">localhost ≠ internet</span><span class="cover-chip">→ Client &amp; Server</span></div>
+    <p class="slide-subtitle">Và: em với bạn ở hai đầu thành phố, sao lại <strong>cùng xem một video</strong>? Câu trả lời nằm ở một chữ:
+      <strong>SERVER</strong>. Và để bạn mở được link của em kể cả khi máy em tắt, em cần một chữ nữa: <strong>DEPLOY</strong>.</p>
+    <div class="cover-chips"><span class="cover-chip">localhost ≠ internet</span><span class="cover-chip">→ Client &amp; Server → Deploy</span></div>
   </div>
 </section>
-
-<!-- ============ MÀN 2 — CLIENT & SERVER ============ -->
 
 <!-- 6 -->
-<section class="slide" data-slide="6" data-title="Internet là gì">
-  <div class="slide-body">
-    <span class="eyebrow">BỨC TRANH LỚN</span>
-    <h2 class="slide-title">Internet = hàng tỉ máy tính nối với nhau</h2>
-    <p class="slide-subtitle">Internet không phải "đám mây" mơ hồ. Nó là <strong>một mạng lưới máy tính thật</strong> khắp thế giới, nối bằng dây cáp (kể cả cáp ngầm dưới biển!) và sóng, để trao đổi dữ liệu cho nhau.</p>
-    <div class="hl-box info"><span class="hl-label">ẨN DỤ GAME</span>
-      <p>Giống <strong>một server Minecraft/Roblox khổng lồ</strong> mà cả thế giới cùng vào: máy của mỗi người kết nối tới các "máy chủ" chung để cùng thấy một thế giới, cùng chơi với nhau.</p>
-    </div>
-    <div class="hl-box"><span class="hl-label">GHI NHỚ</span>
-      <p>Không có gì "biến mất trong không khí". Mọi thứ em xem đều nằm trên một <strong>máy tính thật</strong> ở đâu đó, và được gửi tới em.</p>
-    </div>
-  </div>
-</section>
-
-<!-- 7 -->
-<section class="slide" data-slide="7" data-title="Client & Server">
+<section class="slide" data-slide="6" data-title="Client & Server">
   <div class="slide-body">
     <span class="eyebrow">HAI VAI TRÒ CỐT LÕI</span>
     <h2 class="slide-title">Client &amp; Server — ai hỏi, ai trả lời?</h2>
@@ -175,17 +160,17 @@
         <div class="met-emoji">🌐</div>
         <div class="met-term">Internet</div>
         <div class="met-metaphor">= Con đường nối 2 bên</div>
-        <div class="met-desc">Đường truyền để client và server gửi dữ liệu qua lại cho nhau.</div>
+        <div class="met-desc">Mạng lưới máy tính thật khắp thế giới (cả cáp ngầm dưới biển!) để client và server gửi dữ liệu qua lại.</div>
       </div>
     </div>
-    <div class="hl-box info"><span class="hl-label">ẨN DỤ</span>
-      <p>Client như <strong>người chơi</strong> bấm nút; Server như <strong>máy chủ game</strong> giữ cả thế giới và trả lời mọi người chơi cùng lúc.</p>
+    <div class="hl-box info"><span class="hl-label">ẨN DỤ GAME</span>
+      <p>Client như <strong>người chơi</strong> bấm nút; Server như <strong>máy chủ game</strong> (Minecraft/Roblox) giữ cả thế giới và trả lời mọi người chơi cùng lúc.</p>
     </div>
   </div>
 </section>
 
-<!-- 8 -->
-<section class="slide" data-slide="8" data-title="Request & Response">
+<!-- 7 -->
+<section class="slide" data-slide="7" data-title="Request & Response">
   <div class="slide-body">
     <span class="eyebrow">MỘT LẦN "HỎI — ĐÁP"</span>
     <h2 class="slide-title">Request → Response: chuyện xảy ra khi em bấm</h2>
@@ -201,8 +186,8 @@
   </div>
 </section>
 
-<!-- 9 -->
-<section class="slide" data-slide="9" data-title="Server kết nối mọi người">
+<!-- 8 -->
+<section class="slide" data-slide="8" data-title="Server kết nối mọi người">
   <div class="slide-body">
     <span class="eyebrow">TRẢ LỜI CÂU HỎI ĐẦU BUỔI</span>
     <h2 class="slide-title">Server = "điểm hẹn" nối mọi người lại</h2>
@@ -229,8 +214,8 @@
   </div>
 </section>
 
-<!-- 10 -->
-<section class="slide" data-slide="10" data-title="Quiz client/server">
+<!-- 9 -->
+<section class="slide" data-slide="9" data-title="Quiz client/server">
   <div class="slide-body">
     <span class="eyebrow">KIỂM TRA NHANH</span>
     <h2 class="slide-title">Đâu là việc của Server?</h2>
@@ -248,41 +233,10 @@
   </div>
 </section>
 
-<!-- ============ MÀN 3 — ĐỊA CHỈ & HOSTING ============ -->
+<!-- ============ MÀN 2 — HOSTING: localhost vs internet, tĩnh vs động ============ -->
 
-<!-- 11 -->
-<section class="slide" data-slide="11" data-title="Địa chỉ trên internet">
-  <div class="slide-body">
-    <span class="eyebrow">LÀM SAO TÌM ĐÚNG SERVER?</span>
-    <h2 class="slide-title">Domain · IP · DNS — địa chỉ của server</h2>
-    <div class="met-grid">
-      <div class="met-card model">
-        <div class="met-emoji">🏷️</div>
-        <div class="met-term">Domain</div>
-        <div class="met-metaphor">= Tên dễ nhớ</div>
-        <div class="met-desc">Tên miền như <code>tiktok.com</code> — dễ đọc, dễ nhớ (giống tên quán).</div>
-      </div>
-      <div class="met-card llm">
-        <div class="met-emoji">🔢</div>
-        <div class="met-term">IP</div>
-        <div class="met-metaphor">= Số nhà thật</div>
-        <div class="met-desc">Địa chỉ số của server (vd <code>142.250.x.x</code>) — máy tính dùng cái này để tìm nhau.</div>
-      </div>
-      <div class="met-card token">
-        <div class="met-emoji">📖</div>
-        <div class="met-term">DNS</div>
-        <div class="met-metaphor">= Danh bạ</div>
-        <div class="met-desc">Tra <strong>tên miền → số nhà IP</strong>. Em gõ tên, DNS tìm ra đúng server.</div>
-      </div>
-    </div>
-    <div class="hl-box info"><span class="hl-label">GỘP LẠI</span>
-      <p>Gõ <code>tiktok.com</code> → DNS tra ra IP server → client gửi request tới đúng "số nhà" đó.</p>
-    </div>
-  </div>
-</section>
-
-<!-- 12 -->
-<section class="slide" data-slide="12" data-title="Hosting & luôn bật">
+<!-- 10 -->
+<section class="slide" data-slide="10" data-title="Hosting & luôn bật">
   <div class="slide-body">
     <span class="eyebrow">VÌ SAO CẦN "MÁY CHỦ LUÔN BẬT"</span>
     <h2 class="slide-title">localhost (chỉ mình em) vs Hosting (ai cũng vào)</h2>
@@ -296,56 +250,35 @@
         <tr><td>Đặt ở đâu?</td><td>Ngay trong laptop em</td><td>Máy chủ trong "data center" (trung tâm dữ liệu)</td></tr>
       </tbody>
     </table>
-    <div class="hl-box success"><span class="hl-label">EM ĐÃ LÀM RỒI!</span>
-      <p>Buổi 14 bật <strong>GitHub Pages</strong> chính là đưa web tĩnh của em lên hosting — vì thế bạn ở xa mới mở link được. Buổi 16 sẽ deploy app "động" bằng Vercel.</p>
+    <div class="hl-box success"><span class="hl-label">EM ĐÃ LÀM 1 NỬA RỒI!</span>
+      <p>Buổi 14 bật <strong>GitHub Pages</strong> chính là đưa web <strong>tĩnh</strong> lên hosting — vì thế bạn ở xa mới mở link được. Hôm nay ta đi tiếp: deploy cả app <strong>"động"</strong> bằng Vercel.</p>
     </div>
   </div>
 </section>
 
-<!-- 13 -->
-<section class="slide" data-slide="13" data-title="Từ điển internet — lật thẻ">
+<!-- 11 -->
+<section class="slide" data-slide="11" data-title="Web tĩnh vs App động">
   <div class="slide-body">
-    <span class="eyebrow">8 THUẬT NGỮ — CLICK ĐỂ LẬT</span>
-    <h2 class="slide-title">Từ vựng Internet</h2>
-    <div class="fc-grid">
-      <div class="fc"><div class="fc-inner">
-        <div class="fc-front"><div class="fc-term">Client</div><div class="fc-vi">Máy đi hỏi</div></div>
-        <div class="fc-back">Máy của em (app/trình duyệt) gửi yêu cầu và hiển thị kết quả.</div>
-      </div></div>
-      <div class="fc"><div class="fc-inner">
-        <div class="fc-front"><div class="fc-term">Server</div><div class="fc-vi">Máy chủ trả lời</div></div>
-        <div class="fc-back">Máy luôn bật, giữ dữ liệu và trả lời khi được hỏi.</div>
-      </div></div>
-      <div class="fc"><div class="fc-inner">
-        <div class="fc-front"><div class="fc-term">Request</div><div class="fc-vi">Yêu cầu</div></div>
-        <div class="fc-back">Lời "xin dữ liệu" client gửi lên server.</div>
-      </div></div>
-      <div class="fc"><div class="fc-inner">
-        <div class="fc-front"><div class="fc-term">Response</div><div class="fc-vi">Phản hồi</div></div>
-        <div class="fc-back">Dữ liệu server gửi trả lại cho client.</div>
-      </div></div>
-      <div class="fc"><div class="fc-inner">
-        <div class="fc-front"><div class="fc-term">Domain</div><div class="fc-vi">Tên miền</div></div>
-        <div class="fc-back">Tên dễ nhớ của web, vd tiktok.com.</div>
-      </div></div>
-      <div class="fc"><div class="fc-inner">
-        <div class="fc-front"><div class="fc-term">IP</div><div class="fc-vi">Số nhà</div></div>
-        <div class="fc-back">Địa chỉ số để máy tính tìm ra server.</div>
-      </div></div>
-      <div class="fc"><div class="fc-inner">
-        <div class="fc-front"><div class="fc-term">DNS</div><div class="fc-vi">Danh bạ</div></div>
-        <div class="fc-back">Tra tên miền ra địa chỉ IP.</div>
-      </div></div>
-      <div class="fc"><div class="fc-inner">
-        <div class="fc-front"><div class="fc-term">Hosting</div><div class="fc-vi">Nơi đặt web</div></div>
-        <div class="fc-back">Đặt web lên 1 server luôn bật để ai cũng vào được.</div>
-      </div></div>
+    <span class="eyebrow">HAI LOẠI SẢN PHẨM</span>
+    <h2 class="slide-title">Web tĩnh vs App động — khác nhau ở đâu?</h2>
+    <table class="cmp-table">
+      <thead>
+        <tr><th>Tiêu chí</th><th>Web tĩnh</th><th>App động</th></tr>
+      </thead>
+      <tbody>
+        <tr><td>Là gì</td><td>Trang hiện nội dung có sẵn (chữ, ảnh, game HTML/JS)</td><td>Có phần <strong>chạy/xử lý riêng</strong>, đổi theo người dùng</td></tr>
+        <tr><td>Ví dụ</td><td>Portfolio, game rắn, trang giới thiệu</td><td>App có đăng nhập, giấu chìa khoá API, lưu dữ liệu</td></tr>
+        <tr><td>Đẩy lên GitHub Pages?</td><td>✅ Được — Pages <strong>chỉ</strong> dành cho web tĩnh</td><td>❌ Không chạy được trên Pages → phải dùng Vercel</td></tr>
+      </tbody>
+    </table>
+    <div class="hl-box danger"><span class="hl-label">GHI NHỚ QUAN TRỌNG</span>
+      <p><strong>GitHub Pages CHỈ đẩy được web TĨNH</strong> — nó không chạy được code phía server nên app "động" đưa lên sẽ không hoạt động. App động cần <strong>Vercel</strong> (chạy được cả web tĩnh lẫn phần động).</p>
     </div>
   </div>
 </section>
 
-<!-- 14 -->
-<section class="slide" data-slide="14" data-title="Game: Client hay Server?">
+<!-- 12 -->
+<section class="slide" data-slide="12" data-title="Game: Client hay Server?">
   <div class="slide-body">
     <span class="eyebrow">QUICK SELF-TEST</span>
     <h2 class="slide-title">Kéo mỗi việc về đúng vai</h2>
@@ -377,46 +310,173 @@
   </div>
 </section>
 
-<!-- ============ MÀN 4 — TỰ TAY CHO WEB NÓI CHUYỆN VỚI SERVER ============ -->
+<!-- 13 -->
+<section class="slide" data-slide="13" data-title="Từ điển — lật thẻ">
+  <div class="slide-body">
+    <span class="eyebrow">8 THUẬT NGỮ — CLICK ĐỂ LẬT</span>
+    <h2 class="slide-title">Từ vựng Internet &amp; Deploy</h2>
+    <div class="fc-grid">
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Client</div><div class="fc-vi">Máy đi hỏi</div></div>
+        <div class="fc-back">Máy của em (app/trình duyệt) gửi yêu cầu và hiển thị kết quả.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Server</div><div class="fc-vi">Máy chủ trả lời</div></div>
+        <div class="fc-back">Máy luôn bật, giữ dữ liệu và trả lời khi được hỏi.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Request</div><div class="fc-vi">Yêu cầu</div></div>
+        <div class="fc-back">Lời "xin dữ liệu" client gửi lên server.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Response</div><div class="fc-vi">Phản hồi</div></div>
+        <div class="fc-back">Dữ liệu server gửi trả lại cho client.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Hosting</div><div class="fc-vi">Nơi đặt web</div></div>
+        <div class="fc-back">Đặt web lên 1 server luôn bật để ai cũng vào được.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Deploy</div><div class="fc-vi">Triển khai</div></div>
+        <div class="fc-back">Đưa code lên server để chạy thật cho cả thế giới.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Build</div><div class="fc-vi">Đóng gói</div></div>
+        <div class="fc-back">Dịch &amp; đóng gói code thành bản chạy được trước khi lên mạng.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Vercel</div><div class="fc-vi">Nền tảng deploy</div></div>
+        <div class="fc-back">Dịch vụ đưa repo của em lên internet, cho link .vercel.app sống 24/7.</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 3 — DEPLOY LÊN VERCEL ============ -->
+
+<!-- 14 -->
+<section class="slide" data-slide="14" data-title="Vercel là gì">
+  <div class="slide-body">
+    <span class="eyebrow">KHÁI NIỆM CỐT LÕI</span>
+    <h2 class="slide-title">Vercel = "nhà xuất bản" đưa code lên internet</h2>
+    <div class="met-grid">
+      <div class="met-card model">
+        <div class="met-emoji">🚀</div>
+        <div class="met-term">Deploy</div>
+        <div class="met-metaphor">= Đăng lên / triển khai</div>
+        <div class="met-desc">Đưa code từ repo (buổi 14) lên server Vercel để chạy thật cho cả thế giới.</div>
+      </div>
+      <div class="met-card llm">
+        <div class="met-emoji">📦</div>
+        <div class="met-term">Build</div>
+        <div class="met-metaphor">= Đóng gói cho chạy được</div>
+        <div class="met-desc">Vercel tự "dịch &amp; đóng gói" code thành bản chạy được, trước khi đưa lên mạng.</div>
+      </div>
+      <div class="met-card token">
+        <div class="met-emoji">🔗</div>
+        <div class="met-term">Production URL</div>
+        <div class="met-metaphor">= Link sống chính thức</div>
+        <div class="met-desc">Địa chỉ <code>tên-app.vercel.app</code> ai cũng mở được, có sẵn khoá an toàn HTTPS.</div>
+      </div>
+    </div>
+    <div class="hl-box"><span class="hl-label">KHÁC GÌ BUỔI 12?</span>
+      <p>Buổi 12 em nhờ <strong>AI agent (OpenCode) deploy hộ</strong> qua skill. Hôm nay em <strong>tự tay làm trên vercel.com</strong> để hiểu rõ từng bước — sau này chọn cách nào cũng được.</p>
+    </div>
+  </div>
+</section>
 
 <!-- 15 -->
-<section class="slide slide-cover" data-slide="15" data-title="Thực hành: web gọi server">
-  <div class="cover-orb orb-1" style="background:#059669;"></div>
-  <div class="cover-orb orb-2" style="background:#F59E0B;"></div>
-  <div class="cover-orb orb-3"></div>
-  <div class="cover-content slide-body">
-    <span class="eyebrow">ĐỦ LÝ THUYẾT — GIỜ TỰ TAY LÀM</span>
-    <h1 class="hero-title">Cho web của em <span class="grad-text">"nói chuyện" với server thật</span></h1>
-    <p class="slide-subtitle">Em sẽ vibe-code 1 trang web: bấm nút → gửi request tới 1 server công khai → nhận dữ liệu sống và hiện ra.
-      Chính tay em điều khiển một lần "client hỏi – server trả lời".</p>
-    <div class="cover-chips"><span class="cover-chip">API</span><span class="cover-chip">fetch</span><span class="cover-chip">Dữ liệu sống</span></div>
+<section class="slide" data-slide="15" data-title="5 bước deploy lên Vercel">
+  <div class="slide-body">
+    <span class="eyebrow">THỰC HÀNH — TỪ REPO → LINK SỐNG</span>
+    <h2 class="slide-title">Deploy repo GitHub lên Vercel trong 5 bước</h2>
+    <ol class="steps stagger">
+      <li>Vào <code>vercel.com</code> → <strong>Sign Up</strong> → chọn <strong>Continue with GitHub</strong> (nối tài khoản buổi 14).</li>
+      <li>Bấm <strong>Add New… → Project</strong> → chọn repo (vd <code>game-ran-cua-em</code>) → <strong>Import</strong>.</li>
+      <li>Để nguyên cấu hình mặc định → bấm <strong>Deploy</strong> → chờ Vercel build ~1 phút.</li>
+      <li>Xong! Nhận link <code>https://&lt;tên-app&gt;.vercel.app</code> — có sẵn HTTPS, sống 24/7.</li>
+      <li>Mở link trên điện thoại → <strong>app của em chạy thật, dù laptop đã tắt!</strong></li>
+    </ol>
+    <div class="hl-box success"><span class="hl-label">CƠ BẢN — CHỈ DÙNG CHUỘT</span>
+      <p>Toàn bộ 5 bước làm trên trang <code>vercel.com</code>, không cần gõ lệnh. Kẹt bước nào → hỏi AI trợ lý deploy (slide sau).</p>
+    </div>
   </div>
 </section>
 
 <!-- 16 -->
-<section class="slide" data-slide="16" data-title="API là gì">
+<section class="slide" data-slide="16" data-title="Push là tự cập nhật">
   <div class="slide-body">
-    <span class="eyebrow">CÁCH XIN DỮ LIỆU TỪ SERVER</span>
-    <h2 class="slide-title">API — "quầy nhận đơn" của server</h2>
-    <p class="slide-subtitle">Server không cho em vào lục đồ lung tung. Nó mở sẵn một <strong>API</strong> — cái "quầy" có ô nhận yêu cầu và trả về dữ liệu gọn gàng (thường ở dạng <strong>JSON</strong>).</p>
-    <div class="hl-box info"><span class="hl-label">ẨN DỤ QUẦY ORDER</span>
-      <p>API giống quầy order ở quán: em đưa đúng yêu cầu qua ô cửa (địa chỉ API) → server đưa lại đúng phần dữ liệu. Em không cần biết bếp nấu thế nào.</p>
-    </div>
-    <div class="hl-box"><span class="hl-label">TRONG CODE</span>
-      <p>Trình duyệt gọi API bằng lệnh <code>fetch("địa-chỉ-api")</code> → nhận về dữ liệu → hiển thị. (AI sẽ viết phần này cho em.)</p>
+    <span class="eyebrow">ĐƯỜNG ỐNG TỰ ĐỘNG</span>
+    <h2 class="slide-title">Sửa code → git push → Vercel tự đăng bản mới</h2>
+    <ol class="steps stagger">
+      <li>Em sửa code trên máy như bình thường (vd đổi màu, thêm màn game).</li>
+      <li><strong>git push</strong> lên repo GitHub (đúng thao tác buổi 14).</li>
+      <li>Vercel <strong>tự phát hiện</strong> có bản mới → build lại → cập nhật link sống.</li>
+      <li>Vài chục giây sau, link <code>.vercel.app</code> đã là phiên bản mới nhất — không phải deploy tay lần nữa.</li>
+    </ol>
+    <div class="hl-box info"><span class="hl-label">ẨN DỤ</span>
+      <p>Như một <strong>đường ống tự động</strong> nối từ code tới web sống: em chỉ cần push, phần "xuất bản" Vercel lo hết. Git (buổi 14) + Vercel (hôm nay) ghép thành 1 quy trình hoàn chỉnh.</p>
     </div>
   </div>
 </section>
 
 <!-- 17 -->
-<section class="slide" data-slide="17" data-title="Chọn 1 trong 2 API">
+<section class="slide" data-slide="17" data-title="Env Variable — giấu chìa khoá">
   <div class="slide-body">
-    <span class="eyebrow">CHỌN "MÓN" EM THÍCH</span>
-    <h2 class="slide-title">Trang tra cứu sống — chọn 1 trong 2</h2>
+    <span class="eyebrow">GIẤU BÍ MẬT ĐÚNG CÁCH</span>
+    <h2 class="slide-title">Environment Variable — cất "chìa khoá" API an toàn</h2>
+    <p class="slide-subtitle">Nhiều API cần 1 <strong>chìa khoá bí mật</strong> (API key). Repo của em <strong>công khai</strong> (buổi 14) — ai cũng đọc được code, nên
+      <strong>tuyệt đối không dán key thẳng vào code</strong>.</p>
+    <div class="hl-box danger"><span class="hl-label">ĐỪNG BAO GIỜ</span>
+      <p>Dán API key vào file code rồi push lên GitHub công khai = đưa chìa khoá nhà cho cả thế giới. Bot sẽ quét thấy và lạm dụng.</p>
+    </div>
+    <div class="hl-box success"><span class="hl-label">NÂNG CAO — CÁCH ĐÚNG</span>
+      <p>Trên Vercel: <strong>Settings → Environment Variables</strong> → thêm tên + giá trị chìa khoá. Vercel giữ kín, code chỉ gọi tên biến. Nếu API em dùng không cần key (như slide thực hành) thì bỏ qua bước này.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 18 -->
+<section class="slide" data-slide="18" data-title="AI — trợ lý deploy">
+  <div class="slide-body">
+    <span class="eyebrow">TẬN DỤNG AI — BỘ PROMPT BỎ TÚI</span>
+    <h2 class="slide-title">Biến AI thành trợ lý deploy của em</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(240px, 1fr)); gap:14px;">
+      <div class="qbox qbox-orange" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">1</div>🩹 Giải mã lỗi build</div>
+        <div class="qbox-content" style="font-size:0.9rem;"><em>"Deploy lên Vercel bị lỗi, đây là log: '[dán log]'. Giải thích và cách sửa cho người mới."</em></div>
+      </div>
+      <div class="qbox qbox-blue" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">2</div>🧭 Chỉ đường thao tác</div>
+        <div class="qbox-content" style="font-size:0.9rem;"><em>"Trên vercel.com, từng bước import repo GitHub và deploy như thế nào? Mình chưa quen."</em></div>
+      </div>
+      <div class="qbox qbox-purple" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">3</div>💻 Viết code gọi API</div>
+        <div class="qbox-content" style="font-size:0.9rem;"><em>"Viết 1 trang HTML có nút, bấm là fetch() gọi API [địa chỉ] rồi hiện kết quả cho đẹp."</em></div>
+      </div>
+      <div class="qbox qbox-yellow" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon">4</div>🕵️ Web trắng / 404</div>
+        <div class="qbox-content" style="font-size:0.9rem;"><em>"Deploy xong mở link bị trang trắng (hoặc 404). Cho mình nguyên nhân hay gặp và cách kiểm tra."</em></div>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">NHỚ</span>
+      <p>AI chỉ đường rất nhanh, nhưng <strong>luôn đọc lại &amp; kiểm chứng</strong> — thử mở link thật để chắc chắn đã chạy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 4 — TỰ TAY LÀM & KHÉP LẠI ============ -->
+
+<!-- 19 -->
+<section class="slide" data-slide="19" data-title="API là gì">
+  <div class="slide-body">
+    <span class="eyebrow">CÁCH XIN DỮ LIỆU TỪ SERVER</span>
+    <h2 class="slide-title">API — "quầy nhận đơn" của server</h2>
+    <p class="slide-subtitle">Server không cho em vào lục lung tung. Nó mở sẵn một <strong>API</strong> — cái "quầy" có ô nhận yêu cầu và trả về dữ liệu gọn gàng (thường ở dạng <strong>JSON</strong>). Trình duyệt gọi API bằng lệnh <code>fetch("địa-chỉ-api")</code>.</p>
     <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(260px, 1fr));">
       <div class="card">
         <div class="card-icon" style="background:#F59E0B;">🐶</div>
-        <h3>Ảnh vui</h3>
+        <h3>Ảnh vui (dễ nhất)</h3>
         <p>Bấm nút → hiện 1 ảnh chó ngẫu nhiên từ server.</p>
         <p style="font-size:0.8rem;color:var(--text-muted);"><code>dog.ceo/api/breeds/image/random</code></p>
       </div>
@@ -427,57 +487,30 @@
         <p style="font-size:0.8rem;color:var(--text-muted);"><code>opentdb.com/api.php?amount=1&amp;type=multiple</code></p>
       </div>
     </div>
-    <div class="hl-box info"><span class="hl-label">CẢ HAI ĐỀU MIỄN PHÍ</span>
-      <p>Không cần đăng ký, không cần "chìa khoá" — gọi thẳng từ trình duyệt là có dữ liệu sống.</p>
+    <div class="hl-box info"><span class="hl-label">CẢ HAI MIỄN PHÍ, KHÔNG CẦN CHÌA KHOÁ</span>
+      <p>Gọi thẳng từ trình duyệt là có dữ liệu sống. (opentdb trả câu hỏi tiếng Anh — chưa quen thì chọn ảnh chó cho nhẹ.)</p>
     </div>
   </div>
 </section>
 
-<!-- 18 -->
-<section class="slide" data-slide="18" data-title="Thực hành APP-15.1">
+<!-- 20 -->
+<section class="slide" data-slide="20" data-title="Thực hành APP-15.1">
   <div class="slide-body">
     <span class="eyebrow">THỰC HÀNH — HỘP MÀU CAM</span>
-    <h2 class="slide-title">APP-15.1 — 4 bước có web gọi server</h2>
+    <h2 class="slide-title">APP-15.1 — Web gọi server, sống trên Vercel</h2>
     <ol class="steps stagger">
-      <li>Mở công cụ vibe-code quen thuộc (z.ai, Bolt, Cursor, hoặc chatbot AI).</li>
-      <li>Dán prompt (đổi <em>[API em chọn]</em> theo slide trước):</li>
+      <li>Mở công cụ vibe-code quen (z.ai, Bolt, Cursor, hoặc chatbot AI). Dán prompt:</li>
     </ol>
     <div class="prompt-box"><span class="prompt-label">PROMPT MẪU</span>Tạo 1 trang HTML đơn giản có 1 nút. Khi bấm nút, dùng fetch() gọi API
 [dán địa chỉ API em chọn], rồi hiện kết quả (ảnh hoặc câu hỏi) ra màn hình
-cho đẹp. Giải thích ngắn dòng nào là "gửi request" và dòng nào "nhận response".</div>
-    <ol class="steps stagger" start="3">
-      <li>Chạy thử → <strong>bấm nút</strong> → dữ liệu sống hiện ra. Mỗi lần bấm là 1 request mới!</li>
-      <li><strong>Khoe:</strong> đẩy trang lên GitHub, bật GitHub Pages (buổi 14) → có link sống gửi bạn.</li>
+cho đẹp. Giải thích ngắn dòng nào "gửi request" và dòng nào "nhận response".</div>
+    <ol class="steps stagger" start="2">
+      <li>Chạy thử → <strong>bấm nút</strong> → dữ liệu sống hiện ra (mỗi lần bấm là 1 request mới!).</li>
+      <li>Đẩy code lên <strong>GitHub</strong> (buổi 14) → <strong>import vào Vercel → Deploy</strong> → lấy link <code>.vercel.app</code>.</li>
+      <li>Mở link trên điện thoại; thử <code>git push</code> 1 thay đổi nhỏ → xem Vercel tự cập nhật.</li>
     </ol>
-  </div>
-</section>
-
-<!-- 19 -->
-<section class="slide" data-slide="19" data-title="Thử AI nâng cấp">
-  <div class="slide-body">
-    <span class="eyebrow">HỘP CÂU HỎI MÀU CAM</span>
-    <h2 class="slide-title">Nhờ AI nâng cấp trang (không bắt buộc)</h2>
-    <div class="qbox qbox-orange">
-      <div class="qbox-header"><div class="qbox-icon">+</div>THỬ THÊM</div>
-      <div class="qbox-content">Bảo AI: "<em>Thêm hiệu ứng loading khi đang chờ server trả lời</em>", hoặc "<em>đổi sang API khác</em>",
-        hoặc "<em>hiện thêm thông tin từ dữ liệu server trả về</em>".</div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Để làm gì?</span>Hiệu ứng "loading" cho em thấy rõ khoảnh khắc <strong>đang chờ response</strong> từ server — đúng thứ vừa học.</div>
-    </div>
-  </div>
-</section>
-
-<!-- ============ MÀN 5 — KHÉP LẠI ============ -->
-
-<!-- 20 -->
-<section class="slide" data-slide="20" data-title="Thảo luận cặp">
-  <div class="slide-body">
-    <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
-    <h2 class="slide-title">Cùng bạn cặp — mổ xẻ 1 app quen</h2>
-    <div class="qbox qbox-yellow">
-      <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận</div>
-      <div class="qbox-content">Chọn 1 app cả hai cùng dùng (Zalo, 1 game online, Google Docs...). Thử chỉ ra:
-        đâu là <strong>client</strong>, đâu là <strong>server</strong>, và server giúp <strong>kết nối mọi người</strong> với nhau như thế nào?</div>
-      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Áp mô hình Client–Server vào một ứng dụng thật em dùng hằng ngày.</div>
+    <div class="hl-box info"><span class="hl-label">CƠ BẢN / NÂNG CAO</span>
+      <p><strong>Cơ bản:</strong> có trang gọi API + 1 link Vercel sống là đạt. <strong>Nâng cao:</strong> thêm hiệu ứng loading (thấy rõ lúc "chờ response"), hoặc thêm Environment Variable. Bí bước nào → prompt "trợ lý deploy" (slide 18).</p>
     </div>
   </div>
 </section>
@@ -486,85 +519,101 @@ cho đẹp. Giải thích ngắn dòng nào là "gửi request" và dòng nào "
 <section class="slide" data-slide="21" data-title="Sổ Tay #2 — Sau thực hành">
   <div class="slide-body">
     <span class="eyebrow">GHI LẠI KẾT QUẢ</span>
-    <h2 class="slide-title">Trang gọi server của em</h2>
+    <h2 class="slide-title">Trang gọi server &amp; link Vercel của em</h2>
     <div class="qbox qbox-purple">
       <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #2 — Sau thực hành</div>
-      <div class="qbox-content">Trang web em vừa làm gọi dữ liệu gì từ server? Khi em bấm nút, đâu là 'client', đâu là 'server'?</div>
+      <div class="qbox-content">Trang web em vừa làm gọi dữ liệu gì từ server? Và link Vercel (sống 24/7) của em là gì?</div>
       <div class="nb-input-wrap">
         <label>Câu trả lời của em:</label>
-        <textarea class="nb-input" data-nb-id="2" placeholder="Ví dụ: trang mình gọi ảnh chó; client là trình duyệt của mình, server là dog.ceo..."></textarea>
+        <textarea class="nb-input" data-nb-id="2" placeholder="Ví dụ: trang mình gọi ảnh chó từ dog.ceo; client là trình duyệt; link sống: ...vercel.app"></textarea>
         <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
       </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Link Vercel này góp vào Portfolio — nơi khoe sản phẩm ở Final Project.</div>
     </div>
   </div>
 </section>
 
 <!-- 22 -->
-<section class="slide" data-slide="22" data-title="Quiz tổng hợp">
+<section class="slide" data-slide="22" data-title="Thảo luận cặp">
+  <div class="slide-body">
+    <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
+    <h2 class="slide-title">Cùng bạn cặp — mổ xẻ 1 app quen</h2>
+    <div class="qbox qbox-yellow">
+      <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận</div>
+      <div class="qbox-content">Chọn 1 app cả hai cùng dùng (Zalo, 1 game online, Google Docs...). Thử chỉ ra: đâu là <strong>client</strong>, đâu là <strong>server</strong>;
+        nó là <strong>web tĩnh hay app động</strong>; và nên host bằng <strong>GitHub Pages hay Vercel</strong>?</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Áp mô hình Client–Server và lựa chọn hosting vào một ứng dụng thật.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 23 -->
+<section class="slide" data-slide="23" data-title="Quiz tổng hợp">
   <div class="slide-body">
     <span class="eyebrow">TỰ KIỂM TRA</span>
-    <h2 class="slide-title">Khi em bấm nút gọi API, thứ tự đúng là?</h2>
+    <h2 class="slide-title">Để bạn ở xa mở web của em kể cả khi máy em tắt?</h2>
     <div class="quiz" data-correct="1"
-      data-explanation="Đúng thứ tự: Client gửi Request → Server nhận & xử lý → Server trả Response → Client hiển thị. Client luôn là bên đi hỏi trước; server là bên trả lời.">
-      <p class="quiz-q">Chọn thứ tự đúng của một lần "hỏi – đáp":</p>
+      data-explanation="Web chạy ở máy em (localhost) sẽ chết khi tắt máy. Muốn ai cũng vào được 24/7, phải DEPLOY nó lên 1 server luôn bật như Vercel — khi đó có link sống độc lập với máy em. Gửi file qua Zalo hay đổi tên file đều không giải quyết được.">
+      <p class="quiz-q">Chọn cách đúng:</p>
       <div class="quiz-opts">
-        <button class="quiz-opt" data-index="0">Server hỏi client → client trả lời → hiện ra</button>
-        <button class="quiz-opt" data-index="1">Client gửi request → server trả response → client hiển thị</button>
-        <button class="quiz-opt" data-index="2">Client tự tạo dữ liệu, không cần server</button>
-        <button class="quiz-opt" data-index="3">DNS tạo ra video rồi gửi cho server</button>
+        <button class="quiz-opt" data-index="0">Gửi file HTML qua Zalo cho từng người</button>
+        <button class="quiz-opt" data-index="1">Deploy lên 1 server luôn bật như Vercel</button>
+        <button class="quiz-opt" data-index="2">Để máy em luôn bật và mở sẵn file</button>
+        <button class="quiz-opt" data-index="3">Đổi tên file thành index_final.html</button>
       </div>
       <div class="quiz-fb"></div>
     </div>
   </div>
 </section>
 
-<!-- 23 -->
-<section class="slide" data-slide="23" data-title="Checklist cuối buổi">
+<!-- 24 -->
+<section class="slide" data-slide="24" data-title="Checklist cuối buổi">
   <div class="slide-body">
     <span class="eyebrow">CUỐI BUỔI 15 — EM ĐÃ LÀM GÌ</span>
     <h2 class="slide-title">Checklist — bấm để tick</h2>
     <div class="cl-container">
       <ul class="cl-list">
-        <li class="cl-item"><span class="cl-check"></span><span>Phân biệt được Client và Server</span></li>
-        <li class="cl-item"><span class="cl-check"></span><span>Mô tả được vòng Request → Response</span></li>
-        <li class="cl-item"><span class="cl-check"></span><span>Giải thích được vì sao mọi người kết nối qua server chung</span></li>
-        <li class="cl-item"><span class="cl-check"></span><span>Hiểu Domain/IP/DNS và Hosting (localhost vs internet)</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Phân biệt được Client và Server, mô tả vòng Request → Response</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Giải thích vì sao mọi người kết nối qua server chung</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Hiểu Hosting (localhost vs internet) và web tĩnh vs app động</span></li>
         <li class="cl-item"><span class="cl-check"></span><span>Tự làm 1 trang web gọi API thật, hiện dữ liệu sống</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Deploy được lên Vercel → có link sống 24/7 (git push là tự cập nhật)</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Biết dùng AI làm trợ lý (viết code, gỡ lỗi deploy)</span></li>
       </ul>
     </div>
   </div>
 </section>
 
-<!-- 24 -->
-<section class="slide" data-slide="24" data-title="Sổ Tay #3 + BTVN">
+<!-- 25 -->
+<section class="slide" data-slide="25" data-title="Sổ Tay #3 + BTVN">
   <div class="slide-body">
-    <span class="eyebrow">PHẢN TƯ &amp; CHUẨN BỊ BUỔI 16</span>
+    <span class="eyebrow">PHẢN TƯ &amp; CHUẨN BỊ BUỔI SAU</span>
     <h2 class="slide-title">Nhìn lại — và việc về nhà</h2>
     <div class="qbox qbox-purple">
       <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #3 — Cuối buổi</div>
-      <div class="qbox-content">Hãy giải thích cho một người chưa biết gì: vì sao em và bạn ở hai nơi khác nhau mà cùng xem được một video trên mạng?</div>
+      <div class="qbox-content">Từ code trên máy đến 1 link cả thế giới mở được, em đã đi qua những chặng nào (Git → Internet/Server → Deploy)?</div>
       <div class="nb-input-wrap">
-        <label>Cách em giải thích:</label>
-        <textarea class="nb-input" data-nb-id="3" placeholder="Ví dụ: vì video nằm trên 1 server chung, cả hai đều 'gọi' server đó..."></textarea>
+        <label>Suy ngẫm của em:</label>
+        <textarea class="nb-input" data-nb-id="3" placeholder="Ví dụ: viết code → git push lên GitHub → deploy lên Vercel → có link sống cho mọi người..."></textarea>
         <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
       </div>
     </div>
-    <div class="hl-box "><span class="hl-label">BÀI TẬP VỀ NHÀ — TRƯỚC BUỔI 16</span>
-      <p>Hoàn thiện trang gọi API của em cho chạy được. Buổi 16 mình sẽ <strong>deploy</strong> nó (và các sản phẩm khác) lên internet bằng <strong>Vercel</strong> để có link sống cho app "động" — không chỉ web tĩnh.</p>
+    <div class="hl-box "><span class="hl-label">BÀI TẬP VỀ NHÀ</span>
+      <p>Gửi <strong>link Vercel</strong> của em cho 3 người mở thử trên điện thoại. Và nghĩ trước: em muốn xây <strong>app "thật" nào của riêng mình</strong> cho dự án sắp tới?</p>
     </div>
   </div>
 </section>
 
-<!-- 25 -->
-<section class="slide slide-cover" data-slide="25" data-title="Hết Buổi 15">
+<!-- 26 -->
+<section class="slide slide-cover" data-slide="26" data-title="Hết Buổi 15">
   <div class="cover-orb orb-1" style="background:#059669;"></div>
   <div class="cover-orb orb-2" style="background:#3B82F6;"></div>
   <div class="cover-orb orb-3"></div>
   <div class="cover-content slide-body">
     <span class="eyebrow">HẾT BUỔI 15</span>
-    <h1 class="hero-title">Hẹn em ở <span class="grad-text">Buổi 16 — Deploy lên Vercel</span></h1>
-    <p class="slide-subtitle">Giờ em đã hiểu internet vận hành thế nào và mọi người kết nối qua server ra sao. Buổi 16:
-      đưa sản phẩm của em lên một server thật với <strong>Vercel</strong> — có link sống gửi cả thế giới.</p>
-    <div class="cover-chips"><span class="cover-chip">Mang theo trang API của em</span><span class="cover-chip">Sẵn sàng deploy</span></div>
+    <h1 class="hero-title">Sản phẩm của em đã <span class="grad-text">sống trên internet</span></h1>
+    <p class="slide-subtitle">Em đã đi trọn hành trình hạ tầng: code (buổi 13) → lưu &amp; quản với Git (buổi 14) →
+      hiểu Internet, Hosting và <strong>tự tay deploy có link sống (hôm nay)</strong>. Giờ em đã sẵn sàng dựng app thật của riêng mình.</p>
+    <div class="cover-chips"><span class="cover-chip">Giữ link Vercel để khoe</span><span class="cover-chip">Sẵn sàng dựng app riêng</span></div>
   </div>
 </section>
