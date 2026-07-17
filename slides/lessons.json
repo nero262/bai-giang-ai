@@ -279,35 +279,35 @@
   {
     "id": 15,
     "slug": "buoi_15",
-    "title": "Internet & Hosting — Thế giới kết nối thế nào",
+    "title": "Internet, Hosting & Deploy — App sống trên internet",
     "module": "M4",
     "module_name": "Nền tảng Lập trình & Hạ tầng",
     "duration_min": 120,
     "file": "buoi_15.html",
     "available": true,
-    "description": "Hiểu cách Internet vận hành và vì sao mọi người kết nối được với nhau qua ứng dụng: mô hình Client–Server, vòng Request–Response, server là 'điểm hẹn' chung; Domain/IP/DNS và Hosting (localhost vs internet). Thực hành APP-15.1: tự làm 1 trang web gọi API thật để hiện dữ liệu sống từ server.",
+    "description": "Hiểu cách Internet vận hành (Client–Server, vòng Request–Response, server là 'điểm hẹn' chung) và Hosting (localhost vs internet, web tĩnh vs app động); rồi tự tay deploy sản phẩm lên Vercel: Deploy/Build/Production URL, 5 bước import repo GitHub → link .vercel.app sống 24/7, git push là tự cập nhật, giấu chìa khoá API bằng Environment Variables, dùng AI làm trợ lý. Thực hành APP-15.1: 1 trang web gọi API thật → deploy lên Vercel → link sống gửi khoe. (Gộp từ 2 buổi Internet & Deploy.)",
     "tags": [
       "internet",
       "client-server",
       "request-response",
       "api",
-      "dns",
       "hosting",
-      "fetch"
+      "deploy",
+      "vercel"
     ]
   },
   {
     "id": 16,
     "slug": "buoi_16",
-    "title": "Brief APP-2.2",
+    "title": "(Trống — đã gộp Deploy vào buổi 15)",
     "module": "M4",
-    "module_name": "Mini Project + Agent",
+    "module_name": "Nền tảng Lập trình & Hạ tầng",
     "duration_min": 120,
     "file": "buoi_16.html",
     "available": false,
-    "description": "Brief dự án APP-2.2.",
+    "description": "Slot trống sau khi gộp Internet + Deploy vào buổi 15. Chờ sắp xếp lại nội dung khối sau (buổi 17-23).",
     "tags": [
-      "project-brief"
+      "trong"
     ]
   },
   {
