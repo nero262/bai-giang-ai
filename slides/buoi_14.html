@@ -242,7 +242,7 @@
 git commit -m "them tinh diem cho game"
 git push</div>
     <div class="hl-box info"><span class="hl-label">CƠ BẢN — DỄ HƠN</span>
-      <p>Không cần gõ lệnh: dùng <strong>GitHub Desktop</strong> hoặc nút bấm ngay trên github.com — cùng ý tưởng add → commit → push nhưng bằng chuột.</p>
+      <p>Không cần gõ lệnh: dùng <strong>GitHub Desktop</strong> hoặc nút bấm ngay trên github.com — cùng ý tưởng add → commit → push nhưng bằng chuột. Đây là <strong>vòng lặp hằng ngày</strong>; còn các bước <strong>khởi tạo lần đầu</strong> (git init, nối GitHub) sẽ làm ở phần thực hành.</p>
     </div>
   </div>
 </section>
@@ -363,8 +363,8 @@ git push</div>
 <!-- 14 -->
 <section class="slide" data-slide="14" data-title="Tạo repo đầu tiên">
   <div class="slide-body">
-    <span class="eyebrow">THỰC HÀNH — TẠO REPO</span>
-    <h2 class="slide-title">Đưa dự án lên GitHub trong 5 bước</h2>
+    <span class="eyebrow">THỰC HÀNH · CÁCH 1 (CƠ BẢN) — KHÔNG CẦN DÒNG LỆNH</span>
+    <h2 class="slide-title">Cách 1 — Đưa dự án lên GitHub bằng web</h2>
     <ol class="steps stagger">
       <li>Tạo tài khoản tại <code>github.com</code> (dưới 16 tuổi: đăng ký cùng phụ huynh).</li>
       <li>Bấm <strong>New repository</strong> → đặt tên (vd <code>game-ran-cua-em</code>) → Create.</li>
@@ -379,7 +379,28 @@ git push</div>
 </section>
 
 <!-- 15 -->
-<section class="slide" data-slide="15" data-title="README">
+<section class="slide" data-slide="15" data-title="Cách 2 — Terminal từng bước">
+  <div class="slide-body">
+    <span class="eyebrow">THỰC HÀNH · CÁCH 2 (NÂNG CAO) — DÙNG TERMINAL</span>
+    <h2 class="slide-title">Cách 2 — Khởi tạo Git trên máy &amp; đẩy lên GitHub</h2>
+    <p class="slide-subtitle">Đã cài Git + IDE (Antigravity/OpenCode)? Mở terminal <strong>ngay trong thư mục dự án</strong> rồi gõ lần lượt từng dòng:</p>
+    <ol class="steps stagger">
+      <li><strong>Khai báo tên (chỉ 1 lần cho máy):</strong> <code>git config --global user.name "Tên Em"</code> và <code>git config --global user.email "email@cua-em"</code></li>
+      <li><code>git init</code> — tạo "kho Git" cho thư mục dự án (chạy 1 lần cho mỗi dự án).</li>
+      <li><code>git add .</code> — đưa toàn bộ file vào vùng chờ.</li>
+      <li><code>git commit -m "phiên bản đầu tiên"</code> — lưu mốc đầu tiên.</li>
+      <li>Lên <code>github.com</code> tạo <strong>1 repo RỖNG</strong> (đừng tích "Add a README") → copy link repo.</li>
+      <li><code>git remote add origin &lt;link-repo&gt;</code> — nối máy của em với repo trên GitHub.</li>
+      <li><code>git branch -M main</code> rồi <code>git push -u origin main</code> — đẩy code lên GitHub.</li>
+    </ol>
+    <div class="hl-box success"><span class="hl-label">LẦN SAU GỌN HƠN NHIỀU</span>
+      <p>Bước 1-2 &amp; 5-6 chỉ làm <strong>1 lần đầu</strong>. Từ lần sau, mỗi khi sửa code chỉ cần lặp lại <code>git add .</code> → <code>git commit -m "..."</code> → <code>git push</code> (đúng vòng làm việc hằng ngày ở slide trước). Kẹt lệnh nào → hỏi AI trợ lý Git.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-slide="16" data-title="README">
   <div class="slide-body">
     <span class="eyebrow">BỘ MẶT CỦA REPO</span>
     <h2 class="slide-title">README — thứ người ta đọc đầu tiên</h2>
@@ -399,8 +420,8 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
   </div>
 </section>
 
-<!-- 16 -->
-<section class="slide" data-slide="16" data-title="AI — trợ lý Git">
+<!-- 17 -->
+<section class="slide" data-slide="17" data-title="AI — trợ lý Git">
   <div class="slide-body">
     <span class="eyebrow">TẬN DỤNG AI — BỘ PROMPT BỎ TÚI</span>
     <h2 class="slide-title">Biến AI thành trợ lý Git của em</h2>
@@ -428,8 +449,8 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
   </div>
 </section>
 
-<!-- 17 -->
-<section class="slide" data-slide="17" data-title="Thực hành: Khám phá Git cùng AI">
+<!-- 18 -->
+<section class="slide" data-slide="18" data-title="Thực hành: Khám phá Git cùng AI">
   <div class="slide-body">
     <span class="eyebrow">THỰC HÀNH — HỘP MÀU CAM</span>
     <h2 class="slide-title">Khám phá Git cùng AI (5 phút)</h2>
@@ -447,8 +468,8 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
   </div>
 </section>
 
-<!-- 18 -->
-<section class="slide" data-slide="18" data-title="GitHub Pages — link sống">
+<!-- 19 -->
+<section class="slide" data-slide="19" data-title="GitHub Pages — link sống">
   <div class="slide-body">
     <span class="eyebrow">BIẾN REPO THÀNH WEB SỐNG</span>
     <h2 class="slide-title">GitHub Pages — 1 nút bật, có link để khoe</h2>
@@ -469,8 +490,8 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
 
 <!-- ============ MÀN 4 — HỌC TỪ THẾ GIỚI ============ -->
 
-<!-- 19 -->
-<section class="slide slide-cover" data-slide="19" data-title="Tìm & tái dùng mã nguồn">
+<!-- 20 -->
+<section class="slide slide-cover" data-slide="20" data-title="Tìm & tái dùng mã nguồn">
   <div class="cover-orb orb-1" style="background:#7C3AED;"></div>
   <div class="cover-orb orb-2" style="background:#3B82F6;"></div>
   <div class="cover-orb orb-3"></div>
@@ -483,8 +504,8 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
   </div>
 </section>
 
-<!-- 20 -->
-<section class="slide" data-slide="20" data-title="Tìm & đánh giá repo">
+<!-- 21 -->
+<section class="slide" data-slide="21" data-title="Tìm & đánh giá repo">
   <div class="slide-body">
     <span class="eyebrow">KỸ NĂNG SĂN CODE HAY</span>
     <h2 class="slide-title">Tìm &amp; đánh giá nhanh 1 repo</h2>
@@ -500,8 +521,8 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
   </div>
 </section>
 
-<!-- 21 -->
-<section class="slide" data-slide="21" data-title="Fork & Clone">
+<!-- 22 -->
+<section class="slide" data-slide="22" data-title="Fork & Clone">
   <div class="slide-body">
     <span class="eyebrow">MƯỢN CODE VỀ ĐỂ HỌC</span>
     <h2 class="slide-title">Fork &amp; Clone — hai cách "mượn" repo</h2>
@@ -523,8 +544,8 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
   </div>
 </section>
 
-<!-- 22 -->
-<section class="slide" data-slide="22" data-title="Hỏi bạn cặp — săn repo">
+<!-- 23 -->
+<section class="slide" data-slide="23" data-title="Hỏi bạn cặp — săn repo">
   <div class="slide-body">
     <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
     <h2 class="slide-title">Cùng bạn cặp — săn repo hay</h2>
@@ -537,8 +558,8 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
   </div>
 </section>
 
-<!-- 23 -->
-<section class="slide" data-slide="23" data-title="License & ghi nguồn">
+<!-- 24 -->
+<section class="slide" data-slide="24" data-title="License & ghi nguồn">
   <div class="slide-body">
     <span class="eyebrow">CỰC KỲ QUAN TRỌNG</span>
     <h2 class="slide-title">Code công khai ≠ được tự do lấy dùng</h2>
@@ -561,8 +582,8 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
   </div>
 </section>
 
-<!-- 24 -->
-<section class="slide" data-slide="24" data-title="Quiz license">
+<!-- 25 -->
+<section class="slide" data-slide="25" data-title="Quiz license">
   <div class="slide-body">
     <span class="eyebrow">KIỂM TRA NHANH</span>
     <h2 class="slide-title">Em có được dùng lại đoạn code này không?</h2>
@@ -582,8 +603,8 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
 
 <!-- ============ MÀN 5 — TỰ TAY LÀM & KHÉP LẠI ============ -->
 
-<!-- 25 -->
-<section class="slide" data-slide="25" data-title="Thực hành APP-14.1">
+<!-- 26 -->
+<section class="slide" data-slide="26" data-title="Thực hành APP-14.1">
   <div class="slide-body">
     <span class="eyebrow">THỰC HÀNH HÔM NAY</span>
     <h2 class="slide-title">APP-14.1 — Repo &amp; web sống của em</h2>
@@ -595,13 +616,13 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
       <li>Tìm <strong>1 repo tham khảo</strong> cùng chủ đề, ghi link + 1 điều học được.</li>
     </ol>
     <div class="hl-box info"><span class="hl-label">BÍ LÀ HỎI AI</span>
-      <p>Kẹt bất kỳ bước nào (lỗi, không biết bấm đâu) → dùng bộ prompt <strong>"trợ lý Git"</strong> (slide 16) thay vì bỏ cuộc. Muốn nâng cao: thử thêm terminal <code>git add/commit/push</code>.</p>
+      <p>Kẹt bất kỳ bước nào (lỗi, không biết bấm đâu) → dùng bộ prompt <strong>"trợ lý Git"</strong> (slide 17) thay vì bỏ cuộc. Muốn nâng cao: làm theo terminal từng bước ở <strong>Cách 2 (slide 15)</strong>.</p>
     </div>
   </div>
 </section>
 
-<!-- 26 -->
-<section class="slide" data-slide="26" data-title="Sổ Tay #2 — Sau thực hành">
+<!-- 27 -->
+<section class="slide" data-slide="27" data-title="Sổ Tay #2 — Sau thực hành">
   <div class="slide-body">
     <span class="eyebrow">GHI LẠI KẾT QUẢ</span>
     <h2 class="slide-title">Link web sống &amp; repo tham khảo của em</h2>
@@ -618,8 +639,8 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
   </div>
 </section>
 
-<!-- 27 -->
-<section class="slide" data-slide="27" data-title="Checklist cuối buổi">
+<!-- 28 -->
+<section class="slide" data-slide="28" data-title="Checklist cuối buổi">
   <div class="slide-body">
     <span class="eyebrow">CUỐI BUỔI 14 — EM ĐÃ LÀM GÌ</span>
     <h2 class="slide-title">Checklist — bấm để tick</h2>
@@ -636,8 +657,8 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
   </div>
 </section>
 
-<!-- 28 -->
-<section class="slide" data-slide="28" data-title="Sổ Tay #3 + BTVN">
+<!-- 29 -->
+<section class="slide" data-slide="29" data-title="Sổ Tay #3 + BTVN">
   <div class="slide-body">
     <span class="eyebrow">PHẢN TƯ &amp; CHUẨN BỊ BUỔI 15</span>
     <h2 class="slide-title">Nhìn lại — và việc về nhà</h2>
@@ -656,8 +677,8 @@ Trò chơi rắn cổ điển mình làm bằng HTML + JavaScript.
   </div>
 </section>
 
-<!-- 29 -->
-<section class="slide slide-cover" data-slide="29" data-title="Hết Buổi 14">
+<!-- 30 -->
+<section class="slide slide-cover" data-slide="30" data-title="Hết Buổi 14">
   <div class="cover-orb orb-1" style="background:#059669;"></div>
   <div class="cover-orb orb-2" style="background:#F59E0B;"></div>
   <div class="cover-orb orb-3"></div>
