@@ -279,13 +279,13 @@
   {
     "id": 15,
     "slug": "buoi_15",
-    "title": "Internet, Hosting & Deploy — App sống trên internet",
+    "title": "Xây dựng và deploy web động",
     "module": "M4",
     "module_name": "Nền tảng Lập trình & Hạ tầng",
     "duration_min": 120,
     "file": "buoi_15.html",
     "available": true,
-    "description": "Hiểu cách Internet vận hành (Client–Server, vòng Request–Response, server là 'điểm hẹn' chung) và Hosting (localhost vs internet, web tĩnh vs app động); rồi tự tay deploy sản phẩm lên Vercel: Deploy/Build/Production URL, 5 bước import repo GitHub → link .vercel.app sống 24/7, git push là tự cập nhật, giấu chìa khoá API bằng Environment Variables, dùng AI làm trợ lý. Thực hành APP-15.1: 1 trang web gọi API thật → deploy lên Vercel → link sống gửi khoe. (Gộp từ 2 buổi Internet & Deploy.)",
+    "description": "Phân loại web tĩnh vs web động; hiểu các thành phần của web động (Frontend, Backend, Database, Server) và luồng Request–Response qua API. Ôn nhanh triển khai web tĩnh bằng GitHub Pages (buổi 14) và giới hạn của nó; điểm qua các nền tảng hosting web động (Vercel, Netlify, Render, Railway, Heroku, Hostinger). TRỌNG TÂM thực hành APP-15.1: vibe-code 1 web ĐỘNG (có phần chạy phía server) rồi deploy lên Vercel để có link sống. Environment Variable/secret nối sang An toàn thông tin (buổi 16).",
     "tags": [
       "internet",
       "client-server",
@@ -299,15 +299,20 @@
   {
     "id": 16,
     "slug": "buoi_16",
-    "title": "(Trống — đã gộp Deploy vào buổi 15)",
+    "title": "An toàn thông tin — Bảo vệ mình & sản phẩm trên internet",
     "module": "M4",
     "module_name": "Nền tảng Lập trình & Hạ tầng",
     "duration_min": 120,
     "file": "buoi_16.html",
-    "available": false,
-    "description": "Slot trống sau khi gộp Internet + Deploy vào buổi 15. Chờ sắp xếp lại nội dung khối sau (buổi 17-23).",
+    "available": true,
+    "description": "Khái niệm cơ bản về an toàn thông tin và cách tự bảo vệ khi đã đưa sản phẩm lên internet: 3 thứ cần bảo vệ (tài khoản, thông tin cá nhân, thiết bị) và 3 mối nguy hay gặp; bảo vệ bản thân bằng mật khẩu mạnh + xác thực 2 lớp (2FA), nhận biết lừa đảo (phishing), giữ gìn dấu chân số; bảo vệ sản phẩm bằng cách không để lộ chìa khoá API/secret trong repo công khai (.env, .gitignore, Environment Variable — nối buổi 15) và dùng AI an toàn. Thực hành APP-16.1: tự rà soát an toàn cho tài khoản và repo của mình.",
     "tags": [
-      "trong"
+      "an-toan-thong-tin",
+      "bao-mat",
+      "mat-khau",
+      "2fa",
+      "phishing",
+      "gitignore"
     ]
   },
   {
