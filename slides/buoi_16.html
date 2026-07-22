@@ -1,0 +1,563 @@
+<!--
+  Slide fragment cho Buổi 16 — MODULE M4: Nền tảng Lập trình & Hạ tầng.
+  Buổi 16: An toàn thông tin — Khái niệm cơ bản & cách bảo vệ bản thân + sản phẩm của mình trên internet.
+  Format fragment: cấu hình Sổ Tay + CSS riêng + các <section class="slide">.
+  Chrome do frontend/templates/lesson.html cung cấp. Xưng "em", "GV". Navigation chạy theo thứ tự DOM.
+  Trục kể chuyện (5 màn): Công khai ra thế giới rồi, sao nữa? → Khái niệm cơ bản → Bảo vệ BẢN THÂN → Bảo vệ SẢN PHẨM → Tự tay rà soát an toàn.
+  Phân hoá CƠ BẢN / NÂNG CAO — dùng cho cả lớp 8 và lớp 12.
+  Nối buổi: repo công khai (buổi 14) + Environment Variable/secret (buổi 15) là cầu nối tự nhiên sang phần bảo vệ sản phẩm.
+-->
+
+<script type="application/json" id="nb-questions">
+{
+  "1": {"title": "SỔ TAY #1 — Đầu buổi", "q": "Em có khoảng bao nhiêu tài khoản online (game, mạng xã hội, GitHub...)? Em có dùng chung 1 mật khẩu cho nhiều nơi không? Đã bật xác thực 2 lớp (2FA) ở đâu chưa?"},
+  "2": {"title": "SỔ TAY #2 — Sau thực hành", "q": "Em vừa làm gì để an toàn hơn (bật 2FA, đổi mật khẩu yếu, kiểm tra repo lộ 'chìa khoá'...)? Sản phẩm của em có đang để lộ thông tin bí mật nào không?"},
+  "3": {"title": "SỔ TAY #3 — Cuối buổi", "q": "Kể 1 thói quen an toàn em sẽ giữ từ nay, và 1 điều em từng làm chưa an toàn mà giờ sẽ sửa."}
+}
+</script>
+
+<style>
+  /* BUỔI 16 — Local styles (Module M4) */
+  .slide-body .qbox,
+  .slide-body .steps,
+  .slide-body .prompt-box,
+  .slide-body .hl-box,
+  .slide-body .cl-container {
+    width: 100%;
+    max-width: none;
+  }
+  .slide { justify-content: flex-start; }
+  .slide-body { margin-top: auto; margin-bottom: auto; }
+  /* Steps: cho chữ chảy inline bình thường (tránh mỗi <strong>/<code> thành 1 ô flex riêng làm vỡ layout) */
+  .slide-body .steps li { display: block; padding-left: 3.6rem; }
+  .slide-body .steps li::before { position: absolute; left: 1.1rem; top: 0.8rem; margin-right: 0; }
+</style>
+
+<!-- ============ MỞ ĐẦU ============ -->
+
+<!-- 1 -->
+<section class="slide active slide-cover" data-slide="1" data-title="Chào mừng">
+  <div class="cover-orb orb-1" style="background:#DC2626;"></div>
+  <div class="cover-orb orb-2" style="background:#2563EB;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">BUỔI 16 · MODULE 4 — NỀN TẢNG LẬP TRÌNH & HẠ TẦNG</span>
+    <h1 class="hero-title">An toàn thông tin — <span class="grad-text">bảo vệ mình &amp; sản phẩm trên internet</span></h1>
+    <p class="slide-subtitle">Buổi trước em đưa code + web ra cả thế giới. Giờ cả thế giới cũng "nhìn thấy" em. Hôm nay em học cách
+      <strong>khoá cửa</strong>: bảo vệ tài khoản, thông tin cá nhân, và <strong>không để lộ "chìa khoá" bí mật</strong> trong sản phẩm.</p>
+    <div class="cover-chips"><span class="cover-chip">120 phút</span><span class="cover-chip">Mật khẩu · 2FA · Phishing</span><span class="cover-chip">Giấu secret đúng cách</span></div>
+  </div>
+</section>
+
+<!-- 2 -->
+<section class="slide" data-slide="2" data-title="4 loại câu hỏi tương tác">
+  <div class="slide-body">
+    <span class="eyebrow">CÁCH HỌC HÔM NAY</span>
+    <h2 class="slide-title">4 loại câu hỏi em sẽ gặp</h2>
+    <p class="slide-subtitle">Mỗi loại có một màu riêng. Thấy hộp màu nào, em biết ngay mình cần làm gì.</p>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="qbox qbox-blue" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#3B82F6;">?</div>Trước giờ học</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Đọc trước, ngẫm 30 giây. Giúp em phát biểu tự tin khi GV gọi.</div>
+      </div>
+      <div class="qbox qbox-yellow" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#F59E0B;">!</div>Hỏi bạn cặp</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Quay sang bạn cặp cùng bàn để trao đổi. Bạn hiểu nhanh giảng lại cho bạn còn lúng túng.</div>
+      </div>
+      <div class="qbox qbox-purple" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#A855F7;">#</div>Suy ngẫm Sổ Tay</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Em tự ngẫm rồi viết vào Sổ Tay Cá Nhân (nút trên cùng). Riêng tư, không nộp.</div>
+      </div>
+      <div class="qbox qbox-orange" style="margin:0;">
+        <div class="qbox-header"><div class="qbox-icon" style="background:#F97316;">+</div>Thực hành / Thử AI</div>
+        <div class="qbox-content" style="font-size:0.88rem;">Bắt tay làm trên máy — tự rà soát an toàn cho tài khoản và sản phẩm của mình.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 3 -->
+<section class="slide" data-slide="3" data-title="Cuối buổi em có gì">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 16 — EM PHẢI CÓ</span>
+    <h2 class="slide-title">3 thứ em mang về</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(230px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">1</div>
+        <h3>Hiểu an toàn thông tin</h3>
+        <p>Biết <strong>3 thứ cần bảo vệ</strong> (tài khoản · thông tin cá nhân · thiết bị) và các mối nguy hay gặp.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">2</div>
+        <h3>Bảo vệ bản thân</h3>
+        <p><strong>Mật khẩu mạnh + 2FA</strong>, nhận biết <strong>lừa đảo</strong>, và giữ gìn dấu chân số.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">3</div>
+        <h3>Bảo vệ sản phẩm</h3>
+        <p>Không để lộ <strong>chìa khoá bí mật</strong> trong repo công khai; biết dùng <code>.gitignore</code> + Environment Variable.</p>
+      </div>
+    </div>
+    <div class="hl-box success"><span class="hl-label">OUTPUT — LÀM ĐƯỢC NGAY</span>
+      <p><strong>APP-16.1 — Bảng tự rà soát an toàn:</strong> mỗi em tự làm ít nhất <strong>2 việc</strong> để an toàn hơn (bật 2FA, đổi mật khẩu yếu, kiểm tra repo không lộ secret...) và ghi lại vào Sổ Tay.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 4 -->
+<section class="slide" data-slide="4" data-title="Sổ Tay #1 — Đầu buổi">
+  <div class="slide-body">
+    <span class="eyebrow">BẮT ĐẦU</span>
+    <h2 class="slide-title">Em đang khoá cửa "ngôi nhà số" của mình kỹ đến đâu?</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #1 — Đầu buổi</div>
+      <div class="qbox-content">Em có khoảng bao nhiêu tài khoản online (game, mạng xã hội, GitHub...)? Em có dùng chung 1 mật khẩu cho nhiều nơi không? Đã bật xác thực 2 lớp (2FA) ở đâu chưa?</div>
+      <div class="nb-input-wrap">
+        <label>Câu trả lời của em:</label>
+        <textarea class="nb-input" data-nb-id="1" placeholder="Ví dụ: mình có ~10 tài khoản, hay dùng chung 1-2 mật khẩu, chưa bật 2FA bao giờ..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Vì sao em viết?</span>Cuối buổi so lại, em sẽ thấy mình cần siết những chỗ nào.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 1 — CÂU HỎI LỚN ============ -->
+
+<!-- 5 -->
+<section class="slide slide-cover" data-slide="5" data-title="Công khai ra thế giới rồi">
+  <div class="cover-orb orb-1" style="background:#DC2626;"></div>
+  <div class="cover-orb orb-2" style="background:#F59E0B;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">MẶT TRÁI CỦA "CÔNG KHAI"</span>
+    <h1 class="hero-title">Cả thế giới xem được sản phẩm của em — <span class="grad-text">điều gì có thể đi sai?</span></h1>
+    <p class="slide-subtitle">Repo công khai thì ai cũng <strong>đọc được code</strong>; link web thì ai cũng vào. Mật khẩu yếu bị dò, "chìa khoá" API dán trong code bị lấy,
+      một cú click link giả là mất tài khoản. Hôm nay ta học cách <strong>khoá cửa</strong>.</p>
+    <div class="cover-chips"><span class="cover-chip">Lộ mật khẩu</span><span class="cover-chip">Lộ secret trong code</span><span class="cover-chip">Bị lừa đảo</span></div>
+  </div>
+</section>
+
+<!-- ============ MÀN 2 — KHÁI NIỆM CƠ BẢN ============ -->
+
+<!-- 6 -->
+<section class="slide" data-slide="6" data-title="An toàn thông tin là gì">
+  <div class="slide-body">
+    <span class="eyebrow">KHÁI NIỆM CỐT LÕI</span>
+    <h2 class="slide-title">An toàn thông tin = bảo vệ 3 thứ của em</h2>
+    <p class="slide-subtitle">An toàn thông tin (information security) là giữ cho thông tin &amp; tài khoản của em <strong>không bị xem trộm, sửa bậy hay chiếm mất</strong>. Có 3 thứ cần canh:</p>
+    <div class="met-grid">
+      <div class="met-card model">
+        <div class="met-emoji">🔑</div>
+        <div class="met-term">Tài khoản</div>
+        <div class="met-metaphor">= Chìa khoá vào nhà</div>
+        <div class="met-desc">Email, GitHub, mạng xã hội, game... Mất tài khoản là mất cả "ngôi nhà số".</div>
+      </div>
+      <div class="met-card llm">
+        <div class="met-emoji">🪪</div>
+        <div class="met-term">Thông tin cá nhân</div>
+        <div class="met-metaphor">= Giấy tờ tuỳ thân</div>
+        <div class="met-desc">Tên, trường, ảnh, địa chỉ, số điện thoại... Lộ ra dễ bị lợi dụng, lừa đảo.</div>
+      </div>
+      <div class="met-card token">
+        <div class="met-emoji">💻</div>
+        <div class="met-term">Thiết bị &amp; dữ liệu</div>
+        <div class="met-metaphor">= Két sắt trong nhà</div>
+        <div class="met-desc">Máy tính, điện thoại, file bài làm, code. Dính mã độc là mất/hỏng dữ liệu.</div>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">GHI NHỚ</span>
+      <p>Bảo vệ thông tin giống <strong>khoá cửa nhà</strong>: không phải vì hàng xóm xấu, mà vì "cửa mở" thì rủi ro luôn rình rập.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 7 -->
+<section class="slide" data-slide="7" data-title="3 mối nguy thường gặp">
+  <div class="slide-body">
+    <span class="eyebrow">KẺ XẤU HAY TẤN CÔNG KIỂU GÌ?</span>
+    <h2 class="slide-title">3 mối nguy em hay gặp nhất</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">🔓</div>
+        <h3>Chiếm tài khoản</h3>
+        <p>Mật khẩu yếu/dùng chung bị dò ra → kẻ xấu vào tài khoản, mạo danh em.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#F59E0B;">🎣</div>
+        <h3>Lừa đảo (Phishing)</h3>
+        <p>Tin nhắn/email/link giả dụ em tự nhập mật khẩu, mã OTP hoặc tải file độc.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">📤</div>
+        <h3>Lộ dữ liệu &amp; secret</h3>
+        <p>Đăng quá nhiều thông tin cá nhân, hoặc dán "chìa khoá" API vào code công khai.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">TIN VUI</span>
+      <p>Cả 3 mối nguy này đều <strong>phòng được</strong> bằng vài thói quen đơn giản — chính là nội dung phần còn lại của buổi.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 8 -->
+<section class="slide" data-slide="8" data-title="Quiz khái niệm">
+  <div class="slide-body">
+    <span class="eyebrow">KIỂM TRA NHANH</span>
+    <h2 class="slide-title">Cách nào giúp tài khoản an toàn NHẤT?</h2>
+    <div class="quiz" data-correct="1"
+      data-explanation="Mật khẩu mạnh (dài, khó đoán, mỗi nơi một khác) CỘNG với bật xác thực 2 lớp (2FA) là lớp bảo vệ tốt nhất: kể cả lộ mật khẩu, kẻ xấu vẫn thiếu mã lớp 2. Dùng chung 1 mật khẩu, ngày sinh, hay dán màn hình đều rất rủi ro.">
+      <p class="quiz-q">Chọn cách bảo vệ tài khoản tốt nhất:</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Dùng 1 mật khẩu dễ nhớ cho tất cả tài khoản</button>
+        <button class="quiz-opt" data-index="1">Mật khẩu mạnh, mỗi nơi một khác + bật xác thực 2 lớp</button>
+        <button class="quiz-opt" data-index="2">Ghi mật khẩu ra giấy dán vào màn hình</button>
+        <button class="quiz-opt" data-index="3">Lấy ngày sinh làm mật khẩu cho dễ nhớ</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 3 — BẢO VỆ BẢN THÂN ============ -->
+
+<!-- 9 -->
+<section class="slide" data-slide="9" data-title="Mật khẩu mạnh">
+  <div class="slide-body">
+    <span class="eyebrow">LỚP KHOÁ THỨ NHẤT</span>
+    <h2 class="slide-title">Mật khẩu mạnh — và đừng dùng chung</h2>
+    <ol class="steps stagger">
+      <li><strong>Dài &amp; khó đoán:</strong> ưu tiên 1 <em>chuỗi 3-4 từ</em> ghép lại (vd <code>MeoVang$AnCa2Ca</code>) — dài mà vẫn dễ nhớ.</li>
+      <li><strong>Mỗi nơi một mật khẩu khác:</strong> lộ 1 nơi thì các nơi khác vẫn an toàn.</li>
+      <li><strong>Không dùng:</strong> ngày sinh, tên, <code>123456</code>, <code>password</code> — máy dò ra trong tích tắc.</li>
+      <li><strong>Nhớ không xuể?</strong> Dùng <strong>trình quản lý mật khẩu</strong> (password manager) để tạo &amp; lưu hộ.</li>
+    </ol>
+    <div class="hl-box info"><span class="hl-label">NÂNG CAO</span>
+      <p>Trình quản lý mật khẩu (Bitwarden, Google Password Manager...) tạo mật khẩu ngẫu nhiên cực mạnh cho từng nơi, em chỉ cần nhớ <strong>1 mật khẩu chính</strong>.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 10 -->
+<section class="slide" data-slide="10" data-title="Xác thực 2 lớp (2FA)">
+  <div class="slide-body">
+    <span class="eyebrow">LỚP KHOÁ THỨ HAI</span>
+    <h2 class="slide-title">Xác thực 2 lớp (2FA) — khoá đôi cho tài khoản</h2>
+    <p class="slide-subtitle">2FA (two-factor authentication) là <strong>lớp bảo vệ thứ hai</strong>: sau khi nhập mật khẩu, còn cần thêm 1 mã dùng-một-lần (từ app hoặc SMS). Kẻ xấu có mật khẩu vẫn không vào được.</p>
+    <div class="hl-box success"><span class="hl-label">ẨN DỤ</span>
+      <p>Giống cửa nhà có <strong>2 ổ khoá</strong>: mất chìa 1 (mật khẩu) thì vẫn còn ổ 2 (mã 2FA) chặn lại.</p>
+    </div>
+    <div class="hl-box info"><span class="hl-label">BẬT NGAY HÔM NAY</span>
+      <p>Bật 2FA cho các tài khoản quan trọng: <strong>Google/Email · GitHub · mạng xã hội</strong>. Vào <em>Settings → Security → Two-factor authentication</em>, dùng app như Google Authenticator / Authy.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 11 -->
+<section class="slide" data-slide="11" data-title="Nhận biết lừa đảo">
+  <div class="slide-body">
+    <span class="eyebrow">CẢNH GIÁC PHISHING</span>
+    <h2 class="slide-title">Dấu hiệu của một cú lừa đảo</h2>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(220px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">⏰</div>
+        <h3>Giục gấp, doạ nạt</h3>
+        <p>"Tài khoản sắp bị khoá, xác minh NGAY!" — tạo hoảng để em vội vàng làm theo.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#F59E0B;">🎁</div>
+        <h3>Mồi ngon bất thường</h3>
+        <p>"Trúng thưởng iPhone", "nhận thẻ game free" — cái gì quá hời thường là bẫy.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#7C3AED;">🔗</div>
+        <h3>Link &amp; tên miền lạ</h3>
+        <p>Địa chỉ sai chính tả, tên miền giả (<code>faceb00k.com</code>), đòi em nhập mật khẩu/OTP.</p>
+      </div>
+    </div>
+    <div class="hl-box danger"><span class="hl-label">QUY TẮC VÀNG</span>
+      <p><strong>Không ai được hỏi mật khẩu hay mã OTP của em</strong> — kể cả "người của tổng đài". Nghi ngờ thì <strong>dừng lại, kiểm tra</strong>, gõ thẳng địa chỉ web chính thức thay vì bấm link.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 12 -->
+<section class="slide" data-slide="12" data-title="Dấu chân số">
+  <div class="slide-body">
+    <span class="eyebrow">THỨ EM ĐĂNG SẼ Ở LẠI RẤT LÂU</span>
+    <h2 class="slide-title">Dấu chân số — nghĩ trước khi đăng</h2>
+    <p class="slide-subtitle">Mọi thứ em đăng (ảnh, bình luận, thông tin) để lại <strong>"dấu chân số"</strong> — có thể bị chụp lại, lan đi và <strong>rất khó xoá sạch</strong>.</p>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#2563EB;">🤔</div>
+        <h3>Hỏi trước khi đăng</h3>
+        <p>"Mình có ổn không nếu thầy cô, bố mẹ, hay nhà tuyển sinh 5 năm sau nhìn thấy cái này?"</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#059669;">🔒</div>
+        <h3>Giữ riêng tư</h3>
+        <p>Hạn chế công khai địa chỉ, trường lớp, số điện thoại. Chỉnh quyền riêng tư ở mạng xã hội.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">LIÊN HỆ SẢN PHẨM</span>
+      <p>Dấu chân số cũng gồm <strong>repo &amp; web em vừa công khai</strong> (buổi 14-15): hãy chắc chúng không lộ thông tin cá nhân nhạy cảm.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 13 -->
+<section class="slide" data-slide="13" data-title="Game: An toàn hay Rủi ro?">
+  <div class="slide-body">
+    <span class="eyebrow">QUICK SELF-TEST</span>
+    <h2 class="slide-title">Kéo mỗi hành vi vào đúng nhóm</h2>
+    <p class="slide-subtitle">Kéo (hoặc bấm) từng ô vào: An toàn ✅ hay Rủi ro ⚠️?</p>
+    <div class="game-area">
+      <div class="game-items" id="gameItems">
+        <div class="draggable" draggable="true" data-type="antoan" data-label="Bật xác thực 2 lớp (2FA)">Bật xác thực 2 lớp (2FA)</div>
+        <div class="draggable" draggable="true" data-type="antoan" data-label="Mỗi tài khoản một mật khẩu khác nhau">Mỗi tài khoản một mật khẩu khác nhau</div>
+        <div class="draggable" draggable="true" data-type="antoan" data-label="Gõ thẳng địa chỉ web chính thức thay vì bấm link lạ">Gõ thẳng địa chỉ web chính thức thay vì bấm link lạ</div>
+        <div class="draggable" draggable="true" data-type="ruiro" data-label="Dùng '123456' cho mọi tài khoản">Dùng '123456' cho mọi tài khoản</div>
+        <div class="draggable" draggable="true" data-type="ruiro" data-label="Bấm link 'trúng thưởng' lạ trong tin nhắn">Bấm link 'trúng thưởng' lạ trong tin nhắn</div>
+        <div class="draggable" draggable="true" data-type="ruiro" data-label="Dán API key thẳng vào code repo công khai">Dán API key thẳng vào code repo công khai</div>
+      </div>
+      <div class="game-buckets" style="grid-template-columns:repeat(2,1fr);">
+        <div class="bucket" data-bucket="antoan" data-color="#059669" style="border-color:#10B981;background:#ECFDF5;">
+          <div class="bucket-title" style="color:#059669;">✅ An toàn</div>
+          <div class="bucket-zone"></div>
+        </div>
+        <div class="bucket" data-bucket="ruiro" data-color="#DC2626" style="border-color:#EF4444;background:#FEF2F2;">
+          <div class="bucket-title" style="color:#DC2626;">⚠️ Rủi ro</div>
+          <div class="bucket-zone"></div>
+        </div>
+      </div>
+      <div class="game-score" id="gameScore" style="display:none;">
+        <div id="gameScoreText"></div>
+        <button class="btn-restart" onclick="restartGame()">Chơi lại</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 4 — BẢO VỆ SẢN PHẨM TRÊN INTERNET ============ -->
+
+<!-- 14 -->
+<section class="slide" data-slide="14" data-title="Repo công khai = ai cũng đọc">
+  <div class="slide-body">
+    <span class="eyebrow">NỐI BUỔI 14-15</span>
+    <h2 class="slide-title">Repo công khai: ai cũng đọc được code của em</h2>
+    <p class="slide-subtitle">Repo <strong>Public</strong> (buổi 14) rất tốt để khoe, nhưng nghĩa là <strong>toàn bộ code hiện ra cho cả thế giới</strong> — kể cả thứ em vô tình để trong đó.</p>
+    <div class="hl-box danger"><span class="hl-label">TUYỆT ĐỐI KHÔNG ĐẨY LÊN</span>
+      <p>Mật khẩu, <strong>chìa khoá API (API key)</strong>, token, thông tin cá nhân nhạy cảm. Bot tự động quét GitHub liên tục — một API key lộ có thể bị lạm dụng trong vài phút.</p>
+    </div>
+    <div class="hl-box info"><span class="hl-label">LỠ ĐẨY LÊN RỒI?</span>
+      <p>Xoá khỏi code là <strong>chưa đủ</strong> (còn trong lịch sử commit) — phải coi chìa khoá đó là đã lộ và <strong>tạo lại (revoke) key mới</strong> ngay.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 15 -->
+<section class="slide" data-slide="15" data-title="Giấu chìa khoá đúng cách">
+  <div class="slide-body">
+    <span class="eyebrow">GIẤU SECRET ĐÚNG CÁCH</span>
+    <h2 class="slide-title">.env + .gitignore + Environment Variable</h2>
+    <ol class="steps stagger">
+      <li>Để chìa khoá bí mật trong 1 file riêng <code>.env</code> (không viết thẳng vào code).</li>
+      <li>Thêm <code>.env</code> vào file <strong><code>.gitignore</code></strong> — danh sách những thứ Git <strong>KHÔNG</strong> đẩy lên.</li>
+      <li>Khi deploy (buổi 15), nạp chìa khoá qua <strong>Environment Variable</strong> trên Vercel — server giữ kín, code chỉ gọi tên biến.</li>
+    </ol>
+    <div class="prompt-box"><span class="prompt-label">.gitignore — ví dụ</span># Không đẩy các file bí mật / rác lên GitHub
+.env
+*.key
+node_modules/</div>
+    <div class="hl-box success"><span class="hl-label">NHỚ</span>
+      <p>Quy tắc: <strong>secret không bao giờ nằm trong code công khai</strong>. Đây chính là lý do buổi 15 dạy Environment Variable.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 16 -->
+<section class="slide" data-slide="16" data-title="Từ vựng an toàn — lật thẻ">
+  <div class="slide-body">
+    <span class="eyebrow">8 THUẬT NGỮ — CLICK ĐỂ LẬT</span>
+    <h2 class="slide-title">Từ vựng An toàn thông tin</h2>
+    <div class="fc-grid">
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">2FA</div><div class="fc-vi">Xác thực 2 lớp</div></div>
+        <div class="fc-back">Lớp bảo vệ thứ 2 sau mật khẩu (mã dùng-một-lần).</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Phishing</div><div class="fc-vi">Lừa đảo giả mạo</div></div>
+        <div class="fc-back">Dụ em tự nhập mật khẩu/OTP qua link, email, tin nhắn giả.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Malware</div><div class="fc-vi">Mã độc</div></div>
+        <div class="fc-back">Phần mềm hại máy, đánh cắp dữ liệu — hay núp trong file tải bừa.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">HTTPS</div><div class="fc-vi">Ổ khoá 🔒</div></div>
+        <div class="fc-back">Kết nối được mã hoá; nhìn ổ khoá trước khi nhập mật khẩu.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">API key</div><div class="fc-vi">Chìa khoá bí mật</div></div>
+        <div class="fc-back">Mã cho phép dùng dịch vụ — lộ ra là bị lạm dụng.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">.gitignore</div><div class="fc-vi">Danh sách chặn</div></div>
+        <div class="fc-back">Liệt kê các file Git KHÔNG được đẩy lên (vd .env).</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Password manager</div><div class="fc-vi">Quản lý mật khẩu</div></div>
+        <div class="fc-back">Công cụ tạo &amp; lưu mật khẩu mạnh cho từng nơi.</div>
+      </div></div>
+      <div class="fc"><div class="fc-inner">
+        <div class="fc-front"><div class="fc-term">Backup</div><div class="fc-vi">Sao lưu</div></div>
+        <div class="fc-back">Bản dự phòng dữ liệu — mất/hỏng vẫn khôi phục được.</div>
+      </div></div>
+    </div>
+  </div>
+</section>
+
+<!-- 17 -->
+<section class="slide" data-slide="17" data-title="Dùng AI an toàn">
+  <div class="slide-body">
+    <span class="eyebrow">AN TOÀN KHI DÙNG AI</span>
+    <h2 class="slide-title">Đừng "khai" thông tin nhạy cảm cho AI</h2>
+    <p class="slide-subtitle">AI (ChatGPT/Gemini/Claude) là trợ lý tuyệt vời, nhưng những gì em dán vào có thể được lưu lại. Hãy coi khung chat như <strong>nơi công cộng</strong>.</p>
+    <div class="card-grid stagger" style="grid-template-columns:repeat(auto-fit, minmax(240px, 1fr));">
+      <div class="card">
+        <div class="card-icon" style="background:#DC2626;">🚫</div>
+        <h3>Không dán</h3>
+        <p>Mật khẩu, API key, số CCCD/điện thoại, thông tin riêng tư của người khác.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon" style="background:#059669;">✅</div>
+        <h3>Nên làm</h3>
+        <p>Thay số liệu thật bằng ví dụ; hỏi ý tưởng/cách làm thay vì đưa dữ liệu nhạy cảm.</p>
+      </div>
+    </div>
+    <div class="hl-box info"><span class="hl-label">NỐI KỸ NĂNG CŨ</span>
+      <p>Vẫn giữ thói quen <strong>kiểm chứng</strong> câu trả lời của AI (các buổi trước) — an toàn thông tin đi cùng tư duy phản biện.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MÀN 5 — TỰ TAY RÀ SOÁT & KHÉP LẠI ============ -->
+
+<!-- 18 -->
+<section class="slide" data-slide="18" data-title="Thực hành APP-16.1">
+  <div class="slide-body">
+    <span class="eyebrow">THỰC HÀNH — HỘP MÀU CAM</span>
+    <h2 class="slide-title">APP-16.1 — Tự rà soát an toàn (chọn ≥2 việc)</h2>
+    <ol class="steps stagger">
+      <li><strong>Bật 2FA</strong> cho 1 tài khoản quan trọng (GitHub hoặc Google) — làm ngay tại lớp.</li>
+      <li><strong>Đổi 1 mật khẩu yếu / dùng chung</strong> thành mật khẩu mạnh, riêng biệt.</li>
+      <li><strong>Kiểm tra repo</strong> của em (buổi 14): có lỡ để lộ chìa khoá/thông tin cá nhân không? Có thì xử lý (thêm <code>.gitignore</code>, revoke key).</li>
+      <li><strong>Rà quyền riêng tư</strong> 1 mạng xã hội em hay dùng.</li>
+    </ol>
+    <div class="hl-box info"><span class="hl-label">CƠ BẢN / NÂNG CAO</span>
+      <p><strong>Cơ bản:</strong> làm xong ≥2 việc trên là đạt. <strong>Nâng cao:</strong> cài 1 password manager, hoặc thêm <code>.env</code> + <code>.gitignore</code> cho dự án có chìa khoá API. Bí đâu → hỏi AI (nhưng đừng dán secret vào!).</p>
+    </div>
+  </div>
+</section>
+
+<!-- 19 -->
+<section class="slide" data-slide="19" data-title="Sổ Tay #2 — Sau thực hành">
+  <div class="slide-body">
+    <span class="eyebrow">GHI LẠI KẾT QUẢ</span>
+    <h2 class="slide-title">Em vừa siết an toàn ở đâu?</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #2 — Sau thực hành</div>
+      <div class="qbox-content">Em vừa làm gì để an toàn hơn (bật 2FA, đổi mật khẩu yếu, kiểm tra repo lộ "chìa khoá"...)? Sản phẩm của em có đang để lộ thông tin bí mật nào không?</div>
+      <div class="nb-input-wrap">
+        <label>Câu trả lời của em:</label>
+        <textarea class="nb-input" data-nb-id="2" placeholder="Ví dụ: mình đã bật 2FA cho GitHub, đổi mật khẩu game, kiểm tra repo không có key..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 20 -->
+<section class="slide" data-slide="20" data-title="Thảo luận cặp">
+  <div class="slide-body">
+    <span class="eyebrow">HỘP CÂU HỎI MÀU VÀNG</span>
+    <h2 class="slide-title">Cùng bạn cặp — xử lý 1 tình huống</h2>
+    <div class="qbox qbox-yellow">
+      <div class="qbox-header"><div class="qbox-icon">!</div>HỎI BẠN CẶP — Thảo luận</div>
+      <div class="qbox-content">Bạn em nhận tin nhắn: <em>"Chúc mừng! Tài khoản game của bạn trúng 1 triệu kim cương. Đăng nhập tại link này để nhận: gamefree-nhankc.xyz"</em>.
+        Hai bạn chỉ ra: đây có phải lừa đảo không? <strong>Dấu hiệu nào</strong>? Nên khuyên bạn ấy làm gì?</div>
+      <div class="qbox-tip"><span class="qbox-tip-label">Mục đích:</span>Luyện phản xạ nhận diện phishing và phản ứng đúng.</div>
+    </div>
+  </div>
+</section>
+
+<!-- 21 -->
+<section class="slide" data-slide="21" data-title="Quiz tổng hợp">
+  <div class="slide-body">
+    <span class="eyebrow">TỰ KIỂM TRA</span>
+    <h2 class="slide-title">Dán API key vào code repo công khai — rủi ro là?</h2>
+    <div class="quiz" data-correct="1"
+      data-explanation="Repo công khai ai cũng đọc được code, nên ai cũng thấy chìa khoá API và có thể lạm dụng (bot còn tự quét). Key KHÔNG tự được mã hoá, và 'code của mình' không có nghĩa là an toàn. Cách đúng: để trong .env + .gitignore, nạp qua Environment Variable khi deploy.">
+      <p class="quiz-q">Em đưa game lên GitHub công khai, trong code có dán API key. Điều gì đúng?</p>
+      <div class="quiz-opts">
+        <button class="quiz-opt" data-index="0">Không sao, code của mình mà</button>
+        <button class="quiz-opt" data-index="1">Ai đọc repo cũng thấy key và có thể lạm dụng nó</button>
+        <button class="quiz-opt" data-index="2">Key sẽ tự động được GitHub mã hoá an toàn</button>
+        <button class="quiz-opt" data-index="3">Chỉ bạn bè của em mới xem được key</button>
+      </div>
+      <div class="quiz-fb"></div>
+    </div>
+  </div>
+</section>
+
+<!-- 22 -->
+<section class="slide" data-slide="22" data-title="Checklist cuối buổi">
+  <div class="slide-body">
+    <span class="eyebrow">CUỐI BUỔI 16 — EM ĐÃ LÀM GÌ</span>
+    <h2 class="slide-title">Checklist — bấm để tick</h2>
+    <div class="cl-container">
+      <ul class="cl-list">
+        <li class="cl-item"><span class="cl-check"></span><span>Biết 3 thứ cần bảo vệ &amp; 3 mối nguy thường gặp</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Đặt mật khẩu mạnh, mỗi nơi một khác</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Bật xác thực 2 lớp (2FA) cho tài khoản quan trọng</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Nhận biết được dấu hiệu lừa đảo (phishing)</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Không để lộ chìa khoá/secret trong repo công khai (.gitignore, env)</span></li>
+        <li class="cl-item"><span class="cl-check"></span><span>Dùng AI an toàn: không dán thông tin nhạy cảm</span></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- 23 -->
+<section class="slide" data-slide="23" data-title="Sổ Tay #3 + BTVN">
+  <div class="slide-body">
+    <span class="eyebrow">PHẢN TƯ &amp; VIỆC VỀ NHÀ</span>
+    <h2 class="slide-title">Nhìn lại — và việc về nhà</h2>
+    <div class="qbox qbox-purple">
+      <div class="qbox-header"><div class="qbox-icon">#</div>SỔ TAY #3 — Cuối buổi</div>
+      <div class="qbox-content">Kể 1 thói quen an toàn em sẽ giữ từ nay, và 1 điều em từng làm chưa an toàn mà giờ sẽ sửa.</div>
+      <div class="nb-input-wrap">
+        <label>Suy ngẫm của em:</label>
+        <textarea class="nb-input" data-nb-id="3" placeholder="Ví dụ: từ nay mỗi nơi 1 mật khẩu; trước hay bấm link lạ, giờ sẽ kiểm tra trước..."></textarea>
+        <div class="nb-save-status">Đã lưu vào Sổ Tay</div>
+      </div>
+    </div>
+    <div class="hl-box "><span class="hl-label">BÀI TẬP VỀ NHÀ</span>
+      <p>Bật <strong>2FA</strong> cho hết các tài khoản quan trọng ở nhà; giúp bố mẹ/anh chị kiểm tra 1 tài khoản của họ. Và rà lại repo/web của em: chắc chắn <strong>không lộ thông tin bí mật</strong> nào.</p>
+    </div>
+  </div>
+</section>
+
+<!-- 24 -->
+<section class="slide slide-cover" data-slide="24" data-title="Hết Buổi 16">
+  <div class="cover-orb orb-1" style="background:#DC2626;"></div>
+  <div class="cover-orb orb-2" style="background:#2563EB;"></div>
+  <div class="cover-orb orb-3"></div>
+  <div class="cover-content slide-body">
+    <span class="eyebrow">HẾT BUỔI 16</span>
+    <h1 class="hero-title">Giờ em vừa <span class="grad-text">làm sản phẩm, vừa biết giữ an toàn</span></h1>
+    <p class="slide-subtitle">Em đã trọn vẹn nền tảng: code (13) → Git (14) → Internet &amp; deploy (15) → <strong>an toàn thông tin (hôm nay)</strong>.
+      Một lập trình viên giỏi không chỉ tạo ra sản phẩm, mà còn bảo vệ được nó và chính mình.</p>
+    <div class="cover-chips"><span class="cover-chip">Khoá cửa ngôi nhà số</span><span class="cover-chip">Sẵn sàng cho dự án lớn</span></div>
+  </div>
+</section>
